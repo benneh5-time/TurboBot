@@ -51,6 +51,8 @@ def load_player_list():
         return data["player_list"], data["waiting_list"]
     except FileNotFoundError:
         return {}, {}
+    except json.JSONDecodeError:
+        return {}, {}
 
 @bot.event
 async def on_ready():
