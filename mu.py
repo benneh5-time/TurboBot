@@ -132,16 +132,16 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
     
     if game_setup == "joat10":
         add_joat_roles(game_title)
-        data.add("preset": "joat-10er")
+        data.add("preset", "joat-10er")
     if game_setup == "vig10":
         add_vig_roles(game_title)
-        data.add("preset": "vig-10")        
+        data.add("preset", "vig-10")        
     if game_setup == "cop9":
         add_cop9_roles(game_title)
-        data.add("preset": "cop-9")
+        data.add("preset", "cop-9")
     if game_setup == "cop13":
         add_cop13_roles(game_title)
-        data.add("preset": "cop-13")
+        data.add("preset", "cop-13")
         
     add_players(player_aliases, host_name)
     
