@@ -65,10 +65,9 @@ async def on_ready():
 
 @bot.command()
 async def game(ctx, setup_name=None):
-    global current_setup
-    global player_limit
-    global players
-    global waiting_list
+
+    global current_setup, player_limit, players, waiting_list
+
     if setup_name is None:
         await ctx.send(f"The current game setup is '{current_setup}'. To change the setup, use !game <setup_name>. Valid setup names are: {', '.join(valid_setups)}.")
     elif setup_name in valid_setups:
@@ -108,10 +107,7 @@ async def in_(ctx, time: int = 60):
         return
 
     alias = aliases[ctx.author.id]
-    global game_host_name 
-    global player_limit
-    global players
-    global waiting_list
+    global game_host_name, player_limit, players, waiting_list
 
     if time < 10 or time > 90:
         await ctx.send("Invalid duration. Please choose a duration between 10 and 90 minutes.")
@@ -140,9 +136,9 @@ async def in_(ctx, time: int = 60):
         await ctx.send(f"{alias}'s in has been renewed for the next {time} minutes.")
     else:
         if len(players) < player_limit:
-            players[alias] = time
-            
+            players[alias] = time            
             await ctx.send(f"{alias} has been added to the list for the next {time} minutes.")
+            
         else:
             waiting_list[alias] = time
             await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
@@ -152,10 +148,8 @@ async def in_(ctx, time: int = 60):
 async def out(ctx):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
-    global game_host_name 
-    global player_limit
-    global players
-    global waiting_list 
+        
+    global game_host_name, player_limit, players, waiting_list 
     
     if ctx.author.id not in aliases:
         await ctx.send("You are not on the list and you haven't set an alias. Stop trolling me.")
@@ -214,10 +208,7 @@ async def add(ctx, *, alias):
         return
 
     alias = alias.lower()
-    global game_host_name
-    global player_limit 
-    global players
-    global waiting_list
+    global game_host_name, player_limit, players, waiting_list
     
     if game_host_name == alias:
         game_host_name = "Mafia Host"
@@ -227,8 +218,7 @@ async def add(ctx, *, alias):
             await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.") 
             return
         else:
-            waiting_list[alias] = 60 
-            
+            waiting_list[alias] = 60             
             await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
             return
             
@@ -254,10 +244,7 @@ async def remove(ctx, *, alias):
         return
 
     alias = alias.lower()
-    global game_host_name
-    global player_limit 
-    global players
-    global waiting_list
+    global game_host_name, player_limit, players, waiting_list
     
     if game_host_name == alias:
         game_host_name = "Mafia Host"
@@ -286,11 +273,13 @@ async def remove(ctx, *, alias):
 async def status(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
-
+        
+    global game_host_name
+    
     show_time = False if args and args[0].lower() == 'list' else True
 
     message = f"**Turbo sign-ups!**\nCurrent !game is {current_setup}\n"
-    global game_host_name
+
     if players:
         message += "**Players:**\n"
         for i, (alias, remaining_time) in enumerate(players.items(), 1):
@@ -321,6 +310,8 @@ async def host(ctx, *, host_name=None):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
         
+    global game_host_name
+    
     if host_name is None:
         if ctx.author.id in aliases:
             host_name = aliases[ctx.author.id]
@@ -332,7 +323,6 @@ async def host(ctx, *, host_name=None):
         await ctx.send(f"{host_name} is already on the turbo list or waiting list.\n Please choose a different name for the host.")
         return
     
-    global game_host_name
     game_host_name = host_name
     
     await ctx.send(f"Host for the next turbo has been set to {host_name}!")
@@ -358,9 +348,7 @@ async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     
-    global player_limit 
-    global game_host_name
-    global current_setup
+    global player_limit, game_host_name, current_setup
     
     if len(players) < player_limit:
         await ctx.send(f"Not enough players to start a game. Need {player_limit} players.")
@@ -428,6 +416,8 @@ async def rand(ctx, *args):
 async def clear(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
+        
+    global players, waiting_list, game_host_name, current_setup    
     
     parser = argparse.ArgumentParser()
     parser.add_argument('-confirm', action='store_true') 
@@ -438,17 +428,11 @@ async def clear(ctx, *args):
         await ctx.send("Invalid arguments. Type `!clear -confirm` to clear the queue otherwise f off")
         return
     
-    if args_parsed.confirm:
-        global players
-        global waiting_list
-        global game_host_name
-        global current_setup
-        
+    if args_parsed.confirm:        
         players = {}
         waiting_list = {}
         game_host_name = "Mafia Host"
-        current_setup = "joat10"
-        
+        current_setup = "joat10"        
         await ctx.send("Player and waiting list has been cleared. Game is JOAT10 and host is Mafia Host")
     else:
         await ctx.send("To clear, run !clear -confirm")
