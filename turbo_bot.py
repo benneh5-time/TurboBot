@@ -39,11 +39,25 @@ def load_aliases():
             aliases.update({int(id): alias for id, alias in loaded_aliases.items()})
     except FileNotFoundError:
         pass
+        
+def save_player_list(player_list, waiting_list):
+    with open('player_list_data.json', 'w') as f:
+        json.dump({"player_list": player_list, "waiting_list": waiting_list})
+       
+def load_player_list():
+    try:
+        with open('player_list_data.json', 'r') as f:
+            data = json.load(f)
+        return data["player_list"], data["waiting_list"]
+    except FileNotFoundError:
+        return {}, {}
 
 @bot.event
 async def on_ready():
+    global player_list, waiting_list
     print(f"We have logged in as {bot.user}", flush=True)
     load_aliases()
+    player_list, waiting_list = load_player_list()
     # Start looping task
     update_players.start()  # Start background task
 
