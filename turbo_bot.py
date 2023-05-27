@@ -92,7 +92,7 @@ async def game(ctx, setup_name=None):
             
         current_setup = setup_name
         player_limit = new_player_limit
-        save_player_list(players, waiting_list)
+        
         await ctx.send(f"The game setup has been changed to '{current_setup}'")
     else:
         await ctx.send(f"'{setup_name}' is not a valid setup name. Please choose from: {', '.join(valid_setups)}.")
@@ -122,31 +122,31 @@ async def in_(ctx, time: int = 60):
         if len(players) < player_limit:
             players[alias] = time
             await ctx.send(f"{alias} has been removed as host and added to the list for the next {time} minutes.")
-            save_player_list(players, waiting_list)
+            
             return
         else:
             waiting_list[alias] = time 
             await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
-            save_player_list(players, waiting_list)
+            
             return
             
     if alias in players or alias in waiting_list:
         if alias in players:
             players[alias] = time
-            save_player_list(players, waiting_list)
+            
         else:
             waiting_list[alias] = time
-            save_player_list(players, waiting_list)
+            
         await ctx.send(f"{alias}'s in has been renewed for the next {time} minutes.")
     else:
         if len(players) < player_limit:
             players[alias] = time
-            save_player_list(players, waiting_list)
+            
             await ctx.send(f"{alias} has been added to the list for the next {time} minutes.")
         else:
             waiting_list[alias] = time
             await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
-            save_player_list(players, waiting_list)
+            
 
 @bot.command()
 async def out(ctx):
@@ -171,11 +171,11 @@ async def out(ctx):
     if alias in players:
         del players[alias]
         await ctx.send(f"{alias} has been removed from the list.")
-        save_player_list(players, waiting_list)
+        
     elif alias in waiting_list:
         del waiting_list[alias]
         await ctx.send(f"{alias} has been removed from the waiting list.")
-        save_player_list(players, waiting_list)
+        
     else:
         await ctx.send(f"{alias} is not on the list.")
 
@@ -183,7 +183,7 @@ async def out(ctx):
     if len(players) < player_limit and waiting_list:
         next_alias, next_time = waiting_list.popitem()
         players[next_alias] = next_time
-        save_player_list(players, waiting_list)
+        
         await ctx.send(f"{next_alias} has been moved from the waiting list to the main list.")
 
 @bot.command()
@@ -205,7 +205,7 @@ async def alias(ctx, *, alias):
             for player in list(player_list.keys()):  # Create a copy of keys to avoid RuntimeError
                 if player == old_alias:
                     player_list[alias] = player_list.pop(old_alias)
-                    save_player_list(players, waiting_list)
+                    
 
         
 @bot.command()
@@ -223,12 +223,12 @@ async def add(ctx, *, alias):
         game_host_name = "Mafia Host"
         if len(players) < player_limit:
             players[alias] = 60
-            save_player_list(players, waiting_list)
+            
             await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.") 
             return
         else:
             waiting_list[alias] = 60 
-            save_player_list(players, waiting_list)
+            
             await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
             return
             
@@ -237,7 +237,7 @@ async def add(ctx, *, alias):
             players[alias] = 60  # Default time
         else:
             waiting_list[alias] = 60  # Default time
-        save_player_list(players, waiting_list)
+        
         await ctx.send(f"{alias}'s in has been renewed for 60 minutes.")
     else:
         if len(players) < player_limit:
@@ -246,7 +246,7 @@ async def add(ctx, *, alias):
         else:
             waiting_list[alias] = 60  # Default time
             await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
-        save_player_list(players, waiting_list)
+        
 
 @bot.command()
 async def remove(ctx, *, alias):
@@ -266,11 +266,11 @@ async def remove(ctx, *, alias):
         
     if alias in players:
         del players[alias]
-        save_player_list(players, waiting_list)
+        
         await ctx.send(f"{alias} has been removed from the list.")
     elif alias in waiting_list:
         del waiting_list[alias]
-        save_player_list(players, waiting_list)
+        
         await ctx.send(f"{alias} has been removed from the waiting list.")
     else:
         await ctx.send(f"{alias} is not on the list.")
@@ -279,7 +279,7 @@ async def remove(ctx, *, alias):
     if len(players) < player_limit and waiting_list:
         next_alias, next_time = waiting_list.popitem()
         players[next_alias] = next_time
-        save_player_list(players, waiting_list)
+        
         await ctx.send(f"{next_alias} has been moved from the waiting list to the main list.")
 
 @bot.command()
@@ -351,7 +351,8 @@ async def update_players():
                 next_alias, next_time = waiting_list.popitem()
                 players[next_alias] = next_time
                 await bot.get_channel(223260125786406912).send(f"{next_alias} has been moved from the waiting list to the main list.")
-
+    save_player_list(players, waiting_list)
+    
 @bot.command()
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
