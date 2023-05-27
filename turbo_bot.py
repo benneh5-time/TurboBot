@@ -40,9 +40,9 @@ def load_aliases():
     except FileNotFoundError:
         pass
         
-def save_player_list(player_list, waiting_list):
+def save_player_list(player_list, waiting_list, current_setup, game_host_name):
     with open('player_list_data.json', 'w') as f:
-        json.dump({"player_list": player_list, "waiting_list": waiting_list}, f)
+        json.dump({"player_list": player_list, "waiting_list": waiting_list, "current_setup": current_setup, "game_host_name": game_host_name}, f)
        
 def load_player_list():
     try:
@@ -351,7 +351,7 @@ async def update_players():
                 next_alias, next_time = waiting_list.popitem()
                 players[next_alias] = next_time
                 await bot.get_channel(223260125786406912).send(f"{next_alias} has been moved from the waiting list to the main list.")
-    save_player_list(players, waiting_list)
+    save_player_list(players, waiting_list, current_setup, game_host_name)
     
 @bot.command()
 async def rand(ctx, *args):
