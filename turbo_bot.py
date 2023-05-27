@@ -422,7 +422,7 @@ async def rand(ctx, *args):
         players.update(waiting_list)
         waiting_list.clear()
     elif "Error" in response_message:
-        await ctx.send(f"Game failed to rand, reason: {response_message}")    
+        await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
     
 @bot.command()
 async def clear(ctx, *args):
