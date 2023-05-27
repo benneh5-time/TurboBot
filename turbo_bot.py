@@ -397,7 +397,8 @@ async def rand(ctx, *args):
         game_title = mu.generate_game_thread_uuid()
     if not thread_id:
         thread_id = mu.post_thread(session, game_title, security_token)
-        
+    await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game using thread ID: `{thread_id}`. Please standby.")
+    
     security_token = mu.new_game_token(session, thread_id)
     response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, current_setup, game_host_name)
     
@@ -423,7 +424,34 @@ async def rand(ctx, *args):
     elif "Error" in response_message:
         await ctx.send(f"Game failed to rand, reason: {response_message}")    
     
+@bot.command()
+async def clear(ctx, *args):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
     
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-confirm', action='store_true') 
+    
+    try:
+        args_parsed = parser.parse_args(args)
+    except SystemExit:
+        await ctx.send("Invalid arguments. Type `!clear -confirm` to clear the queue otherwise f off")
+        return
+    
+    if args_parsed.confirm:
+        global players = {}
+        global waiting_list = {}
+        global game_host_name = "Mafia Host"
+        global current_setup
+        
+        players = {}
+        waiting_list = {}
+        game_host_name = "Mafia Host"
+        current_setup = "joat10"
+        
+        await ctx.send("Player and waiting list has been cleared. Game is JOAT10 and host is Mafia Host")
+    else:
+        await ctx.send("To clear, run !clear -confirm")
 
 TOKEN = os.environ.get('TOKEN')
 # Run the bot
