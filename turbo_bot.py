@@ -42,7 +42,7 @@ def load_aliases():
         
 def save_player_list(player_list, waiting_list):
     with open('player_list_data.json', 'w') as f:
-        json.dump({"player_list": player_list, "waiting_list": waiting_list})
+        json.dump({"player_list": player_list, "waiting_list": waiting_list}, f)
        
 def load_player_list():
     try:
