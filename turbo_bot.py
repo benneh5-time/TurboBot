@@ -439,9 +439,9 @@ async def clear(ctx, *args):
         return
     
     if args_parsed.confirm:
-        global players = {}
-        global waiting_list = {}
-        global game_host_name = "Mafia Host"
+        global players
+        global waiting_list
+        global game_host_name
         global current_setup
         
         players = {}
