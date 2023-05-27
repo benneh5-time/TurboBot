@@ -372,15 +372,18 @@ async def rand(ctx, *args):
     username = os.environ.get('MUUN')
     password = os.environ.get('MUPW')
     
-    args = shlex.split(' '.join(args))
+    # args = shlex.split(' '.join(args))
     parser = argparse.ArgumentParser()
     parser.add_argument('-title', default=None)
     parser.add_argument('-thread_id', default=None)
     
     try:
         args_parsed = parser.parse_args(args)
+    except SystemExit:
+        await ctx.send(f"Invalid arguments. Please check your command syntax. Do not use `-`, `--`, or `:` in your titles and try again.")
+        return
     except Exception as e:
-        await ctx.send(f"Invalid arguments. Please check your command syntax.\n{str(e)}")
+        await ctx.send(f"An unexpected error occurred. Please try again.\n{str(e)}")
         return
     
     #Login and get Initial Token
