@@ -492,11 +492,37 @@ async def recruit(ctx, opt_in=None):
     if ctx.channel.id not in allowed_channels:  
         return
     global recruit_list, recruit_timer
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-opt_in', action='store_true')
+    parser.add_argument('-opt_out', action='store_true')
     
-    if opt_in == '-opt_in':
-        recruit_list[str(ctx.author.id)] = str(ctx.author.id)
-        save_recruit_list()
-        await ctx.send(f"{ctx.author.mention} has been added to the recruit list!")
+    try:
+        args_parsed = parser.parse_args(args)
+    except Exception as e:
+        await ctx.send(f"Invalid arguments. Please check your command syntax.\n{str(e)}")
+        return
+        
+    if args_parsed.opt_in and args_parsed.opt_out:
+        await ctx.send("You can't opt in and opt out at the same time.")
+        return
+        
+    if args_parsed.opt_in:
+        if str(ctx.author.id) not in recruit_list:
+            recruit_list.append(str(ctx.author.id))
+            save_recruit_list()
+            await ctx.send(f"{ctx.author.mention} has opted in to be recruited.")
+        else:
+            await ctx.send("You're already in the recruit list.")
+        
+    elif args_parsed.opt_out:
+        if str(ctx.author.id) in recruit_list:
+            recruit_list.remove(str(ctx.author.id))
+            save_recruit_list()
+            await ctx.send(f"{ctx.author.mention} has opted out of being recruited.")
+        else:
+            await ctx.send("You're not in the recruit list.")
+
     else:
         if recruit_timer > 0:
             await ctx.send(f"This command can only be used once every hour. Please try again in {recruit_timer} minutes.")
