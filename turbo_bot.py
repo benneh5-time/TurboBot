@@ -331,7 +331,7 @@ async def status(ctx, *args):
         time_message +=  "!in to join!\n"  
         embed.add_field(name="**Players:**", value=player_message, inline=True)
         embed.add_field(name="**Time Remaining:**", value=time_message, inline=True)
-
+        embed.add_field(name="", value="", inline=True)
     if waiting_list:
         # message += "**Waiting list:**\n"
         waiting_list_message = ""
@@ -342,12 +342,13 @@ async def status(ctx, *args):
             
         embed.add_field(name="**Waiting List:**", value=waiting_list_message, inline=True)
         embed.add_field(name="**Time Remaining:**", value=time_message, inline=True)
-
+        embed.add_field(name="", value="", inline=True)
     if not players and not waiting_list:
         embed.add_field(name="No players are currently signed up.", value="", inline=False)
-    embed.add_field(name="", value="", inline=True)    
+    
   
-
+    embed.set_thumbnail(url="https://www.mafiauniverse.com/forums/image.php?u=10958&dateline=1666928444")
+    embed.set_footer(text="https://github.com/benneh5-time/TurboBot", icon_url="https://www.mafiauniverse.com/forums/image.php?u=274&dateline=1677601621")
     await ctx.send(embed=embed)
 
 @bot.command()
