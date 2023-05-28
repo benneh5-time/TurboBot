@@ -54,9 +54,7 @@ def load_player_list():
         current_setup = data.get('current_setup')
         game_host_name = data.get('game_host_name')
         player_limit = data.get('player_limit')
-
-    return player_list, waiting_list, current_setup, game_host_name, player_limit
-    
+        return player_list, waiting_list, current_setup, game_host_name, player_limit
     except FileNotFoundError:
         return {}, {}
     except json.JSONDecodeError:
