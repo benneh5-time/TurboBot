@@ -343,7 +343,7 @@ async def status(ctx, *args):
         embed.add_field(name="**Waiting List:**", value=waiting_list_message, inline=False)
 
     if not players and not waiting_list:
-        embed.add_field(name="No players are currently signed up.\", value="", inline=False)
+        embed.add_field(name="No players are currently signed up.", value="", inline=False)
         
 
     embed.add_field(name="**Host**", value=game_host_name, inline=False)    
