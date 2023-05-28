@@ -488,7 +488,7 @@ async def help(ctx):
     
 # The following is a troll command
 @bot.command()
-async def recruit(ctx, opt_in=None):
+async def recruit(ctx, *args):
     if ctx.channel.id not in allowed_channels:  
         return
     global recruit_list, recruit_timer
