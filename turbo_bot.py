@@ -311,41 +311,44 @@ async def status(ctx, *args):
     
     show_time = False if args and args[0].lower() == 'list' else True
 
-    message = f"**Turbo sign-ups!**\nCurrent !game is {current_setup}\n"
-
+    # message = f"**Turbo sign-ups!**\nCurrent !game is {current_setup}\n"
+    embed = discord.Embed(title="**Turbo sign-ups!**", description="", color="0x1beb30")
+    embed.add_field(name="**Game Setup**", value=current_setup, inline=False)
     if players:
-        message += "**Players:**\n"
+        # message += "**Players:**\n"
+        player_message = ""
         for i, (alias, remaining_time) in enumerate(players.items(), 1):
             if show_time:
-                message += f"{i}. {alias} - {remaining_time} minutes remaining\n"
+                player_message += f"{i}. {alias} - {remaining_time} minutes remaining\n"
             else:
-                message += f"{i}. {alias}\n"
+                player_message += f"{i}. {alias}\n"
+        spots_left = player_limit - len(players)
+        if spots_left > 1:
+            player_message += f"+{spots_left} !!\n"
+        elif spots_left == 1:
+            player_message += "+1 HERO NEEDED\n"
+        else:
+            player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
+            
+        embed.add_field(name="**Players:**", value=player_message, inline=False)
 
     if waiting_list:
-        message += "**Waiting list:**\n"
+        # message += "**Waiting list:**\n"
+        waiting_list_message = ""
         for i, (alias, remaining_time) in enumerate(waiting_list.items(), 1):
             if show_time:
-                message += f"{i}. {alias} - {remaining_time} minutes remaining\n"
+                waiting_list_message += f"{i}. {alias} - {remaining_time} minutes remaining\n"
             else:
-                message += f"{i}. {alias}\n"
-    
-
+                waiting_list_message += f"{i}. {alias}\n"
+        embed.add_field(name="**Waiting List:**", value=waiting_list_message, inline=False)
 
     if not players and not waiting_list:
-        message += "No players are currently signed up.\n"
-    spots_left = player_limit - len(players)
-    if spots_left > 1:
-        message += f"+{spots_left} !!\n\n"
-    elif spots_left == 1:
-        message += "+1 HERO NEEDED\n\n"
-    else:
-        message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n\n"        
-            
-    message += f"**Host**\n{game_host_name}"
+        embed.add_field(name="No players are currently signed up.\", value="", inline=False)
+        
 
-    
+    embed.add_field(name="**Host**", value=game_host_name, inline=False)    
 
-    await ctx.send(message)
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def host(ctx, *, host_name=None):
