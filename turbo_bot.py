@@ -333,17 +333,18 @@ async def status(ctx, *args):
 
     if not players and not waiting_list:
         message += "No players are currently signed up.\n"
-        
+    
+    if spots_left > 1:
+        message += f"+{spots_left} !!\n\n"
+    elif spots_left == 1:
+        message += "+1 HERO NEEDED\n\n"
+    else:
+        message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n\n"        
+            
     message += f"**Host**\n{game_host_name}"
     spots_left = player_limit - len(players)
     
-    if spots_left > 1:
-        message += f"+{spots_left} !!"
-    elif spots_left == 1:
-        message += "+1 HERO NEEDED"
-    else:
-        message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`"        
-    
+
     await ctx.send(message)
 
 @bot.command()
