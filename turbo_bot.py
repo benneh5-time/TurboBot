@@ -5,7 +5,7 @@ import asyncio
 import mu
 import os
 import argparse
-import shlex
+import random
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -81,6 +81,8 @@ async def on_ready():
 
 @bot.command()
 async def game(ctx, setup_name=None):
+    if ctx.channel.id not in allowed_channels:  
+        return
 
     global current_setup, player_limit, players, waiting_list
 
@@ -453,7 +455,48 @@ async def clear(ctx, *args):
         await ctx.send("Player and waiting list has been cleared. Game is JOAT10 and host is Mafia Host")
     else:
         await ctx.send("To clear, run !clear -confirm")
+        
+@bot.command(name='help')
+async def help(ctx):
+    embed = discord.Embed(title="Bot Commands", description="Here are the commands you can use:", color=0x1e00ff)
+    embed.add_field(name="!in", value="Joins the player list. You must first set an alias using `!alias` before joining. Optionally specify duration with a number, e.g. `!in 60` to join for 60 minutes.", inline=False)
+    embed.add_field(name="!out", value="Leaves the player list.", inline=False)
+    embed.add_field(name="!add", value="Add a player to the player list. Must specify player's username, e.g. `!add MU_Username`. You cannot control the duration with this command.", inline=False)
+    embed.add_field(name="!remove", value="Removes a player from the player list. Must specify player's username, e.g. `!remove MU_Username`.", inline=False)
+    embed.add_field(name="!rand", value="Randomly selects a game setup from a pre-defined list. Additional arguments may be used to specify thread title or id, e.g. `!rand -title \"Game Title\" -thread_id \"123456\"`.", inline=False)
+    embed.add_field(name="!alias", value="Sets the user's Mafia Universe username for use in other commands, e.g. `!alias MU_Username`.", inline=False)
+    embed.add_field(name="!clear", value="Resets the current game to defaults. Must be confirmed with `!clear -confirm`.", inline=False)
+    embed.add_field(name="!status", value="Displays the current status of the game, including player list, waiting list, host, and setup.", inline=False)
+    embed.add_field(name="!host", value="Sets the host of the game. By default, it will use your defined alias. You can specify a different host's username, e.g. `!host MU_Username`.", inline=False)
+    embed.add_field(name="!game", value="Sets the game setup. Must specify setup name from available options: cop9, cop13, joat10, vig10. E.g. `!game cop9`.", inline=False)
+    await ctx.send(embed=embed)
+    
+# The following is a troll command
+@bot.command()
+async def recruit(ctx):
+    if ctx.channel.id not in allowed_channels:  
+        return
 
+    if len(aliases) < 3:
+        await ctx.send("There are not enough aliases to recruit from.")
+        return    
+        
+    # Find aliases that are not in the players list
+    available_aliases = [alias for alias in aliases if alias not in players]
+
+    # If there are less than three available aliases, inform the user
+    if len(available_aliases) < 3:
+        await ctx.send("I'm sorry, Dave. I'm afraid can't do that.")
+        return
+
+    # Randomly select three aliases
+    recruits = random.sample(available_aliases, 3)
+
+    # Send a separate message for each recruited alias
+    for recruit in recruits:
+        message = f"{recruit} has been added to the list for 60 minutes."
+        await ctx.send(message)      
+        
 TOKEN = os.environ.get('TOKEN')
 # Run the bot
 bot.run(TOKEN)
