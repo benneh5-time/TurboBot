@@ -16,7 +16,7 @@ intents.reactions = True
 intents.guilds = True
 intents.members = True
 
-bot = commands.Bot(command_prefix='!', case_insensitive=True, intents=intents)
+bot = commands.Bot(command_prefix='!', case_insensitive=True, intents=intents, help_command=None)
 
 player_limit = 10
 players = {}
