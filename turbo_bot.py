@@ -341,7 +341,7 @@ async def status(ctx, *args):
             time_message += f"{remaining_time} minutes remaining\n"
             
         embed.add_field(name="**Waiting List:**", value=waiting_list_message, inline=True)
-        embed.add_field(name="**Time Remaining:**", value=time_message, inline=True
+        embed.add_field(name="**Time Remaining:**", value=time_message, inline=True)
     if not players and not waiting_list:
         embed.add_field(name="No players are currently signed up.", value="", inline=False)
         
