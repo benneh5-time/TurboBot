@@ -517,7 +517,7 @@ async def recruit(ctx, *args):
         
     elif args_parsed.opt_out:
         if str(ctx.author.id) in recruit_list:
-            recruit_list.remove(str(ctx.author.id))
+            del recruit_list[ctx.author.id]
             save_recruit_list()
             await ctx.send(f"{ctx.author.mention} has opted out of being recruited.")
         else:
