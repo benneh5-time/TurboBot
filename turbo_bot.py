@@ -335,6 +335,14 @@ async def status(ctx, *args):
         message += "No players are currently signed up.\n"
         
     message += f"**Host**\n{game_host_name}"
+    spots_left = player_limit - len(players)
+    
+    if spots_left > 1:
+        message += f"+{spots_left} !!"
+    elif spots_left == 1:
+        message += "+1 HERO NEEDED"
+    else:
+        message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`"        
     
     await ctx.send(message)
 
@@ -362,7 +370,11 @@ async def host(ctx, *, host_name=None):
     
 @tasks.loop(minutes=1)
 async def update_players():
-    global player_limit 
+    global player_limit, recruit_timer
+    
+    if recruit_timer > 0:
+        recruit_timer -= 1
+    
     for alias in list(players.keys()):
         players[alias] -= 1
         if players[alias] <= 0:
@@ -535,7 +547,7 @@ async def recruit(ctx, *args):
         
         if len(recruit_list) > 0:
             mention_list = [f"<@{id}>" for id in recruit_list]
-            await ctx.send(' '.join(mention_list) + "come turbo! ")
+            await ctx.send(' '.join(mention_list) + " come turbo!!")
         else:
             await ctx.send("No players have opted in to be recruited")
         
