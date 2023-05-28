@@ -347,8 +347,7 @@ async def status(ctx, *args):
         embed.add_field(name="No players are currently signed up.", value="", inline=False)
     
   
-    embed.set_thumbnail(url="https://www.mafiauniverse.com/forums/image.php?u=10958&dateline=1666928444")
-    embed.set_footer(text="https://github.com/benneh5-time/TurboBot", icon_url="https://www.mafiauniverse.com/forums/image.php?u=274&dateline=1677601621")
+    embed.set_thumbnail(url="https://i.imgur.com/7st6J5V.jpg")
     await ctx.send(embed=embed)
 
 @bot.command()
