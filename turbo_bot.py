@@ -21,12 +21,25 @@ bot = commands.Bot(command_prefix='!', case_insensitive=True, intents=intents, h
 player_limit = 10
 players = {}
 waiting_list = {}
+recruit_list = {}
+recruit_timer = 0
 aliases = {}
 game_host_name = "Mafia Host"
 current_setup = "joat10"
 valid_setups = ["joat10", "vig10", "cop9", "cop13"] #future setups
 
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
+
+def save_recruit_list():
+    with open('recruit_list.json', 'w') as f:
+        json.dump(recruit_list, f)
+
+def load_recruit_list():
+    try:
+        with open('recruit_list.json', 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
 
 def save_aliases():
     with open('aliases.json', 'w') as f:
@@ -62,10 +75,12 @@ def load_player_list():
 
 @bot.event
 async def on_ready():
-    global players, waiting_list, current_setup, game_host_name, player_limit
+    global players, waiting_list, current_setup, game_host_name, player_limit, recruit_list
     print(f"We have logged in as {bot.user}", flush=True)
     load_aliases()
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
+    recruit_list = load_recruit_list()
+    
     if players is None:
         players = {}
     if waiting_list is None:
@@ -473,18 +488,27 @@ async def help(ctx):
     
 # The following is a troll command
 @bot.command()
-async def recruit(ctx):
+async def recruit(ctx, opt_in=None):
     if ctx.channel.id not in allowed_channels:  
         return
-
-    if len(aliases) < 3:
-        await ctx.send("There are not enough aliases to recruit from.")
-        return    
+    global recruit_list, recruit_timer
+    
+    if opt_in == '-opt_in':
+        recruit_list[str(ctx.author.id)] = str(ctx.author.id)
+        save_recruit_list()
+        await ctx.send(f"{ctx.author.mention} has been added to the recruit list!")
+    else:
+        if recruit_timer > 0:
+            await ctx.send(f"This command can only be used once every hour. Please try again in {recruit_timer} minutes.")
+            return
         
-    chosen_players = random.sample(list(aliases.values()), 3)
-    for player in chosen_players:
-        await asyncio.sleep(1)
-        await ctx.send(f"{player} has been auto-recruited for the next game for 60 minutes!")
+        recruit_timer = 60
+        
+        if len(recruit_list) > 0:
+            mention_list = [f"<@{id}>" for id in recruit_list]
+            await ctx.send(' '.join(mention_list) + "come turbo! ")
+        else:
+            await ctx.send("No players have opted in to be recruited")
         
 TOKEN = os.environ.get('TOKEN')
 # Run the bot
