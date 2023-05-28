@@ -333,7 +333,7 @@ async def status(ctx, *args):
 
     if not players and not waiting_list:
         message += "No players are currently signed up.\n"
-    
+    spots_left = player_limit - len(players)
     if spots_left > 1:
         message += f"+{spots_left} !!\n\n"
     elif spots_left == 1:
@@ -342,7 +342,7 @@ async def status(ctx, *args):
         message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n\n"        
             
     message += f"**Host**\n{game_host_name}"
-    spots_left = player_limit - len(players)
+
     
 
     await ctx.send(message)
