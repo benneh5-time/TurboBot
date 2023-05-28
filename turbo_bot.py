@@ -499,6 +499,9 @@ async def recruit(ctx, *args):
     
     try:
         args_parsed = parser.parse_args(args)
+    except SystemExit:
+        await ctx.send(f"wrong syntax dumbass")
+        pass
     except Exception as e:
         await ctx.send(f"Invalid arguments. Please check your command syntax.\n{str(e)}")
         return
@@ -517,7 +520,7 @@ async def recruit(ctx, *args):
         
     elif args_parsed.opt_out:
         if str(ctx.author.id) in recruit_list:
-            del recruit_list[ctx.author.id]
+            del recruit_list[str(ctx.author.id)]
             save_recruit_list()
             await ctx.send(f"{ctx.author.mention} has opted out of being recruited.")
         else:
