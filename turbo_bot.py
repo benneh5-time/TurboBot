@@ -48,7 +48,14 @@ def load_player_list():
     try:
         with open('player_list_data.json', 'r') as f:
             data = json.load(f)
-        return data["player_list"], data["waiting_list"], data["current_setup"], data["game_host_name"], data["player_limit"]
+    player_list = data.get('player_list')
+    waiting_list = data.get('waiting_list')
+    current_setup = data.get('current_setup')
+    game_host_name = data.get('game_host_name')
+    player_limit = data.get('player_limit')
+
+    return player_list, waiting_list, current_setup, game_host_name, player_limit
+    
     except FileNotFoundError:
         return {}, {}
     except json.JSONDecodeError:
@@ -60,6 +67,16 @@ async def on_ready():
     print(f"We have logged in as {bot.user}", flush=True)
     load_aliases()
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
+    if players is None:
+        players = {}
+    if waiting_list is None:
+        waiting_list = {}
+    if current_setup is None:
+        current_setup = "joat10" 
+    if game_host_name is None:
+        game_host_name = "Mafia Host" 
+    if player_limit is None:
+        player_limit = 10  
     # Start looping task
     update_players.start()  # Start background task
 
