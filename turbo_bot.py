@@ -45,6 +45,7 @@ def save_player_list(player_list, waiting_list, current_setup, game_host_name, p
         json.dump({"player_list": player_list, "waiting_list": waiting_list, "current_setup": current_setup, "game_host_name": game_host_name, "player_limit": player_limit}, f)
        
 def load_player_list():
+    global player_list, waiting_list, current_setup, game_host_name, player_limit
     try:
         with open('player_list_data.json', 'r') as f:
             data = json.load(f)
