@@ -318,7 +318,7 @@ async def status(ctx, *args):
         player_message = ""
         time_message = ""
         for i, (alias, remaining_time) in enumerate(players.items(), 1):
-            player_message += f"{i}. {alias} - {remaining_time} minutes remaining\n"
+            player_message += f"{i}. {alias}\n"
             time_message += f"{remaining_time} minutes remaining\n"
             
         spots_left = player_limit - len(players)
@@ -337,7 +337,7 @@ async def status(ctx, *args):
         waiting_list_message = ""
         time_message = ""
         for i, (alias, remaining_time) in enumerate(waiting_list.items(), 1):
-            waiting_list_message += f"{i}. {alias} - {remaining_time} minutes remaining\n"
+            waiting_list_message += f"{i}. {alias}\n"
             time_message += f"{remaining_time} minutes remaining\n"
             
         embed.add_field(name="**Waiting List:**", value=waiting_list_message, inline=True)
