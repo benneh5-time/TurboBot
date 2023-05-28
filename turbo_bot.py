@@ -512,7 +512,7 @@ async def recruit(ctx, *args):
         
     if args_parsed.opt_in:
         if str(ctx.author.id) not in recruit_list:
-            recruit_list.append(str(ctx.author.id))
+            recruit_list[str(ctx.author.id)] = str(ctx.author.id)
             save_recruit_list()
             await ctx.send(f"{ctx.author.mention} has opted in to be recruited.")
         else:
