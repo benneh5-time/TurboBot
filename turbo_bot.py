@@ -312,7 +312,7 @@ async def status(ctx, *args):
     embed = discord.Embed(title="**Turbo sign-ups!**", description="", color=0x1beb30)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=True)
     embed.add_field(name="**Host**", value=game_host_name, inline=True)
-    embed.add_field(name="Turbo Bot v1.0", value="", inline=False)
+    embed.add_field(name="Turbo Bot v1.0", value="", inline=True)
     
     if players:
         player_message = ""
