@@ -481,21 +481,10 @@ async def recruit(ctx):
         await ctx.send("There are not enough aliases to recruit from.")
         return    
         
-    # Find aliases that are not in the players list
-    available_aliases = [alias for alias in aliases if alias not in players]
-
-    # If there are less than three available aliases, inform the user
-    if len(available_aliases) < 3:
-        await ctx.send("I'm sorry, Dave. I'm afraid can't do that.")
-        return
-
-    # Randomly select three aliases
-    recruits = random.sample(available_aliases, 3)
-
-    # Send a separate message for each recruited alias
-    for recruit in recruits:
-        message = f"{recruit} has been added to the list for 60 minutes."
-        await ctx.send(message)      
+    chosen_players = random.sample(list(aliases.values()), 3)
+    for player in chosen_players:
+        await asyncio.sleep(1)
+        await ctx.send(f"{player} has been auto-recruited for the next game for 60 minutes!")
         
 TOKEN = os.environ.get('TOKEN')
 # Run the bot
