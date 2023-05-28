@@ -40,15 +40,15 @@ def load_aliases():
     except FileNotFoundError:
         pass
         
-def save_player_list(player_list, waiting_list, current_setup, game_host_name):
+def save_player_list(player_list, waiting_list, current_setup, game_host_name, player_limit):
     with open('player_list_data.json', 'w') as f:
-        json.dump({"player_list": player_list, "waiting_list": waiting_list, "current_setup": current_setup, "game_host_name": game_host_name}, f)
+        json.dump({"player_list": player_list, "waiting_list": waiting_list, "current_setup": current_setup, "game_host_name": game_host_name, "player_limit": player_limit}, f)
        
 def load_player_list():
     try:
         with open('player_list_data.json', 'r') as f:
             data = json.load(f)
-        return data["player_list"], data["waiting_list"], data["current_setup"], data["game_host_name"]
+        return data["player_list"], data["waiting_list"], data["current_setup"], data["game_host_name"], data["player_limit"]
     except FileNotFoundError:
         return {}, {}
     except json.JSONDecodeError:
@@ -56,10 +56,10 @@ def load_player_list():
 
 @bot.event
 async def on_ready():
-    global players, waiting_list, current_setup, game_host_name
+    global players, waiting_list, current_setup, game_host_name, player_limit
     print(f"We have logged in as {bot.user}", flush=True)
     load_aliases()
-    players, waiting_list, current_setup, game_host_name = load_player_list()
+    players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     # Start looping task
     update_players.start()  # Start background task
 
@@ -341,7 +341,7 @@ async def update_players():
                 next_alias, next_time = waiting_list.popitem()
                 players[next_alias] = next_time
                 await bot.get_channel(223260125786406912).send(f"{next_alias} has been moved from the waiting list to the main list.")
-    save_player_list(players, waiting_list, current_setup, game_host_name)
+    save_player_list(players, waiting_list, current_setup, game_host_name, player_limit)
     
 @bot.command()
 async def rand(ctx, *args):
