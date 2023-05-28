@@ -312,7 +312,7 @@ async def status(ctx, *args):
     show_time = False if args and args[0].lower() == 'list' else True
 
     # message = f"**Turbo sign-ups!**\nCurrent !game is {current_setup}\n"
-    embed = discord.Embed(title="**Turbo sign-ups!**", description="", color="0x1beb30")
+    embed = discord.Embed(title="**Turbo sign-ups!**", description="", color=0x1beb30)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=False)
     if players:
         # message += "**Players:**\n"
