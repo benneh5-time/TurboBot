@@ -349,6 +349,7 @@ async def status(ctx, *args):
 
     status_embed = await ctx.send(embed=embed)
     status_id = status_embed.id
+    print(status_id, flush=True)
 
 async def update_status(ctx):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
