@@ -73,13 +73,13 @@ def new_thread_token(session):
 def post_thread(session, game_title, security_token, setup):
 
     protected_url = "https://www.mafiauniverse.com/forums/newthread.php"
-    if setup = "joat10":
+    if setup == "joat10":
         game_flavor = joat_flavor
-    if setup = "cop9":
+    if setup == "cop9":
         game_flavor = cop9_flavor
-    if setup = "cop13":
+    if setup == "cop13":
         game_flavor = cop13_flavor
-    if setup = "vig10":
+    if setup == "vig10":
         game_flavor = vig_flavor
         
     payload = {
