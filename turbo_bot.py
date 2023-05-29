@@ -442,7 +442,7 @@ async def update_players():
     
     if recruit_timer > 0:
         recruit_timer -= 1
-    update_status()
+    await update_status()
     for alias in list(players.keys()):
         players[alias] -= 1
         if players[alias] <= 0:
