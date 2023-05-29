@@ -6,7 +6,7 @@ import uuid
 import json
 from roles import vanilla_town_dict, mafia_goon_dict, joat_dict, cop_dict, vig_dict, big_ham_dict, frankie_dict, vanchilla_dict, vinnie_dict, zippy_dict, kingpin_dict
 from bs4 import BeautifulSoup
-
+from flavor import joat_flavor, cop9_flavor, cop13_flavor, vig_flavor
 
 data = None
 
@@ -70,28 +70,18 @@ def new_thread_token(session):
     else:
         print("Failed to extract security token.")
 
-def post_thread(session, game_title, security_token):
+def post_thread(session, game_title, security_token, setup):
 
     protected_url = "https://www.mafiauniverse.com/forums/newthread.php"
-    game_flavor = """
-    In the bustling cityscape of Fast Lane City, where time and tide wait for none, life was anything but ordinary. 
-    At the core of this metropolis were characters that gave it a color as unique as its rhythm. 
-    But amid this motley crew, two shady characters, Frankie and Big Ham, lurked with sinister intent. 
-    Known only by their aliases, these mafia made the city's underbelly their playground. 
-    They moved like ghosts among the populace, their footprints erased before the ink was dry, leaving a trail of unease in their wake. 
-    \n\n
-    The city's only hope was Zippy McLeatherman, a maverick with a heart of gold and nerves of steel. 
-    With his trusty Van Chilla by his side, he had stood up to many a challenge that threatened the peace of Fast Lane City. 
-    But the clandestine operations of Frankie and Big Ham were like no other enemy he'd faced. 
-    It was a battle of shadows and whispers, and Zippy knew he had to tread carefully to protect the people he loved. 
-    \n\n
-    And so, as the sun dipped below the horizon, casting long shadows that danced in the city's narrow alleys, 
-    the stage was set for a showdown. Zippy, with the backing of the brave Van Chilla, stood facing the nebulous threats of Frankie and Big Ham. 
-    This was not just a fight for the present, but a fight for the future of Fast Lane City. 
-    Suddenly, a blaze of wild fire lit up the night sky, marking the beginning of the end. 
-    The final chapter in this high-stakes game of cat and mouse had begun. 
-    There were mafia among us.
-    """
+    if setup = "joat10":
+        game_flavor = joat_flavor
+    if setup = "cop9":
+        game_flavor = cop9_flavor
+    if setup = "cop13":
+        game_flavor = cop13_flavor
+    if setup = "vig10":
+        game_flavor = vig_flavor
+        
     payload = {
         "do": "postthread",
         "f": "8",

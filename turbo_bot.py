@@ -433,7 +433,7 @@ async def rand(ctx, *args):
     if not thread_id:
         if not game_title:
             game_title = mu.generate_game_thread_uuid()
-        thread_id = mu.post_thread(session, game_title, security_token)
+        thread_id = mu.post_thread(session, game_title, security_token, current_setup)
         
     await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game using thread ID: `{thread_id}`. Please standby.")
     
