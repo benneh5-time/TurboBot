@@ -130,7 +130,7 @@ async def game(ctx, setup_name=None):
         await ctx.send(f"The game setup has been changed to '{current_setup}'")
     else:
         await ctx.send(f"'{setup_name}' is not a valid setup name. Please choose from: {', '.join(valid_setups)}.")
-        
+    await update_status()        
     
 @bot.command(name="in")
 async def in_(ctx, time: int = 60):
@@ -177,7 +177,7 @@ async def in_(ctx, time: int = 60):
         else:
             waiting_list[alias] = time
             await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
-            
+    await update_status()            
 
 @bot.command()
 async def out(ctx):
@@ -214,7 +214,7 @@ async def out(ctx):
         players[next_alias] = next_time
         
         await ctx.send(f"{next_alias} has been moved from the waiting list to the main list.")
-
+    await update_status()
 @bot.command()
 async def alias(ctx, *, alias):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -233,9 +233,8 @@ async def alias(ctx, *, alias):
         for player_list in [players, waiting_list]:
             for player in list(player_list.keys()):  # Create a copy of keys to avoid RuntimeError
                 if player == old_alias:
-                    player_list[alias] = player_list.pop(old_alias)
-                    
-
+                    player_list[alias] = player_list.pop(old_alias)                   
+    await update_status()
         
 @bot.command()
 async def add(ctx, *, alias):
@@ -271,7 +270,7 @@ async def add(ctx, *, alias):
         else:
             waiting_list[alias] = 60  # Default time
             await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
-        
+    await update_status()    
 
 @bot.command()
 async def remove(ctx, *, alias):
@@ -303,7 +302,7 @@ async def remove(ctx, *, alias):
         players[next_alias] = next_time
         
         await ctx.send(f"{next_alias} has been moved from the waiting list to the main list.")
-
+    await update_status()
 @bot.command()
 async def status(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -437,6 +436,7 @@ async def host(ctx, *, host_name=None):
     game_host_name = host_name
     
     await ctx.send(f"Host for the next turbo has been set to {host_name}!")
+    await update_status()
     
 @tasks.loop(minutes=1)
 async def update_players():
@@ -444,7 +444,6 @@ async def update_players():
     
     if recruit_timer > 0:
         recruit_timer -= 1
-    await update_status()
     for alias in list(players.keys()):
         players[alias] -= 1
         if players[alias] <= 0:
