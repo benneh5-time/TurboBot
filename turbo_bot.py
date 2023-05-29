@@ -29,6 +29,7 @@ current_setup = "joat10"
 valid_setups = ["joat10", "vig10", "cop9", "cop13"] #future setups
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 status_id = None
+status_channel = None
 
 def save_recruit_list():
     with open('recruit_list.json', 'w') as f:
@@ -307,7 +308,7 @@ async def status(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
         
-    global game_host_name, status_id
+    global game_host_name, status_id, status_channel
 
     embed = discord.Embed(title="**Turbo sign-ups!**", description="Turbo Bot v1.0", color=0x1beb30)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=True)
@@ -349,17 +350,18 @@ async def status(ctx, *args):
 
     status_embed = await ctx.send(embed=embed)
     status_id = status_embed.id
+    status_channel = ctx.channel
     print(status_id, flush=True)
 
-async def update_status(ctx):
+async def update_status():
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     global status_id 
     
-    if status_id is None:
+    if status_id is None or status_channel is None:
         return
     
-    status_message = await ctx.fetch_message(status_id)
+    status_message = await status_channel.fetch_message(status_id)
     embed = status_message.embeds[0]
     
     spots_left = player_limit - len(players)
@@ -440,8 +442,7 @@ async def update_players():
     
     if recruit_timer > 0:
         recruit_timer -= 1
-    if status_id is not None:
-        update_status()
+    update_status()
     for alias in list(players.keys()):
         players[alias] -= 1
         if players[alias] <= 0:
