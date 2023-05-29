@@ -385,13 +385,14 @@ async def update_status():
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
         time_message +=  "!in to join!\n"
         
-        print (len(embed.fields))
-        if len(embed.fields) > 3:
+        print (len(embed.fields), flush=True)
+        if len(embed.fields) > 4:
             embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
             embed.set_field_at(4, name="**Time Remaining:**", value=time_message, inline=True)
         else:
-            embed.add_field(name="**Players:**", value=player_message, inline=True)
+            embed.set_field_at(3,name="**Players:**", value=player_message, inline=True)
             embed.add_field(name="**Time Remaining:**", value=time_message, inline=True)
+            embed.add_field(name="", value="", inline=True)
     
     if waiting_list:
         waiting_list_message = ""
