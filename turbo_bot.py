@@ -27,8 +27,8 @@ aliases = {}
 game_host_name = "Mafia Host"
 current_setup = "joat10"
 valid_setups = ["joat10", "vig10", "cop9", "cop13"] #future setups
-
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
+status_id = None
 
 def save_recruit_list():
     with open('recruit_list.json', 'w') as f:
@@ -307,7 +307,7 @@ async def status(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
         
-    global game_host_name
+    global game_host_name, status_id
 
     embed = discord.Embed(title="**Turbo sign-ups!**", description="Turbo Bot v1.0", color=0x1beb30)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=True)
@@ -333,7 +333,6 @@ async def status(ctx, *args):
         embed.add_field(name="**Time Remaining:**", value=time_message, inline=True)
         embed.add_field(name="", value="", inline=True)
     if waiting_list:
-        # message += "**Waiting list:**\n"
         waiting_list_message = ""
         time_message = ""
         for i, (alias, remaining_time) in enumerate(waiting_list.items(), 1):
@@ -346,9 +345,71 @@ async def status(ctx, *args):
     if not players and not waiting_list:
         embed.add_field(name="No players are currently signed up.", value="", inline=False)
     
-  
     embed.set_thumbnail(url="https://i.imgur.com/7st6J5V.jpg")
-    await ctx.send(embed=embed)
+
+    status_embed = await ctx.send(embed=embed)
+    status_id = status_embed.id
+
+async def update_status(ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    global status_id 
+    
+    if status_id is None:
+        return
+    
+    status_message = await ctx.fetch_message(status_id)
+    embed = status_message.embeds[0]
+    
+    spots_left = player_limit - len(players)
+    
+    embed.set_field_at(0, name="**Game Setup**", value=current_setup, inline=True)
+    embed.set_field_at(1, name="**Host**", value=game_host_name, inline=True)
+    
+    if players:
+        player_message = ""
+        time_message = ""
+        for i, (alias, remaining_time) in enumerate(players.items(), 1):
+            player_message += f"{alias}\n"
+            time_message += f"{remaining_time} minutes remaining\n"
+            
+        spots_left = player_limit - len(players)
+        if spots_left > 1:
+            player_message += f"+{spots_left} !!\n"
+        elif spots_left == 1:
+            player_message += "+1 HERO NEEDED\n"
+        else:
+            player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
+        time_message +=  "!in to join!\n"
+
+        if len(embed.fields) > 3:
+            embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
+            embed.set_field_at(4, name="**Time Remaining:**", value=time_message, inline=True)
+        else:
+            embed.add_field(name="**Players:**", value=player_message, inline=True)
+            embed.add_field(name="**Time Remaining:**", value=time_message, inline=True)
+    
+    if waiting_list:
+        waiting_list_message = ""
+        time_message = ""
+        for i, (alias, remaining_time) in enumerate(waiting_list.items(), 1):
+            waiting_list_message += f"{alias}\n"
+            time_message += f"{remaining_time} minutes remaining\n"            
+        if len(embed.fields) > 5:
+            embed.set_field_at(5, name="**Waiting List:**", value=waiting_list_message, inline=True)
+            embed.set_field_at(6, name="**Time Remaining:**", value=time_message, inline=True)
+        else:
+            embed.add_field(name="**Waiting List:**", value=waiting_list_message, inline=True)
+            embed.add_field(name="**Time Remaining:**", value=time_message, inline=True)
+        
+    if not players and not waiting_list:
+        if len(embed.fields) > 3:
+            embed.set_field_at(3, name="No players are currently signed up.", value="", inline=False)
+        else:
+            embed.add_field(name="No players are currently signed up.", value="", inline=False)
+    
+    await status_message.edit(embed=embed)
+    
 
 @bot.command()
 async def host(ctx, *, host_name=None):
@@ -378,7 +439,8 @@ async def update_players():
     
     if recruit_timer > 0:
         recruit_timer -= 1
-    
+    if status_id is not None:
+        update_status()
     for alias in list(players.keys()):
         players[alias] -= 1
         if players[alias] <= 0:
@@ -489,6 +551,8 @@ async def clear(ctx, *args):
         
 @bot.command(name='help')
 async def help(ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
     embed = discord.Embed(title="Bot Commands", description="Here are the commands you can use:", color=0x1e00ff)
     embed.add_field(name="!in", value="Joins the player list. You must first set an alias using `!alias` before joining. Optionally specify duration with a number, e.g. `!in 60` to join for 60 minutes.", inline=False)
     embed.add_field(name="!out", value="Leaves the player list.", inline=False)
