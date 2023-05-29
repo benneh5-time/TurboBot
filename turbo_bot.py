@@ -354,8 +354,7 @@ async def status(ctx, *args):
     print(status_id, flush=True)
 
 async def update_status():
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
-        return
+
     global status_id 
     
     if status_id is None or status_channel is None:
