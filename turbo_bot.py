@@ -30,6 +30,7 @@ valid_setups = ["joat10", "vig10", "cop9", "cop13"] #future setups
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 status_id = None
 status_channel = None
+is_rand_running = False
 
 def save_recruit_list():
     with open('recruit_list.json', 'w') as f:
@@ -383,7 +384,8 @@ async def update_status():
         else:
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
         time_message +=  "!in to join!\n"
-
+        
+        print (len(embed.fields))
         if len(embed.fields) > 3:
             embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
             embed.set_field_at(4, name="**Time Remaining:**", value=time_message, inline=True)
@@ -460,71 +462,80 @@ async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     
-    global player_limit, game_host_name, current_setup
+    global player_limit, game_host_name, current_setup, is_rand_running
     
     if len(players) < player_limit:
         await ctx.send(f"Not enough players to start a game. Need {player_limit} players.")
         return
         
+    if is_rand_running:
+        await ctx.send("The !rand command is currently being processed. Please wait.")
+        return
     
-    player_aliases = list(players.keys())[:player_limit]
-
-    username = os.environ.get('MUUN')
-    password = os.environ.get('MUPW')
-    
-    # args = shlex.split(' '.join(args))
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-title', default=None)
-    parser.add_argument('-thread_id', default=None)
+    is_rand_running = True
     
     try:
-        args_parsed = parser.parse_args(args)
-    except SystemExit:
-        await ctx.send(f"Invalid arguments. Please check your command syntax. Do not use `-`, `--`, or `:` in your titles and try again.")
-        return
-    except Exception as e:
-        await ctx.send(f"An unexpected error occurred. Please try again.\n{str(e)}")
-        return
+        player_aliases = list(players.keys())[:player_limit]
     
-    #Login and get Initial Token
-    session = mu.login(username, password)
-    security_token = mu.new_thread_token(session)
-    
-    game_title = args_parsed.title
-    thread_id = args_parsed.thread_id
-    
-    if not thread_id:
-        if not game_title:
-            game_title = mu.generate_game_thread_uuid()
-        thread_id = mu.post_thread(session, game_title, security_token, current_setup)
+        username = os.environ.get('MUUN')
+        password = os.environ.get('MUPW')
         
-    await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game using thread ID: `{thread_id}`. Please standby.")
-    
-    security_token = mu.new_game_token(session, thread_id)
-    response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, current_setup, game_host_name)
-    
-    if "was created successfully." in response_message:
-        # Use aliases to get the Discord IDs
+        # args = shlex.split(' '.join(args))
+        parser = argparse.ArgumentParser()
+        parser.add_argument('-title', default=None)
+        parser.add_argument('-thread_id', default=None)
         
-        mention_list = []
+        try:
+            args_parsed = parser.parse_args(args)
+        except SystemExit:
+            await ctx.send(f"Invalid arguments. Please check your command syntax. Do not use `-`, `--`, or `:` in your titles and try again.")
+            return
+        except Exception as e:
+            await ctx.send(f"An unexpected error occurred. Please try again.\n{str(e)}")
+            return
         
-        for player in player_aliases:
-            for key, value in aliases.items():
-                if player == value:
-                    mention_list.append(int(key))
-                    
-        player_mentions = " ".join([f"<@{id}>" for id in mention_list])
-        game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
-        await ctx.send(f"{player_mentions} randed STFU {game_url}")
+        #Login and get Initial Token
+        session = mu.login(username, password)
+        security_token = mu.new_thread_token(session)
         
-
-        game_host_name = "Mafia Host"
-        players.clear()
-        players.update(waiting_list)
-        waiting_list.clear()
-    elif "Error" in response_message:
-        await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
+        game_title = args_parsed.title
+        thread_id = args_parsed.thread_id
+        
+        if not thread_id:
+            if not game_title:
+                game_title = mu.generate_game_thread_uuid()
+            thread_id = mu.post_thread(session, game_title, security_token, current_setup)
+            
+        await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game using thread ID: `{thread_id}`. Please standby.")
+        
+        security_token = mu.new_game_token(session, thread_id)
+        response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, current_setup, game_host_name)
+        
+        if "was created successfully." in response_message:
+            # Use aliases to get the Discord IDs
+            
+            mention_list = []
+            
+            for player in player_aliases:
+                for key, value in aliases.items():
+                    if player == value:
+                        mention_list.append(int(key))
+                        
+            player_mentions = " ".join([f"<@{id}>" for id in mention_list])
+            game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
+            await ctx.send(f"{player_mentions} randed STFU {game_url}")
+            
     
+            game_host_name = "Mafia Host"
+            players.clear()
+            players.update(waiting_list)
+            waiting_list.clear()
+        elif "Error" in response_message:
+            await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
+    
+    finally:
+        is_rand_running = False
+        
 @bot.command()
 async def clear(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
