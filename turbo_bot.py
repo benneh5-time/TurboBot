@@ -152,8 +152,8 @@ async def in_(ctx, time: int = 60):
         game_host_name = "Mafia Host"
         if len(players) < player_limit:
             players[alias] = time
-            await ctx.send(f"{alias} has been removed as host and added to the list for the next {time} minutes.")
-            
+            #await ctx.send(f"{alias} has been removed as host and added to the list for the next {time} minutes.")
+            await ctx.message.add_reaction(':thumbsup:')
             return
         else:
             waiting_list[alias] = time 
