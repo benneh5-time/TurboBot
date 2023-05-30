@@ -108,16 +108,12 @@ async def game(ctx, setup_name=None):
     elif setup_name in valid_setups:
         if setup_name == "cop9":
             new_player_limit = 9
-            await ctx.message.add_reaction('👮')
         elif setup_name == "vig10":
             new_player_limit = 10
-            await ctx.message.add_reaction('🔫')
         elif setup_name == "joat10":
             new_player_limit = 10
-            await ctx.message.add_reaction(980556464353591356)
         elif setup_name == "cop13":
             new_player_limit = 13
-            await ctx.message.add_reaction('👮')
         else:
             await ctx.send(f"'{setup_name}' is not a valid setup name. Please choose from: {', '.join(valid_setups)}.")
             return
