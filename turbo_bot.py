@@ -192,31 +192,32 @@ async def out(ctx):
     
     if ctx.author.id not in aliases:
         await ctx.send("You are not on the list and you haven't set an alias. Stop trolling me.")
+        await ctx.message.add_reaction('👎')
         return
-
     alias = aliases[ctx.author.id]
     
     if game_host_name == alias:
         game_host_name = "Mafia Host"
-        await ctx.send(f"{alias} has been removed as host")
+        #await ctx.send(f"{alias} has been removed as host")
+        await ctx.message.add_reaction('👎')
         return
         
     if alias in players:
         del players[alias]
-        await ctx.send(f"{alias} has been removed from the list.")
-        
+        #await ctx.send(f"{alias} has been removed from the list.")
+        await ctx.message.add_reaction('👎')
     elif alias in waiting_list:
         del waiting_list[alias]
-        await ctx.send(f"{alias} has been removed from the waiting list.")
-        
+        #await ctx.send(f"{alias} has been removed from the waiting list.")
+        await ctx.message.add_reaction('👎')
     else:
         await ctx.send(f"{alias} is not on the list.")
-
+        await ctx.message.add_reaction('👎')
     # Add a player from waiting list to main list if it's not full
     if len(players) < player_limit and waiting_list:
         next_alias, next_time = waiting_list.popitem()
         players[next_alias] = next_time
-        
+        await ctx.message.add_reaction('👎')
         await ctx.send(f"{next_alias} has been moved from the waiting list to the main list.")
     await update_status()
 @bot.command()
@@ -252,12 +253,13 @@ async def add(ctx, *, alias):
         game_host_name = "Mafia Host"
         if len(players) < player_limit:
             players[alias] = 60
-            
-            await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.") 
+            await ctx.message.add_reaction('👍')
+            # await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.") 
             return
         else:
-            waiting_list[alias] = 60             
-            await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
+            waiting_list[alias] = 60      
+            await ctx.message.add_reaction('👍')
+            # await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
             return
             
     if alias in players or alias in waiting_list:
@@ -265,15 +267,16 @@ async def add(ctx, *, alias):
             players[alias] = 60  # Default time
         else:
             waiting_list[alias] = 60  # Default time
-        
-        await ctx.send(f"{alias}'s in has been renewed for 60 minutes.")
+        await ctx.message.add_reaction('👍')    
+        #await ctx.send(f"{alias}'s in has been renewed for 60 minutes.")
     else:
         if len(players) < player_limit:
             players[alias] = 60  # Default time
-            await ctx.send(f"{alias} has been added to the list with for 60 minutes.")
+            #await ctx.send(f"{alias} has been added to the list with for 60 minutes.")
         else:
             waiting_list[alias] = 60  # Default time
-            await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
+            #await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
+        await ctx.message.add_reaction('👍')
     await update_status()    
 
 @bot.command()
@@ -286,20 +289,21 @@ async def remove(ctx, *, alias):
     
     if game_host_name == alias:
         game_host_name = "Mafia Host"
+        await ctx.message.add_reaction('👎')
         await ctx.send(f"{alias} has been removed as host")
         return
         
     if alias in players:
         del players[alias]
-        
-        await ctx.send(f"{alias} has been removed from the list.")
+        await ctx.message.add_reaction('👎')
+        #await ctx.send(f"{alias} has been removed from the list.")
     elif alias in waiting_list:
         del waiting_list[alias]
-        
-        await ctx.send(f"{alias} has been removed from the waiting list.")
+        await ctx.message.add_reaction('👎')
+        #await ctx.send(f"{alias} has been removed from the waiting list.")
     else:
         await ctx.send(f"{alias} is not on the list.")
-
+        await ctx.message.add_reaction('👎')
     # Add a player from waiting list to main list if it's not full
     if len(players) < player_limit and waiting_list:
         next_alias, next_time = waiting_list.popitem()
