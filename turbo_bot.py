@@ -700,8 +700,6 @@ async def on_in_reaction(reaction, user):
                     #await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
                     #await ctx.message.add_reaction('👍')           
                     await reaction.message.channel.send(f'{user.name} joined the waiting list! I am the new Manny!')
-                else:
-                    return
             await update_status()
 
         
