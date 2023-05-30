@@ -642,23 +642,23 @@ async def recruit(ctx, *args):
             await ctx.send("No players have opted in to be recruited")
 
 @bot.event
-async def turbo_ping(message):
+async def on_message(message):
     global turbo_ping_message
-    if message.author == bot.user or message.channel.id != allowed_channels:
+    if message.author == bot.user or message.channel.id not in allowed_channels:
         return
     
     for mention in message.role_mentions:
-        if mention.name == 'Turbo':
+        if mention.id == 327124222512070656:
             spots = player_limit - len(players)
             response = await message.channel.send(f'ITS TURBO TIME! +{spots} spots! React to join the next turbo!')
             turbo_ping_message = response.id
             await response.add_reaction('✅')
 
 @bot.event 
-async def on_in_reaction(reaction, user):
-    if message.author == bot.user or message.channel.id != allowed_channels:
+async def on_reaction_add(reaction, user):
+    if user == bot.user or reaction.message.channel.id not in allowed_channels:
         return
-    global game_host_name, player_limit, players, waiting_list
+    global game_host_name, player_limit, players, waiting_list, turbo_ping_message
         
     if reaction.message.id == turbo_message_id:
         if reaction.emoji == '✅':
