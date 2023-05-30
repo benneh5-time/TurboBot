@@ -31,6 +31,7 @@ allowed_channels = [223260125786406912]  # turbo-chat channel ID
 status_id = None
 status_channel = None
 is_rand_running = False
+turbo_ping_message = None
 
 def save_recruit_list():
     with open('recruit_list.json', 'w') as f:
@@ -639,6 +640,70 @@ async def recruit(ctx, *args):
             await ctx.send(' '.join(mention_list) + " come turbo!!")
         else:
             await ctx.send("No players have opted in to be recruited")
+
+@bot.event
+async def turbo_ping(message):
+    global turbo_ping_message
+    if message.author == bot.user or message.channel.id != allowed_channels:
+        return
+    
+    for mention in message.role_mentions:
+        if mention.name == 'Turbo':
+            spots = player_limit - len(players)
+            response = await message.channel.send(f'ITS TURBO TIME! +{spots} spots! React to join the next turbo!')
+            turbo_ping_message = response.id
+            await response.add_reaction('✅')
+
+@bot.event 
+async def on_in_reaction(reaction, user):
+    if message.author == bot.user or message.channel.id != allowed_channels:
+        return
+    global game_host_name, player_limit, players, waiting_list
+        
+    if reaction.message.id == turbo_message_id:
+        if reaction.emoji == '✅':
+            if user.id not in aliases:
+                await reaction.message.channel.send("Please set your MU username by using !alias MU_Username before inning!")
+                return
+
+            alias = aliases[user.id]
+
+            if game_host_name == alias:
+                game_host_name = "Mafia Host"
+                if len(players) < player_limit:
+                    players[alias] = 60
+                    await reaction.message.channel.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
+                
+                    return
+                else:
+                    waiting_list[alias] = 60 
+                    await reaction.message.channel.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
+                    
+                    return
+                    
+            if alias in players or alias in waiting_list:
+                if alias in players:
+                    players[alias] = 60
+                    
+                else:
+                    waiting_list[alias] = 60
+                    
+                await reaction.message.channel.send(f"{alias}'s in has been renewed for the next 60 minutes.")
+                #await ctx.message.add_reaction('👍')
+            else:
+                if len(players) < player_limit:
+                    players[alias] = time            
+                    await reaction.message.channel.send(f'{user.name} joined the game! I am the new Manny!')
+                    #await ctx.message.add_reaction('👍')
+                else:
+                    waiting_list[alias] = time
+                    #await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
+                    #await ctx.message.add_reaction('👍')           
+                    await reaction.message.channel.send(f'{user.name} joined the waiting list! I am the new Manny!')
+                else:
+                    return
+            await update_status()
+
         
 TOKEN = os.environ.get('TOKEN')
 # Run the bot
