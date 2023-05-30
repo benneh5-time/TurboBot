@@ -653,7 +653,7 @@ async def on_message(message):
             response = await message.channel.send(f'ITS TURBO TIME! +{spots} spots! React to join the next turbo!')
             turbo_ping_message = response.id
             await response.add_reaction('✅')
-
+    await bot.process_commands(message)
 @bot.event 
 async def on_reaction_add(reaction, user):
     if user == bot.user or reaction.message.channel.id not in allowed_channels:
