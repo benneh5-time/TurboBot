@@ -114,7 +114,7 @@ async def game(ctx, setup_name=None):
             await ctx.message.add_reaction('🔫')
         elif setup_name == "joat10":
             new_player_limit = 10
-            await ctx.message.add_reaction('<:jackbuff:980556464353591356>')
+            await ctx.message.add_reaction(980556464353591356)
         elif setup_name == "cop13":
             new_player_limit = 13
             await ctx.message.add_reaction('👮')
