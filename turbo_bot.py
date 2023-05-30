@@ -303,6 +303,7 @@ async def remove(ctx, *, alias):
         
         await ctx.send(f"{next_alias} has been moved from the waiting list to the main list.")
     await update_status()
+
 @bot.command()
 async def status(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -351,7 +352,6 @@ async def status(ctx, *args):
     status_embed = await ctx.send(embed=embed)
     status_id = status_embed.id
     status_channel = ctx.channel
-    print(status_id, flush=True)
 
 async def update_status():
 
@@ -384,7 +384,6 @@ async def update_status():
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
         time_message +=  "!in to join!\n"
         
-        print (len(embed.fields), flush=True)
         if len(embed.fields) > 4:
             embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
             embed.set_field_at(4, name="**Time Remaining:**", value=time_message, inline=True)
@@ -504,16 +503,17 @@ async def rand(ctx, *args):
         if not thread_id:
             if not game_title:
                 game_title = mu.generate_game_thread_uuid()
+            print(f"Attempting to post new thread with {game_title}", flush=True)
             thread_id = mu.post_thread(session, game_title, security_token, current_setup)
             
         await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game using thread ID: `{thread_id}`. Please standby.")
-        
+        print(f"Attempting to rand `{game_title}`, a {current_setup} game using thread ID: `{thread_id}`.", flush=True)
         security_token = mu.new_game_token(session, thread_id)
         response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, current_setup, game_host_name)
         
         if "was created successfully." in response_message:
             # Use aliases to get the Discord IDs
-            
+            print("Success. Gathering player list for mentions", flush=True)
             mention_list = []
             
             for player in player_aliases:
@@ -531,6 +531,7 @@ async def rand(ctx, *args):
             players.update(waiting_list)
             waiting_list.clear()
         elif "Error" in response_message:
+            print(f"Game failed to rand, reason: {response_message}", flush=True)
             await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
     
     finally:
