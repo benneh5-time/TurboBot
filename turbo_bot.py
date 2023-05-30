@@ -169,16 +169,16 @@ async def in_(ctx, time: int = 60):
             waiting_list[alias] = time
             
         #await ctx.send(f"{alias}'s in has been renewed for the next {time} minutes.")
-        await ctx.message.add_reaction('👍
+        await ctx.message.add_reaction('👍')
     else:
         if len(players) < player_limit:
             players[alias] = time            
             #await ctx.send(f"{alias} has been added to the list for the next {time} minutes.")
-            await ctx.message.add_reaction('👍
+            await ctx.message.add_reaction('👍')
         else:
             waiting_list[alias] = time
             #await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
-            await ctx.message.add_reaction('👍
+            await ctx.message.add_reaction('👍')
     await update_status()            
 
 @bot.command()
