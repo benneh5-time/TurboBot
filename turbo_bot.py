@@ -650,7 +650,7 @@ async def on_message(message):
     for mention in message.role_mentions:
         if mention.id == 327124222512070656:
             spots = player_limit - len(players)
-            response = await message.channel.send(f'ITS TURBO TIME! +{spots} spots! React to join the next turbo!')
+            response = await message.channel.send(f'ITS TURBO TIME! +{spots} spots! React to ✅ to join the next turbo!')
             turbo_ping_message = response.id
             await response.add_reaction('✅')
     await bot.process_commands(message)
@@ -660,7 +660,7 @@ async def on_reaction_add(reaction, user):
         return
     global game_host_name, player_limit, players, waiting_list, turbo_ping_message
         
-    if reaction.message.id == turbo_message_id:
+    if reaction.message.id == turbo_ping_message:
         if reaction.emoji == '✅':
             if user.id not in aliases:
                 await reaction.message.channel.send("Please set your MU username by using !alias MU_Username before inning!")
