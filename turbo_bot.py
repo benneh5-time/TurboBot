@@ -473,7 +473,7 @@ async def host(ctx, *, host_name=None):
         
     global game_host_name
     
-    if host_name is "Mafia Host":
+    if host_name == "Mafia Host":
         game_host_name = ["Mafia Host"]
         update_status()
         await ctx.send("Host setting has been set to default for Mafia Host and cleared all other hosts.")
