@@ -649,11 +649,10 @@ async def on_message(message):
     
     for mention in message.role_mentions:
         if mention.id == 327124222512070656:
-            for id in recruit_list:
-                if id not in players:
-                    
+            mention_list = [f"<@{id}>" for id in recruit_list if str(id) not in players]                    
             spots = player_limit - len(players)
-            response = await message.channel.send(f'ITS TURBO TIME! +{spots} spots! React to ✅ to join the next turbo!')
+            opt_in_mentions = ' '.join(mention_list)
+            response = await message.channel.send(f'ITS TURBO TIME! {opt_in_mentions}!! +{spots} spots!  React to ✅ to join the next turbo!')
             turbo_ping_message = response.id
             await response.add_reaction('✅')
     await bot.process_commands(message)
