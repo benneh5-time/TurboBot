@@ -121,6 +121,7 @@ class ThreadmarkProcessor:
 				username = event.split("Elimination: ")[1].split(" was ")[0].strip()  
 				if username in aliases.values() and username in player_aliases:
 					mention_id = find_key_by_value(aliases, username)
+                    print(mention_id, flush=True)
 					member = guild.get_member(mention_id)
 					await member.add_roles(role_id)
 					await channel.send(f"<@{mention_id}> welcome to dvc, you're dead")
@@ -169,7 +170,7 @@ async def on_ready():
         player_limit = 10  
     # Start looping task
     role_id, channel_id, guild = await create_dvc('40056')
-    await process_threadmarks.start(40056, ['benneh'], role_id, guild, channel_id)
+    await process_threadmarks.start(40055, ['benneh'], role_id, guild, channel_id)
     print(f"role: {role_id}")
     print(f"channel: {channel_id}")
     update_players.start()  # Start background task
