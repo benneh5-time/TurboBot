@@ -649,6 +649,9 @@ async def on_message(message):
     
     for mention in message.role_mentions:
         if mention.id == 327124222512070656:
+            for id in recruit_list:
+                if id not in players:
+                    
             spots = player_limit - len(players)
             response = await message.channel.send(f'ITS TURBO TIME! +{spots} spots! React to ✅ to join the next turbo!')
             turbo_ping_message = response.id
@@ -692,11 +695,11 @@ async def on_reaction_add(reaction, user):
                 #await ctx.message.add_reaction('👍')
             else:
                 if len(players) < player_limit:
-                    players[alias] = time            
+                    players[alias] = 60            
                     await reaction.message.channel.send(f'{user.name} joined the game! I am the new Manny!')
                     #await ctx.message.add_reaction('👍')
                 else:
-                    waiting_list[alias] = time
+                    waiting_list[alias] = 60
                     #await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
                     #await ctx.message.add_reaction('👍')           
                     await reaction.message.channel.send(f'{user.name} joined the waiting list! I am the new Manny!')

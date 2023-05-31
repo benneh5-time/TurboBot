@@ -87,7 +87,7 @@ def post_thread(session, game_title, security_token, setup):
         "f": "8",
         "s": "",
         "prefixid": "GameThread",
-        "subject": game_title,
+        "subject": f"{game_title} - [{setup} game]",
         "message": game_flavor,
         "message_backup": game_flavor,
         "sbutton": "Submit New Thread",
