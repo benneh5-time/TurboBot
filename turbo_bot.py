@@ -119,26 +119,30 @@ class ThreadmarkProcessor:
 				continue
 
 			if "Elimination:" in event:
-				username = event.split("Elimination: ")[1].split(" was ")[0].strip()  
-				if username in aliases.values() and username in player_aliases:
+				results = event.split("Elimination: ")[1].strip()
+                username = results.split(" was ")[0].strip()
+                role = results.split(" was ")[1].strip()
+                
+				if username.lower() in aliases.values() and username.lower() in player_aliases:
 					mention_id = find_key_by_value(aliases, username)
 					member = guild.get_member(mention_id)
 					await member.add_roles(role_id)
-					await channel.send(f"<@{mention_id}> welcome to dvc, you're dead")
+					await channel.send(f"<@{mention_id}> was lunched. They were {role}, welcome to DVC")
 				else:                                
-					await channel.send(username + " died via lunch")
+					await channel.send(f"{username} was lunched")
 			elif "Results:" in event:
                 results = event.split("Results:")[1].strip()
                 players = results.split(", ")
                 
                 for player in players:
                     if " was " in player:
-                        username = player.split(" was ")[0].strip()                    
-                        if username in aliases.values() and username in player_aliases:
+                        username = player.split(" was ")[0].strip()
+                        role = player.split(" was ")[1].strip()
+                        if username.lower() in aliases.values() and username.lower() in player_aliases:
                             mention_id = find_key_by_value(aliases, username)
                             member = guild.get_member(mention_id)
                             await member.add_roles(role_id)
-                            await channel.send(f"<@{mention_id}> welcome to dvc, you're dead")
+                            await channel.send(f"<@{mention_id}> was nightkilled. They were {role}. Welcome to dvc")
                     else:
                         await channel.send(username + " died at night")
 			elif "Game Over:" in event:
@@ -174,8 +178,9 @@ async def on_ready():
     if player_limit is None:
         player_limit = 10  
     # Start looping task
-    # role_id, channel_id, guild = await create_dvc(thread_id)
-    # await process_threadmarks.start(thread_id, player_aliases, role_id, guild, channel_id)
+    test_players = ["vikuale2", "Amrock", "matt", "LimeCoke", "anne.", "Clouds", "alexa.", "High Fidelity", "Delta", "Xanjori"]
+    role_id, channel_id, guild = await create_dvc(thread_id)
+    await process_threadmarks.start(40059, test_players, role_id, guild, channel_id)
     update_players.start()  # Start background task
 
 @bot.command()
