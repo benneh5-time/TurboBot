@@ -163,7 +163,7 @@ async def on_ready():
     if player_limit is None:
         player_limit = 10  
     # Start looping task
-    role_id, channel_id = await create_dvc('40056')
+    role_id, channel_id = await create_dvc('40056', ['benneh'])
     print(f"role: {role_id}")
     print(f"channel: {channel_id}")
     update_players.start()  # Start background task
