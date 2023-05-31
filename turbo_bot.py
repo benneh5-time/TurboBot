@@ -90,7 +90,7 @@ async def create_dvc(thread_id):
     guild = bot.get_guild(server_id)
     
     role = await guild.create_role(name=f"DVC: {thread_id}", permissions=discord.Permissions.none())
-    await guild.me.add_roles(role.id)
+    await guild.me.add_roles(role)
     channel = await guild.create_text_channel(
         name = f"DVC {thread_id}",
         overwrites={
