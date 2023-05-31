@@ -108,13 +108,13 @@ class ThreadmarkProcessor:
 					await channel.send(username + " died via lunch")
 			elif "Results:" in event:
 				username = event.split(" was ")[0].split(": ")[-1].strip()
-                if username in aliases.values() and username in player_aliases:
-                    for key, val in aliases.items():
-                        if val == username:
-                            mention_id = key
-                            await channel.send(f"<@{mention_id}> test")
-                else:
-                    await channel.send(username + " died at night")
+				if username in aliases.values() and username in player_aliases:
+					for key, val in aliases.items():
+						if val == username:
+							mention_id = key
+							await channel.send(f"<@{mention_id}> test")
+				else:
+					await channel.send(username + " died at night")
 			elif "Game Over:" in event:
 				winning_team = event.split(" Wins")[0].split("Over: ")[-1].strip()
 				await channel.send(winning_team + " wins!!!")
