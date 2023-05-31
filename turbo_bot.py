@@ -122,7 +122,7 @@ class ThreadmarkProcessor:
 				if username in aliases.values() and username in player_aliases:
 					mention_id = find_key_by_value(aliases, username)
 					member = guild.get_member(mention_id)
-					await member.add_roles(self.role_id)
+					await member.add_roles(role_id)
 					await channel.send(f"<@{mention_id}> welcome to dvc, you're dead")
 				else:                                
 					await channel.send(username + " died via lunch")
@@ -131,7 +131,7 @@ class ThreadmarkProcessor:
 				if username in aliases.values() and username in player_aliases:
 					mention_id = find_key_by_value(aliases, username)
 					member = guild.get_member(mention_id)
-					await member.add_roles(self.role_id)
+					await member.add_roles(role_id)
 					await channel.send(f"<@{mention_id}> welcome to dvc, you're dead")
 				else:
 					await channel.send(username + " died at night")
