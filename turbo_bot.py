@@ -121,7 +121,6 @@ class ThreadmarkProcessor:
 				username = event.split("Elimination: ")[1].split(" was ")[0].strip()  
 				if username in aliases.values() and username in player_aliases:
 					mention_id = find_key_by_value(aliases, username)
-                    print(mention_id, flush=True)
 					member = guild.get_member(mention_id)
 					await member.add_roles(role_id)
 					await channel.send(f"<@{mention_id}> welcome to dvc, you're dead")
