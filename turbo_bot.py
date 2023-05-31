@@ -696,7 +696,8 @@ async def rand(ctx, *args):
             game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
             await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}")
             role_id, channel_id, guild = await create_dvc(thread_id)            
-            await process_threadmarks.start(thread_id, player_aliases, role_id, guild, channel_id)            game_host_name = ["Mafia Host"]
+            await process_threadmarks.start(thread_id, player_aliases, role_id, guild, channel_id)
+            game_host_name = ["Mafia Host"]
             players.clear()
             players.update(waiting_list)
             waiting_list.clear()
