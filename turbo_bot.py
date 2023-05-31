@@ -112,7 +112,6 @@ class ThreadmarkProcessor:
 		soup = BeautifulSoup(html, "html.parser")
 		event_div = soup.find("div", class_="bbc_threadmarks view-threadmarks")
 		channel = bot.get_channel(channel_id)
-   
 		for i, row in enumerate(reversed(event_div.find_all("div", class_="threadmark-row"))):
 			event = row.find("div", class_="threadmark-event").text
 			if event in self.processed_threadmarks:
@@ -124,12 +123,15 @@ class ThreadmarkProcessor:
 				role = results.split(" was ")[1].strip()
                 
 				if username.lower() in aliases.values() and username.lower() in player_aliases:
-					mention_id = find_key_by_value(aliases, username)
-					member = guild.get_member(mention_id)
-					await member.add_roles(role_id)
-					await channel.send(f"<@{mention_id}> was lunched. They were {role}, welcome to DVC")
+					try:
+						mention_id = find_key_by_value(aliases, username)
+						member = guild.get_member(mention_id)
+						await member.add_roles(role_id)
+						await channel.send(f"<@{mention_id}> was lunched. They were {role}, welcome to DVC")
+					except:
+						await channel.send(f"{username} was lunched. They were {role}.")
 				else:                                
-					await channel.send(f"{username} was lunched")
+					await channel.send(f"{username} was lunched. They were {role}.")
 			elif "Results:" in event:
 				results = event.split("Results:")[1].strip()
 				players = results.split(", ")
@@ -139,10 +141,13 @@ class ThreadmarkProcessor:
 						username = player.split(" was ")[0].strip()
 						role = player.split(" was ")[1].strip()
 						if username.lower() in aliases.values() and username.lower() in player_aliases:
-							mention_id = find_key_by_value(aliases, username)
-							member = guild.get_member(mention_id)
-							await member.add_roles(role_id)
-							await channel.send(f"<@{mention_id}> was nightkilled. They were {role}. Welcome to dvc")
+							try:
+								mention_id = find_key_by_value(aliases, username)
+								member = guild.get_member(mention_id)
+								await member.add_roles(role_id)
+								await channel.send(f"<@{mention_id}> was nightkilled. They were {role}. Welcome to dvc")
+							except:
+								await channel.send(f"{username} was lunched. They were {role}.")
 					else:
 						await channel.send(username + " died at night")
 			elif "Game Over:" in event:
