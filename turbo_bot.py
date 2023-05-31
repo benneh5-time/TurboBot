@@ -91,8 +91,8 @@ class ThreadmarkProcessor:
 		soup = BeautifulSoup(html, "html.parser")
 		event_div = soup.find("div", class_="bbc_threadmarks view-threadmarks")
 		eliminations = []
-		night_results = []
-        channel = guild.get_channel(dvc_channel)
+		channel = guild.get_channel(dvc_channel)
+		night_results = []    
 		for i, row in enumerate(reversed(event_div.find_all("div", class_="threadmark-row"))):
 			event = row.find("div", class_="threadmark-event").text
 			if event in self.processed_threadmarks:
