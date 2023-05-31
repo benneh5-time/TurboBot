@@ -583,6 +583,9 @@ async def host(ctx, *, host_name=None):
     if host_name is None:
         if ctx.author.id in aliases:
             host_name = aliases[ctx.author.id]
+			if host_name in players or host_name in waiting_list:
+				await ctx.send(f"{host_name} is already on the turbo list or waiting list.\n Please choose a different name for the host.")
+				return
             if game_host_name[0] == "Mafia Host":
                 game_host_name[0] = host_name
                 await update_status()
