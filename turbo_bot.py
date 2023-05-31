@@ -6,6 +6,8 @@ import mu
 import os
 import argparse
 import random
+import requests
+from bs4 import BeautifulSoup
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -28,6 +30,7 @@ game_host_name = ["Mafia Host"]
 current_setup = "joat10"
 valid_setups = ["joat10", "vig10", "cop9", "cop13"] #future setups
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
+dvc_channel = 1097200194157809757
 status_id = None
 status_channel = None
 is_rand_running = False
@@ -76,6 +79,50 @@ def load_player_list():
     except json.JSONDecodeError:
         return {}, {}
 
+class ThreadmarkProcessor:
+	def __init__(self):
+		self.processed_threadmarks = []
+
+	async def process_threadmarks(self, thread_id):
+
+		url = f"https://www.mafiauniverse.com/forums/threadmarks/{thread_id}"
+		response = requests.get(url)
+		html = response.text
+		soup = BeautifulSoup(html, "html.parser")
+		event_div = soup.find("div", class_="bbc_threadmarks view-threadmarks")
+		eliminations = []
+		night_results = []	
+        channel = guild.get_channel(dvc_channel)
+		for i, row in enumerate(reversed(event_div.find_all("div", class_="threadmark-row"))):
+			event = row.find("div", class_="threadmark-event").text
+			if event in self.processed_threadmarks:
+				continue
+
+			if "Elimination:" in event:
+				if "Elimination: " in event and " was " in event:
+					username = event.split("Elimination: ")[1].split(" was ")[0].strip()
+					eliminations.append(username)
+					await channel.send(username + " died via lunch")
+			elif "Results:" in event:
+				if " was " in event:
+					username = event.split(" was ")[0].split(": ")[-1].strip()
+					night_results.append(username)
+					await channel.send(username + " died at night")
+			elif "Game Over:" in event:
+				winning_team = event.split(" Wins")[0].split("Over: ")[-1].strip()
+				await channel.send(winning_team + " wins!!!")
+				processed_threadmarks.clear()
+				await channel.send("Game concluded")
+				# process_threadmarks.cancel()
+				# Game is over, perform any other cleanup here	
+			self.processed_threadmarks.append(event)
+
+processor = ThreadmarkProcessor()
+
+@tasks.loop(minutes=1)
+async def process_threadmarks(thread_id):
+    await processor.process_threadmarks(thread_id)
+    
 @bot.event
 async def on_ready():
     global players, waiting_list, current_setup, game_host_name, player_limit, recruit_list
@@ -84,7 +131,7 @@ async def on_ready():
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     print(game_host_name, flush=True)
     recruit_list = load_recruit_list()
-    
+    process_threadmarks.start(40059)
     if players is None:
         players = {}
     if waiting_list is None:
@@ -609,13 +656,12 @@ async def rand(ctx, *args):
                         
             player_mentions = " ".join([f"<@{id}>" for id in mention_list])
             game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
-            await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}")
-            
-    
+            await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}")               
             game_host_name = ["Mafia Host"]
             players.clear()
             players.update(waiting_list)
             waiting_list.clear()
+            process_threadmarks.start(thread_id)
         elif "Error" in response_message:
             print(f"Game failed to rand, reason: {response_message}", flush=True)
             await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
