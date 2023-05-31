@@ -122,7 +122,7 @@ class ThreadmarkProcessor:
 				results = event.split("Elimination: ")[1].strip()
 				username = results.split(" was ")[0].strip()
 				role = results.split(" was ")[1].strip()
-                		username = username.lower()
+				username = username.lower()
 				if username in aliases.values() and username in pl_list:
 					try:
 						mention_id = find_key_by_value(aliases, username)
