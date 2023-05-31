@@ -110,7 +110,7 @@ class ThreadmarkProcessor:
 		html = response.text
 		soup = BeautifulSoup(html, "html.parser")
 		event_div = soup.find("div", class_="bbc_threadmarks view-threadmarks")
-		channel = bot.get_channel(self.channel_id)
+		channel = bot.get_channel(channel_id)
    
 		for i, row in enumerate(reversed(event_div.find_all("div", class_="threadmark-row"))):
 			event = row.find("div", class_="threadmark-event").text
@@ -121,7 +121,7 @@ class ThreadmarkProcessor:
 				username = event.split("Elimination: ")[1].split(" was ")[0].strip()  
 				if username in aliases.values() and username in player_aliases:
 					mention_id = find_key_by_value(aliases, username)
-					member = self.guild.get_member(mention_id)
+					member = guild.get_member(mention_id)
 					await member.add_roles(self.role_id)
 					await channel.send(f"<@{mention_id}> welcome to dvc, you're dead")
 				else:                                
@@ -130,7 +130,7 @@ class ThreadmarkProcessor:
 				username = event.split(" was ")[0].split(": ")[-1].strip()
 				if username in aliases.values() and username in player_aliases:
 					mention_id = find_key_by_value(aliases, username)
-					member = self.guild.get_member(mention_id)
+					member = guild.get_member(mention_id)
 					await member.add_roles(self.role_id)
 					await channel.send(f"<@{mention_id}> welcome to dvc, you're dead")
 				else:
