@@ -24,7 +24,7 @@ waiting_list = {}
 recruit_list = {}
 recruit_timer = 0
 aliases = {}
-game_host_name = "Mafia Host"
+game_host_name = ["Mafia Host"]
 current_setup = "joat10"
 valid_setups = ["joat10", "vig10", "cop9", "cop13"] #future setups
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
@@ -91,7 +91,7 @@ async def on_ready():
     if current_setup is None:
         current_setup = "joat10" 
     if game_host_name is None:
-        game_host_name = "Mafia Host" 
+        game_host_name = ["Mafia Host"] 
     if player_limit is None:
         player_limit = 10  
     # Start looping task
@@ -151,26 +151,37 @@ async def in_(ctx, time: int = 60):
         await ctx.send("Invalid duration. Please choose a duration between 10 and 90 minutes.")
         return
         
-    if game_host_name == alias:
-        game_host_name = "Mafia Host"
-        if len(players) < player_limit:
+    if alias in game_host_name:
+        if len(game_host_name) == 1:
+            game_host_name = ["Mafia Host"]
+            if len(players) < player_limit:
+                players[alias] = time
+                await ctx.send(f"{alias} has been removed as host and added to the list for the next {time} minutes. Your current host is Mafia Host.")
+            else:
+                waiting_list[alias] = time
+                await ctx.send(f"{alias} has been removed as host and added to the waiting list for the next {time} minutes. Your current host is Mafia Host.")
+            await update_status()
+            return
+            
+        elif len(players) < player_limit:
             players[alias] = time
-            await ctx.send(f"{alias} has been removed as host and added to the list for the next {time} minutes.")
-           
+            game_host_name = game_host_name.remove(alias)
+            host_list = [f"{host}" for host in game_host_name]
+            hosts = ' '.join(host_list)
+            await ctx.send(f"{alias} has been removed as host and added to the list for the next {time} minutes. Your current host(s): {hosts}")
+            await update_status()
             return
         else:
             waiting_list[alias] = time 
             await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
-            
+            await update_status()
             return
             
     if alias in players or alias in waiting_list:
         if alias in players:
-            players[alias] = time
-            
+            players[alias] = time            
         else:
-            waiting_list[alias] = time
-            
+            waiting_list[alias] = time            
         #await ctx.send(f"{alias}'s in has been renewed for the next {time} minutes.")
         await ctx.message.add_reaction('👍')
     else:
@@ -197,11 +208,19 @@ async def out(ctx):
         return
     alias = aliases[ctx.author.id]
     
-    if game_host_name == alias:
-        game_host_name = "Mafia Host"
-        #await ctx.send(f"{alias} has been removed as host")
-        await ctx.message.add_reaction('👎')
-        return
+    if alias in game_host_name:
+        if len(game_host_name) == 1:
+            game_host_name = ["Mafia Host"]
+            await ctx.send(f"{alias} has been removed as host. Mafia Host has been set back to the default host.")
+            await update_status()
+            return
+        else:
+            game_host_name = game_host_name.remove(alias)
+            host_list = [f"{host}" for host in game_host_name]
+            hosts = ' '.join(host_list)
+            await ctx.send(f"{alias} has been removed as host. Your current host(s): {hosts}")
+            await update_status()
+            return
         
     if alias in players:
         del players[alias]
@@ -250,17 +269,30 @@ async def add(ctx, *, alias):
     alias = alias.lower()
     global game_host_name, player_limit, players, waiting_list
     
-    if game_host_name == alias:
-        game_host_name = "Mafia Host"
-        if len(players) < player_limit:
+    if alias in game_host_name:
+        if len(game_host_name) == 1:
+            game_host_name = ["Mafia Host"]
+            if len(players) < player_limit:
+                players[alias] = 60
+                await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes. Your current host is Mafia Host.")
+            else:
+                waiting_list[alias] = 60
+                await ctx.send(f"{alias} has been removed as host and added to the waiting list for the next 60 minutes. Your current host is Mafia Host.")
+            await update_status()
+            return
+            
+        elif len(players) < player_limit:
             players[alias] = 60
-            await ctx.message.add_reaction('👍')
-            # await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.") 
+            game_host_name = game_host_name.remove(alias)
+            host_list = [f"{host}" for host in game_host_name]
+            hosts = ' '.join(host_list)
+            await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes. Your current host(s): {hosts}")
+            await update_status()
             return
         else:
-            waiting_list[alias] = 60      
-            await ctx.message.add_reaction('👍')
-            # await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
+            waiting_list[alias] = time 
+            await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
+            await update_status()
             return
             
     if alias in players or alias in waiting_list:
@@ -288,11 +320,19 @@ async def remove(ctx, *, alias):
     alias = alias.lower()
     global game_host_name, player_limit, players, waiting_list
     
-    if game_host_name == alias:
-        game_host_name = "Mafia Host"
-        await ctx.message.add_reaction('👎')
-        await ctx.send(f"{alias} has been removed as host")
-        return
+    if alias in game_host_name:
+        if len(game_host_name) == 1:
+            game_host_name = ["Mafia Host"]
+            await ctx.send(f"{alias} has been removed as host. Mafia Host has been set back to the default host.")
+            await update_status()
+            return
+        else:
+            game_host_name = game_host_name.remove(alias)
+            host_list = [f"{host}" for host in game_host_name]
+            hosts = ' '.join(host_list)
+            await ctx.send(f"{alias} has been removed as host. Your current host(s): {hosts}")
+            await update_status()
+            return
         
     if alias in players:
         del players[alias]
@@ -321,8 +361,10 @@ async def status(ctx, *args):
     global game_host_name, status_id, status_channel
 
     embed = discord.Embed(title="**Turbo sign-ups!**", description="Turbo Bot v1.0", color=0x1beb30)
-    embed.add_field(name="**Game Setup**", value=current_setup, inline=True)
-    embed.add_field(name="**Host**", value=game_host_name, inline=True)
+    embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
+    host_list = [f"{host}\n" for host in game_host_name]
+    hosts = ''.join(host_list)
+    embed.add_field(name="**Host**", value=hosts, inline=True)
     embed.add_field(name="", value="", inline=True)
     
     if players:
@@ -373,9 +415,10 @@ async def update_status():
     embed = status_message.embeds[0]
     
     spots_left = player_limit - len(players)
-    
+    host_list = [f"{host}\n" for host in game_host_name]
+    hosts = ''.join(host_list)
     embed.set_field_at(0, name="**Game Setup**", value=current_setup, inline=True)
-    embed.set_field_at(1, name="**Host**", value=game_host_name, inline=True)
+    embed.set_field_at(1, name="**Host**", value=hosts, inline=True)
     
     if players:
         player_message = ""
@@ -430,9 +473,27 @@ async def host(ctx, *, host_name=None):
         
     global game_host_name
     
+    if host_name is "Mafia Host":
+        game_host_name = ["Mafia Host"]
+        update_status()
+        await ctx.send("Host setting has been set to default for Mafia Host and cleared all other hosts.")
+        return
+    
     if host_name is None:
         if ctx.author.id in aliases:
             host_name = aliases[ctx.author.id]
+            if game_host_name[0] = "Mafia Host":
+                game_host_name[0] = host_name
+                update_status()
+                await ctx.send(f"Host for the next turbo has been set to {host_name}")
+                return
+            else:
+                game_host_name.append(host_name)
+                host_list = [f"{host}" for host in game_host_name]
+                hosts = ', '.join(host_list)
+                await ctx.send(f"Hosts for the next turbo are set as {hosts}")
+                update_status()
+                return
         else:
             await ctx.send("You have not set an alias. Please use `!alias [MU Username]` before trying to use !host or !in commands.")
             return
@@ -441,10 +502,17 @@ async def host(ctx, *, host_name=None):
         await ctx.send(f"{host_name} is already on the turbo list or waiting list.\n Please choose a different name for the host.")
         return
     
-    game_host_name = host_name
-    
-    await ctx.send(f"Host for the next turbo has been set to {host_name}!")
-    await update_status()
+    if game_host_name[0] = "Mafia Host":
+        game_host_name[0] = host_name
+        update_status()
+        await ctx.send(f"Host for the next turbo has been set to {host_name}")
+    else:
+        game_host_name.append(host_name)
+        host_list = [f"{host}" for host in game_host_name]
+        hosts = ', '.join(host_list)
+        await ctx.send(f"Hosts for the next turbo are set as {hosts}")
+        update_status()
+        return
     
 @tasks.loop(minutes=1)
 async def update_players():
@@ -535,7 +603,7 @@ async def rand(ctx, *args):
             await ctx.send(f"{player_mentions} randed STFU {game_url}")
             
     
-            game_host_name = "Mafia Host"
+            game_host_name = ["Mafia Host"]
             players.clear()
             players.update(waiting_list)
             waiting_list.clear()
@@ -565,7 +633,7 @@ async def clear(ctx, *args):
     if args_parsed.confirm:        
         players = {}
         waiting_list = {}
-        game_host_name = "Mafia Host"
+        game_host_name = ["Mafia Host"]
         current_setup = "joat10"        
         await ctx.send("Player and waiting list has been cleared. Game is JOAT10 and host is Mafia Host")
     else:
@@ -670,19 +738,32 @@ async def on_reaction_add(reaction, user):
 
             alias = aliases[user.id]
 
-            if game_host_name == alias:
-                game_host_name = "Mafia Host"
-                if len(players) < player_limit:
-                    players[alias] = 60
-                    await reaction.message.channel.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
-                
-                    return
+            if alias in game_host_name:
+                if len(game_host_name) == 1:
+                    game_host_name = ["Mafia Host"]    
+                    if len(players) < player_limit:
+                        players[alias] = 60
+                        await reaction.message.channel.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
                 else:
                     waiting_list[alias] = 60 
                     await reaction.message.channel.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
-                    
-                    return
-                    
+                await update_status()    
+                return
+                
+            elif len(players) < player_limit:
+                players[alias] = 60
+                game_host_name = game_host_name.remove(alias)
+                host_list = [f"{host}" for host in game_host_name]
+                hosts = ' '.join(host_list)
+                await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes. Your current host(s): {hosts}")
+                await update_status()
+                return
+            else:
+                waiting_list[alias] = 60
+                await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
+                await update_status()
+                return
+                
             if alias in players or alias in waiting_list:
                 if alias in players:
                     players[alias] = 60
