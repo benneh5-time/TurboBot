@@ -128,14 +128,19 @@ class ThreadmarkProcessor:
 				else:                                
 					await channel.send(username + " died via lunch")
 			elif "Results:" in event:
-				username = event.split(" was ")[0].split(": ")[-1].strip()
-				if username in aliases.values() and username in player_aliases:
-					mention_id = find_key_by_value(aliases, username)
-					member = guild.get_member(mention_id)
-					await member.add_roles(role_id)
-					await channel.send(f"<@{mention_id}> welcome to dvc, you're dead")
-				else:
-					await channel.send(username + " died at night")
+                results = event.split("Results:")[1].strip()
+                players = results.split(", ")
+                
+                for player in players:
+                    if " was " in player:
+                        username = player.split(" was ")[0].strip()                    
+                        if username in aliases.values() and username in player_aliases:
+                            mention_id = find_key_by_value(aliases, username)
+                            member = guild.get_member(mention_id)
+                            await member.add_roles(role_id)
+                            await channel.send(f"<@{mention_id}> welcome to dvc, you're dead")
+                    else:
+                        await channel.send(username + " died at night")
 			elif "Game Over:" in event:
 				winning_team = event.split(" Wins")[0].split("Over: ")[-1].strip()
 				await channel.send(winning_team + " wins!!!")
@@ -169,10 +174,8 @@ async def on_ready():
     if player_limit is None:
         player_limit = 10  
     # Start looping task
-    role_id, channel_id, guild = await create_dvc('40055')
-    await process_threadmarks.start(40055, ['benneh'], role_id, guild, channel_id)
-    print(f"role: {role_id}")
-    print(f"channel: {channel_id}")
+    # role_id, channel_id, guild = await create_dvc(thread_id)
+    # await process_threadmarks.start(thread_id, player_aliases, role_id, guild, channel_id)
     update_players.start()  # Start background task
 
 @bot.command()
@@ -686,12 +689,12 @@ async def rand(ctx, *args):
                         
             player_mentions = " ".join([f"<@{id}>" for id in mention_list])
             game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
-            await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}")               
-            game_host_name = ["Mafia Host"]
+            await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}")
+            role_id, channel_id, guild = await create_dvc(thread_id)            
+            await process_threadmarks.start(thread_id, player_aliases, role_id, guild, channel_id)            game_host_name = ["Mafia Host"]
             players.clear()
             players.update(waiting_list)
             waiting_list.clear()
-            process_threadmarks.start(thread_id, player_aliases)
         elif "Error" in response_message:
             print(f"Game failed to rand, reason: {response_message}", flush=True)
             await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
