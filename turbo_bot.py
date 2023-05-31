@@ -113,7 +113,7 @@ class ThreadmarkProcessor:
 				await channel.send(winning_team + " wins!!!")
 				self.processed_threadmarks.clear()
 				await channel.send("Game concluded")
-				# process_threadmarks.cancel()
+				process_threadmarks.cancel()
 				# Game is over, perform any other cleanup here	
 			self.processed_threadmarks.append(event)
 
