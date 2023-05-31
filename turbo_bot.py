@@ -151,9 +151,9 @@ class ThreadmarkProcessor:
 						await member.add_roles(role_id)
 						await channel.send(f"<@{mention_id}> was nightkilled. They were {role}. Welcome to dvc")
 					except:
-						await channel.send(f"{username} was lunched. They were {role}.")
+						await channel.send(f"{username} was nightkilled. They were {role}.")
 				elif username in pl_list:
-					await channel.send(f"{username} was lunched. They were {role}.")
+					await channel.send(f"{username} was nightkilled. They were {role}.")
 				else:
 					continue
 			elif "Game Over:" in event:
@@ -189,11 +189,11 @@ async def on_ready():
     if player_limit is None:
         player_limit = 10  
     # Start looping task
-    test_players = ["vikuale2", "Amrock", "matt", "LimeCoke", "anne.", "Clouds", "alexa.", "High Fidelity", "Delta", "Xanjori"]
-    role_id, channel_id, guild = await create_dvc('40059')
+    test_players = ["benneh", "Carlos", "Clouds", "DoctorZeus", "Happy", "Haru Okumura", "how are giraffes real", "ladd", "matt", "Prince J"]
+    role_id, channel_id, guild = await create_dvc('40005')
     print(role_id, flush=True)
     print(guild, flush=True)
-    await process_threadmarks.start('40059', test_players, role_id, guild, channel_id)
+    await process_threadmarks.start('40005', test_players, role_id, guild, channel_id)
     update_players.start()  # Start background task
 
 @bot.command()
