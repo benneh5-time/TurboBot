@@ -475,7 +475,7 @@ async def host(ctx, *, host_name=None):
     
     if host_name == "Mafia Host":
         game_host_name = ["Mafia Host"]
-        update_status()
+        await update_status()
         await ctx.send("Host setting has been set to default for Mafia Host and cleared all other hosts.")
         return
     
@@ -484,7 +484,7 @@ async def host(ctx, *, host_name=None):
             host_name = aliases[ctx.author.id]
             if game_host_name[0] == "Mafia Host":
                 game_host_name[0] = host_name
-                update_status()
+                await update_status()
                 await ctx.send(f"Host for the next turbo has been set to {host_name}")
                 return
             else:
@@ -492,7 +492,7 @@ async def host(ctx, *, host_name=None):
                 host_list = [f"{host}" for host in game_host_name]
                 hosts = ', '.join(host_list)
                 await ctx.send(f"Hosts for the next turbo are set as {hosts}")
-                update_status()
+                await update_status()
                 return
         else:
             await ctx.send("You have not set an alias. Please use `!alias [MU Username]` before trying to use !host or !in commands.")
@@ -504,14 +504,14 @@ async def host(ctx, *, host_name=None):
     
     if game_host_name[0] == "Mafia Host":
         game_host_name[0] = host_name
-        update_status()
+        await update_status()
         await ctx.send(f"Host for the next turbo has been set to {host_name}")
     else:
         game_host_name.append(host_name)
         host_list = [f"{host}" for host in game_host_name]
         hosts = ', '.join(host_list)
         await ctx.send(f"Hosts for the next turbo are set as {hosts}")
-        update_status()
+        await update_status()
         return
     
 @tasks.loop(minutes=1)
