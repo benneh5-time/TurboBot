@@ -583,9 +583,10 @@ async def rand(ctx, *args):
                 game_title = mu.generate_game_thread_uuid()
             print(f"Attempting to post new thread with {game_title}", flush=True)
             thread_id = mu.post_thread(session, game_title, security_token, current_setup)
-            
-        await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game using thread ID: `{thread_id}`. Please standby.")
-        print(f"Attempting to rand `{game_title}`, a {current_setup} game using thread ID: `{thread_id}`.", flush=True)
+        host_list = [f"{host}" for host in game_host_name]
+        hosts = ', '.join(host_list)
+        await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
+        print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
         security_token = mu.new_game_token(session, thread_id)
         response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, current_setup, game_host_name)
         
@@ -601,7 +602,7 @@ async def rand(ctx, *args):
                         
             player_mentions = " ".join([f"<@{id}>" for id in mention_list])
             game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
-            await ctx.send(f"{player_mentions} randed STFU {game_url}")
+            await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}")
             
     
             game_host_name = ["Mafia Host"]
