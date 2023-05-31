@@ -78,7 +78,26 @@ def load_player_list():
         return {}, {}
     except json.JSONDecodeError:
         return {}, {}
+        
+def find_key_by_value(dictionary, value):
+    for key, val in dictionary.items():
+        if val == value:
+            return key
+    return None
 
+async def create_dvc(thread_id):
+    server_id = 1094321402489872436
+    guild = bot.get_guild(server_id)
+    
+    channel = await guild.create_text_channel(
+        name="DVC" + thread_id
+        overwrites={
+            guild.default_role: discord.PermissionOverwrite(read_message=False)
+            role: discord.PermissionOverwrite(read_messages=True)
+        }
+    )
+    return role.id, channel.id
+    
 class ThreadmarkProcessor:
 	def __init__(self):
 		self.processed_threadmarks = []
@@ -100,19 +119,15 @@ class ThreadmarkProcessor:
 			if "Elimination:" in event:
 				username = event.split("Elimination: ")[1].split(" was ")[0].strip()  
 				if username in aliases.values() and username in player_aliases:
-					for key, val in aliases.items():
-						if val == username:
-							mention_id = key
-							await channel.send(f"<@{mention_id}> test")
+					mention_id = find_key_by_value(aliases, username)
+					await channel.send(f"<@{mention_id}> test")
 				else:                                
 					await channel.send(username + " died via lunch")
 			elif "Results:" in event:
 				username = event.split(" was ")[0].split(": ")[-1].strip()
 				if username in aliases.values() and username in player_aliases:
-					for key, val in aliases.items():
-						if val == username:
-							mention_id = key
-							await channel.send(f"<@{mention_id}> test")
+					mention_id = find_key_by_value(aliases, username)
+					await channel.send(f"<@{mention_id}> test")
 				else:
 					await channel.send(username + " died at night")
 			elif "Game Over:" in event:
@@ -148,6 +163,9 @@ async def on_ready():
     if player_limit is None:
         player_limit = 10  
     # Start looping task
+    role_id, channel_id = await create_dvc('40056')
+    print(f"role: {role_id}")
+    print(f"channel: {channel_id}")
     update_players.start()  # Start background task
 
 @bot.command()
