@@ -137,8 +137,6 @@ async def on_ready():
     load_aliases()
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     recruit_list = load_recruit_list()
-    testlist = ['benneh']
-    await process_threadmarks(40026, testlist)
     if players is None:
         players = {}
     if waiting_list is None:
