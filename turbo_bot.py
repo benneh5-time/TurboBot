@@ -144,18 +144,18 @@ class ThreadmarkProcessor:
 						username = player.split(" was ")[0].strip()
 						role = player.split(" was ")[1].strip()
 						username = username.lower()
-				if username in aliases.values() and username in pl_list:
-					try:
-						mention_id = find_key_by_value(aliases, username)
-						member = guild.get_member(mention_id)
-						await member.add_roles(role_id)
-						await channel.send(f"<@{mention_id}> was nightkilled. They were {role}. Welcome to dvc")
-					except:
-						await channel.send(f"{username} was nightkilled. They were {role}.")
-				elif username in pl_list:
-					await channel.send(f"{username} was nightkilled. They were {role}.")
-				else:
-					continue
+						if username in aliases.values() and username in pl_list:
+							try:
+								mention_id = find_key_by_value(aliases, username)
+								member = guild.get_member(mention_id)
+								await member.add_roles(role_id)
+								await channel.send(f"<@{mention_id}> was nightkilled. They were {role}. Welcome to dvc")
+							except:
+								await channel.send(f"{username} was nightkilled. They were {role}.")
+						elif username in pl_list:
+							await channel.send(f"{username} was nightkilled. They were {role}.")
+					else:
+						continue
 			elif "Game Over:" in event:
 				winning_team = event.split(" Wins")[0].split("Over: ")[-1].strip()
 				await channel.send(winning_team + " wins!!!")
