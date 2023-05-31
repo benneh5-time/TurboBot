@@ -82,6 +82,7 @@ async def on_ready():
     print(f"We have logged in as {bot.user}", flush=True)
     load_aliases()
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
+    print(game_host_name, flush=True)
     recruit_list = load_recruit_list()
     
     if players is None:
@@ -165,7 +166,7 @@ async def in_(ctx, time: int = 60):
             
         elif len(players) < player_limit:
             players[alias] = time
-            game_host_name = game_host_name.remove(alias)
+            game_host_name.remove(alias)
             host_list = [f"{host}" for host in game_host_name]
             hosts = ' '.join(host_list)
             await ctx.send(f"{alias} has been removed as host and added to the list for the next {time} minutes. Your current host(s): {hosts}")
@@ -215,7 +216,7 @@ async def out(ctx):
             await update_status()
             return
         else:
-            game_host_name = game_host_name.remove(alias)
+            game_host_name.remove(alias)
             host_list = [f"{host}" for host in game_host_name]
             hosts = ' '.join(host_list)
             await ctx.send(f"{alias} has been removed as host. Your current host(s): {hosts}")
@@ -283,7 +284,7 @@ async def add(ctx, *, alias):
             
         elif len(players) < player_limit:
             players[alias] = 60
-            game_host_name = game_host_name.remove(alias)
+            game_host_name.remove(alias)
             host_list = [f"{host}" for host in game_host_name]
             hosts = ' '.join(host_list)
             await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes. Your current host(s): {hosts}")
@@ -327,7 +328,7 @@ async def remove(ctx, *, alias):
             await update_status()
             return
         else:
-            game_host_name = game_host_name.remove(alias)
+            game_host_name.remove(alias)
             host_list = [f"{host}" for host in game_host_name]
             hosts = ' '.join(host_list)
             await ctx.send(f"{alias} has been removed as host. Your current host(s): {hosts}")
@@ -752,7 +753,7 @@ async def on_reaction_add(reaction, user):
                 
             elif len(players) < player_limit:
                 players[alias] = 60
-                game_host_name = game_host_name.remove(alias)
+                game_host_name.remove(alias)
                 host_list = [f"{host}" for host in game_host_name]
                 hosts = ' '.join(host_list)
                 await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes. Your current host(s): {hosts}")
