@@ -120,8 +120,8 @@ class ThreadmarkProcessor:
 
 			if "Elimination:" in event:
 				results = event.split("Elimination: ")[1].strip()
-                username = results.split(" was ")[0].strip()
-                role = results.split(" was ")[1].strip()
+				username = results.split(" was ")[0].strip()
+				role = results.split(" was ")[1].strip()
                 
 				if username.lower() in aliases.values() and username.lower() in player_aliases:
 					mention_id = find_key_by_value(aliases, username)
