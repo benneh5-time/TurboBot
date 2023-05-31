@@ -112,17 +112,18 @@ class ThreadmarkProcessor:
 		soup = BeautifulSoup(html, "html.parser")
 		event_div = soup.find("div", class_="bbc_threadmarks view-threadmarks")
 		channel = bot.get_channel(channel_id)
+		pl_list = [item.lower() for item in player_aliases]
 		for i, row in enumerate(reversed(event_div.find_all("div", class_="threadmark-row"))):
 			event = row.find("div", class_="threadmark-event").text
+			
 			if event in self.processed_threadmarks:
 				continue
-
 			if "Elimination:" in event:
 				results = event.split("Elimination: ")[1].strip()
 				username = results.split(" was ")[0].strip()
 				role = results.split(" was ")[1].strip()
-                
-				if username.lower() in aliases.values() and username.lower() in player_aliases:
+                		username = username.lower()
+				if username in aliases.values() and username in pl_list:
 					try:
 						mention_id = find_key_by_value(aliases, username)
 						member = guild.get_member(mention_id)
@@ -130,7 +131,7 @@ class ThreadmarkProcessor:
 						await channel.send(f"<@{mention_id}> was lunched. They were {role}, welcome to DVC")
 					except:
 						await channel.send(f"{username} was lunched. They were {role}.")
-				elif username.lower() in player_aliases:
+				elif username in pl_list:
 					await channel.send(f"{username} was lunched. They were {role}.")
 				else:                                
 					continue
@@ -142,18 +143,19 @@ class ThreadmarkProcessor:
 					if " was " in player:
 						username = player.split(" was ")[0].strip()
 						role = player.split(" was ")[1].strip()
-						if username.lower() in aliases.values() and username.lower() in player_aliases:
-							try:
-								mention_id = find_key_by_value(aliases, username)
-								member = guild.get_member(mention_id)
-								await member.add_roles(role_id)
-								await channel.send(f"<@{mention_id}> was nightkilled. They were {role}. Welcome to dvc")
-							except:
-								await channel.send(f"{username} was lunched. They were {role}.")
-					elif username.lower() in player_aliases:
+						username = username.lower()
+				if username in aliases.values() and username in pl_list:
+					try:
+						mention_id = find_key_by_value(aliases, username)
+						member = guild.get_member(mention_id)
+						await member.add_roles(role_id)
+						await channel.send(f"<@{mention_id}> was nightkilled. They were {role}. Welcome to dvc")
+					except:
 						await channel.send(f"{username} was lunched. They were {role}.")
-					else:
-						continue
+				elif username in pl_list:
+					await channel.send(f"{username} was lunched. They were {role}.")
+				else:
+					continue
 			elif "Game Over:" in event:
 				winning_team = event.split(" Wins")[0].split("Over: ")[-1].strip()
 				await channel.send(winning_team + " wins!!!")
