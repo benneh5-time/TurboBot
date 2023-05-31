@@ -130,8 +130,10 @@ class ThreadmarkProcessor:
 						await channel.send(f"<@{mention_id}> was lunched. They were {role}, welcome to DVC")
 					except:
 						await channel.send(f"{username} was lunched. They were {role}.")
-				else:                                
+				elif username.lower() in player_aliases:
 					await channel.send(f"{username} was lunched. They were {role}.")
+				else:                                
+					continue
 			elif "Results:" in event:
 				results = event.split("Results:")[1].strip()
 				players = results.split(", ")
@@ -148,8 +150,10 @@ class ThreadmarkProcessor:
 								await channel.send(f"<@{mention_id}> was nightkilled. They were {role}. Welcome to dvc")
 							except:
 								await channel.send(f"{username} was lunched. They were {role}.")
+					elif username.lower() in player_aliases:
+						await channel.send(f"{username} was lunched. They were {role}.")
 					else:
-						await channel.send(username + " died at night")
+						continue
 			elif "Game Over:" in event:
 				winning_team = event.split(" Wins")[0].split("Over: ")[-1].strip()
 				await channel.send(winning_team + " wins!!!")
