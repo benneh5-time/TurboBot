@@ -83,31 +83,33 @@ class ThreadmarkProcessor:
 	def __init__(self):
 		self.processed_threadmarks = []
 
-	async def process_threadmarks(self, thread_id):
+	async def process_threadmarks(self, thread_id, player_aliases):
 
 		url = f"https://www.mafiauniverse.com/forums/threadmarks/{thread_id}"
 		response = requests.get(url)
 		html = response.text
 		soup = BeautifulSoup(html, "html.parser")
 		event_div = soup.find("div", class_="bbc_threadmarks view-threadmarks")
-		eliminations = []
 		channel = bot.get_channel(dvc_channel)
-		night_results = []    
+   
 		for i, row in enumerate(reversed(event_div.find_all("div", class_="threadmark-row"))):
 			event = row.find("div", class_="threadmark-event").text
 			if event in self.processed_threadmarks:
 				continue
 
 			if "Elimination:" in event:
-				if "Elimination: " in event and " was " in event:
-					username = event.split("Elimination: ")[1].split(" was ")[0].strip()
-					eliminations.append(username)
-					await channel.send(username + " died via lunch")
+				username = event.split("Elimination: ")[1].split(" was ")[0].strip()  
+                if username in aliases.values() and username in player_aliases:
+                    for key, val in aliases.items():
+                        if val == username:
+                            mention_id = key
+                    await channel.send(f"<@{mention_id}> test")
+                else:                                
+                    await channel.send(username + " died via lunch")
 			elif "Results:" in event:
-				if " was " in event:
-					username = event.split(" was ")[0].split(": ")[-1].strip()
-					night_results.append(username)
-					await channel.send(username + " died at night")
+                username = event.split(" was ")[0].split(": ")[-1].strip()
+
+                await channel.send(username + " died at night")
 			elif "Game Over:" in event:
 				winning_team = event.split(" Wins")[0].split("Over: ")[-1].strip()
 				await channel.send(winning_team + " wins!!!")
@@ -120,8 +122,8 @@ class ThreadmarkProcessor:
 processor = ThreadmarkProcessor()
 
 @tasks.loop(minutes=1)
-async def process_threadmarks(thread_id):
-    await processor.process_threadmarks(thread_id)
+async def process_threadmarks(thread_id, player_aliases):
+    await processor.process_threadmarks(thread_id, player_aliases)
     
 @bot.event
 async def on_ready():
@@ -129,8 +131,9 @@ async def on_ready():
     print(f"We have logged in as {bot.user}", flush=True)
     load_aliases()
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
-    print(game_host_name, flush=True)
     recruit_list = load_recruit_list()
+    testlist = ['benneh']
+    await process_threadmarks(40059, testlist)
     if players is None:
         players = {}
     if waiting_list is None:
@@ -660,7 +663,7 @@ async def rand(ctx, *args):
             players.clear()
             players.update(waiting_list)
             waiting_list.clear()
-            process_threadmarks.start(thread_id)
+            process_threadmarks.start(thread_id, player_aliases)
         elif "Error" in response_message:
             print(f"Game failed to rand, reason: {response_message}", flush=True)
             await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
