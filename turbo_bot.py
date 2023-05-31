@@ -189,11 +189,11 @@ async def on_ready():
     if player_limit is None:
         player_limit = 10  
     # Start looping task
-    test_players = ["benneh", "Carlos", "Clouds", "DoctorZeus", "Happy", "Haru Okumura", "how are giraffes real", "ladd", "matt", "Prince J"]
-    role_id, channel_id, guild = await create_dvc('40005')
+    test_players = ["alexa.", "AnimePigeon", "baudib1", "benneh", "Clouds", "insomnia", "InstantAlt1", "Kajot", "LimeCoke", "Xanjori"]
+    role_id, channel_id, guild = await create_dvc('40026')
     print(role_id, flush=True)
     print(guild, flush=True)
-    await process_threadmarks.start('40005', test_players, role_id, guild, channel_id)
+    await process_threadmarks.start('40026', test_players, role_id, guild, channel_id)
     update_players.start()  # Start background task
 
 @bot.command()
