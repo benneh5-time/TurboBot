@@ -97,20 +97,20 @@ async def create_dvc(thread_id):
             role: discord.PermissionOverwrite(read_messages=True)
         }
     )
-    return role.id, channel.id
+    return role.id, channel.id, guild
     
 class ThreadmarkProcessor:
 	def __init__(self):
 		self.processed_threadmarks = []
 
-	async def process_threadmarks(self, thread_id, player_aliases):
+	async def process_threadmarks(self, thread_id, player_aliases, role_id, guild, channel_id):
 
 		url = f"https://www.mafiauniverse.com/forums/threadmarks/{thread_id}"
 		response = requests.get(url)
 		html = response.text
 		soup = BeautifulSoup(html, "html.parser")
 		event_div = soup.find("div", class_="bbc_threadmarks view-threadmarks")
-		channel = bot.get_channel(dvc_channel)
+		channel = bot.get_channel(self.channel_id)
    
 		for i, row in enumerate(reversed(event_div.find_all("div", class_="threadmark-row"))):
 			event = row.find("div", class_="threadmark-event").text
@@ -121,7 +121,9 @@ class ThreadmarkProcessor:
 				username = event.split("Elimination: ")[1].split(" was ")[0].strip()  
 				if username in aliases.values() and username in player_aliases:
 					mention_id = find_key_by_value(aliases, username)
-					await channel.send(f"<@{mention_id}> test")
+                    member = self.guild.get_member(mention_id)
+                    await member.add_roles(self.role_id)
+					await channel.send(f"<@{mention_id}> welcome to dvc, you're dead")
 				else:                                
 					await channel.send(username + " died via lunch")
 			elif "Results:" in event:
@@ -143,8 +145,8 @@ class ThreadmarkProcessor:
 processor = ThreadmarkProcessor()
 
 @tasks.loop(minutes=1)
-async def process_threadmarks(thread_id, player_aliases):
-    await processor.process_threadmarks(thread_id, player_aliases)
+async def process_threadmarks(thread_id, player_aliases, role_id, guild, channel_id):
+    await processor.process_threadmarks(thread_id, player_aliases, role_id, guild, channel_id)
     
 @bot.event
 async def on_ready():
@@ -164,7 +166,8 @@ async def on_ready():
     if player_limit is None:
         player_limit = 10  
     # Start looping task
-    role_id, channel_id = await create_dvc('40056')
+    role_id, channel_id, guild = await create_dvc('40056')
+    await process_threadmarks(40056, ['benneh'], role_id, guild, channel_id)
     print(f"role: {role_id}")
     print(f"channel: {channel_id}")
     update_players.start()  # Start background task
