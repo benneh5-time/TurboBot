@@ -263,18 +263,15 @@ async def in_(ctx, time: int = 60):
             await update_status()
             return
             
-        elif len(players) < player_limit:
-            players[alias] = time
+        elif len(game_host_name) > 1:
             game_host_name.remove(alias)
-            host_list = [f"{host}" for host in game_host_name]
-            hosts = ' '.join(host_list)
-            await ctx.send(f"{alias} has been removed as host and added to the list for the next {time} minutes. Your current host(s): {hosts}")
-            await update_status()
-            return
-        else:
-            waiting_list[alias] = time 
-            await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
-            await update_status()
+            if len(players) < player_limit:
+                players[alias] = 60
+                reaction.message.channel.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
+            else:
+                waiting_list[alias] = 60
+                await reaction.message.channel.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
+            await update_status()    
             return
             
     if alias in players or alias in waiting_list:
@@ -852,24 +849,18 @@ async def on_reaction_add(reaction, user):
                     if len(players) < player_limit:
                         players[alias] = 60
                         await reaction.message.channel.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
-                else:
-                    waiting_list[alias] = 60 
-                    await reaction.message.channel.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
+                    else:
+                        waiting_list[alias] = 60
+                        await reaction.message.channel.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
+                elif len(game_host_name) > 1:
+                    game_host_name.remove(alias)
+                    if len(players) < player_limit:
+                        players[alias] = 60
+                        reaction.message.channel.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
+                    else:
+                        waiting_list[alias] = 60
+                        await reaction.message.channel.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
                 await update_status()    
-                return
-                
-            elif len(players) < player_limit:
-                players[alias] = 60
-                game_host_name.remove(alias)
-                host_list = [f"{host}" for host in game_host_name]
-                hosts = ' '.join(host_list)
-                await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes. Your current host(s): {hosts}")
-                await update_status()
-                return
-            else:
-                waiting_list[alias] = 60
-                await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
-                await update_status()
                 return
                 
             if alias in players or alias in waiting_list:
