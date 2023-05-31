@@ -98,7 +98,7 @@ async def create_dvc(thread_id):
             role: discord.PermissionOverwrite(read_messages=True)
         }
     )
-    return role.id, channel.id, guild
+    return role, channel.id, guild
     
 class ThreadmarkProcessor:
 	def __init__(self):
@@ -169,7 +169,7 @@ async def on_ready():
     if player_limit is None:
         player_limit = 10  
     # Start looping task
-    role_id, channel_id, guild = await create_dvc('40056')
+    role_id, channel_id, guild = await create_dvc('40055')
     await process_threadmarks.start(40055, ['benneh'], role_id, guild, channel_id)
     print(f"role: {role_id}")
     print(f"channel: {channel_id}")
