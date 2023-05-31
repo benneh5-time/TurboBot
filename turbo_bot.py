@@ -92,7 +92,7 @@ async def create_dvc(thread_id):
     channel = await guild.create_text_channel(
         name="DVC" + thread_id,
         overwrites={
-            guild.default_role: discord.PermissionOverwrite(read_message=False),
+            guild.default_role: discord.PermissionOverwrite(read_messages=False),
             role: discord.PermissionOverwrite(read_messages=True)
         }
     )
@@ -163,7 +163,7 @@ async def on_ready():
     if player_limit is None:
         player_limit = 10  
     # Start looping task
-    role_id, channel_id = await create_dvc('40056', ['benneh'])
+    role_id, channel_id = await create_dvc('40056')
     print(f"role: {role_id}")
     print(f"channel: {channel_id}")
     update_players.start()  # Start background task
