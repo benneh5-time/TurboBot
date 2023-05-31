@@ -131,7 +131,6 @@ async def on_ready():
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     print(game_host_name, flush=True)
     recruit_list = load_recruit_list()
-    process_threadmarks.start(40059)
     if players is None:
         players = {}
     if waiting_list is None:
