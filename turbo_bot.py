@@ -169,7 +169,7 @@ async def on_ready():
         player_limit = 10  
     # Start looping task
     role_id, channel_id, guild = await create_dvc('40056')
-    await process_threadmarks(40056, ['benneh'], role_id, guild, channel_id)
+    await process_threadmarks.start(40056, ['benneh'], role_id, guild, channel_id)
     print(f"role: {role_id}")
     print(f"channel: {channel_id}")
     update_players.start()  # Start background task
