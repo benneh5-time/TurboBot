@@ -92,7 +92,7 @@ async def create_dvc(thread_id):
     channel = await guild.create_text_channel(
         name="DVC" + thread_id,
         overwrites={
-            guild.default_role: discord.PermissionOverwrite(read_message=False)
+            guild.default_role: discord.PermissionOverwrite(read_message=False),
             role: discord.PermissionOverwrite(read_messages=True)
         }
     )
