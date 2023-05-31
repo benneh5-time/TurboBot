@@ -131,20 +131,20 @@ class ThreadmarkProcessor:
 				else:                                
 					await channel.send(f"{username} was lunched")
 			elif "Results:" in event:
-                results = event.split("Results:")[1].strip()
-                players = results.split(", ")
+				results = event.split("Results:")[1].strip()
+				players = results.split(", ")
                 
-                for player in players:
-                    if " was " in player:
-                        username = player.split(" was ")[0].strip()
-                        role = player.split(" was ")[1].strip()
-                        if username.lower() in aliases.values() and username.lower() in player_aliases:
-                            mention_id = find_key_by_value(aliases, username)
-                            member = guild.get_member(mention_id)
-                            await member.add_roles(role_id)
-                            await channel.send(f"<@{mention_id}> was nightkilled. They were {role}. Welcome to dvc")
-                    else:
-                        await channel.send(username + " died at night")
+				for player in players:
+					if " was " in player:
+						username = player.split(" was ")[0].strip()
+						role = player.split(" was ")[1].strip()
+						if username.lower() in aliases.values() and username.lower() in player_aliases:
+							mention_id = find_key_by_value(aliases, username)
+							member = guild.get_member(mention_id)
+							await member.add_roles(role_id)
+							await channel.send(f"<@{mention_id}> was nightkilled. They were {role}. Welcome to dvc")
+					else:
+						await channel.send(username + " died at night")
 			elif "Game Over:" in event:
 				winning_team = event.split(" Wins")[0].split("Over: ")[-1].strip()
 				await channel.send(winning_team + " wins!!!")
