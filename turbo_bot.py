@@ -716,8 +716,8 @@ async def rand(ctx, *args):
             players.update(waiting_list)
             waiting_list.clear()   
             print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
-			is_rand_running = False
-			await process_threadmarks.start(thread_id, player_aliases, role_id, guild, channel_id)
+            is_rand_running = False
+            await process_threadmarks.start(thread_id, player_aliases, role_id, guild, channel_id)
             print(f"Threadmark processor started. Clearing game values.", Flush=True)
 
         elif "Error" in response_message:
