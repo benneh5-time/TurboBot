@@ -103,7 +103,7 @@ async def create_dvc(thread_id):
     guild = bot.get_guild(server_id)
     
     role = await guild.create_role(name=f"DVC: {thread_id}", permissions=discord.Permissions.none())
-    dvc_roles[thread_id] = role
+    dvc_roles[thread_id] = role.id
     save_dvc_roles()
     await guild.me.add_roles(role.id)
     channel = await guild.create_text_channel(
@@ -191,7 +191,7 @@ async def on_ready():
     global players, waiting_list, current_setup, game_host_name, player_limit, recruit_list
     print(f"We have logged in as {bot.user}", flush=True)
     load_aliases()
-    #load_dvc_roles()
+    load_dvc_roles()
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     recruit_list = load_recruit_list()
     if players is None:
@@ -207,7 +207,7 @@ async def on_ready():
     # Start looping task
     # Testing thread processing data
     #test_players = ["alexa.", "AnimePigeon", "baudib1", "benneh", "Clouds", "insomnia", "InstantAlt1", "Kajot", "LimeCoke", "Xanjori"]
-    #role_id, channel_id, guild = await create_dvc('40026')
+    role_id, channel_id, guild = await create_dvc('40026')
     # print(role_id, flush=True)
     # print(guild, flush=True)
     #await process_threadmarks.start('40026', test_players, role_id, guild, channel_id)
