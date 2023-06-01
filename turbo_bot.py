@@ -26,6 +26,7 @@ waiting_list = {}
 recruit_list = {}
 recruit_timer = 0
 aliases = {}
+dvc_roles = {}
 game_host_name = ["Mafia Host"]
 current_setup = "joat10"
 valid_setups = ["joat10", "vig10", "cop9", "cop13"] #future setups
@@ -58,7 +59,19 @@ def load_aliases():
             aliases.update({int(id): alias for id, alias in loaded_aliases.items()})
     except FileNotFoundError:
         pass
-        
+
+def save_dvc_roles():
+    with open('dvc_roles.json', 'w') as f:
+        json.dump(dvc_roles, f)
+
+def load_dvc_roles():
+    try:
+        with open("dvc_roles.json", "r") as f:
+            loaded_dvc_roles = json.load(f)
+            dvc_roles.update({int(id): alias for id, alias in loaded_dvc_roles.items()})
+    except FileNotFoundError:
+        pass
+           
 def save_player_list(player_list, waiting_list, current_setup, game_host_name, player_limit):
     with open('player_list_data.json', 'w') as f:
         json.dump({"player_list": player_list, "waiting_list": waiting_list, "current_setup": current_setup, "game_host_name": game_host_name, "player_limit": player_limit}, f)
@@ -90,6 +103,8 @@ async def create_dvc(thread_id):
     guild = bot.get_guild(server_id)
     
     role = await guild.create_role(name=f"DVC: {thread_id}", permissions=discord.Permissions.none())
+    dvc_roles[thread_id] = role
+    save_dvc_roles()
     await guild.me.add_roles(role)
     channel = await guild.create_text_channel(
         name = f"DVC {thread_id}",
@@ -176,6 +191,7 @@ async def on_ready():
     global players, waiting_list, current_setup, game_host_name, player_limit, recruit_list
     print(f"We have logged in as {bot.user}", flush=True)
     load_aliases()
+    load_dvc_roles()
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     recruit_list = load_recruit_list()
     if players is None:
@@ -191,9 +207,9 @@ async def on_ready():
     # Start looping task
     # Testing thread processing data
     #test_players = ["alexa.", "AnimePigeon", "baudib1", "benneh", "Clouds", "insomnia", "InstantAlt1", "Kajot", "LimeCoke", "Xanjori"]
-    #role_id, channel_id, guild = await create_dvc('40026')
-    #print(role_id, flush=True)
-    #print(guild, flush=True)
+    role_id, channel_id, guild = await create_dvc('40026')
+    # print(role_id, flush=True)
+    # print(guild, flush=True)
     #await process_threadmarks.start('40026', test_players, role_id, guild, channel_id)
     update_players.start()  # Start background task
 
