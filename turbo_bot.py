@@ -711,7 +711,7 @@ async def rand(ctx, *args):
             await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}")
             role_id, channel_id, guild = await create_dvc(thread_id)
             print(f"DVC thread created. Clearing variables", flush=True)
-			game_host_name = ["Mafia Host"]
+            game_host_name = ["Mafia Host"]
             players.clear()
             players.update(waiting_list)
             waiting_list.clear()   
