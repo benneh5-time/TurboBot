@@ -191,7 +191,7 @@ async def on_ready():
     global players, waiting_list, current_setup, game_host_name, player_limit, recruit_list
     print(f"We have logged in as {bot.user}", flush=True)
     load_aliases()
-    load_dvc_roles()
+    #load_dvc_roles()
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     recruit_list = load_recruit_list()
     if players is None:
