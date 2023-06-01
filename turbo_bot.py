@@ -170,7 +170,7 @@ processor = ThreadmarkProcessor()
 @tasks.loop(minutes=1)
 async def process_threadmarks(thread_id, player_aliases, role_id, guild, channel_id):
     await processor.process_threadmarks(thread_id, player_aliases, role_id, guild, channel_id)
-    
+
 @bot.event
 async def on_ready():
     global players, waiting_list, current_setup, game_host_name, player_limit, recruit_list
@@ -709,12 +709,17 @@ async def rand(ctx, *args):
             player_mentions = " ".join([f"<@{id}>" for id in mention_list])
             game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
             await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}")
-            role_id, channel_id, guild = await create_dvc(thread_id)            
-            await process_threadmarks.start(thread_id, player_aliases, role_id, guild, channel_id)
-            game_host_name = ["Mafia Host"]
+            role_id, channel_id, guild = await create_dvc(thread_id)
+            print(f"DVC thread created. Clearing variables", flush=True)
+			game_host_name = ["Mafia Host"]
             players.clear()
             players.update(waiting_list)
-            waiting_list.clear()
+            waiting_list.clear()   
+            print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
+			is_rand_running = False
+			await process_threadmarks.start(thread_id, player_aliases, role_id, guild, channel_id)
+            print(f"Threadmark processor started. Clearing game values.", Flush=True)
+
         elif "Error" in response_message:
             print(f"Game failed to rand, reason: {response_message}", flush=True)
             await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
