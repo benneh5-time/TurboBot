@@ -816,7 +816,20 @@ async def help(ctx):
     embed.add_field(name="!host", value="Sets the host of the game. By default, it will use your defined alias. You can specify a different host's username, e.g. `!host MU_Username`.", inline=False)
     embed.add_field(name="!game", value="Sets the game setup. Must specify setup name from available options: cop9, cop13, joat10, vig10. E.g. `!game cop9`.", inline=False)
     await ctx.send(embed=embed)
-    
+
+@bot.command()
+async def dvc(ctx)
+    if ctx.channel.id not in allowed_channels:
+        return
+    guild = bot.get_guild(dvc_server)
+    members = guild.query_members(user_ids=[ctx.author.id])
+    if members:
+        invite = "https://discord.gg/NgcPEhP5kY"
+        await ctx.author.send(f"Here is an invite to the Turbo DVC Discord: {invite}")
+    else:
+        await ctx.send("You're already in the turbo DVC, liar.")
+
+
 # The following is a troll command
 @bot.command()
 async def recruit(ctx, *args):
