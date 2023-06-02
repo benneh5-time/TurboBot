@@ -931,13 +931,13 @@ async def on_reaction_add(reaction, user):
             else:
                 if len(players) < player_limit:
                     players[alias] = 60            
-                    await reaction.message.channel.send(f'{user.name} joined the game! I am the new Manny!')
+                    await reaction.message.channel.send(f'{user.name} joined the game!')
                     #await ctx.message.add_reaction('👍')
                 else:
                     waiting_list[alias] = 60
                     #await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
                     #await ctx.message.add_reaction('👍')           
-                    await reaction.message.channel.send(f'{user.name} joined the waiting list! I am the new Manny!')
+                    await reaction.message.channel.send(f'{user.name} joined the waiting list!')
             await update_status()
 
        
