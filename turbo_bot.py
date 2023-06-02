@@ -900,6 +900,10 @@ async def recruit(ctx, *args):
 @bot.event
 async def on_message(message):
     global turbo_ping_message
+    if message.channel.id == dvc_channel:
+        await bot.process_commands(message)
+        return
+    
     if message.author == bot.user or message.channel.id not in allowed_channels:
         return
     
