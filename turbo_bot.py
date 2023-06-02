@@ -671,8 +671,19 @@ async def spec(ctx, arg: int):
             member = guild.get_member(ctx.author.id)
             await member.add_roles(role)
             await ctx.send(f"Added <@{ctx.author.id}> to role: {role.name}. Check #dvc-{role_num}")
-        except:
-            await ctx.send(f"Failed to add <@{ctx.author.id}> to spec chat. sorry, something went wrong.")
+        except ValueError as ve:
+            # Handle ValueError
+            print("ValueError occurred:", str(ve))
+            await ctx.send(f"Failed to add <@{ctx.author.id}> to spec chat. sorry, something went wrong.", flush=True)            
+        except TypeError as te:
+            # Handle TypeError
+            print("TypeError occurred:", str(te))
+            await ctx.send(f"Failed to add <@{ctx.author.id}> to spec chat. sorry, something went wrong.", flush=True)            
+        except Exception as e:
+            # Handle any other exception
+            print("An exception occurred:", str(e))
+            await ctx.send(f"Failed to add <@{ctx.author.id}> to spec chat. sorry, something went wrong.", flush=True)
+                      
 
     else:
         await ctx.send('Invalid argument. Please provide the 5-digit number of the game thread. You can find this at the beginning of the URL for the game thread or from my rand comment in #turbo-chat. Please try again with !spec xxxxx')
