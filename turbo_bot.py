@@ -30,7 +30,7 @@ dvc_roles = {}
 game_host_name = ["Mafia Host"]
 current_setup = "joat10"
 valid_setups = ["joat10", "vig10", "cop9", "cop13"] #future setups
-allowed_channels = [223260125786406912]  # turbo-chat channel ID
+allowed_channels = [223260125786406912, 1113961938855145563]  # turbo-chat channel ID
 dvc_channel = 1113961938855145563
 dvc_server = 1094321402489872436
 status_id = None
@@ -868,7 +868,7 @@ async def recruit(ctx, *args):
 @bot.event
 async def on_message(message):
     global turbo_ping_message
-    if message.author == bot.user or message.channel.id not in allowed_channels or message.channel.id == dvc_channel:
+    if message.author == bot.user or message.channel.id not in allowed_channels:
         return
     
     for mention in message.role_mentions:
@@ -882,7 +882,7 @@ async def on_message(message):
     await bot.process_commands(message)
 @bot.event 
 async def on_reaction_add(reaction, user):
-    if user == bot.user or reaction.message.channel.id not in allowed_channels or message.channel.id == dvc_channel:
+    if user == bot.user or reaction.message.channel.id not in allowed_channels:
         return
     global game_host_name, player_limit, players, waiting_list, turbo_ping_message
         
