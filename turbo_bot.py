@@ -657,7 +657,7 @@ async def update_players():
 
 @bot.command()
 async def spec(ctx, arg: int):
-    if ctx.channel.id not dvc_server:
+    if ctx.channel.id not in dvc_server:
         return
     if 10000 <= arg <= 99999:
         try:
