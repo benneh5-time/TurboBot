@@ -665,7 +665,7 @@ async def spec(ctx, arg: int):
     if 10000 <= arg <= 99999:
         try:
             role_num = str(arg)
-            role_id = dvc_roles[arg]
+            role_id = dvc_roles[role_num]
             guild = bot.get_guild(dvc_server)
             role = guild.get_role(role_id)
             member = guild.get_member(ctx.author.id)
