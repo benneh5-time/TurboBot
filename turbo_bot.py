@@ -772,7 +772,7 @@ async def rand(ctx, *args):
                         
             player_mentions = " ".join([f"<@{id}>" for id in mention_list])
             game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
-            await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}")
+            await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}\nType !dvc to join the turbo DVC/Graveyard. You will be auto-in'd to the graveyard channel upon your death if you are in that server!")
             role_id, channel_id, guild = await create_dvc(thread_id)
             print(f"DVC thread created. Clearing variables", flush=True)
             channel = bot.get_channel(channel_id)
