@@ -633,7 +633,7 @@ async def host(ctx, *, host_name=None):
         host_list = [f"{host}" for host in game_host_name]
         hosts = ', '.join(host_list)
         await ctx.send(f"Hosts for the next turbo are set as {hosts}")
-        await update_status()
+        await update_status() 
         return
     
 @tasks.loop(minutes=1)
