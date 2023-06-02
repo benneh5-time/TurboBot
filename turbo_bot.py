@@ -818,7 +818,7 @@ async def help(ctx):
     await ctx.send(embed=embed)
 
 @bot.command()
-async def dvc(ctx)
+async def dvc(ctx):
     if ctx.channel.id not in allowed_channels:
         return
     guild = bot.get_guild(dvc_server)
