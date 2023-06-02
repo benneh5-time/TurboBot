@@ -658,6 +658,7 @@ async def update_players():
 @bot.command()
 async def spec(ctx, arg: int):
     if ctx.channel.id != dvc_channel:
+        print("ignoring, flush=True")
         return
     if arg is None:
         return
