@@ -32,6 +32,7 @@ current_setup = "joat10"
 valid_setups = ["joat10", "vig10", "cop9", "cop13"] #future setups
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 dvc_channel = 1097200194157809757
+dvc_server = 1094321402489872436
 status_id = None
 status_channel = None
 is_rand_running = False
@@ -99,9 +100,7 @@ def find_key_by_value(dictionary, value):
     return None
 
 async def create_dvc(thread_id):
-    server_id = 1094321402489872436
-    guild = bot.get_guild(server_id)
-    
+    guild = bot.get_guild(dvc_server)    
     role = await guild.create_role(name=f"DVC: {thread_id}", permissions=discord.Permissions.none())
     dvc_roles[thread_id] = role.id
     save_dvc_roles()
@@ -176,7 +175,7 @@ class ThreadmarkProcessor:
 				await channel.send(winning_team + " wins!!!")
 				self.processed_threadmarks.clear()
 				await channel.send("Game concluded")
-				process_threadmarks.cancel()
+				process_threadmarks.stop()
 				# Game is over, perform any other cleanup here	
 			self.processed_threadmarks.append(event)
 
@@ -655,7 +654,24 @@ async def update_players():
                 players[next_alias] = next_time
                 await bot.get_channel(223260125786406912).send(f"{next_alias} has been moved from the waiting list to the main list.")
     save_player_list(players, waiting_list, current_setup, game_host_name, player_limit)
-    
+
+@bot.command()
+async def spec(ctx, arg: int):
+    if ctx.channel.id not dvc_server:
+        return
+    if 10000 <= arg <= 99999:
+        try:
+            role_id = dvc_roles[str(arg)]
+            guild = bot.get_guild(dvc_server)
+            member = guild.get_member(ctx.author.id)
+            await member.add_roles(role_id)
+        except:
+            await ctx.send(f"Failed to add {ctx.author.id} to spec chat. sorry, something went wrong.")
+
+    else:
+        await ctx.send('Invalid argument. Please provide the 5-digit number of the game thread. You can find this at the beginning of the URL for the game thread or from my rand comment in #turbo-chat. Please try again with !spec xxxxx')
+
+
 @bot.command()
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -727,6 +743,17 @@ async def rand(ctx, *args):
             await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}")
             role_id, channel_id, guild = await create_dvc(thread_id)
             print(f"DVC thread created. Clearing variables", flush=True)
+            channel = bot.get_channel(channel_id)
+            for host in game_host_name:
+                if host in aliases.values():
+                    try:
+                        mention_id = find_key_by_value(aliases, host)
+                        member = guild.get_member(mention_id)
+                        await member.add_roles(role_id)
+                        await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
+                    except:
+                        await channel.send(f"failed to add {host} to dvc.")
+
             game_host_name = ["Mafia Host"]
             players.clear()
             players.update(waiting_list)
@@ -908,7 +935,7 @@ async def on_reaction_add(reaction, user):
                     await reaction.message.channel.send(f'{user.name} joined the waiting list! I am the new Manny!')
             await update_status()
 
-        
+       
 TOKEN = os.environ.get('TOKEN')
 # Run the bot
 bot.run(TOKEN)
