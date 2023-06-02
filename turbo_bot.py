@@ -102,7 +102,7 @@ def find_key_by_value(dictionary, value):
 async def create_dvc(thread_id):
     guild = bot.get_guild(dvc_server)    
     role = await guild.create_role(name=f"DVC: {thread_id}", permissions=discord.Permissions.none())
-    dvc_roles[thread_id] = role.id
+    dvc_roles[int(thread_id)] = role.id
     save_dvc_roles()
     await guild.me.add_roles(role)
     channel = await guild.create_text_channel(
@@ -665,8 +665,7 @@ async def spec(ctx, arg: int):
         return
     if 10000 <= arg <= 99999:
         try:
-            role_num = str(arg)
-            role_id = dvc_roles[role_num]
+            role_id = dvc_roles[arg]
             guild = bot.get_guild(dvc_server)
             role = guild.get_role(role_id)
             member = guild.get_member(ctx.author.id)
