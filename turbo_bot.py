@@ -669,7 +669,7 @@ async def spec(ctx, arg: int):
         #print(role_id)
         guild = bot.get_guild(dvc_server)
         member = guild.get_member(ctx.author.id)
-        await member.add_roles(role_id)
+        await member.add_roles(str(role_id))
         #except:
         #    await ctx.send(f"Failed to add <@{ctx.author.id}> to spec chat. sorry, something went wrong.")
 
