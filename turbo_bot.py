@@ -823,7 +823,8 @@ async def dvc(ctx):
         return
     guild = bot.get_guild(dvc_server)
     members = await guild.query_members(user_ids=[ctx.author.id])
-    if ctx.author.id in members:
+    print(members, flush=True)
+    if ctx.author.id not in members:
         invite = "https://discord.gg/Wt6rVWmG3B"
         await ctx.author.send(f"Here is an invite to the Turbo DVC Discord: {invite}")
     else:
