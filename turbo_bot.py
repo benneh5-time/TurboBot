@@ -205,7 +205,6 @@ async def on_ready():
     load_aliases()
     load_dvc_roles()
     load_messages()
-    print(dvc_roles, flush=True)
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     recruit_list = load_recruit_list()
     if players is None:
@@ -917,7 +916,7 @@ async def new_game_spec_message(bot, thread_id, title):
 
     channel = bot.get_channel(dvc_channel)
     
-    message_text = f"Game thread: {title} has just randed! React with 👀 or type `!spec {thread_id} to spectate if you are not in the game or are not auto-added after your death!"
+    message_text = f"Game thread: {title}, thread_id: {thread_id} has just randed! React with 👀 to spectate. Make sure you are not in the game or that you have died before adding yourself. Bot will attempt to auto add those who are signed up with their alias."
     message = await channel.send(message_text)
     await message.add_reaction('👀')
 
