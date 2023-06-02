@@ -31,7 +31,7 @@ game_host_name = ["Mafia Host"]
 current_setup = "joat10"
 valid_setups = ["joat10", "vig10", "cop9", "cop13"] #future setups
 allowed_channels = [223260125786406912, 1113961938855145563]  # turbo-chat channel ID
-dvc_channel = 1113961938855145563
+dvc_channel = 1114212787141492788
 dvc_server = 1094321402489872436
 status_id = None
 status_channel = None
@@ -206,7 +206,7 @@ async def on_ready():
     # Start looping task
     # Testing thread processing data
     #test_players = ["alexa.", "AnimePigeon", "baudib1", "benneh", "Clouds", "insomnia", "InstantAlt1", "Kajot", "LimeCoke", "Xanjori"]
-    role_id, channel_id, guild = await create_dvc('40026')
+    # role_id, channel_id, guild = await create_dvc('40026')
     # print(role_id, flush=True)
     # print(guild, flush=True)
     #await process_threadmarks.start('40026', test_players, role_id, guild, channel_id)
@@ -824,7 +824,7 @@ async def dvc(ctx):
     guild = bot.get_guild(dvc_server)
     members = await guild.query_members(user_ids=[ctx.author.id])
     if ctx.author.id in members:
-        invite = "https://discord.gg/NgcPEhP5kY"
+        invite = "https://discord.gg/Wt6rVWmG3B"
         await ctx.author.send(f"Here is an invite to the Turbo DVC Discord: {invite}")
     else:
         await ctx.send("You're already in the turbo DVC, liar.")
