@@ -659,14 +659,16 @@ async def update_players():
 async def spec(ctx, arg: int):
     if ctx.channel.id != dvc_channel:
         return
+    if arg is None:
+        return
     if 10000 <= arg <= 99999:
         try:
-            role_id = dvc_roles[str(arg)]
+            role_id = dvc_roles[arg]
             guild = bot.get_guild(dvc_server)
             member = guild.get_member(ctx.author.id)
             await member.add_roles(role_id)
         except:
-            await ctx.send(f"Failed to add {ctx.author.id} to spec chat. sorry, something went wrong.")
+            await ctx.send(f"Failed to add <@{ctx.author.id}> to spec chat. sorry, something went wrong.")
 
     else:
         await ctx.send('Invalid argument. Please provide the 5-digit number of the game thread. You can find this at the beginning of the URL for the game thread or from my rand comment in #turbo-chat. Please try again with !spec xxxxx')
