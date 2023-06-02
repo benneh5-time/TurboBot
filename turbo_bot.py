@@ -1004,7 +1004,7 @@ async def on_reaction_add(reaction, user):
 
     if reaction.message.id in message_ids.values():
         role_thread_id = find_key_by_value(message_ids, reaction.message.id)
-        role_id = dvc_roles[role_thread_id]
+        role_id = dvc_roles[int(role_thread_id)]
         guild = bot.get_guild(dvc_server)
         member = guild.get_member(user.id)
         member.add_roles(role_id)
