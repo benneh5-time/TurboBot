@@ -671,6 +671,7 @@ async def spec(ctx, arg: int):
         role = guild.get_role(role_id)
         member = guild.get_member(ctx.author.id)
         await member.add_roles(role)
+        await ctx.send(f"Added {ctx.author.id} to role: {role.name}.")
         #except:
         #    await ctx.send(f"Failed to add <@{ctx.author.id}> to spec chat. sorry, something went wrong.")
 
