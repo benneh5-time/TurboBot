@@ -868,7 +868,7 @@ async def recruit(ctx, *args):
 @bot.event
 async def on_message(message):
     global turbo_ping_message
-    if message.author == bot.user or message.channel.id not in allowed_channels or message.channel.id != dvc_channel:
+    if message.author == bot.user or message.channel.id not in allowed_channels or message.channel.id == dvc_channel:
         return
     
     for mention in message.role_mentions:
@@ -882,7 +882,7 @@ async def on_message(message):
     await bot.process_commands(message)
 @bot.event 
 async def on_reaction_add(reaction, user):
-    if user == bot.user or reaction.message.channel.id not in allowed_channels or message.channel.id != dvc_channel:
+    if user == bot.user or reaction.message.channel.id not in allowed_channels or message.channel.id == dvc_channel:
         return
     global game_host_name, player_limit, players, waiting_list, turbo_ping_message
         
