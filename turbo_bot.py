@@ -32,6 +32,7 @@ game_host_name = ["Mafia Host"]
 current_setup = "joat10"
 valid_setups = ["joat10", "vig10", "cop9", "cop13"] #future setups
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
+react_channels = [223260125786406912, 1114212787141492788]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 status_id = None
@@ -948,7 +949,7 @@ async def on_message(message):
 
 @bot.event 
 async def on_reaction_add(reaction, user):
-    if user == bot.user or reaction.message.channel.id not in allowed_channels:
+    if user == bot.user or reaction.message.channel.id not in react_channels:
         return
     global game_host_name, player_limit, players, waiting_list, turbo_ping_message
         
