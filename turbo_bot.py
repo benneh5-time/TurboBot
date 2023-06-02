@@ -27,12 +27,13 @@ recruit_list = {}
 recruit_timer = 0
 aliases = {}
 dvc_roles = {}
+message_ids = {}
 game_host_name = ["Mafia Host"]
 current_setup = "joat10"
 valid_setups = ["joat10", "vig10", "cop9", "cop13"] #future setups
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
-dvc_channel = 1114212787141492788
-dvc_server = 1094321402489872436
+dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
+dvc_server = 1094321402489872436   # DVC Server id
 status_id = None
 status_channel = None
 is_rand_running = False
@@ -48,6 +49,18 @@ def load_recruit_list():
             return json.load(f)
     except FileNotFoundError:
         return {}
+
+def save_messages():
+    with open('messages.json', 'w') as f:
+        json.dump(message_ids, f)
+
+def load_messages():
+    try:
+        with open("messages.json", "r") as f:
+            loaded_messages = json.load(f)
+            message_ids.update({int(id): int(alias) for id, alias in loaded_messages.items()})
+    except FileNotFoundError:
+        pass
 
 def save_aliases():
     with open('aliases.json', 'w') as f:
@@ -191,6 +204,7 @@ async def on_ready():
     print(f"We have logged in as {bot.user}", flush=True)
     load_aliases()
     load_dvc_roles()
+    load_messages()
     print(dvc_roles, flush=True)
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     recruit_list = load_recruit_list()
@@ -772,6 +786,7 @@ async def rand(ctx, *args):
                     except:
                         await channel.send(f"failed to add {host} to dvc.")
 
+            await new_game_spec_message(bot, thread_id, game_title)
             game_host_name = ["Mafia Host"]
             players.clear()
             players.update(waiting_list)
@@ -897,6 +912,20 @@ async def recruit(ctx, *args):
         else:
             await ctx.send("No players have opted in to be recruited")
 
+async def new_game_spec_message(bot, thread_id, title):
+    global message_ids
+
+    channel = bot.get_channel(dvc_channel)
+    
+    message_text = f"Game thread: {title} has just randed! React with 👀 or type `!spec {thread_id} to spectate if you are not in the game or are not auto-added after your death!"
+    message = await channel.send(message_text)
+    await message.add_reaction('👀')
+
+    message_ids[thread_id] = message.id
+    save_messages()
+
+    return
+
 @bot.event
 async def on_message(message):
     global turbo_ping_message
@@ -916,6 +945,8 @@ async def on_message(message):
             turbo_ping_message = response.id
             await response.add_reaction('✅')
     await bot.process_commands(message)
+
+
 @bot.event 
 async def on_reaction_add(reaction, user):
     if user == bot.user or reaction.message.channel.id not in allowed_channels:
@@ -970,6 +1001,16 @@ async def on_reaction_add(reaction, user):
                     #await ctx.message.add_reaction('👍')           
                     await reaction.message.channel.send(f'{user.name} joined the waiting list!')
             await update_status()
+
+    if reaction.message.id in message_ids.values():
+        role_thread_id = find_key_by_value(message_ids, reaction.message.id)
+        role_id = dvc_roles[role_thread_id]
+        guild = bot.get_guild(dvc_server)
+        member = guild.get_member(user.id)
+        member.add_roles(role_id)
+        channel = bot.get_channel(dvc_channel)
+        await channel.send(f"Added <@{user.id}> to #dvc-{str(role_thread_id)}")
+        
 
        
 TOKEN = os.environ.get('TOKEN')
