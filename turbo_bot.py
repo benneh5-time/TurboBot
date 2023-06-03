@@ -114,17 +114,22 @@ def find_key_by_value(dictionary, value):
     return None
 
 async def create_dvc(thread_id):
-    guild = bot.get_guild(dvc_server)    
+    guild = bot.get_guild(dvc_server)
+    category_id = 1114340515006136411    
     role = await guild.create_role(name=f"DVC: {thread_id}", permissions=discord.Permissions.none())
     dvc_roles[int(thread_id)] = role.id
     save_dvc_roles()
     await guild.me.add_roles(role)
+    category = guild.get_channel(category_id)
     channel = await guild.create_text_channel(
         name = f"DVC {thread_id}",
         overwrites={
             guild.default_role: discord.PermissionOverwrite(read_messages=False),
             role: discord.PermissionOverwrite(read_messages=True)
-        }
+        },
+        category = category,
+        position = 0
+
     )
     return role, channel.id, guild
     
@@ -794,7 +799,7 @@ async def rand(ctx, *args):
             print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
             is_rand_running = False
             await process_threadmarks.start(thread_id, player_aliases, role_id, guild, channel_id)
-            print(f"Threadmark processor started. Clearing game values.", flush=True)
+            print(f"Threadmark processor finished. rand function finished.", flush=True)
 
         elif "Error" in response_message:
             print(f"Game failed to rand, reason: {response_message}", flush=True)
