@@ -211,7 +211,7 @@ async def on_ready():
     load_aliases()
     load_dvc_roles()
     load_messages()
-    print(message_ids.values())
+    print(message_ids.values(), flush=True)
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     recruit_list = load_recruit_list()
     if players is None:
