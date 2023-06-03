@@ -958,7 +958,7 @@ async def on_reaction_add(reaction, user):
     if user == bot.user or reaction.message.channel.id not in react_channels:
         return
     global game_host_name, player_limit, players, waiting_list, turbo_ping_message
-        
+    print("reaction seen", flush=True)    
     if reaction.message.id == turbo_ping_message:
         if reaction.emoji == '✅':
             if user.id not in aliases:
