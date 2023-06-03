@@ -1012,8 +1012,9 @@ async def on_reaction_add(reaction, user):
         role_thread_id = find_key_by_value(message_ids, reaction.message.id)
         role_id = dvc_roles[int(role_thread_id)]
         guild = bot.get_guild(dvc_server)
+        role = guild.get_role(role_id)
         member = guild.get_member(user.id)
-        await member.add_roles(role_id)
+        await member.add_roles(role)
         channel = bot.get_channel(dvc_channel)
         await channel.send(f"Added <@{user.id}> to #dvc-{str(role_thread_id)}")
         
