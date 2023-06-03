@@ -1009,8 +1009,10 @@ async def on_reaction_add(reaction, user):
             await update_status()
 
     if reaction.message.id in message_ids.values():
+        print(f"message_ids {message_ids}", flush=True)
         role_thread_id = find_key_by_value(message_ids, reaction.message.id)
         role_id = dvc_roles[int(role_thread_id)]
+        print(f"role_id {role_id}", flush=True)
         guild = bot.get_guild(dvc_server)
         role = guild.get_role(role_id)
         member = guild.get_member(user.id)
