@@ -828,7 +828,7 @@ async def clear(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
         
-    global players, waiting_list, game_host_name, current_setup    
+    global players, waiting_list, game_host_name, current_setup, player_limit    
     
     parser = argparse.ArgumentParser()
     parser.add_argument('-confirm', action='store_true') 
@@ -842,6 +842,7 @@ async def clear(ctx, *args):
     if args_parsed.confirm:        
         players = {}
         waiting_list = {}
+        player_limit = 10
         game_host_name = ["Mafia Host"]
         current_setup = "joat10"        
         await ctx.send("Player and waiting list has been cleared. Game is JOAT10 and host is Mafia Host")
