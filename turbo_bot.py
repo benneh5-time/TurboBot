@@ -316,10 +316,10 @@ async def in_(ctx, time: int = 60):
             game_host_name.remove(alias)
             if len(players) < player_limit:
                 players[alias] = 60
-                reaction.message.channel.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
+                await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
             else:
                 waiting_list[alias] = 60
-                await reaction.message.channel.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
+                await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
             await update_status()    
             return
             
@@ -436,7 +436,7 @@ async def add(ctx, *, alias):
             await update_status()
             return
         else:
-            waiting_list[alias] = time 
+            waiting_list[alias] = 60 
             await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
             await update_status()
             return
