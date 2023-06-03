@@ -231,7 +231,6 @@ async def on_ready():
     load_aliases()
     load_dvc_roles()
     load_messages()
-    print(message_ids.values(), flush=True)
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     recruit_list = load_recruit_list()
     if players is None:
@@ -244,14 +243,8 @@ async def on_ready():
         game_host_name = ["Mafia Host"] 
     if player_limit is None:
         player_limit = 10  
-    # Start looping task
-    # Testing thread processing data
-    #test_players = ["alexa.", "AnimePigeon", "baudib1", "benneh", "Clouds", "insomnia", "InstantAlt1", "Kajot", "LimeCoke", "Xanjori"]
-    # role_id, channel_id, guild = await create_dvc('40026')
-    # print(role_id, flush=True)
-    # print(guild, flush=True)
-    #await process_threadmarks.start('40026', test_players, role_id, guild, channel_id)
     update_players.start()  # Start background task
+    await clear_dvc_roles()
 
 @bot.command()
 async def game(ctx, setup_name=None):
@@ -1041,7 +1034,20 @@ async def on_reaction_add(reaction, user):
         channel = bot.get_channel(dvc_channel)
         await channel.send(f"Added <@{user.id}> to #dvc-{str(role_thread_id)}")
         
+async def clear_dvc_roles():
+    roles_to_delete = []
 
+    guild = bot.get_guild(dvc_server)
+    for role in guild.roles:
+        if "DVC:" in role.name:
+            roles_to_delete.append(role)
+    
+    for role in roles_to_delete:
+        try:
+            await role.delete()
+            print(f"Deleted role {role.name}")
+        except:
+            print(f"Couldnt delete role {role.name}")
        
 TOKEN = os.environ.get('TOKEN')
 # Run the bot
