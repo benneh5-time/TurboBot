@@ -132,6 +132,26 @@ async def create_dvc(thread_id):
 
     )
     return role, channel.id, guild
+
+async def edit_dvc(channel, guild):
+
+    if channel:
+        permissions = channel.overwrites_for(guild.default_role)
+
+        permissions.read_messages = True
+
+        await channel.set_permissions(guild.default_role, overwrite=permissions)
+        await channel.send("This channel is now open to everyone")
+
+async def delete_dvc_role(channel, guild, role_id):
+    role = guild.get_role(role_id)
+
+    if role:
+        try:
+            await role.delete()
+            await channel.send("DVC Role deleted for post-game clean up.")
+        except:
+            await channel.send("Failed to delete dvc role")
     
 class ThreadmarkProcessor:
 	def __init__(self):
@@ -801,7 +821,8 @@ async def rand(ctx, *args):
             is_rand_running = False
             await process_threadmarks.start(thread_id, player_aliases, role_id, guild, channel_id)
             print(f"Threadmark processor finished. rand function finished.", flush=True)
-
+            await edit_dvc(channel, guild)
+            await delete_dvc_role(channel, guild, role_id)
         elif "Error" in response_message:
             print(f"Game failed to rand, reason: {response_message}", flush=True)
             await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
@@ -980,7 +1001,7 @@ async def on_reaction_add(reaction, user):
                     game_host_name.remove(alias)
                     if len(players) < player_limit:
                         players[alias] = 60
-                        reaction.message.channel.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
+                        await reaction.message.channel.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
                     else:
                         waiting_list[alias] = 60
                         await reaction.message.channel.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
