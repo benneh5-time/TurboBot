@@ -143,8 +143,8 @@ async def edit_dvc(channel, guild):
         await channel.set_permissions(guild.default_role, overwrite=permissions)
         await channel.send("This channel is now open to everyone")
 
-async def delete_dvc_role(channel, guild, role_id):
-    role = guild.get_role(role_id)
+async def delete_dvc_role(channel, role):
+    guild = bot.get_guild(dvc_server)
 
     if role:
         try:
@@ -157,7 +157,7 @@ class ThreadmarkProcessor:
 	def __init__(self):
 		self.processed_threadmarks = []
 
-	async def process_threadmarks(self, thread_id, player_aliases, role_id, guild, channel_id):
+	async def process_threadmarks(self, thread_id, player_aliases, role, guild, channel_id):
 
 		url = f"https://www.mafiauniverse.com/forums/threadmarks/{thread_id}"
 		response = requests.get(url)
@@ -174,18 +174,18 @@ class ThreadmarkProcessor:
 			if "Elimination:" in event:
 				results = event.split("Elimination: ")[1].strip()
 				username = results.split(" was ")[0].strip()
-				role = results.split(" was ")[1].strip()
+				game_role = results.split(" was ")[1].strip()
 				username = username.lower()
 				if username in aliases.values() and username in pl_list:
 					try:
 						mention_id = find_key_by_value(aliases, username)
 						member = guild.get_member(mention_id)
-						await member.add_roles(role_id)
-						await channel.send(f"<@{mention_id}> was lunched. They were {role}, welcome to DVC")
+						await member.add_roles(role)
+						await channel.send(f"<@{mention_id}> was lunched. They were {game_role}, welcome to DVC")
 					except:
-						await channel.send(f"{username} was lunched. They were {role}.")
+						await channel.send(f"{username} was lunched. They were {game_role}.")
 				elif username in pl_list:
-					await channel.send(f"{username} was lunched. They were {role}.")
+					await channel.send(f"{username} was lunched. They were {game_role}.")
 				else:                                
 					continue
 			elif "Results:" in event:
@@ -195,18 +195,18 @@ class ThreadmarkProcessor:
 				for player in players:
 					if " was " in player:
 						username = player.split(" was ")[0].strip()
-						role = player.split(" was ")[1].strip()
+						game_role = player.split(" was ")[1].strip()
 						username = username.lower()
 						if username in aliases.values() and username in pl_list:
 							try:
 								mention_id = find_key_by_value(aliases, username)
 								member = guild.get_member(mention_id)
-								await member.add_roles(role_id)
-								await channel.send(f"<@{mention_id}> was nightkilled. They were {role}. Welcome to dvc")
+								await member.add_roles(role)
+								await channel.send(f"<@{mention_id}> was nightkilled. They were {game_role}. Welcome to dvc")
 							except:
-								await channel.send(f"{username} was nightkilled. They were {role}.")
+								await channel.send(f"{username} was nightkilled. They were {game_role}.")
 						elif username in pl_list:
-							await channel.send(f"{username} was nightkilled. They were {role}.")
+							await channel.send(f"{username} was nightkilled. They were {game_role}.")
 					else:
 						continue
 			elif "Game Over:" in event:
@@ -221,8 +221,8 @@ class ThreadmarkProcessor:
 processor = ThreadmarkProcessor()
 
 @tasks.loop(minutes=1)
-async def process_threadmarks(thread_id, player_aliases, role_id, guild, channel_id):
-    await processor.process_threadmarks(thread_id, player_aliases, role_id, guild, channel_id)
+async def process_threadmarks(thread_id, player_aliases, role, guild, channel_id):
+    await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id)
 
 @bot.event
 async def on_ready():
@@ -792,7 +792,7 @@ async def rand(ctx, *args):
             player_mentions = " ".join([f"<@{id}>" for id in mention_list])
             game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
             await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}\nType !dvc to join the turbo DVC/Graveyard. You will be auto-in'd to the graveyard channel upon your death if you are in that server!")
-            role_id, channel_id, guild = await create_dvc(thread_id)
+            role, channel_id, guild = await create_dvc(thread_id)
             print(f"DVC thread created. Clearing variables", flush=True)
             channel = bot.get_channel(channel_id)
             for host in game_host_name:
@@ -800,7 +800,7 @@ async def rand(ctx, *args):
                     try:
                         mention_id = find_key_by_value(aliases, host)
                         member = guild.get_member(mention_id)
-                        await member.add_roles(role_id)
+                        await member.add_roles(role)
                         await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
                     except:
                         await channel.send(f"failed to add {host} to dvc.")
@@ -812,10 +812,10 @@ async def rand(ctx, *args):
             waiting_list.clear()   
             print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
             is_rand_running = False
-            await process_threadmarks.start(thread_id, player_aliases, role_id, guild, channel_id)
+            await process_threadmarks.start(thread_id, player_aliases, role, guild, channel_id)
             print(f"Threadmark processor finished. rand function finished.", flush=True)
             await edit_dvc(channel, guild)
-            await delete_dvc_role(channel, guild, role_id)
+            await delete_dvc_role(channel, role)
         elif "Error" in response_message:
             print(f"Game failed to rand, reason: {response_message}", flush=True)
             await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
