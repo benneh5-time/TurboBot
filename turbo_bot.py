@@ -244,7 +244,7 @@ async def on_ready():
     if player_limit is None:
         player_limit = 10  
     update_players.start()  # Start background task
-    await clear_dvc_roles()
+    # await clear_dvc_roles()
 
 @bot.command()
 async def game(ctx, setup_name=None):
