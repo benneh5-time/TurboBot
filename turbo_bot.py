@@ -315,10 +315,10 @@ async def in_(ctx, time: int = 60):
         elif len(game_host_name) > 1:
             game_host_name.remove(alias)
             if len(players) < player_limit:
-                players[alias] = 60
+                players[alias] = time
                 await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
             else:
-                waiting_list[alias] = 60
+                waiting_list[alias] = time
                 await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
             await update_status()    
             return
