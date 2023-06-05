@@ -171,7 +171,7 @@ class ThreadmarkProcessor:
 			
 			if event in self.processed_threadmarks:
 				continue
-			if "Elimination:" in event:
+			if "Elimination:" in event and " was " in event:
 				results = event.split("Elimination: ")[1].strip()
 				username = results.split(" was ")[0].strip()
 				game_role = results.split(" was ")[1].strip()
@@ -209,7 +209,15 @@ class ThreadmarkProcessor:
 							await channel.send(f"{username} was nightkilled. They were {game_role}.")
 					else:
 						continue
+                                        
+			elif "Elimination: Sleep" in event:
+				await channel.send("Players voted sleep. No one has died.")
+
 			elif "Game Over:" in event:
+				winning_team = event.split(" Wins")[0].split("Over: ")[-1].strip()
+				await channel.send(winning_team + " wins!!!")
+				self.processed_threadmarks.clear()
+				await channel.send("Game concluded")
 				winning_team = event.split(" Wins")[0].split("Over: ")[-1].strip()
 				await channel.send(winning_team + " wins!!!")
 				self.processed_threadmarks.clear()
