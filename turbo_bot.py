@@ -115,7 +115,9 @@ def find_key_by_value(dictionary, value):
 
 async def create_dvc(thread_id):
     guild = bot.get_guild(dvc_server)
-    category_id = 1114340515006136411    
+    # DVC Archive cat_id
+    # category_id = 1114340515006136411
+    category_id = 1117176858304336012
     role = await guild.create_role(name=f"DVC: {thread_id}", permissions=discord.Permissions.none())
     dvc_roles[int(thread_id)] = role.id
     save_dvc_roles()
@@ -134,12 +136,13 @@ async def create_dvc(thread_id):
     return role, channel.id, guild
 
 async def edit_dvc(channel, guild):
-
+    dvc_archive = 1114340515006136411
+    category = bot.get_channel(dvc_archive)
     if channel:
         permissions = channel.overwrites_for(guild.default_role)
 
         permissions.read_messages = True
-
+        await channel.edit(category=category)
         await channel.set_permissions(guild.default_role, overwrite=permissions)
         await channel.send("This channel is now open to everyone")
 
