@@ -136,6 +136,7 @@ async def create_dvc(thread_id):
     return role, channel.id, guild
 
 async def edit_dvc(channel, guild):
+    
     dvc_archive = 1114340515006136411
     category = bot.get_channel(dvc_archive)
     if channel:
@@ -191,6 +192,10 @@ class ThreadmarkProcessor:
 					await channel.send(f"{username} was lunched. They were {game_role}.")
 				else:                                
 					continue
+                
+			elif "Results: No one died" in event:
+				await channel.send("No one died overnight. Doc save? CROGGERS")
+                
 			elif "Results:" in event:
 				results = event.split("Results:")[1].strip()
 				players = results.split(", ")
@@ -327,7 +332,7 @@ async def in_(ctx, time: int = 60):
             game_host_name.remove(alias)
             if len(players) < player_limit:
                 players[alias] = time
-                await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
+                await ctx.send(f"{alias} has been removed as host and added to the list for the next {time} minutes.")
             else:
                 waiting_list[alias] = time
                 await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
