@@ -703,7 +703,6 @@ async def update_players():
 @bot.command()
 async def spec(ctx, arg: int):
     if ctx.channel.id != dvc_channel:
-        print("ignoring, flush=True")
         return
     if arg is None:
         return
@@ -883,7 +882,6 @@ async def dvc(ctx):
         return
     guild = bot.get_guild(dvc_server)
     members = await guild.query_members(user_ids=[ctx.author.id])
-    print(members, flush=True)
     if ctx.author.id not in members:
         invite = "https://discord.gg/Wt6rVWmG3B"
         await ctx.author.send(f"Here is an invite to the Turbo DVC Discord: {invite}")
@@ -983,8 +981,7 @@ async def on_message(message):
 async def on_reaction_add(reaction, user):
     if user == bot.user or reaction.message.channel.id not in react_channels:
         return
-    global game_host_name, player_limit, players, waiting_list, turbo_ping_message
-    print("reaction seen", flush=True)    
+    global game_host_name, player_limit, players, waiting_list, turbo_ping_message   
     if reaction.message.id == turbo_ping_message:
         if reaction.emoji == '✅':
             if user.id not in aliases:
@@ -1035,10 +1032,8 @@ async def on_reaction_add(reaction, user):
             await update_status()
 
     if reaction.message.id in message_ids.values():
-        print(f"message_ids {message_ids}", flush=True)
         role_thread_id = find_key_by_value(message_ids, reaction.message.id)
         role_id = dvc_roles[int(role_thread_id)]
-        print(f"role_id {role_id}", flush=True)
         guild = bot.get_guild(dvc_server)
         role = guild.get_role(role_id)
         member = guild.get_member(user.id)
