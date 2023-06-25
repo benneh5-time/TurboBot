@@ -224,14 +224,9 @@ class ThreadmarkProcessor:
 			elif "Game Over:" in event:
 				winning_team = event.split(" Wins")[0].split("Over: ")[-1].strip()
 				await channel.send(winning_team + " wins!!!")
-				self.processed_threadmarks.clear()
-				await channel.send("Game concluded")
-				winning_team = event.split(" Wins")[0].split("Over: ")[-1].strip()
-				await channel.send(winning_team + " wins!!!")
-				self.processed_threadmarks.clear()
 				await channel.send("Game concluded")
 				process_threadmarks.stop()
-				# Game is over, perform any other cleanup here	
+				self.processed_threadmarks.clear()
 			self.processed_threadmarks.append(event)
 
 processor = ThreadmarkProcessor()
