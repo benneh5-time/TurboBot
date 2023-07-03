@@ -692,6 +692,7 @@ async def update_players():
                 players[next_alias] = next_time
                 await bot.get_channel(223260125786406912).send(f"{next_alias} has been moved from the waiting list to the main list.")
     save_player_list(players, waiting_list, current_setup, game_host_name, player_limit)
+    await update_status()
 
 @bot.command()
 async def spec(ctx, arg: int):
