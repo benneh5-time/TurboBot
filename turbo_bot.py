@@ -175,26 +175,25 @@ class ThreadmarkProcessor:
 			
 			if event in self.processed_threadmarks:
 				continue
+                        
+			await channel.send(event)
+                        
 			if "Elimination:" in event and " was " in event:
 				results = event.split("Elimination: ")[1].strip()
-				username = results.split(" was ")[0].strip()
-				game_role = results.split(" was ")[1].strip()
-				username = username.lower()
-				if username in aliases.values() and username in pl_list:
+				username = results.split(" was ")[0].strip().lower()
+				if username in aliases.values():
 					try:
 						mention_id = find_key_by_value(aliases, username)
 						member = guild.get_member(mention_id)
 						await member.add_roles(role)
-						await channel.send(f"<@{mention_id}> was lunched. They were {game_role}, welcome to DVC")
+						await channel.send(f"<@{mention_id}> has been added to DVC.")
 					except:
-						await channel.send(f"{username} was lunched. They were {game_role}.")
-				elif username in pl_list:
-					await channel.send(f"{username} was lunched. They were {game_role}.")
-				else:                                
-					continue
+						await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
+				else:
+					await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
                 
 			elif "Results: No one died" in event:
-				await channel.send("No one died overnight. Doc save? CROGGERS")
+				pass
                 
 			elif "Results:" in event:
 				results = event.split("Results:")[1].strip()
@@ -202,29 +201,23 @@ class ThreadmarkProcessor:
                 
 				for player in players:
 					if " was " in player:
-						username = player.split(" was ")[0].strip()
-						game_role = player.split(" was ")[1].strip()
-						username = username.lower()
-						if username in aliases.values() and username in pl_list:
+						username = player.split(" was ")[0].strip().lower()
+						if username in aliases.values():
 							try:
 								mention_id = find_key_by_value(aliases, username)
 								member = guild.get_member(mention_id)
 								await member.add_roles(role)
-								await channel.send(f"<@{mention_id}> was nightkilled. They were {game_role}. Welcome to dvc")
+								await channel.send(f"<@{mention_id}> has been added to DVC.")
 							except:
-								await channel.send(f"{username} was nightkilled. They were {game_role}.")
-						elif username in pl_list:
-							await channel.send(f"{username} was nightkilled. They were {game_role}.")
-					else:
-						continue
+								await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
+						else:
+							await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
                                         
 			elif "Elimination: Sleep" in event:
-				await channel.send("Players voted sleep. No one has died.")
+				await channel.send("Players voted sleep. Wusses.")
 
 			elif "Game Over:" in event:
-				winning_team = event.split(" Wins")[0].split("Over: ")[-1].strip()
-				await channel.send(winning_team + " wins!!!")
-				await channel.send("Game concluded")
+				await channel.send("Game concluded -- attempting channel housekeeping/clean up")
 				process_threadmarks.stop()
 				self.processed_threadmarks.clear()
 			self.processed_threadmarks.append(event)
