@@ -358,7 +358,7 @@ async def out(ctx):
         return
     alias = aliases[ctx.author.id]
     
-    if alias in game_host_name:
+    if alias in (hostname.lower() for hostname in game_host_name):
         if len(game_host_name) == 1:
             game_host_name = ["Mafia Host"]
             await ctx.send(f"{alias} has been removed as host. Mafia Host has been set back to the default host.")
@@ -470,7 +470,7 @@ async def remove(ctx, *, alias):
     alias = alias.lower()
     global game_host_name, player_limit, players, waiting_list
     
-    if alias in game_host_name:
+    if alias in (hostname.lower() for hostname in game_host_name):
         if len(game_host_name) == 1:
             game_host_name = ["Mafia Host"]
             await ctx.send(f"{alias} has been removed as host. Mafia Host has been set back to the default host.")
