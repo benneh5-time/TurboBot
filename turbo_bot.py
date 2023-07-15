@@ -628,7 +628,8 @@ async def host(ctx, *, host_name=None):
         await update_status()
         await ctx.send("Host setting has been set to default for Mafia Host and cleared all other hosts.")
         return
-
+    host_name = host_name.lower()
+    
     if host_name in game_host_name:
         await ctx.send(f"That account is already a host. Stop trying to break me. nya~")
         return   
