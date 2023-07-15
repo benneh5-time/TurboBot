@@ -628,9 +628,8 @@ async def host(ctx, *, host_name=None):
         await update_status()
         await ctx.send("Host setting has been set to default for Mafia Host and cleared all other hosts.")
         return
-    host_name = host_name.lower()
-    
-    if host_name in game_host_name:
+
+    if host_name.lower() in game_host_name:
         await ctx.send(f"That account is already a host. Stop trying to break me. nya~")
         return   
         
@@ -658,7 +657,7 @@ async def host(ctx, *, host_name=None):
         else:
             await ctx.send("You have not set an alias. Please use `!alias [MU Username]` before trying to use !host or !in commands.")
             return
-            
+    host_name = host_name.lower()            
     if host_name in players or host_name in waiting_list:
         await ctx.send(f"{host_name} is already on the turbo list or waiting list.\n Please choose a different name for the host.")
         return
