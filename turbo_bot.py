@@ -570,9 +570,9 @@ async def update_status():
     embed.set_field_at(0, name="**Game Setup**", value=current_setup, inline=True)
     embed.set_field_at(1, name="**Host**", value=hosts, inline=True)
     embed.set_field_at(3, name="No players are currently signed up.", value="", inline=True)
-    embed.set_field_at(4, inline=True)
-    embed.set_field_at(6, inline=True)
-    embed.set_field_at(7, inline=True)
+    embed.set_field_at(4, name="", value="", inline=True)
+    embed.set_field_at(6, name="", value="", inline=True)
+    embed.set_field_at(7, name="", value="", inline=True)
 
     if players:
         player_message = ""
@@ -605,9 +605,9 @@ async def update_status():
         
     if not players and not waiting_list:
         embed.set_field_at(3, name="No players are currently signed up.", value="", inline=False)
-        embed.set_field_at(4, inline=True)
-        embed.set_field_at(6, inline=True)
-        embed.set_field_at(7, inline=True)
+        embed.set_field_at(4, name="", value="", inline=True)
+        embed.set_field_at(6, name="", value="", inline=True)
+        embed.set_field_at(7, name="", value="", inline=True)
     
     await status_message.edit(embed=embed)
     
