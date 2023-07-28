@@ -516,6 +516,14 @@ async def status(ctx, *args):
     hosts = ''.join(host_list)
     embed.add_field(name="**Host**", value=hosts, inline=True)
     embed.add_field(name="", value="", inline=True)
+
+    embed.add_field(name="", value="", inline=True)
+    embed.add_field(name="", value="", inline=True)
+    embed.add_field(name="", value="", inline=True)
+
+    embed.add_field(name="", value="", inline=True)
+    embed.add_field(name="", value="", inline=True)
+    embed.add_field(name="", value="", inline=True)
     
     if players:
         player_message = ""
@@ -532,9 +540,9 @@ async def status(ctx, *args):
         else:
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
         time_message +=  "!in to join!\n"  
-        embed.add_field(name="**Players:**", value=player_message, inline=True)
-        embed.add_field(name="**Time Remaining:**", value=time_message, inline=True)
-        embed.add_field(name="", value="", inline=True)
+        embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
+        embed.set_field_at(4, name="**Time Remaining:**", value=time_message, inline=True)
+        embed.set_field_at(5, name="", value="", inline=True)
     if waiting_list:
         waiting_list_message = ""
         time_message = ""
@@ -542,9 +550,9 @@ async def status(ctx, *args):
             waiting_list_message += f"{alias}\n"
             time_message += f"{remaining_time} minutes remaining\n"
             
-        embed.add_field(name="**Waiting List:**", value=waiting_list_message, inline=True)
-        embed.add_field(name="**Time Remaining:**", value=time_message, inline=True)
-        embed.add_field(name="", value="", inline=True)
+        embed.set_field_at(6, name="**Waiting List:**", value=waiting_list_message, inline=True)
+        embed.set_field_at(7, name="**Time Remaining:**", value=time_message, inline=True)
+
     if not players and not waiting_list:
         embed.add_field(name="No players are currently signed up.", value="", inline=False)
     
@@ -567,12 +575,14 @@ async def update_status():
     spots_left = player_limit - len(players)
     host_list = [f"{host}\n" for host in game_host_name]
     hosts = ''.join(host_list)
-    embed.set_field_at(0, name="**Game Setup**", value=current_setup, inline=True)
+    """embed.set_field_at(0, name="**Game Setup**", value=current_setup, inline=True)
     embed.set_field_at(1, name="**Host**", value=hosts, inline=True)
+    embed.set_field_at(2, name="", value="", inline=True)
     embed.set_field_at(3, name="No players are currently signed up.", value="", inline=True)
     embed.set_field_at(4, name="", value="", inline=True)
+    embed.set_field_at(5, name="", value="", inline=True)
     embed.set_field_at(6, name="", value="", inline=True)
-    embed.set_field_at(7, name="", value="", inline=True)
+    embed.set_field_at(7, name="", value="", inline=True)"""
 
     if players:
         player_message = ""
@@ -608,6 +618,11 @@ async def update_status():
         embed.set_field_at(4, name="", value="", inline=True)
         embed.set_field_at(6, name="", value="", inline=True)
         embed.set_field_at(7, name="", value="", inline=True)
+    
+    if not waiting_list:
+        embed.set_field_at(6, name="", value="", inline=True)
+        embed.set_field_at(7, name="", value="", inline=True)
+        
     
     await status_message.edit(embed=embed)
     
