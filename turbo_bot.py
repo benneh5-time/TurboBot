@@ -505,7 +505,7 @@ async def remove(ctx, *, alias):
 
 @bot.command()
 async def status(ctx, *args):
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+    if ctx.guild is not None and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
         
     global game_host_name, status_id, status_channel
@@ -569,7 +569,11 @@ async def update_status():
     hosts = ''.join(host_list)
     embed.set_field_at(0, name="**Game Setup**", value=current_setup, inline=True)
     embed.set_field_at(1, name="**Host**", value=hosts, inline=True)
-    
+    embed.set_field_at(3, name="No players are currently signed up.", inline=True)
+    embed.set_field_at(4, inline=True)
+    embed.set_field_at(6, inline=True)
+    embed.set_field_at(7, inline=True)
+
     if players:
         player_message = ""
         time_message = ""
@@ -586,13 +590,8 @@ async def update_status():
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
         time_message +=  "!in to join!\n"
         
-        if len(embed.fields) > 4:
-            embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
-            embed.set_field_at(4, name="**Time Remaining:**", value=time_message, inline=True)
-        else:
-            embed.set_field_at(3,name="**Players:**", value=player_message, inline=True)
-            embed.add_field(name="**Time Remaining:**", value=time_message, inline=True)
-            embed.add_field(name="", value="", inline=True)
+        embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
+        embed.set_field_at(4, name="**Time Remaining:**", value=time_message, inline=True)
     
     if waiting_list:
         waiting_list_message = ""
@@ -600,18 +599,15 @@ async def update_status():
         for i, (alias, remaining_time) in enumerate(waiting_list.items(), 1):
             waiting_list_message += f"{alias}\n"
             time_message += f"{remaining_time} minutes remaining\n"            
-        if len(embed.fields) > 5:
-            embed.set_field_at(5, name="**Waiting List:**", value=waiting_list_message, inline=True)
-            embed.set_field_at(6, name="**Time Remaining:**", value=time_message, inline=True)
-        else:
-            embed.add_field(name="**Waiting List:**", value=waiting_list_message, inline=True)
-            embed.add_field(name="**Time Remaining:**", value=time_message, inline=True)
+
+        embed.set_field_at(5, name="**Waiting List:**", value=waiting_list_message, inline=True)
+        embed.set_field_at(6, name="**Time Remaining:**", value=time_message, inline=True)
         
     if not players and not waiting_list:
-        if len(embed.fields) > 3:
-            embed.set_field_at(3, name="No players are currently signed up.", value="", inline=False)
-        else:
-            embed.add_field(name="No players are currently signed up.", value="", inline=False)
+        embed.set_field_at(3, name="No players are currently signed up.", value="", inline=False)
+        embed.set_field_at(4, inline=True)
+        embed.set_field_at(6, inline=True)
+        embed.set_field_at(7, inline=True)
     
     await status_message.edit(embed=embed)
     
