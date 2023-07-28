@@ -569,7 +569,7 @@ async def update_status():
     hosts = ''.join(host_list)
     embed.set_field_at(0, name="**Game Setup**", value=current_setup, inline=True)
     embed.set_field_at(1, name="**Host**", value=hosts, inline=True)
-    embed.set_field_at(3, name="No players are currently signed up.", inline=True)
+    embed.set_field_at(3, name="No players are currently signed up.", value="" inline=True)
     embed.set_field_at(4, inline=True)
     embed.set_field_at(6, inline=True)
     embed.set_field_at(7, inline=True)
