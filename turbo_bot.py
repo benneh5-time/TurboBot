@@ -137,7 +137,7 @@ async def create_dvc(thread_id):
 
 async def edit_dvc(channel, guild):
     
-    dvc_archive = 1114340515006136411
+    dvc_archive = 1145788310602645524
     category = bot.get_channel(dvc_archive)
     if channel:
         permissions = channel.overwrites_for(guild.default_role)
