@@ -1045,7 +1045,34 @@ async def on_reaction_add(reaction, user):
         await member.add_roles(role)
         channel = bot.get_channel(dvc_channel)
         await channel.send(f"Added <@{user.id}> to #dvc-{str(role_thread_id)}")
-        
+
+@bot.command()
+async def clear_dvc(ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    try:
+        await clear_active_games()
+        await clear_dvc_roles()
+    except:
+        return
+
+async def clear_active_games():
+    games_to_delete = []
+    guild = bot.get_guild(dvc_server)
+
+    active_games_category = 1117176858304336012
+    games_to_delete = active_games_category.channels
+    archive = bot.get_channel(1145788310602645524)
+
+    for game in games_to_delete:
+        try:
+            permissions = game.overwrites_for(guild.default_role)
+            permissions.read_messages = True
+            await game.edit(category=archive)
+            await game.set_permissions(guild.default_role, overwrite=permissions)
+            await game.send("This channel should now be open to everyone.")
+
+
 async def clear_dvc_roles():
     roles_to_delete = []
 
