@@ -886,12 +886,15 @@ async def dvc(ctx):
     if ctx.channel.id not in allowed_channels:
         return
     guild = bot.get_guild(dvc_server)
-    members = await guild.query_members(user_ids=[ctx.author.id])
+    """members = await guild.query_members(user_ids=[ctx.author.id])
     if ctx.author.id not in members:
         invite = "https://discord.gg/Wt6rVWmG3B"
         await ctx.author.send(f"Here is an invite to the Turbo DVC Discord: {invite}")
     else:
         await ctx.send("You're already in the turbo DVC, liar.")
+    """
+    invite = "https://discord.gg/Wt6rVWmG3B
+    await ctx.send(f"Join the Turbo DVC/Graveyard here: {invite}")
 
 
 # The following is a troll command
