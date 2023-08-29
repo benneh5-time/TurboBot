@@ -893,7 +893,7 @@ async def dvc(ctx):
     else:
         await ctx.send("You're already in the turbo DVC, liar.")
     """
-    invite = "https://discord.gg/Wt6rVWmG3B
+    invite = "https://discord.gg/Wt6rVWmG3B"
     await ctx.send(f"Join the Turbo DVC/Graveyard here: {invite}")
 
 
