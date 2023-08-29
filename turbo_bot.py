@@ -1060,7 +1060,7 @@ async def clear_active_games():
     games_to_delete = []
     guild = bot.get_guild(dvc_server)
 
-    active_games_category = 1117176858304336012
+    active_games_category = bot.get_channel(1117176858304336012)
     games_to_delete = active_games_category.channels
     archive = bot.get_channel(1145788310602645524)
 
