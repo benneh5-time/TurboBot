@@ -1072,7 +1072,7 @@ async def clear_active_games():
             await game.set_permissions(guild.default_role, overwrite=permissions)
             await game.send("This channel should now be open to everyone.")
         except:
-            return
+            print("Failed in games_to_delete", flush=True)
 
 
 async def clear_dvc_roles():
