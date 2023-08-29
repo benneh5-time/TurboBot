@@ -1054,7 +1054,7 @@ async def clear_dvc(ctx):
         await clear_active_games()
         await clear_dvc_roles()
     except:
-        return
+        print("failed to run clear_dvc", flush=True)
 
 async def clear_active_games():
     games_to_delete = []
