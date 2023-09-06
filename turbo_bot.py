@@ -137,7 +137,7 @@ async def create_dvc(thread_id):
 
 async def edit_dvc(channel, guild):
     
-    dvc_archive = 1145788310602645524
+    dvc_archive = 1148775358171189278
     category = bot.get_channel(dvc_archive)
     if channel:
         permissions = channel.overwrites_for(guild.default_role)
@@ -1065,7 +1065,7 @@ async def clear_active_games():
 
     active_games_category = bot.get_channel(1117176858304336012)
     games_to_delete = active_games_category.channels
-    archive = bot.get_channel(1145788310602645524)
+    archive = bot.get_channel(1148775358171189278)
 
     for game in games_to_delete:
         try:
