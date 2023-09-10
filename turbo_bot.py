@@ -163,70 +163,75 @@ class ThreadmarkProcessor:
 
 	async def process_threadmarks(self, thread_id, player_aliases, role, guild, channel_id):
 
-		url = f"https://www.mafiauniverse.com/forums/threadmarks/{thread_id}"
-		response = requests.get(url)
-		html = response.text
-		soup = BeautifulSoup(html, "html.parser")
-		event_div = soup.find("div", class_="bbc_threadmarks view-threadmarks")
-		channel = bot.get_channel(channel_id)
-		pl_list = [item.lower() for item in player_aliases]
-		for i, row in enumerate(reversed(event_div.find_all("div", class_="threadmark-row"))):
-			event = row.find("div", class_="threadmark-event").text
-			
-			if event in self.processed_threadmarks:
-				continue
-                        
-			await channel.send(event)
-                        
-			if "Elimination:" in event and " was " in event:
-				results = event.split("Elimination: ")[1].strip()
-				username = results.split(" was ")[0].strip().lower()
-				if username in aliases.values():
-					try:
-						mention_id = find_key_by_value(aliases, username)
-						member = guild.get_member(mention_id)
-						await member.add_roles(role)
-						await channel.send(f"<@{mention_id}> has been added to DVC.")
-					except:
-						await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
-				else:
-					await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-                
-			elif "Results: No one died" in event:
-				pass
-                
-			elif "Results:" in event:
-				results = event.split("Results:")[1].strip()
-				players = results.split(", ")
-                
-				for player in players:
-					if " was " in player:
-						username = player.split(" was ")[0].strip().lower()
-						if username in aliases.values():
-							try:
-								mention_id = find_key_by_value(aliases, username)
-								member = guild.get_member(mention_id)
-								await member.add_roles(role)
-								await channel.send(f"<@{mention_id}> has been added to DVC.")
-							except:
-								await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
-						else:
-							await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-                                        
-			elif "Elimination: Sleep" in event:
-				await channel.send("Players voted sleep. Wusses.")
+		while True:		
+			url = f"https://www.mafiauniverse.com/forums/threadmarks/{thread_id}"
+			response = requests.get(url)
+			html = response.text
+			soup = BeautifulSoup(html, "html.parser")
+			event_div = soup.find("div", class_="bbc_threadmarks view-threadmarks")
+			channel = bot.get_channel(channel_id)
+			pl_list = [item.lower() for item in player_aliases]
+			for i, row in enumerate(reversed(event_div.find_all("div", class_="threadmark-row"))):
+				event = row.find("div", class_="threadmark-event").text
+				
+				if event in self.processed_threadmarks:
+					continue
+		                    
+				await channel.send(event)
+		                    
+				if "Elimination:" in event and " was " in event:
+					results = event.split("Elimination: ")[1].strip()
+					username = results.split(" was ")[0].strip().lower()
+					if username in aliases.values():
+						try:
+							mention_id = find_key_by_value(aliases, username)
+							member = guild.get_member(mention_id)
+							await member.add_roles(role)
+							await channel.send(f"<@{mention_id}> has been added to DVC.")
+						except:
+							await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
+					else:
+						await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+		            
+				elif "Results: No one died" in event:
+					pass
+		            
+				elif "Results:" in event:
+					results = event.split("Results:")[1].strip()
+					players = results.split(", ")
+		            
+					for player in players:
+						if " was " in player:
+							username = player.split(" was ")[0].strip().lower()
+							if username in aliases.values():
+								try:
+									mention_id = find_key_by_value(aliases, username)
+									member = guild.get_member(mention_id)
+									await member.add_roles(role)
+									await channel.send(f"<@{mention_id}> has been added to DVC.")
+								except:
+									await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
+							else:
+								await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+		                                    
+				elif "Elimination: Sleep" in event:
+					await channel.send("Players voted sleep. Wusses.")
+		
+				elif "Game Over:" in event:
+					await channel.send("Game concluded -- attempting channel housekeeping/clean up")
+					# Not used anymore
+                    # process_threadmarks.stop()
+					self.processed_threadmarks.clear()
+					return
+				self.processed_threadmarks.append(event)
 
-			elif "Game Over:" in event:
-				await channel.send("Game concluded -- attempting channel housekeeping/clean up")
-				process_threadmarks.stop()
-				self.processed_threadmarks.clear()
-			self.processed_threadmarks.append(event)
+			await asyncio.sleep(30)
 
 processor = ThreadmarkProcessor()
 
-@tasks.loop(minutes=1)
-async def process_threadmarks(thread_id, player_aliases, role, guild, channel_id):
-    await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id)
+#@tasks.loop(minutes=1)
+#async def process_threadmarks(thread_id, player_aliases, role, guild, channel_id):
+#    await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id)
 
 @bot.event
 async def on_ready():
@@ -827,7 +832,7 @@ async def rand(ctx, *args):
             waiting_list.clear()   
             print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
             is_rand_running = False
-            await process_threadmarks.start(thread_id, player_aliases, role, guild, channel_id)
+            await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id)
             print(f"Threadmark processor finished. rand function finished.", flush=True)
             await edit_dvc(channel, guild)
             await delete_dvc_role(channel, role)
