@@ -787,9 +787,10 @@ async def rand(ctx, *args):
         game_title = args_parsed.title
         thread_id = args_parsed.thread_id
         
+        if not game_title:
+            game_title = mu.generate_game_thread_uuid()
+            
         if not thread_id:
-            if not game_title:
-                game_title = mu.generate_game_thread_uuid()
             print(f"Attempting to post new thread with {game_title}", flush=True)
             thread_id = mu.post_thread(session, game_title, security_token, current_setup)
         host_list = [f"{host}" for host in game_host_name]
