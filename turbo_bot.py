@@ -135,6 +135,20 @@ async def create_dvc(thread_id):
     )
     return role, channel.id, guild
 
+async def test_function():
+    
+    #DVC Arhchive 3
+    dvc_archive = 1148775358171189278
+
+    #DVC Archive 4
+    backup_archive = 1151746848244109313
+
+    category = bot.get_channel(dvc_archive)
+    backup_category = bot.get_channel(backup_archive)
+    channel_count = len(category.channels)
+
+    print(channel_count, flush=True)
+
 async def edit_dvc(channel, guild):
     
     #DVC Arhchive 3
