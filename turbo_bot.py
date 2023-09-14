@@ -176,10 +176,12 @@ async def edit_dvc(channel, guild):
         #Check to make sure we aren't at the channel cap for our primary category. If not, move channel to that category.
         #Otherwise we move to the backup category and create a help message to remind me to update this thing.
         if channel_count < 50:
-            await channel.edit(category=category)
+            await channel.edit(category=category, position=1)
+            await channel.edit(category=category, position=0)
 
         else:
-            await channel.edit(category=backup_category)
+            await channel.edit(category=backup_category, position=1)
+            await channel.edit(category=backup_category, position=0)
             await channel.send("Previous DVC Archive Category is full. Someone please @ benneh and tell him to get off his ass and update the bot for the new category")
         await channel.set_permissions(guild.default_role, overwrite=permissions)
         await channel.send("This channel is now open to everyone")
