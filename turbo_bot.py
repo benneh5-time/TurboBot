@@ -283,6 +283,7 @@ async def on_ready():
     if player_limit is None:
         player_limit = 10  
     update_players.start()  # Start background task
+    test_function()
     # await clear_dvc_roles()
 
 @bot.command()
