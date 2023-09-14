@@ -137,13 +137,29 @@ async def create_dvc(thread_id):
 
 async def edit_dvc(channel, guild):
     
+    #DVC Arhchive 3
     dvc_archive = 1148775358171189278
-    category = bot.get_channel(dvc_archive)
-    if channel:
-        permissions = channel.overwrites_for(guild.default_role)
 
+    #DVC Archive 4
+    backup_archive = 1151746848244109313
+
+    category = bot.get_channel(dvc_archive)
+    backup_category = bot.get_channel(backup_archive)
+    channel_count = len(category.channels)
+
+    if channel:
+        #Set an overwrite for the default role so players can read messages in the channel after update
+        permissions = channel.overwrites_for(guild.default_role)
         permissions.read_messages = True
-        await channel.edit(category=category)
+
+        #Check to make sure we aren't at the channel cap for our primary category. If not, move channel to that category.
+        #Otherwise we move to the backup category and create a help message to remind me to update this thing.
+        if channel_count < 50:
+            await channel.edit(category=category)
+
+        else:
+            await channel.edit(category=backup_category)
+            await channel.send("Previous DVC Archive Category is full. Someone please @ benneh and tell him to get off his ass and update the bot for the new category")
         await channel.set_permissions(guild.default_role, overwrite=permissions)
         await channel.send("This channel is now open to everyone")
 
