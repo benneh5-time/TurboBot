@@ -149,6 +149,13 @@ async def test_function():
 
     print(channel_count, flush=True)
 
+    if channel_count == 50:
+        print("at cap")
+    elif channel_count < 50:
+        print("under cap @ " + channel_count)
+    else:
+        print("idk")
+
 async def edit_dvc(channel, guild):
     
     #DVC Arhchive 3
