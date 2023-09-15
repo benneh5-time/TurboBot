@@ -137,11 +137,11 @@ async def create_dvc(thread_id):
 
 async def test_function():
     
-    #DVC Arhchive 3
-    dvc_archive = 1148775358171189278
+    #DVC Arhchive 4
+    dvc_archive = 1151746848244109313
 
-    #DVC Archive 4
-    backup_archive = 1151746848244109313
+    #DVC Archive 5
+    backup_archive = 1152305015730487467
 
     category = bot.get_channel(dvc_archive)
     backup_category = bot.get_channel(backup_archive)
@@ -158,11 +158,11 @@ async def test_function():
 
 async def edit_dvc(channel, guild):
     
-    #DVC Arhchive 3
-    dvc_archive = 1148775358171189278
+    #DVC Arhchive 4
+    dvc_archive = 1151746848244109313
 
-    #DVC Archive 4
-    backup_archive = 1151746848244109313
+    #DVC Archive 5
+    backup_archive = 1152305015730487467
 
     category = bot.get_channel(dvc_archive)
     backup_category = bot.get_channel(backup_archive)
@@ -1111,7 +1111,7 @@ async def clear_active_games():
 
     active_games_category = bot.get_channel(1117176858304336012)
     games_to_delete = active_games_category.channels
-    archive = bot.get_channel(1148775358171189278)
+    archive = bot.get_channel(1151746848244109313)
 
     for game in games_to_delete:
         try:
