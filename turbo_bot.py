@@ -734,22 +734,25 @@ async def host(ctx, *, host_name=None):
 async def update_players():
     global player_limit, recruit_timer
     
-    if recruit_timer > 0:
-        recruit_timer -= 1
-    for alias in list(players.keys()):
-        players[alias] -= 1
-        if players[alias] <= 0:
-            await bot.get_channel(223260125786406912).send(f"{alias} has run out of time and has been removed from the list.")
-            del players[alias]
+    try:
+        if recruit_timer > 0:
+             recruit_timer -= 1
+        for alias in list(players.keys()):
+            players[alias] -= 1
+            if players[alias] <= 0:
+                await bot.get_channel(223260125786406912).send(f"{alias} has run out of time and has been removed from the list.")
+                del players[alias]
 
             # Add a player from waiting list to main list if it's not full
-            if len(players) < player_limit and waiting_list:
-                next_alias, next_time = waiting_list.popitem()
-                players[next_alias] = next_time
-                await bot.get_channel(223260125786406912).send(f"{next_alias} has been moved from the waiting list to the main list.")
-    save_player_list(players, waiting_list, current_setup, game_host_name, player_limit)
-    await update_status()
-
+                if len(players) < player_limit and waiting_list:
+                    next_alias, next_time = waiting_list.popitem()
+                    players[next_alias] = next_time
+                    await bot.get_channel(223260125786406912).send(f"{next_alias} has been moved from the waiting list to the main list.")
+        save_player_list(players, waiting_list, current_setup, game_host_name, player_limit)
+        await update_status()
+    except:
+        print("Error updating players with update_player function", flush=True)
+        
 @bot.command()
 async def spec(ctx, arg: int):
     if ctx.channel.id != dvc_channel:
