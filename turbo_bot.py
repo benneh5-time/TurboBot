@@ -30,7 +30,7 @@ dvc_roles = {}
 message_ids = {}
 game_host_name = ["Mafia Host"]
 current_setup = "joat10"
-valid_setups = ["joat10", "vig10", "cop9", "cop13"] #future setups
+valid_setups = ["joat10", "vig10", "cop9", "cop13", "doublejoat13", "alexa25"] #future setups
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 react_channels = [223260125786406912, 1114212787141492788]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
@@ -308,6 +308,10 @@ async def game(ctx, setup_name=None):
             new_player_limit = 10
         elif setup_name == "cop13":
             new_player_limit = 13
+        elif setup_name == "doublejoat13":
+            new_player_limit = 13
+        elif setup_name == "alexa25":
+            new_player_limit = 25
         else:
             await ctx.send(f"'{setup_name}' is not a valid setup name. Please choose from: {', '.join(valid_setups)}.")
             return
