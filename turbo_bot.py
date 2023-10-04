@@ -35,6 +35,13 @@ allowed_channels = [223260125786406912]  # turbo-chat channel ID
 react_channels = [223260125786406912, 1114212787141492788]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
+    
+    #DVC Arhchive 5
+dvc_archive = 1152305015730487467
+
+    #DVC Archive 6
+backup_archive = 1158995029768015943
+
 status_id = None
 status_channel = None
 is_rand_running = False
@@ -136,12 +143,6 @@ async def create_dvc(thread_id):
     return role, channel.id, guild
 
 async def test_function():
-    
-    #DVC Arhchive 4
-    dvc_archive = 1151746848244109313
-
-    #DVC Archive 5
-    backup_archive = 1152305015730487467
 
     category = bot.get_channel(dvc_archive)
     backup_category = bot.get_channel(backup_archive)
@@ -157,12 +158,6 @@ async def test_function():
         print("idk", flush=True)
 
 async def edit_dvc(channel, guild):
-    
-    #DVC Arhchive 4
-    dvc_archive = 1151746848244109313
-
-    #DVC Archive 5
-    backup_archive = 1152305015730487467
 
     category = bot.get_channel(dvc_archive)
     backup_category = bot.get_channel(backup_archive)
@@ -1114,7 +1109,7 @@ async def clear_active_games():
 
     active_games_category = bot.get_channel(1117176858304336012)
     games_to_delete = active_games_category.channels
-    archive = bot.get_channel(1151746848244109313)
+    archive = bot.get_channel(dvc_archive)
 
     for game in games_to_delete:
         try:
