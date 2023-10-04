@@ -81,6 +81,8 @@ def post_thread(session, game_title, security_token, setup):
         game_flavor = cop13_flavor
     if setup == "vig10":
         game_flavor = vig_flavor
+    if setup == "doublejoat13":
+        game_flavor = joat_flavor
         
     payload = {
         "do": "postthread",
