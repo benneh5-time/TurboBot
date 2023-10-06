@@ -176,8 +176,9 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         add_f3_roles(game_title)
         data.add("preset", "custom")
         data.add('num_players', '3')
-        data.add('day_length', "9")        
-        
+        data.add('day_length', "9")
+        data.add('auto_majority', '1')       
+
     add_players(player_aliases, host_name)
     
     protected_url = "https://www.mafiauniverse.com/forums/modbot/manage-game/"
