@@ -30,7 +30,7 @@ dvc_roles = {}
 message_ids = {}
 game_host_name = ["Mafia Host"]
 current_setup = "joat10"
-valid_setups = ["joat10", "vig10", "cop9", "cop13", "doublejoat13", "alexa25"] #future setups
+valid_setups = ["joat10", "vig10", "cop9", "cop13", "doublejoat13", "alexa25", "f3practice"] #future setups
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 react_channels = [223260125786406912, 1114212787141492788]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
@@ -312,6 +312,8 @@ async def game(ctx, setup_name=None):
             new_player_limit = 13
         elif setup_name == "alexa25":
             new_player_limit = 25
+        elif setup_name == "f3practice":
+            new_player_limit = 3
         else:
             await ctx.send(f"'{setup_name}' is not a valid setup name. Please choose from: {', '.join(valid_setups)}.")
             return
@@ -926,7 +928,7 @@ async def help(ctx):
     embed.add_field(name="!clear", value="Resets the current game to defaults. Must be confirmed with `!clear -confirm`.", inline=False)
     embed.add_field(name="!list", value="Displays the current list of the game, including player list, waiting list, host, and setup.", inline=False)
     embed.add_field(name="!host", value="Sets the host of the game. By default, it will use your defined alias. You can specify a different host's username, e.g. `!host MU_Username`.", inline=False)
-    embed.add_field(name="!game", value="Sets the game setup. Must specify setup name from available options: cop9, cop13, joat10, vig10. E.g. `!game cop9`.", inline=False)
+    embed.add_field(name="!game", value="Sets the game setup. Must specify setup name from available options: cop9, cop13, joat10, vig10, doublejoat13, alexa25, f3practice. E.g. `!game cop9`.", inline=False)
     await ctx.send(embed=embed)
 
 @bot.command()
