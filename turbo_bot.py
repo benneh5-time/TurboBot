@@ -35,12 +35,12 @@ allowed_channels = [223260125786406912]  # turbo-chat channel ID
 react_channels = [223260125786406912, 1114212787141492788]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
-    
-    #DVC Arhchive 5
-dvc_archive = 1152305015730487467
+f3_channel = 1162495296836739144
+    #DVC Arhchive 6
+dvc_archive = 1158995029768015943
 
-    #DVC Archive 6
-backup_archive = 1158995029768015943
+    #DVC Archive 7
+backup_archive = 1162494594001408131
 
 status_id = None
 status_channel = None
@@ -857,30 +857,53 @@ async def rand(ctx, *args):
             player_mentions = " ".join([f"<@{id}>" for id in mention_list])
             game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
             await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}\nType !dvc to join the turbo DVC/Graveyard. You will be auto-in'd to the graveyard channel upon your death if you are in that server!")
-            role, channel_id, guild = await create_dvc(thread_id)
-            print(f"DVC thread created. Clearing variables", flush=True)
-            channel = bot.get_channel(channel_id)
-            for host in game_host_name:
-                if host in aliases.values():
-                    try:
-                        mention_id = find_key_by_value(aliases, host)
-                        member = guild.get_member(mention_id)
-                        await member.add_roles(role)
-                        await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
-                    except:
-                        await channel.send(f"failed to add {host} to dvc.")
+            
+            if current_setup != "f3practice":
+                role, channel_id, guild = await create_dvc(thread_id)
+                print(f"DVC thread created. Clearing variables", flush=True)
+                channel = bot.get_channel(channel_id)
+                for host in game_host_name:
+                    if host in aliases.values():
+                        try:
+                            mention_id = find_key_by_value(aliases, host)
+                            member = guild.get_member(mention_id)
+                            await member.add_roles(role)
+                            await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
+                        except:
+                            await channel.send(f"failed to add {host} to dvc.")
 
-            await new_game_spec_message(bot, thread_id, game_title)
-            game_host_name = ["Mafia Host"]
-            players.clear()
-            players.update(waiting_list)
-            waiting_list.clear()   
-            print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
-            is_rand_running = False
-            await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id)
-            print(f"Threadmark processor finished. rand function finished.", flush=True)
-            await edit_dvc(channel, guild)
-            await delete_dvc_role(channel, role)
+                await new_game_spec_message(bot, thread_id, game_title)
+                game_host_name = ["Mafia Host"]
+                players.clear()
+                players.update(waiting_list)
+                waiting_list.clear()   
+                print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
+                is_rand_running = False
+                await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id)
+                print(f"Threadmark processor finished. rand function finished.", flush=True)
+                await edit_dvc(channel, guild)
+                await delete_dvc_role(channel, role)
+            
+            else:
+                channel = bot.get_channel(f3_channel)
+                for host in game_host_name:
+                    if host in aliases.values():
+                        try:
+                            mention_id = find_key_by_value(aliases, host)
+                            member = guild.get_member(mention_id)
+                            await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
+                        except:
+                            await channel.send(f"failed to add {host} to dvc.")
+
+                game_host_name = ["Mafia Host"]
+                players.clear()
+                players.update(waiting_list)
+                waiting_list.clear()   
+                print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
+                is_rand_running = False
+                await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id)
+                print(f"Threadmark processor finished. rand function finished.", flush=True)
+
         elif "Error" in response_message:
             print(f"Game failed to rand, reason: {response_message}", flush=True)
             await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
