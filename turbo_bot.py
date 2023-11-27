@@ -36,11 +36,11 @@ react_channels = [223260125786406912, 1114212787141492788]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 f3_channel = 1162495296836739144
-    #DVC Arhchive 6
-dvc_archive = 1158995029768015943
+    #DVC Arhchive 7
+dvc_archive = 1162494594001408131
 
-    #DVC Archive 7
-backup_archive = 1162494594001408131
+    #DVC Archive 8
+backup_archive = 1178497610626113598
 
 status_id = None
 status_channel = None
