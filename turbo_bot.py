@@ -37,10 +37,10 @@ dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 f3_channel = 1162495296836739144
     #DVC Arhchive 8
-dvc_archive = 1178497610626113598
+dvc_archive = 1183256036040261742
 
-    #DVC Archive 9
-backup_archive = 1183256036040261742
+    #DVC Archive 10
+backup_archive = 1188596531125829813
 
 status_id = None
 status_channel = None
