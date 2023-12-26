@@ -33,7 +33,8 @@ current_setup = "joat10"
 valid_setups = ["joat10", "vig10", "cop9", "cop13", "doublejoat13", "alexa25", "f3practice"] #future setups
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 react_channels = [223260125786406912, 1114212787141492788]
-banned_users = [1160632868033265804, 178647349369765888]
+# Merel banned
+banned_users = [1160632868033265804]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 f3_channel = 1162495296836739144
