@@ -34,7 +34,7 @@ valid_setups = ["joat10", "vig10", "cop9", "cop13", "doublejoat13", "alexa25", "
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 react_channels = [223260125786406912, 1114212787141492788]
 # Merel banned
-banned_users = [1160632868033265804]
+banned_users = [1160632868033265804, 148525292200263681]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 f3_channel = 1162495296836739144
@@ -1093,6 +1093,9 @@ async def on_reaction_add(reaction, user):
     global game_host_name, player_limit, players, waiting_list, turbo_ping_message   
     if reaction.message.id == turbo_ping_message:
         if reaction.emoji == '✅':
+            if user.id in banned_users:
+                await ctx.send("You have been banned for flaking and are not allowed to in turbos.")
+                return
             if user.id not in aliases:
                 await reaction.message.channel.send("Please set your MU username by using !alias MU_Username before inning!")
                 return
