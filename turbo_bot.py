@@ -34,7 +34,7 @@ valid_setups = ["joat10", "vig10", "cop9", "cop13", "doublejoat13", "alexa25", "
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 react_channels = [223260125786406912, 1114212787141492788]
 # Merel banned
-banned_users = [1160632868033265804, 148525292200263681]
+banned_users = [1160632868033265804]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 f3_channel = 1162495296836739144
@@ -579,7 +579,7 @@ async def status(ctx, *args):
         
     global game_host_name, status_id, status_channel
 
-    embed = discord.Embed(title="**Turbo sign-ups!**", description="Turbo Bot v1.0 by benneh", color=0x1beb30)
+    embed = discord.Embed(title="**Turbo sign-ups!**", description="Turbo Bot v1.1a by benneh", color=0x1beb30)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
     host_list = [f"{host}\n" for host in game_host_name]
     hosts = ''.join(host_list)
@@ -702,7 +702,10 @@ async def host(ctx, *, host_name=None):
         return
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for flaking and are not allowed to host turbos.")
-        return        
+        return
+    
+    await ctx.send("Hosting has been turned off until version 2.0")
+    """        
     global game_host_name
     
     if host_name == "Mafia Host":
@@ -755,7 +758,7 @@ async def host(ctx, *, host_name=None):
         await ctx.send(f"Hosts for the next turbo are set as {hosts}")
         await update_status() 
         return
-    
+    """
 @tasks.loop(minutes=1)
 async def update_players():
     global player_limit, recruit_timer
