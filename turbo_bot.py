@@ -1097,7 +1097,7 @@ async def on_reaction_add(reaction, user):
     if reaction.message.id == turbo_ping_message:
         if reaction.emoji == '✅':
             if user.id in banned_users:
-                await ctx.send("You have been banned for flaking and are not allowed to in turbos.")
+                await reaction.message.channel.send("You have been banned for flaking and are not allowed to in turbos.")
                 return
             if user.id not in aliases:
                 await reaction.message.channel.send("Please set your MU username by using !alias MU_Username before inning!")
