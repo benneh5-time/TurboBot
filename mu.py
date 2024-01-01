@@ -4,11 +4,15 @@ import re
 from urllib3._collections import HTTPHeaderDict
 import uuid
 import json
+import random
 from roles import vanilla_town_dict, mafia_goon_dict, joat_dict, cop_dict, vig_dict, big_ham_dict, frankie_dict, vanchilla_dict, vinnie_dict, zippy_dict, kingpin_dict, zippy13_dict, kingpin_joat_dict, town_ic_dict
 from bs4 import BeautifulSoup
 from flavor import joat_flavor, cop9_flavor, cop13_flavor, vig_flavor
 
 data = None
+
+with open('turboers.json', 'r') as file:
+    name_image_pairs = json.load(file)
 
 def generate_game_thread_uuid():
     random_uuid = str(uuid.uuid4())[:16]
@@ -211,15 +215,23 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
 
     else:
         print("Game rand fucked up")
-	
+
+
+
 def add_joat_roles(game_title):
-    vanilla_town_json = json.dumps(vanchilla_dict)
+    # vanilla_town_json = json.dumps(vanchilla_dict)
     big_ham_json = json.dumps(big_ham_dict)
     frankie_json = json.dumps(frankie_dict)	
     joat_json = json.dumps(zippy_dict)	
     global data
     
+    villagers = random.sample(name_image_pairs, 7)
+
     for i in range(0,7):
+        current_vanchilla = vanchilla_dict.copy()
+        current_vanchilla['charachter_name'] = villagers[i]["character_name"]
+        current_vanchilla['charachter_image'] = villagers[i]["character_image"]
+        vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vanilla_town_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Town[/COLOR][/B]. You win when all threats to Town have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
     
