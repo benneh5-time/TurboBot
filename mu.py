@@ -229,8 +229,8 @@ def add_joat_roles(game_title):
 
     for i in range(0,7):
         current_vanchilla = vanchilla_dict.copy()
-        current_vanchilla['charachter_name'] = villagers[i]["character_name"]
-        current_vanchilla['charachter_image'] = villagers[i]["character_image"]
+        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Town[/COLOR][/B]. You win when all threats to Town have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
