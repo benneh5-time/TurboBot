@@ -703,9 +703,11 @@ async def host(ctx, *, host_name=None):
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for flaking and are not allowed to host turbos.")
         return
-    
-    await ctx.send("Hosting has been turned off until version 2.0")
-    """        
+    mods = [178647349369765888]
+    if ctx.author.id not in mods:
+        await ctx.send("Hosting has been turned off until version 2.0")
+        return
+         
     global game_host_name
     
     if host_name == "Mafia Host":
@@ -758,7 +760,7 @@ async def host(ctx, *, host_name=None):
         await ctx.send(f"Hosts for the next turbo are set as {hosts}")
         await update_status() 
         return
-    """
+    
 @tasks.loop(minutes=1)
 async def update_players():
     global player_limit, recruit_timer
