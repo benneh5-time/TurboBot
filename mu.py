@@ -13,6 +13,10 @@ data = None
 
 with open('turboers.json', 'r') as file:
     name_image_pairs = json.load(file)
+with open('powerroles.json', 'r') as file:
+    pr_name_image_pairs = json.load(file)
+with open('wolves.json', 'r') as file:
+    wolf_name_image_pairs = json.load(file)
 
 def generate_game_thread_uuid():
     random_uuid = str(uuid.uuid4())[:16]
@@ -220,12 +224,14 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
 
 def add_joat_roles(game_title):
     # vanilla_town_json = json.dumps(vanchilla_dict)
-    big_ham_json = json.dumps(big_ham_dict)
-    frankie_json = json.dumps(frankie_dict)	
-    joat_json = json.dumps(zippy_dict)	
+    #big_ham_json = json.dumps(big_ham_dict)
+    #frankie_json = json.dumps(frankie_dict)	
+    #joat_json = json.dumps(zippy_dict)	
     global data
     
     villagers = random.sample(name_image_pairs, 7)
+    joat = random.sample(pr_name_image_pairs, 1)
+    wolves = random.sample(wolf_name_image_pairs, 2)
 
     for i in range(0,7):
         current_vanchilla = vanchilla_dict.copy()
@@ -233,14 +239,23 @@ def add_joat_roles(game_title):
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
-        data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Town[/COLOR][/B]. You win when all threats to Town have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+        data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to Town have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
     
+
+    current_joat = zippy_dict.copy()
+    current_joat['character_name'] = villagers[i]["character_name"]
+    current_joat['character_image'] = villagers[i]["character_image"]
+    joat_json = json.dumps(current_joat)
     data.add("roles[]", joat_json)
-    data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Town Jack of All Trades (x1 Alignment Cop, x1 Doctor, x1 Vigilante)[/COLOR][/B]. You win when all threats to Town have been eliminated.\n\n[SIZE=4][B][I]Town Jack Of All Trades[/I][/B][/SIZE]\n\nAs [B][COLOR=#339933]Town Jack Of All Trades[/COLOR][/B], you have access to one or more miscellaneous night actions.\n\n[SIZE=4][B][I]x1 Alignment Cop[/I][/B][/SIZE]\n\nYou have access to the [B]Alignment Inspection[/B] Night Action. Alignment Inspection will reveal a target's alignment. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\n[SIZE=4][B][I]x1 Doctor[/I][/B][/SIZE]\n\nYou have access to the [B]Protection[/B] Night Action. Protection will protect your target from being killed. You will not learn whether you successfully protected someone. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\n[SIZE=4][B][I]x1 Vigilante[/I][/B][/SIZE]\n\nYou have access to the [B]Shoot[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\nSubmit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\nIf you do not submit an action, you will forego your action on that day. Keep in mind that if you have multiple uses of your abilities, you must cycle through all of them before being allowed to reuse any of them.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")       
-    data.add("roles[]", frankie_json)
-    data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#ff2244]Mafia Goon[/COLOR][/B]. You win when you overpower the Town and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n[SIZE=4][B][I]Mafia Team[/I][/B][/SIZE]\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\nAs [B][COLOR=#ff2244]Mafia[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf no Mafia submit an action, a player will be picked at random from the living non-Mafia players.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")    
-    data.add("roles[]", big_ham_json)
-    data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#ff2244]Mafia Goon[/COLOR][/B]. You win when you overpower the Town and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n[SIZE=4][B][I]Mafia Team[/I][/B][/SIZE]\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\nAs [B][COLOR=#ff2244]Mafia[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf no Mafia submit an action, a player will be picked at random from the living non-Mafia players.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+    data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Village Jack of All Trades (x1 Alignment Cop, x1 Doctor, x1 Vigilante)[/COLOR][/B]. You win when all threats to Town have been eliminated.\n\n[SIZE=4][B][I]Town Jack Of All Trades[/I][/B][/SIZE]\n\nAs [B][COLOR=#339933]Town Jack Of All Trades[/COLOR][/B], you have access to one or more miscellaneous night actions.\n\n[SIZE=4][B][I]x1 Alignment Cop[/I][/B][/SIZE]\n\nYou have access to the [B]Alignment Inspection[/B] Night Action. Alignment Inspection will reveal a target's alignment. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\n[SIZE=4][B][I]x1 Doctor[/I][/B][/SIZE]\n\nYou have access to the [B]Protection[/B] Night Action. Protection will protect your target from being killed. You will not learn whether you successfully protected someone. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\n[SIZE=4][B][I]x1 Vigilante[/I][/B][/SIZE]\n\nYou have access to the [B]Shoot[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\nSubmit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\nIf you do not submit an action, you will forego your action on that day. Keep in mind that if you have multiple uses of your abilities, you must cycle through all of them before being allowed to reuse any of them.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")       
+    
+    for i in range(0,2):
+        current_wolves = mafia_goon_dict.copy()
+        current_wolves['character_name'] = wolves[i]['character_name']
+        current_wolves['character_image'] = wolves[i]['character_image']
+        wolf_json = json.dumps(current_wolves)
+        data.add("roles[]", wolf_json)
+        data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#ff2244]Wolf[/COLOR][/B]. You win when you overpower the Town and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n[SIZE=4][B][I]Mafia Team[/I][/B][/SIZE]\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\nAs [B][COLOR=#ff2244]Mafia[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf no Mafia submit an action, a player will be picked at random from the living non-Mafia players.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")    
 
 def add_f3_roles(game_title):
     vanilla_town_json = json.dumps(vanchilla_dict)
