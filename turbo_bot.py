@@ -376,7 +376,7 @@ async def phases(ctx, timer_name=None):
         day_length = new_day_length
         night_length = new_night_length
         current_timer = timer_name
-        
+
         await ctx.send(f"The day/night phases have been changed to '{current_timer}'")
     else:
         await ctx.send(f"'{timer_name}' is not a valid setup name. Please choose from: {', '.join(valid_timers)}.")
@@ -1026,7 +1026,7 @@ async def help(ctx):
     embed.add_field(name="!clear", value="Resets the current game to defaults. Must be confirmed with `!clear -confirm`.", inline=False)
     embed.add_field(name="!list", value="Displays the current list of the game, including player list, waiting list, host, and setup.", inline=False)
     embed.add_field(name="!host", value="Sets the host of the game. By default, it will use your defined alias. You can specify a different host's username, e.g. `!host MU_Username`.", inline=False)
-    embed.add_field(name="!game", value="Sets the game setup. Must specify setup name from available options: cop9, cop13, joat10, vig10, doublejoat13, alexa25, f3practice. E.g. `!game cop9`.", inline=False)
+    embed.add_field(name="!game", value="Sets the game setup. Must specify setup name from available options: cop9, cop13, joat10, vig10, doublejoat13, alexa25. E.g. `!game cop9`.", inline=False)
     await ctx.send(embed=embed)
 
 @bot.command()
