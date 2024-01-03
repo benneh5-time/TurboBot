@@ -890,13 +890,13 @@ async def rand(ctx, *args):
         return
 
     is_rand_running = True
-
+    """
     cancel = await ctx.send("The game will rand in 30 seconds unless canceled by reacting with '❌'")
     await cancel.add_reaction("'❌'")
 
     def check(reaction, user):
         return str(reaction.emoji) == '❌' and user == ctx.author and user.id in allowed_randers and reaction.message.id == cancel.id
-    """
+
     try:
         reaction, user = await bot.wait_for('reaction_add', timeout=30, check=check)
 
@@ -907,7 +907,7 @@ async def rand(ctx, *args):
     except asyncio.TimeoutError:
         await ctx.send("Randing, stfu")
         
-"""
+    """
     try:
         player_aliases = list(players.keys())[:player_limit]
     
