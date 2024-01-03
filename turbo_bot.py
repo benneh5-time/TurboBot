@@ -864,6 +864,8 @@ async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     
+    global player_limit, game_host_name, current_setup, is_rand_running
+
     allowed_randers = []
     player_list = list(players.keys())[:player_limit]
     for player in player_list:
@@ -875,12 +877,10 @@ async def rand(ctx, *args):
         await ctx.send("Only hosts and players on the list are allowed to execute this function.")
         return
 
-
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for flaking and are not allowed to rand turbos.")
         return    
-    global player_limit, game_host_name, current_setup, is_rand_running
-    
+
     if len(players) < player_limit:
         await ctx.send(f"Not enough players to start a game. Need {player_limit} players.")
         return
@@ -888,8 +888,6 @@ async def rand(ctx, *args):
     if is_rand_running:
         await ctx.send("The !rand command is currently being processed. Please wait.")
         return
-    
-    
 
     is_rand_running = True
     
