@@ -30,7 +30,11 @@ dvc_roles = {}
 message_ids = {}
 game_host_name = ["Mafia Host"]
 current_setup = "joat10"
-valid_setups = ["joat10", "vig10", "cop9", "cop13", "doublejoat13", "alexa25", "f3practice"] #future setups
+current_timer = "14-3"
+valid_setups = ["joat10", "vig10", "cop9", "cop13", "doublejoat13", "alexa25"] #future setups
+valid_timers = ["sunbae", "14-3", "16-5"]
+day_length = 14
+night_length = 3
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 react_channels = [223260125786406912, 1114212787141492788]
 # Merel banned
@@ -339,7 +343,44 @@ async def game(ctx, setup_name=None):
     else:
         await ctx.send(f"'{setup_name}' is not a valid setup name. Please choose from: {', '.join(valid_setups)}.")
     await update_status()        
+
+@bot.command()
+async def phases(ctx, timer_name=None):
+    if ctx.channel.id not in allowed_channels:  
+        return
     
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for flaking and are not allowed to adjust turbos.")
+        return
+
+    global current_timer, day_length, night_length
+
+    if timer_name is None:
+        await ctx.send(f"The current phases are '{current_timer}'. To change the phases, use !phases <setup_name>. Valid setup names are: {', '.join(valid_timers)}.")
+    elif timer_name in valid_timers:
+        if timer_name == "sunbae":
+            new_day_length = 1
+            new_night_length = 0
+        elif timer_name == "14-3":
+            new_day_length = 14
+            new_night_length = 3
+        elif timer_name == "16-5":
+            new_day_length = 16
+            new_night_length = 5
+
+        else:
+            await ctx.send(f"'{timer_name}' is not a valid phase. Please choose from: {', '.join(valid_timers)}.")
+            return
+        
+            
+        day_length = new_day_length
+        night_length = new_night_length
+        
+        await ctx.send(f"The day/night phases have been changed to '{current_timer}'")
+    else:
+        await ctx.send(f"'{timer_name}' is not a valid setup name. Please choose from: {', '.join(valid_timers)}.")
+    await update_status()     
+
 @bot.command(name="in")
 async def in_(ctx, time: int = 60):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -584,7 +625,7 @@ async def status(ctx, *args):
     host_list = [f"{host}\n" for host in game_host_name]
     hosts = ''.join(host_list)
     embed.add_field(name="**Host**", value=hosts, inline=True)
-    embed.add_field(name="", value="", inline=True)
+    embed.add_field(name="**Phases**", value=day_length + "m Days, " + night_length + "m Nights", inline=True)
 
     embed.add_field(name="", value="", inline=True)
     embed.add_field(name="", value="", inline=True)
@@ -874,7 +915,7 @@ async def rand(ctx, *args):
         await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
         print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
         security_token = mu.new_game_token(session, thread_id)
-        response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, current_setup, game_host_name)
+        response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, current_setup, day_length, night_length, game_host_name)
         
         if "was created successfully." in response_message:
             # Use aliases to get the Discord IDs
