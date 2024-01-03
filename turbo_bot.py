@@ -625,7 +625,7 @@ async def status(ctx, *args):
     host_list = [f"{host}\n" for host in game_host_name]
     hosts = ''.join(host_list)
     embed.add_field(name="**Host**", value=hosts, inline=True)
-    embed.add_field(name="**Phases**", value=day_length + "m Days, " + night_length + "m Nights", inline=True)
+    embed.add_field(name="**Phases**", value=str(day_length) + "m Days, " + str(night_length) + "m Nights", inline=True)
 
     embed.add_field(name="", value="", inline=True)
     embed.add_field(name="", value="", inline=True)
