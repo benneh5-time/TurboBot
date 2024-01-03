@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 with open('flavor.json', 'r') as flavor_file:
     flavor = json.load(flavor_file)
 
-flavors = data['flavors']
+flavors = flavor['flavors']
 
 data = None
 
