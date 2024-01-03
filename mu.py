@@ -7,7 +7,12 @@ import json
 import random
 from roles import vanilla_town_dict, mafia_goon_dict, joat_dict, cop_dict, vig_dict, big_ham_dict, frankie_dict, vanchilla_dict, vinnie_dict, zippy_dict, kingpin_dict, zippy13_dict, kingpin_joat_dict, town_ic_dict
 from bs4 import BeautifulSoup
-from flavor import joat_flavor, cop9_flavor, cop13_flavor, vig_flavor
+# from flavor import joat_flavor, cop9_flavor, cop13_flavor, vig_flavor
+
+with open('flavor.json', 'r') as flavor_file:
+    flavor = json.load(flavor_file)
+
+flavors = data['flavors']
 
 data = None
 
@@ -81,20 +86,8 @@ def new_thread_token(session):
 def post_thread(session, game_title, security_token, setup):
 
     protected_url = "https://www.mafiauniverse.com/forums/newthread.php"
-    if setup == "joat10":
-        game_flavor = joat_flavor
-    if setup == "cop9":
-        game_flavor = cop9_flavor
-    if setup == "cop13":
-        game_flavor = cop13_flavor
-    if setup == "vig10":
-        game_flavor = vig_flavor
-    if setup == "doublejoat13":
-        game_flavor = joat_flavor
-    if setup == "alexa25":
-        game_flavor = cop9_flavor
-    if setup == "f3practice":
-        game_flavor = "Good luck, votes are locked!"
+
+    game_flavor = random.choice(flavors)
         
     payload = {
         "do": "postthread",
