@@ -869,7 +869,7 @@ async def rand(ctx, *args):
     allowed_randers = []
     player_list = list(players.keys())[:player_limit]
     for player in player_list:
-        for key, value in alias.items():
+        for key, value in aliases.items():
             if player == value:
                 allowed_randers.append(int(key))
 
