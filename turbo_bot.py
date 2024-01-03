@@ -873,7 +873,7 @@ async def rand(ctx, *args):
             if player == value:
                 allowed_randers.append(int(key))
 
-    if ctx.author.id not in allowed_randers or game_host_name:
+    if ctx.author.id not in allowed_randers:
         await ctx.send("Only hosts and players on the list are allowed to execute this function.")
         return
 
