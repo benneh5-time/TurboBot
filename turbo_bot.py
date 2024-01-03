@@ -890,112 +890,129 @@ async def rand(ctx, *args):
         return
 
     is_rand_running = True
+
+    cancel = await ctx.send("The game will rand in 30 seconds unless canceled by reacting with '❌'")
+    await cancel.add_reaction("'❌'")
+
+    def check(reaction, user):
+        return str(reaction.emoji) == '❌' and user == ctx.author and user.id in allowed_randers and reaction.message.id == cancel.id
     
     try:
-        player_aliases = list(players.keys())[:player_limit]
-    
-        username = os.environ.get('MUUN')
-        password = os.environ.get('MUPW')
+        reaction, user = await bot.wait_for('reaction_add', timeout=30, check=check)
+
+        if str(reaction.emoji) == '❌':
+            await ctx.send("Rand canceled")
+            is_rand_running = False
+            return
+    except asyncio.TimeoutError:
+        await ctx.send("Randing, stfu")
         
-        # args = shlex.split(' '.join(args))
-        parser = argparse.ArgumentParser()
-        parser.add_argument('-title', default=None)
-        parser.add_argument('-thread_id', default=None)
-        
+
         try:
-            args_parsed = parser.parse_args(args)
-        except SystemExit:
-            await ctx.send(f"Invalid arguments. Please check your command syntax. Do not use `-`, `--`, or `:` in your titles and try again.")
-            return
-        except Exception as e:
-            await ctx.send(f"An unexpected error occurred. Please try again.\n{str(e)}")
-            return
+            player_aliases = list(players.keys())[:player_limit]
         
-        #Login and get Initial Token
-        session = mu.login(username, password)
-        security_token = mu.new_thread_token(session)
-        
-        game_title = args_parsed.title
-        thread_id = args_parsed.thread_id
-        
-        if not game_title:
-            game_title = mu.generate_game_thread_uuid()
+            username = os.environ.get('MUUN')
+            password = os.environ.get('MUPW')
             
-        if not thread_id:
-            print(f"Attempting to post new thread with {game_title}", flush=True)
-            thread_id = mu.post_thread(session, game_title, security_token, current_setup)
-        host_list = [f"{host}" for host in game_host_name]
-        hosts = ', '.join(host_list)
-        await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
-        print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
-        security_token = mu.new_game_token(session, thread_id)
-        response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, current_setup, day_length, night_length, game_host_name)
-        
-        if "was created successfully." in response_message:
-            # Use aliases to get the Discord IDs
-            print("Success. Gathering player list for mentions", flush=True)
-            mention_list = []
+            # args = shlex.split(' '.join(args))
+            parser = argparse.ArgumentParser()
+            parser.add_argument('-title', default=None)
+            parser.add_argument('-thread_id', default=None)
             
-            for player in player_aliases:
-                for key, value in aliases.items():
-                    if player == value:
-                        mention_list.append(int(key))
-                        
-            player_mentions = " ".join([f"<@{id}>" for id in mention_list])
-            game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
-            await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}\nType !dvc to join the turbo DVC/Graveyard. You will be auto-in'd to the graveyard channel upon your death if you are in that server!")
+            try:
+                args_parsed = parser.parse_args(args)
+            except SystemExit:
+                await ctx.send(f"Invalid arguments. Please check your command syntax. Do not use `-`, `--`, or `:` in your titles and try again.")
+                return
+            except Exception as e:
+                await ctx.send(f"An unexpected error occurred. Please try again.\n{str(e)}")
+                return
             
-            if current_setup != "f3practice":
-                role, channel_id, guild = await create_dvc(thread_id)
-                print(f"DVC thread created. Clearing variables", flush=True)
-                channel = bot.get_channel(channel_id)
-                for host in game_host_name:
-                    if host in aliases.values():
-                        try:
-                            mention_id = find_key_by_value(aliases, host)
-                            member = guild.get_member(mention_id)
-                            await member.add_roles(role)
-                            await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
-                        except:
-                            await channel.send(f"failed to add {host} to dvc.")
+            #Login and get Initial Token
+            session = mu.login(username, password)
+            security_token = mu.new_thread_token(session)
+            
+            game_title = args_parsed.title
+            thread_id = args_parsed.thread_id
+            
+            if not game_title:
+                game_title = mu.generate_game_thread_uuid()
+                
+            if not thread_id:
+                print(f"Attempting to post new thread with {game_title}", flush=True)
+                thread_id = mu.post_thread(session, game_title, security_token, current_setup)
+            host_list = [f"{host}" for host in game_host_name]
+            hosts = ', '.join(host_list)
+            await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
+            print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
+            security_token = mu.new_game_token(session, thread_id)
+            response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, current_setup, day_length, night_length, game_host_name)
+            
+            if "was created successfully." in response_message:
+                # Use aliases to get the Discord IDs
+                print("Success. Gathering player list for mentions", flush=True)
+                mention_list = []
+                
+                for player in player_aliases:
+                    for key, value in aliases.items():
+                        if player == value:
+                            mention_list.append(int(key))
+                            
+                player_mentions = " ".join([f"<@{id}>" for id in mention_list])
+                game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
+                await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}\nType !dvc to join the turbo DVC/Graveyard. You will be auto-in'd to the graveyard channel upon your death if you are in that server!")
+                
+                if current_setup != "f3practice":
+                    role, channel_id, guild = await create_dvc(thread_id)
+                    print(f"DVC thread created. Clearing variables", flush=True)
+                    channel = bot.get_channel(channel_id)
+                    for host in game_host_name:
+                        if host in aliases.values():
+                            try:
+                                mention_id = find_key_by_value(aliases, host)
+                                member = guild.get_member(mention_id)
+                                await member.add_roles(role)
+                                await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
+                            except:
+                                await channel.send(f"failed to add {host} to dvc.")
 
-                await new_game_spec_message(bot, thread_id, game_title)
-                game_host_name = ["Mafia Host"]
-                players.clear()
-                players.update(waiting_list)
-                waiting_list.clear()   
-                print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
-                is_rand_running = False
-                await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id)
-                print(f"Threadmark processor finished. rand function finished.", flush=True)
-                await edit_dvc(channel, guild)
-                await delete_dvc_role(channel, role)
-            
-            else:
-                channel = bot.get_channel(f3_channel)
-                for host in game_host_name:
-                    if host in aliases.values():
-                        try:
-                            mention_id = find_key_by_value(aliases, host)
-                            member = guild.get_member(mention_id)
-                            await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
-                        except:
-                            await channel.send(f"failed to add {host} to dvc.")
+                    await new_game_spec_message(bot, thread_id, game_title)
+                    game_host_name = ["Mafia Host"]
+                    players.clear()
+                    players.update(waiting_list)
+                    waiting_list.clear()   
+                    print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
+                    is_rand_running = False
+                    await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id)
+                    print(f"Threadmark processor finished. rand function finished.", flush=True)
+                    await edit_dvc(channel, guild)
+                    await delete_dvc_role(channel, role)
+                
+                else:
+                    channel = bot.get_channel(f3_channel)
+                    for host in game_host_name:
+                        if host in aliases.values():
+                            try:
+                                mention_id = find_key_by_value(aliases, host)
+                                member = guild.get_member(mention_id)
+                                await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
+                            except:
+                                await channel.send(f"failed to add {host} to dvc.")
 
-                game_host_name = ["Mafia Host"]
-                players.clear()
-                players.update(waiting_list)
-                waiting_list.clear()   
-                print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
-                is_rand_running = False
-                print(f"Threadmark processor finished. rand function finished.", flush=True)
+                    game_host_name = ["Mafia Host"]
+                    players.clear()
+                    players.update(waiting_list)
+                    waiting_list.clear()   
+                    print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
+                    is_rand_running = False
+                    print(f"Threadmark processor finished. rand function finished.", flush=True)
 
-        elif "Error" in response_message:
-            print(f"Game failed to rand, reason: {response_message}", flush=True)
-            await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
-    
-    finally:
-        is_rand_running = False
+            elif "Error" in response_message:
+                print(f"Game failed to rand, reason: {response_message}", flush=True)
+                await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
+        
+        finally:
+            is_rand_running = False
         
 @bot.command()
 async def clear(ctx, *args):
