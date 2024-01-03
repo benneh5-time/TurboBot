@@ -375,6 +375,7 @@ async def phases(ctx, timer_name=None):
             
         day_length = new_day_length
         night_length = new_night_length
+        current_timer = timer_name
         
         await ctx.send(f"The day/night phases have been changed to '{current_timer}'")
     else:
