@@ -891,7 +891,8 @@ async def rand(ctx, *args):
 
     is_rand_running = True
 
-    cancel = await ctx.send("The game will rand in 30 seconds unless canceled by reacting with '❌'")
+    mentions = " ".join([f"<@{id}>" for id in allowed_randers])
+    cancel = await ctx.send(f"{mentions} \n\nThe game will rand in 30 seconds unless canceled by reacting with '❌'")
     await cancel.add_reaction('❌')
 
     def check(reaction, user):
