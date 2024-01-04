@@ -896,7 +896,7 @@ async def rand(ctx, *args):
     await cancel.add_reaction('❌')
 
     def check(reaction, user):
-        return str(reaction.emoji) == '❌' and user.id == ctx.author.id and user.id in allowed_randers and reaction.message.id == cancel.id
+        return str(reaction.emoji) == '❌' and user.id in allowed_randers and reaction.message.id == cancel.id
 
     try:
         reaction, user = await bot.wait_for('reaction_add', timeout=30, check=check)
