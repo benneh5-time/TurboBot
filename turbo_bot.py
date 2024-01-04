@@ -747,7 +747,7 @@ async def host(ctx, *, host_name=None):
         return
     mods = [178647349369765888]
     if ctx.author.id not in mods:
-        await ctx.send("Hosting has been turned off until version 2.0")
+        await ctx.send("stfu katze")
         return
          
     global game_host_name
