@@ -29,6 +29,7 @@ aliases = {}
 dvc_roles = {}
 message_ids = {}
 game_host_name = ["Mafia Host"]
+mods = [178647349369765888]
 current_setup = "joat10"
 current_timer = "14-3"
 valid_setups = ["joat10", "vig10", "cop9", "cop13", "doublejoat13", "alexa25"] #future setups
@@ -737,6 +738,27 @@ async def update_status():
     
     await status_message.edit(embed=embed)
     
+@bot.command()
+async def delete_archive(ctx, category_name):
+    if ctx.author.id not in mods:
+        return
+    
+    guild = bot.get_guild(dvc_server)
+
+    try:
+        category = discord.utils.get(guild.categories, name=category_name)
+
+        if category:
+            for channel in category.channels:
+                await channel.delete()
+            await ctx.send(f"DVC Archive cleanup complete for {category_name}")
+        else:
+            await ctx.send(f"Category {category_name} not found on Turbo DVC server. Try again.")
+    except:
+        await ctx.send("Somethin' fucked up, check logs")
+
+
+
 
 @bot.command()
 async def host(ctx, *, host_name=None):
@@ -745,7 +767,6 @@ async def host(ctx, *, host_name=None):
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for flaking and are not allowed to host turbos.")
         return
-    mods = [178647349369765888]
     if ctx.author.id not in mods:
         return
          
