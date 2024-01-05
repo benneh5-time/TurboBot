@@ -9,19 +9,19 @@ from roles import vanilla_town_dict, mafia_goon_dict, joat_dict, cop_dict, vig_d
 from bs4 import BeautifulSoup
 # from flavor import joat_flavor, cop9_flavor, cop13_flavor, vig_flavor
 
-with open('flavor.json', 'r') as flavor_file:
-    flavor = json.load(flavor_file)
+def load_json_file(json_file):
+    with open(json_file, 'r') as f:
+        return json.load(f)
 
-flavors = flavor['flavors']
+
+#with open('turboers.json', 'r') as file:
+#    name_image_pairs = json.load(file)
+#with open('powerroles.json', 'r') as file:
+#    pr_name_image_pairs = json.load(file)
+#with open('wolves.json', 'r') as file:
+#    wolf_name_image_pairs = json.load(file)
 
 data = None
-
-with open('turboers.json', 'r') as file:
-    name_image_pairs = json.load(file)
-with open('powerroles.json', 'r') as file:
-    pr_name_image_pairs = json.load(file)
-with open('wolves.json', 'r') as file:
-    wolf_name_image_pairs = json.load(file)
 
 def generate_game_thread_uuid():
     random_uuid = str(uuid.uuid4())[:16]
@@ -85,6 +85,9 @@ def new_thread_token(session):
 
 def post_thread(session, game_title, security_token, setup):
 
+    flavor = load_json_file('flavor.json')
+    flavors = flavor['flavors']
+
     protected_url = "https://www.mafiauniverse.com/forums/newthread.php"
 
     game_flavor = random.choice(flavors)
@@ -143,6 +146,7 @@ def new_game_token(session, thread_id):
 
 def start_game(session, security_token, game_title, thread_id, player_aliases, game_setup, day_length, night_length, host_name):
     global data
+
     data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': game_title, 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Open', 'period': 'day', 'phase': '1', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'aliased': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '2', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
     data.add('day_length', day_length)
     data.add('night_length', night_length)
@@ -175,13 +179,6 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         add_alexa25_roles(game_title)
         data.add("preset", "custom")
         data.add('num_players', '25')
-    if game_setup == "f3practice":
-        add_f3_roles(game_title)
-        data.add("preset", "custom")
-        data.add('num_players', '3')
-        data.add('day_length', "9")
-        data.add('auto_majority', '1')     
-        data.add('day_action_cutoff', '1')  
 
     add_players(player_aliases, host_name)
     
@@ -215,7 +212,11 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
     else:
         print("Game rand fucked up")
 
-
+def load_flavor_jsons():
+    name_image_pairs = load_json_file('turboers.json')
+    pr_name_image_pairs = load_json_file('powerroles.json')
+    wolf_name_image_pairs = load_json_file('wolves.json')
+    return name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs
 
 def add_joat_roles(game_title):
     # vanilla_town_json = json.dumps(vanchilla_dict)
@@ -224,6 +225,8 @@ def add_joat_roles(game_title):
     #joat_json = json.dumps(zippy_dict)	
     global data
     
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
+
     villagers = random.sample(name_image_pairs, 7)
     joat = random.sample(pr_name_image_pairs, 1)
     wolves = random.sample(wolf_name_image_pairs, 2)
@@ -252,21 +255,6 @@ def add_joat_roles(game_title):
         data.add("roles[]", wolf_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#ff2244]Wolf[/COLOR][/B]. You win when you overpower the Town and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n[SIZE=4][B][I]Mafia Team[/I][/B][/SIZE]\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\nAs [B][COLOR=#ff2244]Mafia[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf no Mafia submit an action, a player will be picked at random from the living non-Mafia players.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")    
 
-def add_f3_roles(game_title):
-    vanilla_town_json = json.dumps(vanchilla_dict)
-    town_ic_json = json.dumps(town_ic_dict)
-    frankie_json = json.dumps(frankie_dict)	
-    global data
-    
-    data.add("roles[]", vanilla_town_json)
-    data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Town[/COLOR][/B]. You win when all threats to Town have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
-    
-    data.add("roles[]", frankie_json)
-    data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#ff2244]Mafia Goon[/COLOR][/B]. You win when you overpower the Town and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n[SIZE=4][B][I]Mafia Team[/I][/B][/SIZE]\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\nAs [B][COLOR=#ff2244]Mafia[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf no Mafia submit an action, a player will be picked at random from the living non-Mafia players.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")    
-
-    data.add("roles[]", town_ic_json)
-    data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Town Innocent Child[/COLOR][/B]. You win when all threats to Town have been eliminated.\n\n[SIZE=4][B][I]Town Innocent Child[/I][/B][/SIZE]\n\nAs [B][COLOR=#339933]Town Innocent Child[/COLOR][/B], you have access to the [B]Claim Innocence[/B] Day action. Claiming your innocence announces your role and alignment in the Game thread for all to see. Submit your claim at any time during a Day, and your role and alignment will be announced in the Game thread. Submit your action using the form below the game thread.\n\n[B]Note:[/B] Innocence claims may take up to one minute to process.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
-
 
 def add_doublejoat13_roles(game_title):
     #vanilla_town_json = json.dumps(vanchilla_dict)
@@ -275,6 +263,7 @@ def add_doublejoat13_roles(game_title):
     #kingpin_json = json.dumps(kingpin_joat_dict)	
     #joat_json = json.dumps(zippy13_dict)	
     global data
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
 
     villagers = random.sample(name_image_pairs, 9)
     joat = random.sample(pr_name_image_pairs, 1)
@@ -318,7 +307,8 @@ def add_vig_roles(game_title):
     #kingpin_json = json.dumps(kingpin_dict)		
     #vig_json = json.dumps(vig_dict)	
     global data
-    
+
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
     villagers = random.sample(name_image_pairs, 7)
     vig = random.sample(pr_name_image_pairs, 1)
     wolves = random.sample(wolf_name_image_pairs, 2)
@@ -351,6 +341,7 @@ def add_alexa25_roles(game_title):
     mafia_json = json.dumps(mafia_goon_dict)
     global data
 
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
     for i in range(0,19):
         data.add("roles[]", vanilla_town_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Town[/COLOR][/B]. You win when all threats to Town have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
@@ -365,7 +356,8 @@ def add_cop9_roles(game_title):
     #frankie_json = json.dumps(frankie_dict)	
     #cop_json = json.dumps(cop_dict)	
     global data
-    
+
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
     villagers = random.sample(name_image_pairs, 6)
     cop = random.sample(pr_name_image_pairs, 1)
     wolves = random.sample(wolf_name_image_pairs, 2)
@@ -397,7 +389,8 @@ def add_cop9_roles(game_title):
 def add_cop13_roles(game_title):
 	
     global data
-    
+
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
     villagers = random.sample(name_image_pairs, 9)
     cop = random.sample(pr_name_image_pairs, 1)
     wolves = random.sample(wolf_name_image_pairs, 3)

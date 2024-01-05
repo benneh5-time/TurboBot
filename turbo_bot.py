@@ -38,7 +38,6 @@ day_length = 14
 night_length = 3
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 react_channels = [223260125786406912, 1114212787141492788]
-# Merel banned
 banned_users = []
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
@@ -100,7 +99,7 @@ def load_dvc_roles():
             dvc_roles.update({int(id): alias for id, alias in loaded_dvc_roles.items()})
     except FileNotFoundError:
         pass
-           
+
 def save_player_list(player_list, waiting_list, current_setup, game_host_name, player_limit):
     with open('player_list_data.json', 'w') as f:
         json.dump({"player_list": player_list, "waiting_list": waiting_list, "current_setup": current_setup, "game_host_name": game_host_name, "player_limit": player_limit}, f)
@@ -127,6 +126,29 @@ def find_key_by_value(dictionary, value):
             return key
     return None
 
+@bot.event
+async def on_ready():
+    global players, waiting_list, current_setup, game_host_name, player_limit, recruit_list
+    print(f"We have logged in as {bot.user}", flush=True)
+    load_aliases()
+    load_dvc_roles()
+    load_messages()
+    players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
+    recruit_list = load_recruit_list()
+    if players is None:
+        players = {}
+    if waiting_list is None:
+        waiting_list = {}
+    if current_setup is None:
+        current_setup = "joat10" 
+    if game_host_name is None:
+        game_host_name = ["Mafia Host"] 
+    if player_limit is None:
+        player_limit = 10  
+    update_players.start()  # Start background task
+    await dvc_limit()
+    # await clear_dvc_roles()
+
 async def create_dvc(thread_id):
     guild = bot.get_guild(dvc_server)
     # DVC Archive cat_id
@@ -149,7 +171,7 @@ async def create_dvc(thread_id):
     )
     return role, channel.id, guild
 
-async def test_function():
+async def dvc_limit():
 
     category = bot.get_channel(dvc_archive)
     backup_category = bot.get_channel(backup_archive)
@@ -269,33 +291,6 @@ class ThreadmarkProcessor:
 			await asyncio.sleep(30)
 
 processor = ThreadmarkProcessor()
-
-#@tasks.loop(minutes=1)
-#async def process_threadmarks(thread_id, player_aliases, role, guild, channel_id):
-#    await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id)
-
-@bot.event
-async def on_ready():
-    global players, waiting_list, current_setup, game_host_name, player_limit, recruit_list
-    print(f"We have logged in as {bot.user}", flush=True)
-    load_aliases()
-    load_dvc_roles()
-    load_messages()
-    players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
-    recruit_list = load_recruit_list()
-    if players is None:
-        players = {}
-    if waiting_list is None:
-        waiting_list = {}
-    if current_setup is None:
-        current_setup = "joat10" 
-    if game_host_name is None:
-        game_host_name = ["Mafia Host"] 
-    if player_limit is None:
-        player_limit = 10  
-    update_players.start()  # Start background task
-    await test_function()
-    # await clear_dvc_roles()
 
 @bot.command()
 async def game(ctx, setup_name=None):
