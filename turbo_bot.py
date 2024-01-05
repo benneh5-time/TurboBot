@@ -9,6 +9,8 @@ import random
 import requests
 import csv
 from bs4 import BeautifulSoup
+import stats
+import pandas as pd
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -292,6 +294,63 @@ class ThreadmarkProcessor:
 			await asyncio.sleep(30)
 
 processor = ThreadmarkProcessor()
+
+@bot.command()
+async def stats(ctx):
+
+    if ctx.channel.id not in allowed_channels:  
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for flaking and are not allowed to adjust turbos.")
+        return   
+
+    df = pd.read_csv('game_database.csv')
+
+    overall_mafia_wins = 0
+    overall_town_wins = 0
+
+    setup_wins = {}
+    setup_total_games = {}
+
+    for index, row in df.iterrows():
+        winning_team = 'wolves' if row['Winning Alignment'] == 'Mafia' else 'villagers'
+        
+        if winning_team == 'wolves':
+            overall_mafia_wins += 1
+        else:
+            overall_town_wins += 1
+
+        setup = row['Setup']
+        setup_wins[setup] = setup_wins.get(setup, {'mafia': 0, 'town': 0})
+        setup_total_games[setup] = setup_total_games.get(setup, 0) + 1
+
+        if winning_team == 'wolves':
+            setup_wins[setup]['mafia'] += 1
+        else:
+            setup_wins[setup]['town'] += 1
+
+    # Calculate overall win percentages
+    total_games = len(df)
+    overall_mafia_win_percentage = (overall_mafia_wins / total_games) * 100
+    overall_town_win_percentage = (overall_town_wins / total_games) * 100
+
+    # Display overall stats
+    await ctx.send(f"Since 1/4/2024, Turbot has randed and collected stats for {total_games} games.")
+    await ctx.send(f"Overall Mafia Win Percentage: {overall_mafia_win_percentage:.2f}%")
+    await ctx.send(f"Overall Town Win Percentage: {overall_town_win_percentage:.2f}%")
+
+    # Display setup-specific stats
+    print("\nSetup Counts:")
+    for setup, count in setup_total_games.items():
+        mafia_wins = setup_wins[setup]['mafia']
+        town_wins = setup_wins[setup]['town']
+        mafia_win_percentage = (mafia_wins / count) * 100
+        town_win_percentage = (town_wins / count) * 100
+
+        await ctx.send(f"{setup} setups have been run {count} times")
+        await ctx.send(f"  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%")
+        await ctx.send(f"  {setup}Town Win Percentage: {town_win_percentage:.2f}%")
 
 @bot.command()
 async def game(ctx, setup_name=None):
