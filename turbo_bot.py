@@ -7,6 +7,7 @@ import os
 import argparse
 import random
 import requests
+import csv
 from bs4 import BeautifulSoup
 
 intents = discord.Intents.default()
@@ -977,21 +978,22 @@ async def rand(ctx, *args):
                 game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
                 await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}\nType !dvc to join the turbo DVC/Graveyard. You will be auto-in'd to the graveyard channel upon your death if you are in that server!")
                 
-                if current_setup != "f3practice":
-                    role, channel_id, guild = await create_dvc(thread_id)
-                    print(f"DVC thread created. Clearing variables", flush=True)
-                    channel = bot.get_channel(channel_id)
-                    for host in game_host_name:
-                        if host in aliases.values():
-                            try:
-                                mention_id = find_key_by_value(aliases, host)
-                                member = guild.get_member(mention_id)
-                                await member.add_roles(role)
-                                await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
-                            except:
-                                await channel.send(f"failed to add {host} to dvc.")
+
+                role, channel_id, guild = await create_dvc(thread_id)
+                print(f"DVC thread created. Clearing variables", flush=True)
+                channel = bot.get_channel(channel_id)
+                for host in game_host_name:
+                    if host in aliases.values():
+                        try:
+                            mention_id = find_key_by_value(aliases, host)
+                            member = guild.get_member(mention_id)
+                            await member.add_roles(role)
+                            await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
+                        except:
+                            await channel.send(f"failed to add {host} to dvc.")
 
                     await new_game_spec_message(bot, thread_id, game_title)
+                    postgame_players = players
                     game_host_name = ["Mafia Host"]
                     players.clear()
                     players.update(waiting_list)
@@ -1002,25 +1004,54 @@ async def rand(ctx, *args):
                     print(f"Threadmark processor finished. rand function finished.", flush=True)
                     await edit_dvc(channel, guild)
                     await delete_dvc_role(channel, role)
-                
-                else:
-                    channel = bot.get_channel(f3_channel)
-                    for host in game_host_name:
-                        if host in aliases.values():
-                            try:
-                                mention_id = find_key_by_value(aliases, host)
-                                member = guild.get_member(mention_id)
-                                await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
-                            except:
-                                await channel.send(f"failed to add {host} to dvc.")
+                    
+                    summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
+                    summary_response = requests.get(summary_url)
+                    summary_json = summary_response.json()
 
-                    game_host_name = ["Mafia Host"]
-                    players.clear()
-                    players.update(waiting_list)
-                    waiting_list.clear()   
-                    print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
-                    is_rand_running = False
-                    print(f"Threadmark processor finished. rand function finished.", flush=True)
+                    summary_csv = 'game_database.csv'
+                    summary_headers = ['Turbo Title', 'Setup', 'Thread ID', 'Game ID', 'Winning Alignment', 'Villagers', 'Wolves']
+                    town = summary_json['players']['town']
+                    mafia = summary_json['players']['mafia']
+
+                    town_list = []
+                    mafia_list = []
+
+                    for player in town:
+                        town_list.append(player['username'])
+                        
+                    for player in mafia:
+                        mafia_list.append(player['username'])
+                    
+                    title= summary_json['title']
+                    start_index = title.find(" - [")
+                    if start_index != -1:
+                        start_index += len(" - [")
+                        end_index = title.find(" game]", start_index)
+
+                        if end_index != -1:
+                            extracted_setup = title[start_index:end_index]
+                        else:
+                            print("No setup found", flush=True)
+                    else:
+                        print("No setup found", flush=True)
+
+                    with open(summary_csv, 'a', newline='') as csvfile:
+                        csv_writer = csv.DictWriter(csvfile, fieldnames=summary_headers)
+
+                        if csvfile.tell() == 0:
+                            csv_writer.writeheader()
+                        
+                        csv_writer.writerow({
+                            "Turbo Title": summary_json['title'],
+                            "Setup": extracted_setup,
+                            "Thread ID": summary_json['threadid'],
+                            "Game ID": summary_json['id'],
+                            "Winning Alignment": summary_json['winning_alignment'],
+                            "Villagers": town_list,
+                            "Wolves": mafia_list,                          
+                        })
+
 
             elif "Error" in response_message:
                 print(f"Game failed to rand, reason: {response_message}", flush=True)
