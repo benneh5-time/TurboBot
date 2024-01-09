@@ -932,26 +932,7 @@ async def spec(ctx, arg: int):
 
     else:
         await ctx.send('Invalid argument. Please provide the 5-digit number of the game thread. You can find this at the beginning of the URL for the game thread or from my rand comment in #turbo-chat. Please try again with !spec xxxxx')
-
-
-@bot.command()
-async def flavor(ctx, name, image):
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
-        return
-    if ctx.author.id not in mods:
-        return
-    new_flavor = {"character_name": name, "character_image": image}
-
-    with open('new_flavor.json', 'a') as file:
-
-        file.seek(0, 2)
-        if file.tell() > 0:
-            file.write('\n')
-            
-        json.dump(new_flavor, file, indent=2)
-        file.write('\n')
-
-
+        
 @bot.command()
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
