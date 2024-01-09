@@ -32,7 +32,7 @@ aliases = {}
 dvc_roles = {}
 message_ids = {}
 game_host_name = ["Mafia Host"]
-mods = [178647349369765888]
+mods = [178647349369765888, 93432503863353344]
 current_setup = "joat10"
 current_timer = "14-3"
 valid_setups = ["joat10", "vig10", "cop9", "cop13", "doublejoat13", "alexa25"] #future setups
@@ -932,6 +932,18 @@ async def spec(ctx, arg: int):
 
     else:
         await ctx.send('Invalid argument. Please provide the 5-digit number of the game thread. You can find this at the beginning of the URL for the game thread or from my rand comment in #turbo-chat. Please try again with !spec xxxxx')
+
+
+@bot.command()
+async def flavor(ctx, name, image):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    if ctx.author.id not in mods:
+        return
+    new_flavor = {"character_name": name, "character_image": image}
+
+    with open('new_flavor.json', 'w') as file:
+        json.dump(new_flavor, file, indent=2)
 
 
 @bot.command()
