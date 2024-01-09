@@ -942,8 +942,14 @@ async def flavor(ctx, name, image):
         return
     new_flavor = {"character_name": name, "character_image": image}
 
-    with open('new_flavor.json', 'w') as file:
+    with open('new_flavor.json', 'a') as file:
+
+        file.seek(0, 2)
+        if file.tell() > 0:
+            file.write('\n')
+            
         json.dump(new_flavor, file, indent=2)
+        file.write('\n')
 
 
 @bot.command()
