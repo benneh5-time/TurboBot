@@ -713,7 +713,7 @@ async def status(ctx, *args):
         
     global game_host_name, status_id, status_channel
 
-    embed = discord.Embed(title="**Turbo sign-ups!**", description="Turbo Bot v1.3 by benneh", color=0x1beb30)
+    embed = discord.Embed(title="**Turbo sign-ups!**", description="Turbo Bot v2.0 (with subs!) by benneh", color=0x1beb30)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
     host_list = [f"{host}\n" for host in game_host_name]
     hosts = ''.join(host_list)
