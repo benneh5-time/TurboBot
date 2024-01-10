@@ -937,6 +937,8 @@ async def spec(ctx, arg: int):
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
+    global player_limit, game_host_name, current_setup, is_rand_running
+
     allowed_randers = []
     player_aliases = list(players.keys())[:player_limit]
 
@@ -946,7 +948,6 @@ async def rand(ctx, *args):
                 allowed_randers.append(int(key))
     for host in game_host_name:
         allowed_randers.append(host)    
-    global player_limit, game_host_name, current_setup, is_rand_running
 
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for flaking and are not allowed to rand turbos.")
