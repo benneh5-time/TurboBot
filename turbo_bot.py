@@ -937,7 +937,15 @@ async def spec(ctx, arg: int):
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
-    
+    allowed_randers = []
+    player_aliases = list(players.keys())[:player_limit]
+
+    for player in player_aliases:
+        for key, value in aliases.items():
+            if player == value:
+                allowed_randers.append(int(key))
+    for host in game_host_name:
+        allowed_randers.append(host)    
     global player_limit, game_host_name, current_setup, is_rand_running
 
     if ctx.author.id in banned_users:
@@ -972,15 +980,6 @@ async def rand(ctx, *args):
     
     is_rand_running = True
 
-    allowed_randers = []
-    player_aliases = list(players.keys())[:player_limit]
-
-    for player in player_aliases:
-        for key, value in aliases.items():
-            if player == value:
-                allowed_randers.append(int(key))
-    for host in game_host_name:
-        allowed_randers.append(host)
 
     mentions = " ".join([f"<@{id}>" for id in allowed_randers])
     cancel = await ctx.send(f"{mentions} \n\nThe game will rand in 15 seconds unless canceled by reacting with '❌'")
