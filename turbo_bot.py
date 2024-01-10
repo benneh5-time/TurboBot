@@ -940,20 +940,13 @@ async def rand(ctx, *args):
     
     global player_limit, game_host_name, current_setup, is_rand_running
 
-    allowed_randers = []
-    player_list = list(players.keys())[:player_limit]
-    for player in player_list:
-        for key, value in aliases.items():
-            if player == value:
-                allowed_randers.append(int(key))
-
-    if ctx.author.id not in allowed_randers:
-        await ctx.send("Only hosts and players on the list are allowed to execute this function.")
-        return
-
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for flaking and are not allowed to rand turbos.")
-        return    
+        return   
+    
+    if ctx.author.id not in allowed_randers:
+        await ctx.send("Only hosts and players on the list are allowed to execute this function.")
+        return 
 
     if len(players) < player_limit:
         await ctx.send(f"Not enough players to start a game. Need {player_limit} players.")
@@ -962,18 +955,42 @@ async def rand(ctx, *args):
     if is_rand_running:
         await ctx.send("The !rand command is currently being processed. Please wait.")
         return
-
+    
+    # args = shlex.split(' '.join(args))
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-title', default=None)
+    parser.add_argument('-thread_id', default=None)
+    
+    try:
+        args_parsed = parser.parse_args(args)
+    except SystemExit:
+        await ctx.send(f"Invalid arguments. Please check your command syntax. Do not use `-`, `--`, or `:` in your titles and try again.")
+        return
+    except Exception as e:
+        await ctx.send(f"An unexpected error occurred. Please try again.\n{str(e)}")
+        return
+    
     is_rand_running = True
 
+    allowed_randers = []
+    player_aliases = list(players.keys())[:player_limit]
+
+    for player in player_aliases:
+        for key, value in aliases.items():
+            if player == value:
+                allowed_randers.append(int(key))
+    for host in game_host_name:
+        allowed_randers.append(host)
+
     mentions = " ".join([f"<@{id}>" for id in allowed_randers])
-    cancel = await ctx.send(f"{mentions} \n\nThe game will rand in 30 seconds unless canceled by reacting with '❌'")
+    cancel = await ctx.send(f"{mentions} \n\nThe game will rand in 15 seconds unless canceled by reacting with '❌'")
     await cancel.add_reaction('❌')
 
     def check(reaction, user):
         return str(reaction.emoji) == '❌' and user.id in allowed_randers and reaction.message.id == cancel.id
 
     try:
-        reaction, user = await bot.wait_for('reaction_add', timeout=30, check=check)
+        reaction, user = await bot.wait_for('reaction_add', timeout=15, check=check)
 
         if str(reaction.emoji) == '❌':
             await ctx.send("Rand canceled")
@@ -983,24 +1000,9 @@ async def rand(ctx, *args):
         await ctx.send("Randing, stfu")
         
         try:
-            player_aliases = list(players.keys())[:player_limit]
         
             username = os.environ.get('MUUN')
             password = os.environ.get('MUPW')
-            
-            # args = shlex.split(' '.join(args))
-            parser = argparse.ArgumentParser()
-            parser.add_argument('-title', default=None)
-            parser.add_argument('-thread_id', default=None)
-            
-            try:
-                args_parsed = parser.parse_args(args)
-            except SystemExit:
-                await ctx.send(f"Invalid arguments. Please check your command syntax. Do not use `-`, `--`, or `:` in your titles and try again.")
-                return
-            except Exception as e:
-                await ctx.send(f"An unexpected error occurred. Please try again.\n{str(e)}")
-                return
             
             #Login and get Initial Token
             session = mu.login(username, password)
