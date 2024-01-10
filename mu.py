@@ -66,6 +66,35 @@ def extract_security_token(response_text):
         return security_token
     return None
 
+def extract_game_id(response_text):
+    soup = BeautifulSoup(response_text, 'html.parser')
+    game_id = soup.find('li', {'class': 'game-thread'}).get('data-gameid')
+
+    return game_id
+
+def open_game_thread(session, thread_id):
+    url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"
+    response = session.get(url)
+    security_token = extract_security_token(response.text)
+    game_id = extract_game_id(response.text)
+
+    return game_id, security_token 
+
+def sub_player(session, game_id, player, player_in, security_token):
+    url = "https://www.mafiauniverse.com/forums/modbot/subs.php"
+
+    payload = {
+        "do": "immediate-sub",
+        "game_id": game_id,
+        "player": player,
+        "player_in": player_in,
+        "reason": "Automatic turbot replacement",
+        "securitytoken": security_token
+        }
+    subs = session.post(url, data=payload)
+    return subs.text
+    
+
 def new_thread_token(session):
     protected_url = "https://www.mafiauniverse.com/forums/newthread.php"
     
