@@ -49,9 +49,6 @@ dvc_server = 1094321402489872436   # DVC Server id
     #DVC Arhchive 11
 # dvc_archive = 1191478882411491338
 
-    #DVC Archive 12
-backup_archive = 1194885111972384789
-
 status_id = None
 status_channel = None
 is_rand_running = False
