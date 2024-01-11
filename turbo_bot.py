@@ -205,8 +205,6 @@ async def edit_dvc(channel, guild):
     # backup_category = bot.get_channel(backup_archive)
     channel_count = len(category.channels)
 
-    global dvc_archive
-
     if channel:
         #Set an overwrite for the default role so players can read messages in the channel after update
         permissions = channel.overwrites_for(guild.default_role)
