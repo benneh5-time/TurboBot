@@ -62,10 +62,11 @@ def load_dvc_archive():
     
 dvc_archive = load_dvc_archive()
 
-print(dvc_archive)
-def save_dvc_archive():
+print(f"Current dvc archive: {dvc_archive}")
+
+def save_dvc_archive(new_archive):
     with open('dvc_archive.json', 'w') as f:
-        json.dump(dvc_archive, f)
+        json.dump(new_archive, f)
 
 def save_recruit_list():
     with open('recruit_list.json', 'w') as f:
@@ -203,8 +204,10 @@ async def dvc_limit():
 async def edit_dvc(channel, guild):
 
     category = bot.get_channel(dvc_archive)
-    backup_category = bot.get_channel(backup_archive)
+    # backup_category = bot.get_channel(backup_archive)
     channel_count = len(category.channels)
+
+    global dvc_archive
 
     if channel:
         #Set an overwrite for the default role so players can read messages in the channel after update
@@ -218,9 +221,20 @@ async def edit_dvc(channel, guild):
             await channel.edit(category=category, position=0)
 
         else:
-            await channel.edit(category=backup_category, position=1)
-            await channel.edit(category=backup_category, position=0)
-            await channel.send("Previous DVC Archive Category is full. Someone please @ benneh and tell him to get off his ass and update the bot for the new category")
+            match = re.search(r'\d+$', category.name)
+            if match:
+                # Increment the numeric part and create the new category
+                old_number = int(match.group())
+                new_number = old_number + 1
+                new_category_name = f'dvc archive {new_number}'
+                new_category = await guild.create_category(name=new_category_name)
+                await new_category.edit(position=1)
+                await channel.edit(category=category, position=1)
+                await channel.edit(category=category, position=0)
+                dvc_archive = new_category.id
+                save_dvc_archive(dvc_archive)
+                
+            
         await channel.set_permissions(guild.default_role, overwrite=permissions)
         await channel.send("This channel is now open to everyone")
 
