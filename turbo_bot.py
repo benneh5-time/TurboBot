@@ -225,7 +225,7 @@ async def edit_dvc(channel, guild):
                 new_number = old_number + 1
                 new_category_name = f'dvc archive {new_number}'
                 new_category = await guild.create_category(name=new_category_name)
-                await new_category.edit(position=1)
+                await new_category.edit(position=2)
                 await channel.edit(category=new_category, position=1)
                 await channel.edit(category=new_category, position=0)
                 dvc_archive = new_category.id
