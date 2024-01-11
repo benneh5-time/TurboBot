@@ -762,7 +762,7 @@ async def status(ctx, *args):
     embed.set_thumbnail(url="https://i.imgur.com/7st6J5V.jpg")
 
     status_embed = await ctx.send(embed=embed)
-    status_embed.add_reaction('✅')
+    await status_embed.add_reaction('✅')
     status_id = status_embed.id
     status_channel = ctx.channel
 
