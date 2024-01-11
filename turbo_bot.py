@@ -987,7 +987,9 @@ async def rand(ctx, *args):
             if player == value:
                 allowed_randers.append(int(key))
     for host in game_host_name:
-        allowed_randers.append(host)    
+        for key, value in aliases.items():
+            if host == value:
+                allowed_randers.append(int(key))    
 
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for flaking and are not allowed to rand turbos.")
@@ -1021,7 +1023,6 @@ async def rand(ctx, *args):
     
     is_rand_running = True
 
-
     mentions = " ".join([f"<@{id}>" for id in allowed_randers])
     cancel = await ctx.send(f"{mentions} \n\nThe game will rand in 15 seconds unless canceled by reacting with '❌'")
     await cancel.add_reaction('❌')
@@ -1033,7 +1034,7 @@ async def rand(ctx, *args):
         reaction, user = await bot.wait_for('reaction_add', timeout=15, check=check)
 
         if str(reaction.emoji) == '❌':
-            await ctx.send("Rand canceled")
+            await ctx.send(f"Rand canceled")
             is_rand_running = False
             return
     except asyncio.TimeoutError:
