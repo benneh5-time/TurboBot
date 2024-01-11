@@ -11,6 +11,7 @@ import csv
 from bs4 import BeautifulSoup
 import stats
 import pandas as pd
+import re
 
 intents = discord.Intents.default()
 intents.typing = False
