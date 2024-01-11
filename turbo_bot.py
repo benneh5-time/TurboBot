@@ -187,7 +187,6 @@ async def create_dvc(thread_id):
 async def dvc_limit():
 
     category = bot.get_channel(dvc_archive)
-    backup_category = bot.get_channel(backup_archive)
     channel_count = len(category.channels)
 
     print(channel_count, flush=True)
