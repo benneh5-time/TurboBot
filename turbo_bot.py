@@ -742,7 +742,7 @@ async def status(ctx, *args):
             player_message += "+1 HERO NEEDED\n"
         else:
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
-        time_message +=  "!in or react <custom_emoji:435543703227203584> to join!\n"  
+        time_message +=  "!in or react ✅ to join!\n"  
         embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
         embed.set_field_at(4, name="**Time Remaining:**", value=time_message, inline=True)
         embed.set_field_at(5, name="", value="", inline=True)
@@ -762,7 +762,7 @@ async def status(ctx, *args):
     embed.set_thumbnail(url="https://i.imgur.com/7st6J5V.jpg")
 
     status_embed = await ctx.send(embed=embed)
-    status_embed.add_reaction('<custom_emoji:435543703227203584>')
+    status_embed.add_reaction('✅')
     status_id = status_embed.id
     status_channel = ctx.channel
 
@@ -809,7 +809,7 @@ async def update_status():
             player_message += "+1 HERO NEEDED\n"
         else:
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
-        time_message +=  "!in or react <custom_emoji:435543703227203584> to join!\n"
+        time_message +=  "!in or react ✅ to join!\n"
         
         embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
         embed.set_field_at(4, name="**Time Remaining:**", value=time_message, inline=True)
@@ -1369,7 +1369,7 @@ async def on_reaction_add(reaction, user):
             await update_status()
 
     if reaction.message.id == status_id:
-        if reaction.emoji == '<custom_emoji:435543703227203584>':
+        if reaction.emoji == '✅':
             if user.id in banned_users:
                 await reaction.message.channel.send("You have been banned for flaking and are not allowed to in turbos.")
                 return
