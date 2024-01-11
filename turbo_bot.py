@@ -713,7 +713,7 @@ async def status(ctx, *args):
         
     global game_host_name, status_id, status_channel
 
-    embed = discord.Embed(title="**Turbo sign-ups!**", description="Turbo Bot v2.0 (with subs!) by benneh", color=0x1beb30)
+    embed = discord.Embed(title="**Turbo sign-ups!**", description="Turbo Bot v2.0 (with subs!) by benneh", color=0x3381ff)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
     host_list = [f"{host}\n" for host in game_host_name]
     hosts = ''.join(host_list)
@@ -742,7 +742,7 @@ async def status(ctx, *args):
             player_message += "+1 HERO NEEDED\n"
         else:
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
-        time_message +=  "!in to join!\n"  
+        time_message +=  "!in or :boombyescum: to join!\n"  
         embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
         embed.set_field_at(4, name="**Time Remaining:**", value=time_message, inline=True)
         embed.set_field_at(5, name="", value="", inline=True)
@@ -762,12 +762,13 @@ async def status(ctx, *args):
     embed.set_thumbnail(url="https://i.imgur.com/7st6J5V.jpg")
 
     status_embed = await ctx.send(embed=embed)
+    status_embed.add_reaction(':boombyescum:')
     status_id = status_embed.id
     status_channel = ctx.channel
 
 async def update_status():
 
-    global status_id 
+    global status_id
     
     if status_id is None or status_channel is None:
         return
@@ -786,6 +787,13 @@ async def update_status():
     embed.set_field_at(5, name="", value="", inline=True)
     embed.set_field_at(6, name="", value="", inline=True)
     embed.set_field_at(7, name="", value="", inline=True)"""
+
+    embed.set_field_at(0, name="**Game Setup**", value=current_setup, inline=True)
+    host_list = [f"{host}\n" for host in game_host_name]
+    hosts = ''.join(host_list)
+    embed.set_field_at(1, name="**Host**", value=hosts, inline=True)
+    embed.set_field_at(2, name="**Phases**", value=str(day_length) + "m Days, " + str(night_length) + "m Nights", inline=True)
+    
 
     if players:
         player_message = ""
@@ -1310,6 +1318,58 @@ async def on_reaction_add(reaction, user):
     global game_host_name, player_limit, players, waiting_list, turbo_ping_message   
     if reaction.message.id == turbo_ping_message:
         if reaction.emoji == '✅':
+            if user.id in banned_users:
+                await reaction.message.channel.send("You have been banned for flaking and are not allowed to in turbos.")
+                return
+            if user.id not in aliases:
+                await reaction.message.channel.send("Please set your MU username by using !alias MU_Username before inning!")
+                return
+
+            alias = aliases[user.id]
+
+            if alias in game_host_name:
+                if len(game_host_name) == 1:
+                    game_host_name = ["The Turbo Team"]    
+                    if len(players) < player_limit:
+                        players[alias] = 60
+                        await reaction.message.channel.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
+                    else:
+                        waiting_list[alias] = 60
+                        await reaction.message.channel.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
+                elif len(game_host_name) > 1:
+                    game_host_name.remove(alias)
+                    if len(players) < player_limit:
+                        players[alias] = 60
+                        await reaction.message.channel.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
+                    else:
+                        waiting_list[alias] = 60
+                        await reaction.message.channel.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
+                await update_status()    
+                return
+                
+            if alias in players or alias in waiting_list:
+                if alias in players:
+                    players[alias] = 60
+                    
+                else:
+                    waiting_list[alias] = 60
+                    
+                await reaction.message.channel.send(f"{alias}'s in has been renewed for the next 60 minutes.")
+                #await ctx.message.add_reaction('👍')
+            else:
+                if len(players) < player_limit:
+                    players[alias] = 60            
+                    await reaction.message.channel.send(f'{user.name} joined the game!')
+                    #await ctx.message.add_reaction('👍')
+                else:
+                    waiting_list[alias] = 60
+                    #await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
+                    #await ctx.message.add_reaction('👍')           
+                    await reaction.message.channel.send(f'{user.name} joined the waiting list!')
+            await update_status()
+
+    if reaction.message.id == status_id:
+        if reaction.emoji == ':boombyescum:':
             if user.id in banned_users:
                 await reaction.message.channel.send("You have been banned for flaking and are not allowed to in turbos.")
                 return
