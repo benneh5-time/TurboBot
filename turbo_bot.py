@@ -47,7 +47,7 @@ dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 
     #DVC Arhchive 11
-dvc_archive = 1191478882411491338
+# dvc_archive = 1191478882411491338
 
     #DVC Archive 12
 backup_archive = 1194885111972384789
@@ -56,15 +56,16 @@ status_id = None
 status_channel = None
 is_rand_running = False
 turbo_ping_message = None
-
-def save_dvc_archive():
-    with open('dvc_archive.json', 'w') as f:
-        json.dump(dvc_archive, f)
-
-save_dvc_archive()
 def load_dvc_archive():
     with open('dvc_archive.json', 'r') as f:
         return json.load(f)
+    
+dvc_archive = load_dvc_archive()
+
+print(dvc_archive)
+def save_dvc_archive():
+    with open('dvc_archive.json', 'w') as f:
+        json.dump(dvc_archive, f)
 
 def save_recruit_list():
     with open('recruit_list.json', 'w') as f:
