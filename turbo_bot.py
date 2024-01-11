@@ -200,6 +200,8 @@ async def dvc_limit():
 
 async def edit_dvc(channel, guild):
 
+    global dvc_archive
+
     category = bot.get_channel(dvc_archive)
     # backup_category = bot.get_channel(backup_archive)
     channel_count = len(category.channels)
@@ -224,8 +226,8 @@ async def edit_dvc(channel, guild):
                 new_category_name = f'dvc archive {new_number}'
                 new_category = await guild.create_category(name=new_category_name)
                 await new_category.edit(position=1)
-                await channel.edit(category=category, position=1)
-                await channel.edit(category=category, position=0)
+                await channel.edit(category=new_category, position=1)
+                await channel.edit(category=new_category, position=0)
                 dvc_archive = new_category.id
                 save_dvc_archive(dvc_archive)
                 
