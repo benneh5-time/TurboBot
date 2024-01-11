@@ -45,17 +45,26 @@ react_channels = [223260125786406912, 1114212787141492788]
 banned_users = [250929980614115329]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
-f3_channel = 1162495296836739144
-    #DVC Arhchive 10
-dvc_archive = 1188596531125829813
 
-    #DVC Archive 11
-backup_archive = 1191478882411491338
+    #DVC Arhchive 11
+dvc_archive = 1191478882411491338
+
+    #DVC Archive 12
+backup_archive = 1194885111972384789
 
 status_id = None
 status_channel = None
 is_rand_running = False
 turbo_ping_message = None
+
+def save_dvc_archive():
+    with open('dvc_archive.json', 'w') as f:
+        json.dump(dvc_archive, f)
+
+save_dvc_archive()
+def load_dvc_archive():
+    with open('dvc_archive.json', 'r') as f:
+        return json.load(f)
 
 def save_recruit_list():
     with open('recruit_list.json', 'w') as f:
