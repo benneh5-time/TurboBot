@@ -902,17 +902,13 @@ async def host(ctx, *, host_name=None):
         await ctx.send(f"{host_name} is already on the turbo list or waiting list.\n Please choose a different name for the host.")
         return
     
-    if game_host_name[0] == "The Turbo Team":
-        game_host_name[0] = host_name
-        await update_status()
-        await ctx.send(f"Host for the next turbo has been set to {host_name}")
-    else:
-        game_host_name.append(host_name)
-        host_list = [f"{host}" for host in game_host_name]
-        hosts = ', '.join(host_list)
-        await ctx.send(f"Hosts for the next turbo are set as {hosts}")
-        await update_status() 
-        return
+
+    game_host_name.append(host_name)
+    host_list = [f"{host}" for host in game_host_name]
+    hosts = ', '.join(host_list)
+    await ctx.send(f"Hosts for the next turbo are set as {hosts}")
+    await update_status() 
+    return
     
 @tasks.loop(minutes=1)
 async def update_players():
