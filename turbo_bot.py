@@ -1319,13 +1319,13 @@ async def on_message(message):
         await bot.process_commands(message)
         return
     
-    if message.author == bot.user or message.channel.id not in allowed_channels:
-        return
-    
     if isinstance(message.channel, discord.DMChannel):
         if message.author.id in mods:
             target_channel = bot.get_channel(223260125786406912)
-            await target_channel.send(f"{message.content}")
+            await target_channel.send(f"{message.content}")   
+            
+    if message.author == bot.user or message.channel.id not in allowed_channels:
+        return
 
 
     for mention in message.role_mentions:
