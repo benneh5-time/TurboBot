@@ -1322,6 +1322,12 @@ async def on_message(message):
     if message.author == bot.user or message.channel.id not in allowed_channels:
         return
     
+    if isinstance(message.channel, discord.DMChannel):
+        if message.author.id in mods:
+            target_channel = bot.get_channel(223260125786406912)
+            await target_channel.send(f"{message.content}")
+
+
     for mention in message.role_mentions:
         if mention.id == 327124222512070656:
             mention_list = [f"<@{id}>" for id in recruit_list if str(id) not in players]                    
