@@ -780,7 +780,7 @@ async def status(ctx, *args):
     if not players and not waiting_list:
         embed.add_field(name="No players are currently signed up.", value="", inline=False)
     
-    embed.set_thumbnail(url="https://i.imgur.com/7st6J5V.jpg")
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1149013467790053420/1195471648850186401/image.png")
 
     status_embed = await ctx.send(embed=embed)
     await status_embed.add_reaction('✅')
@@ -1323,7 +1323,7 @@ async def on_message(message):
         if message.author.id in mods:
             target_channel = bot.get_channel(223260125786406912)
             await target_channel.send(f"{message.content}")   
-            
+
     if message.author == bot.user or message.channel.id not in allowed_channels:
         return
 
