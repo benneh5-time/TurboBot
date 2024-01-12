@@ -401,7 +401,7 @@ async def stats(ctx):
         mafia_win_percentage = (mafia_wins / count) * 100
         town_win_percentage = (town_wins / count) * 100
 
-        await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup}Town Win Percentage: {town_win_percentage:.2f}%```")
+        await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%```")
 
 @bot.command()
 async def game(ctx, setup_name=None):
