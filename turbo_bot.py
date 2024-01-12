@@ -393,21 +393,15 @@ async def stats(ctx):
     overall_town_win_percentage = (overall_town_wins / total_games) * 100
 
     # Display overall stats
-    await ctx.send(f"Since 1/4/2024, Turbot has randed and collected stats for {total_games} games.")
-    await ctx.send(f"Overall Mafia Win Percentage: {overall_mafia_win_percentage:.2f}%")
-    await ctx.send(f"Overall Town Win Percentage: {overall_town_win_percentage:.2f}%")
+    await ctx.send(f"```Since 1/4/2024, Turbot has randed and collected stats for {total_games} games.\nOverall Mafia Win Percentage: {overall_mafia_win_percentage:.2f}%\nOverall Town Win Percentage: {overall_town_win_percentage:.2f}%```")
 
-    # Display setup-specific stats
-    print("\nSetup Counts:")
     for setup, count in setup_total_games.items():
         mafia_wins = setup_wins[setup]['mafia']
         town_wins = setup_wins[setup]['town']
         mafia_win_percentage = (mafia_wins / count) * 100
         town_win_percentage = (town_wins / count) * 100
 
-        await ctx.send(f"{setup} setups have been run {count} times")
-        await ctx.send(f"  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%")
-        await ctx.send(f"  {setup}Town Win Percentage: {town_win_percentage:.2f}%")
+        await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup}Town Win Percentage: {town_win_percentage:.2f}%```")
 
 @bot.command()
 async def game(ctx, setup_name=None):
