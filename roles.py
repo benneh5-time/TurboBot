@@ -290,9 +290,11 @@ vanilla_town_dict = {
     "faction_color": "#339933"
 }
 
-town_ic_dict = {
-    "role":"27","role_name":"Village Innocent Child","faction":"","bpv_status":0,"ninja":0,"x_shot_limit":0,"strongman":0,"janitor":0,"even_night":0,"odd_night":0,"godfather":0,"backup":0,"night_x":0,"macho":0,"recluse":0,"lost":0,"vengeful":0,"flipless":0,"alignment_flip":0,"vote_weight":0,"hide_vote_weight":0,"non_consecutive":0,"self_targetable":0,"treestump":0,"neighbor":0,"mason":0,"lover":0,"loyal":0,"disloyal":0,"uncooperative":0,"blocked":0,"compulsive":0,"vendor_items":"","joat":0,"inventor":0,"disable_in_endgame":0,"powers":{},"ita_count":0,"ita_base_hit":0,"ita_immunity":0,"ita_vulnerability":0,"ita_shield_status":0,"ita_booster":0,"ita_nerfer":0,"character_name":"","character_image":"","alignment":"village","faction_color":"#339933"
-}
+town_ic_dict = {"role":"27","role_name":"Village Innocent Child","faction":"","bpv_status":0,"ninja":0,"x_shot_limit":0,"strongman":0,"janitor":0,"even_night":0,"odd_night":0,"godfather":0,"backup":0,"night_x":0,"macho":0,"recluse":0,"lost":0,"vengeful":0,"flipless":0,"alignment_flip":0,"vote_weight":0,"hide_vote_weight":0,"non_consecutive":0,"self_targetable":0,"treestump":0,"neighbor":0,"mason":0,"lover":0,"loyal":0,"disloyal":0,"uncooperative":0,"blocked":0,"compulsive":0,"vendor_items":"","joat":0,"inventor":0,"disable_in_endgame":0,"powers":{},"ita_count":0,"ita_base_hit":0,"ita_immunity":0,"ita_vulnerability":0,"ita_shield_status":0,"ita_booster":0,"ita_nerfer":0,"character_name":"","character_image":"","alignment":"village","faction_color":"#339933"}
+
+village_sui = {"role":"48","role_name":"Village Suicide Bomber","faction":"","bpv_status":0,"ninja":0,"x_shot_limit":0,"strongman":0,"janitor":0,"even_night":0,"odd_night":0,"godfather":0,"backup":0,"night_x":"2+","macho":0,"recluse":0,"lost":0,"vengeful":0,"flipless":0,"alignment_flip":0,"vote_weight":0,"hide_vote_weight":0,"non_consecutive":0,"self_targetable":0,"treestump":0,"neighbor":0,"mason":0,"lover":0,"loyal":0,"disloyal":0,"uncooperative":0,"blocked":0,"compulsive":0,"vendor_items":"","joat":0,"inventor":0,"disable_in_endgame":0,"powers":{},"ita_count":0,"ita_base_hit":0,"ita_immunity":0,"ita_vulnerability":0,"ita_shield_status":0,"ita_booster":0,"ita_nerfer":0,"character_name":"","character_image":"","alignment":"village","faction_color":"#339933"}
+
+wolf_prkiller = {"role":"76","role_name":"Wolf Power Role Killer","faction":"Wolf","bpv_status":0,"ninja":0,"x_shot_limit":0,"strongman":0,"janitor":0,"even_night":0,"odd_night":0,"godfather":0,"backup":0,"night_x":0,"macho":0,"recluse":0,"lost":0,"vengeful":0,"flipless":0,"alignment_flip":0,"vote_weight":0,"hide_vote_weight":0,"non_consecutive":0,"self_targetable":0,"treestump":0,"neighbor":0,"mason":0,"lover":0,"loyal":0,"disloyal":0,"uncooperative":0,"blocked":0,"compulsive":0,"vendor_items":"","joat":0,"inventor":0,"disable_in_endgame":0,"powers":{},"ita_count":0,"ita_base_hit":0,"ita_immunity":0,"ita_vulnerability":0,"ita_shield_status":0,"ita_booster":0,"ita_nerfer":0,"character_name":"","character_image":"","alignment":"wolf","faction_color":"#ff2244"}
 
 mafia_goon_dict = {
     "role": "2",
@@ -339,6 +341,50 @@ mafia_goon_dict = {
     "faction_color": "#ff2244"
 }
 
+wolf_bpv = {
+    "role": "2",
+    "role_name": "Wolf",
+    "faction": "Wolf",
+    "bpv_status": 1,
+    "ninja": 0,
+    "x_shot_limit": 0,
+    "strongman": 0,
+    "janitor": 0,
+    "even_night": 0,
+    "odd_night": 0,
+    "godfather": 0,
+    "backup": 0,
+    "night_x": 0,
+    "recluse": 0,
+    "vengeful": 0,
+    "flipless": 0,
+    "non_consecutive": 0,
+    "self_targetable": 0,
+    "powers": {
+        "alignment inspection": 0,
+        "fullcop": 0,
+        "rolecop": 0,
+        "bodyguard": 0,
+        "protection": 0,
+        "frame": 0,
+        "jail": 0,
+        "roleblock": 0,
+        "track": 0,
+        "watch": 0,
+        "kill": 0
+    },
+    "ita_count": 0,
+    "ita_base_hit": 0,
+    "ita_immunity": 0,
+    "ita_vulnerability": 0,
+    "ita_shield_status": 0,
+    "ita_booster": 0,
+    "ita_nerfer": 0,
+    "character_name": "",
+    "character_image": "",
+    "alignment": "wolf",
+    "faction_color": "#ff2244"
+}
 big_ham_dict = {
     "role": "2",
     "role_name": "Wolf",

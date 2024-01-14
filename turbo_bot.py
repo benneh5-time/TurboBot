@@ -37,7 +37,7 @@ mods = [178647349369765888]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
-valid_setups = ["joat10", "vig10", "cop9", "cop13", "doublejoat13", "alexa25", "JOATorVig10"] #future setups
+valid_setups = ["joat10", "vig10", "bomb10", "cop9", "cop13", "doublejoat13", "alexa25", "JOATorVig10"] #future setups
 valid_timers = ["sunbae", "14-3", "16-5"]
 day_length = 14
 night_length = 3
@@ -422,6 +422,8 @@ async def game(ctx, setup_name=None):
         elif setup_name == "vig10":
             new_player_limit = 10
         elif setup_name == "joat10":
+            new_player_limit = 10
+        elif setup_name == "bomb10":
             new_player_limit = 10
         elif setup_name == "JOATorVig10":
             new_player_limit = 10
@@ -1222,7 +1224,7 @@ async def help(ctx):
     embed.add_field(name="!clear", value="Resets the current game to defaults. Must be confirmed with `!clear -confirm`.", inline=False)
     embed.add_field(name="!list", value="Displays the current list of the game, including player list, waiting list, host, and setup.", inline=False)
     embed.add_field(name="!host", value="Sets the host of the game. By default, it will use your defined alias. You can specify a different host's username, e.g. `!host MU_Username`.", inline=False)
-    embed.add_field(name="!game", value="Sets the game setup. Must specify setup name from available options: cop9, cop13, joat10, vig10, doublejoat13, alexa25, JOATorVig10. The JOATorVig10 setup randomizes between a vig and joat game. E.g. `!game cop9`.", inline=False)
+    embed.add_field(name="!game", value="Sets the game setup. Must specify setup name from available options: cop9, cop13, joat10, vig10, bomb10, doublejoat13, alexa25, JOATorVig10. The JOATorVig10 setup randomizes between a vig and joat game. E.g. `!game cop9`.", inline=False)
     await ctx.send(embed=embed)
 
 @bot.command()
