@@ -176,35 +176,41 @@ def new_game_token(session, thread_id):
 def start_game(session, security_token, game_title, thread_id, player_aliases, game_setup, day_length, night_length, host_name):
     global data
 
-    data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': game_title + f" - [{game_setup} game]", 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Open', 'period': 'day', 'phase': '1', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'aliased': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '2', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
+    if game_setup == "JOATorVig10":
+        potential_setups = ["joat10", "vig10"]
+        final_game_setup = random.choice(potential_setups)
+    else:
+        final_game_setup = game_setup
+
+    data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': game_title + f" - [{final_game_setup} game]", 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Open', 'period': 'day', 'phase': '1', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'aliased': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '2', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
     data.add('day_length', day_length)
     data.add('night_length', night_length)
     num_hosts = len(host_name)
     data.add('num_hosts', num_hosts)
-    if game_setup == "joat10":
+    if final_game_setup == "joat10":
         add_joat_roles(game_title)
         data.add("preset", "custom")
         data.add('num_players', '10')
         data.add('roles_dropdown', '39')
-    if game_setup == "vig10":
+    if final_game_setup == "vig10":
         add_vig_roles(game_title)
         data.add("preset", "vig-10") 
         data.add('num_players', '10')
-    if game_setup == "cop9":
+    if final_game_setup == "cop9":
         add_cop9_roles(game_title)
         data.add("preset", "cop-9")
         data.add('num_players', '9')
         data.add('n0_peeks', '1')
-    if game_setup == "cop13":
+    if final_game_setup == "cop13":
         add_cop13_roles(game_title)
         data.add("preset", "cop-13")
         data.add('num_players', '13')
         data.add('n0_peeks', '1')
-    if game_setup == "doublejoat13":
+    if final_game_setup == "doublejoat13":
         add_doublejoat13_roles(game_title)
         data.add("preset", "custom")
         data.add('num_players', '13')
-    if game_setup == "alexa25":
+    if final_game_setup == "alexa25":
         add_alexa25_roles(game_title)
         data.add("preset", "custom")
         data.add('num_players', '25')
