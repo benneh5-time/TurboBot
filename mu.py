@@ -319,7 +319,7 @@ def add_bomb_roles(game_title):
             current_sui = village_sui.copy()
             current_sui['character_name'] = powerroles_bomb[i]["character_name"]
             current_sui['character_image'] = powerroles_bomb[i]["character_image"]
-            sui_json = json.dumps(sui_json)
+            sui_json = json.dumps(current_sui)
             data.add("roles[]", sui_json)
             data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#339933]Village Suicide Bomber | Cycle 2+[/COLOR][/B]. You win when all threats to the Village have been eliminated.\n[SIZE=4][B][I]Village Suicide Bomber[/I][/B][/SIZE]\nAs [B][COLOR=#339933]Village Suicide Bomber[/COLOR][/B], you have access to the [B]Suicide Bomb[/B] Day Action. You and the player targeted with this action will die within one minute after submission unless protected.  Submit your action during the Day using the form below the game thread.\nIf you do not submit an action, you will forego your action on that day.\n[SIZE=4][B][I]Cycle X[/I][/B][/SIZE]\nThe [B]Cycle X[/B] modifier makes your role restricted to one or more cycles. You may act during those cycles but will be unable to act before and after.\nYou can act on [B]Cycle 2+[/B] in this game.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
             
