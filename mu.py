@@ -176,8 +176,8 @@ def new_game_token(session, thread_id):
 def start_game(session, security_token, game_title, thread_id, player_aliases, game_setup, day_length, night_length, host_name):
     global data
 
-    if game_setup == "JOATorVig10":
-        potential_setups = ["joat10", "vig10"]
+    if game_setup == "random10er":
+        potential_setups = ["joat10", "vig10", "bomb10"]
         final_game_setup = random.choice(potential_setups)
     else:
         final_game_setup = game_setup
