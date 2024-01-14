@@ -419,7 +419,11 @@ async def game(ctx, setup_name=None):
     elif setup_name in valid_setups:
         if setup_name == "cop9":
             new_player_limit = 9
-        elif setup_name == "vig10" or setup_name is "joat10" or setup_name is "JOATorVig10":
+        elif setup_name == "vig10":
+            new_player_limit = 10
+        elif setup_name == "joat10":
+            new_player_limit = 10
+        elif setup_name == "JOATorVig10":
             new_player_limit = 10
         elif setup_name == "cop13":
             new_player_limit = 13
