@@ -5,7 +5,7 @@ from urllib3._collections import HTTPHeaderDict
 import uuid
 import json
 import random
-from roles import vanilla_town_dict, mafia_goon_dict, joat_dict, cop_dict, vig_dict, big_ham_dict, frankie_dict, vanchilla_dict, vinnie_dict, zippy_dict, kingpin_dict, zippy13_dict, kingpin_joat_dict, town_ic_dict, village_sui, wolf_prkiller, wolf_bpv
+from roles import vanilla_town_dict, mafia_goon_dict, joat_dict, cop_dict, vig_dict, big_ham_dict, frankie_dict, vanchilla_dict, vinnie_dict, zippy_dict, kingpin_dict, zippy13_dict, kingpin_joat_dict, town_ic_dict, village_sui, wolf_prkiller, wolf_bpv, town_inventor_sui
 from bs4 import BeautifulSoup
 # from flavor import joat_flavor, cop9_flavor, cop13_flavor, vig_flavor
 
@@ -316,12 +316,12 @@ def add_bomb_roles(game_title):
             data.add("roles[]", ic_json)
             data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#339933]Village Innocent Child[/COLOR][/B]. You win when all threats to the Village have been eliminated.\n[SIZE=4][B][I]Village Innocent Child[/I][/B][/SIZE]\nAs [B][COLOR=#339933]Village Innocent Child[/COLOR][/B], you have access to the [B]Claim Innocence[/B] Day action. Claiming your innocence announces your role and alignment in the Game thread for all to see. Submit your claim at any time during a Day, and your role and alignment will be announced in the Game thread. Submit your action using the form below the game thread.\n[B]Note:[/B] Innocence claims may take up to one minute to process.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")       
         else: 
-            current_sui = village_sui.copy()
-            current_sui['character_name'] = powerroles_bomb[i]["character_name"]
-            current_sui['character_image'] = powerroles_bomb[i]["character_image"]
-            sui_json = json.dumps(current_sui)
-            data.add("roles[]", sui_json)
-            data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#339933]Village Suicide Bomber | Cycle 2+[/COLOR][/B]. You win when all threats to the Village have been eliminated.\n[SIZE=4][B][I]Village Suicide Bomber[/I][/B][/SIZE]\nAs [B][COLOR=#339933]Village Suicide Bomber[/COLOR][/B], you have access to the [B]Suicide Bomb[/B] Day Action. You and the player targeted with this action will die within one minute after submission unless protected.  Submit your action during the Day using the form below the game thread.\nIf you do not submit an action, you will forego your action on that day.\n[SIZE=4][B][I]Cycle X[/I][/B][/SIZE]\nThe [B]Cycle X[/B] modifier makes your role restricted to one or more cycles. You may act during those cycles but will be unable to act before and after.\nYou can act on [B]Cycle 2+[/B] in this game.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+            current_inven = town_inventor_sui.copy()
+            current_inven['character_name'] = powerroles_bomb[i]["character_name"]
+            current_inven['character_image'] = powerroles_bomb[i]["character_image"]
+            inven_json = json.dumps(current_inven)
+            data.add("roles[]", inven_json)
+            data.add("role_pms[]", f"[CENTER][TITLE]Role PM for testt[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Town Inventor (x1 Suicide Bomber)[/COLOR][/B]. You win when all threats to Town have been eliminated.\n\n[SIZE=4][B][I]Town Inventor[/I][/B][/SIZE]\n\nAs [B][COLOR=#339933]Town Inventor[/COLOR][/B], you have access to the [B]Give Item[/B] Night Action. Give Item allows you to send your target one of your items from the options below. The description you see below each item are the abilities your targets will receive. Each item is a single-use action or passive ability that will disappear once it has been used by your target.\n\n[SIZE=4]Item(s): [B][I]x1 Suicide Bomber[/I][/B][/SIZE][QUOTE]You have access to the [B]Suicide Bomb[/B] Day Action. You and the player targeted with this action will die within one minute after submission unless protected.[/QUOTE]\n\nSubmit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf you do not submit an action, you will forego your action on that day. Keep in mind that if you have at least two different types of items, you must cycle through all of the types before you can give the same one out again.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
             
     for i in range(0,2):
         if i < 1:
