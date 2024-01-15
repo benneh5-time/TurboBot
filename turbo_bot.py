@@ -883,9 +883,7 @@ async def host(ctx, *, host_name=None):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to host turbos.")
-        return
-    if ctx.author.id not in mods:
+        await ctx.send("You have been banned and are not allowed to host turbos.")
         return
          
     global game_host_name
@@ -906,12 +904,7 @@ async def host(ctx, *, host_name=None):
             if host_name in players or host_name in waiting_list:
                 await ctx.send(f"{host_name} is already on the turbo list or waiting list.\n Please choose a different name for the host.")
                 return
-            if game_host_name[0] == "The Turbo Team":
-                game_host_name[0] = host_name
-                await update_status()
-                await ctx.send(f"Host for the next turbo has been set to {host_name}")
-                return
-            elif host_name in game_host_name:
+            if host_name in game_host_name:
                 await ctx.send(f"That account is already a host. Stop trying to break me. nya~")
                 return  
             else:
