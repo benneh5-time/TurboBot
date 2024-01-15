@@ -1067,6 +1067,8 @@ async def rand(ctx, *args):
             if current_setup == "random10er":
                 potential_setups = ["joat10", "vig10", "bomb10"]
                 final_game_setup = random.choice(potential_setups)
+            else:
+                final_game_setup = current_setup
 
             if not game_title:
                 game_title = mu.generate_game_thread_uuid()
