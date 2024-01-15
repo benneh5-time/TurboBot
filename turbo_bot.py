@@ -1070,21 +1070,23 @@ async def rand(ctx, *args):
             
             game_title = args_parsed.title
             thread_id = args_parsed.thread_id
-            
+
+            if current_setup == "random10er":
+                potential_setups = ["joat10", "vig10", "bomb10"]
+                final_game_setup = random.choice(potential_setups)
+
             if not game_title:
                 game_title = mu.generate_game_thread_uuid()
                 
             if not thread_id:
                 print(f"Attempting to post new thread with {game_title}", flush=True)
-                thread_id = mu.post_thread(session, game_title, security_token, current_setup)
+                thread_id = mu.post_thread(session, game_title, security_token, final_game_setup)
             host_list = [f"{host}" for host in game_host_name]
             hosts = ', '.join(host_list)
             await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
             print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
             security_token = mu.new_game_token(session, thread_id)
-            if current_setup == "random10er":
-                potential_setups = ["joat10", "vig10", "bomb10"]
-                final_game_setup = random.choice(potential_setups)
+
             response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, final_game_setup, day_length, night_length, game_host_name)
             
             if "was created successfully." in response_message:
