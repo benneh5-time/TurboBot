@@ -449,7 +449,7 @@ async def game(ctx, setup_name=None):
             
         current_setup = setup_name
         player_limit = new_player_limit
-        
+
         await ctx.send(f"The game setup has been changed to '{current_setup}'")
     else:
         await ctx.send(f"'{setup_name}' is not a valid setup name. Please choose from: {', '.join(valid_setups)}.")
@@ -1082,7 +1082,10 @@ async def rand(ctx, *args):
             await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
             print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
             security_token = mu.new_game_token(session, thread_id)
-            response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, current_setup, day_length, night_length, game_host_name)
+            if current_setup == "random10er":
+                potential_setups = ["joat10", "vig10", "bomb10"]
+                final_game_setup = random.choice(potential_setups)
+            response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, final_game_setup, day_length, night_length, game_host_name)
             
             if "was created successfully." in response_message:
                 # Use aliases to get the Discord IDs
