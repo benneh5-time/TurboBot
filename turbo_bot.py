@@ -1112,67 +1112,67 @@ async def rand(ctx, *args):
                         except:
                             await channel.send(f"failed to add {host} to dvc.")
 
-                    await new_game_spec_message(bot, thread_id, game_title)
-                    postgame_players = players
-                    game_host_name = ["The Turbo Team"]
-                    players.clear()
-                    players.update(waiting_list)
-                    waiting_list.clear()   
-                    print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
-                    is_rand_running = False
-                    current_game = thread_id
-                    await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id)
-                    print(f"Threadmark processor finished. rand function finished.", flush=True)
-                    await edit_dvc(channel, guild)
-                    await delete_dvc_role(channel, role)
-                    current_game = None
+                await new_game_spec_message(bot, thread_id, game_title)
+                postgame_players = players
+                game_host_name = ["The Turbo Team"]
+                players.clear()
+                players.update(waiting_list)
+                waiting_list.clear()   
+                print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
+                is_rand_running = False
+                current_game = thread_id
+                await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id)
+                print(f"Threadmark processor finished. rand function finished.", flush=True)
+                await edit_dvc(channel, guild)
+                await delete_dvc_role(channel, role)
+                current_game = None
+                
+                summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
+                summary_response = requests.get(summary_url)
+                summary_json = summary_response.json()
+
+                summary_csv = 'game_database.csv'
+                summary_headers = ['Turbo Title', 'Setup', 'Thread ID', 'Game ID', 'Winning Alignment', 'Villagers', 'Wolves']
+                town = summary_json['players']['town']
+                mafia = summary_json['players']['mafia']
+
+                town_list = []
+                mafia_list = []
+
+                for player in town:
+                    town_list.append(player['username'])
                     
-                    summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
-                    summary_response = requests.get(summary_url)
-                    summary_json = summary_response.json()
+                for player in mafia:
+                    mafia_list.append(player['username'])
+                
+                title= summary_json['title']
+                start_index = title.find(" - [")
+                if start_index != -1:
+                    start_index += len(" - [")
+                    end_index = title.find(" game]", start_index)
 
-                    summary_csv = 'game_database.csv'
-                    summary_headers = ['Turbo Title', 'Setup', 'Thread ID', 'Game ID', 'Winning Alignment', 'Villagers', 'Wolves']
-                    town = summary_json['players']['town']
-                    mafia = summary_json['players']['mafia']
-
-                    town_list = []
-                    mafia_list = []
-
-                    for player in town:
-                        town_list.append(player['username'])
-                        
-                    for player in mafia:
-                        mafia_list.append(player['username'])
-                    
-                    title= summary_json['title']
-                    start_index = title.find(" - [")
-                    if start_index != -1:
-                        start_index += len(" - [")
-                        end_index = title.find(" game]", start_index)
-
-                        if end_index != -1:
-                            extracted_setup = title[start_index:end_index]
-                        else:
-                            print("No setup found", flush=True)
+                    if end_index != -1:
+                        extracted_setup = title[start_index:end_index]
                     else:
                         print("No setup found", flush=True)
+                else:
+                    print("No setup found", flush=True)
 
-                    with open(summary_csv, 'a', newline='') as csvfile:
-                        csv_writer = csv.DictWriter(csvfile, fieldnames=summary_headers)
+                with open(summary_csv, 'a', newline='') as csvfile:
+                    csv_writer = csv.DictWriter(csvfile, fieldnames=summary_headers)
 
-                        if csvfile.tell() == 0:
-                            csv_writer.writeheader()
-                        
-                        csv_writer.writerow({
-                            "Turbo Title": summary_json['title'],
-                            "Setup": extracted_setup,
-                            "Thread ID": summary_json['threadid'],
-                            "Game ID": summary_json['id'],
-                            "Winning Alignment": summary_json['winning_alignment'],
-                            "Villagers": town_list,
-                            "Wolves": mafia_list,                          
-                        })
+                    if csvfile.tell() == 0:
+                        csv_writer.writeheader()
+                    
+                    csv_writer.writerow({
+                        "Turbo Title": summary_json['title'],
+                        "Setup": extracted_setup,
+                        "Thread ID": summary_json['threadid'],
+                        "Game ID": summary_json['id'],
+                        "Winning Alignment": summary_json['winning_alignment'],
+                        "Villagers": town_list,
+                        "Wolves": mafia_list,                          
+                    })
 
 
             elif "Error" in response_message:
