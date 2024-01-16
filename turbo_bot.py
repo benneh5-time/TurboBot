@@ -890,7 +890,9 @@ async def process_archive(ctx, category_name):
             for channel in category.channels:
                 print(channel.name, flush=True)
                 chan_name = channel.name
+                print(chan_name, flush=True)
                 match = pattern.search(chan_name)
+                print(match.group(1))
 
                 if match:
                     thread_id_only = match.group(1)
