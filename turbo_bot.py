@@ -900,6 +900,7 @@ async def process_archive(ctx, category_name):
             await ctx.send(f"Category {category_name} not found on Turbo DVC server. Try again.")
     except:
         await ctx.send("Somethin' fucked up, check logs")
+    await ctx.send(f"Processed archive: {category_name}")
 
 
 @bot.command()
