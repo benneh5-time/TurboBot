@@ -882,10 +882,8 @@ async def process_archive(ctx, category_name):
     
     guild = bot.get_guild(dvc_server)
     pattern = re.compile(r'(\d+)$')
-
+    category = discord.utils.get(guild.categories, name=category_name)
     try:
-        category = discord.utils.get(guild.categories, name=category_name)
-
         if category:
             for channel in category.channels:
                 match = pattern.search(channel.name)
@@ -898,7 +896,8 @@ async def process_archive(ctx, category_name):
                     continue
         else:
             await ctx.send(f"Category {category_name} not found on Turbo DVC server. Try again.")
-    except:
+    except Exception as error:
+        print(f"Error: {error}", flush=True)
         await ctx.send("Somethin' fucked up, check logs")
     await ctx.send(f"Processed archive: {category_name}")
 
