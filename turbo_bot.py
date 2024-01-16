@@ -393,7 +393,7 @@ async def stats(ctx):
     overall_town_win_percentage = (overall_town_wins / total_games) * 100
 
     # Display overall stats
-    await ctx.send(f"```Since 1/4/2024, Turbot has randed and collected stats for {total_games} games.\nOverall Mafia Win Percentage: {overall_mafia_win_percentage:.2f}%\nOverall Town Win Percentage: {overall_town_win_percentage:.2f}%```")
+    await ctx.send(f"```Since September 5 2023, Turbot has randed and collected stats for {total_games} games.\nOverall Mafia Win Percentage: {overall_mafia_win_percentage:.2f}%\nOverall Town Win Percentage: {overall_town_win_percentage:.2f}%```")
 
     for setup, count in setup_total_games.items():
         mafia_wins = setup_wins[setup]['mafia']
