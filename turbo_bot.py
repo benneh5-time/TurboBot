@@ -33,7 +33,7 @@ aliases = {}
 dvc_roles = {}
 message_ids = {}
 game_host_name = ["The Turbo Team"]
-mods = [178647349369765888]
+mods = [178647349369765888, 93432503863353344]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
@@ -912,6 +912,8 @@ async def host(ctx, *, host_name=None):
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned and are not allowed to host turbos.")
         return
+    if ctx.author.id not in mods:
+        await ctx.send("Hosting is limited to a select set of users who will not ruin the DVC experience for others and also for those who have subscribed to the Turbot Advanced package, $5.99 a month. DM Benneh for billing options.")
          
     global game_host_name
     
