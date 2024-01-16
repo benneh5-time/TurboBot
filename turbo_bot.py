@@ -885,18 +885,18 @@ async def process_archive(ctx, category_name):
     category = discord.utils.get(guild.categories, name=category_name)
     try:
         if category:
-            print(category.text_channels)
-            channel_list = list(category.text_channels)
-            print(channel_list)
-            for channel in category.text_channels:
-                match = pattern.search(channel.name)
+            print(category.channels)
+
+            for channel in category.channels:
+                print(channel.name)
+                """match = pattern.search(channel.name)
 
                 if match:
                     thread_id_only = match.group(1)
                     process(thread_id_only)
                     
                 else:
-                    continue
+                    continue"""
         else:
             await ctx.send(f"Category {category_name} not found on Turbo DVC server. Try again.")
     except Exception as error:
