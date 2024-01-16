@@ -889,14 +889,15 @@ async def process_archive(ctx, category_name):
 
             for channel in category.channels:
                 print(channel.name, flush=True)
-                """match = pattern.search(channel.name)
+                chan_name = channel.name
+                match = pattern.search(chan_name)
 
                 if match:
                     thread_id_only = match.group(1)
                     process(thread_id_only)
                     
                 else:
-                    continue"""
+                    continue
         else:
             await ctx.send(f"Category {category_name} not found on Turbo DVC server. Try again.")
     except Exception as error:
