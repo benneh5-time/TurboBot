@@ -914,7 +914,7 @@ async def host(ctx, *, host_name=None):
         return
     if ctx.author.id not in mods:
         await ctx.send("Hosting is limited to a select set of users who will not ruin the DVC experience for others and also for those who have subscribed to the Turbot Advanced package, $5.99 a month. DM Benneh for billing options.")
-         
+         return
     global game_host_name
     
     if host_name == "The Turbo Team":
