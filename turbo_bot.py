@@ -43,7 +43,7 @@ day_length = 14
 night_length = 3
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 react_channels = [223260125786406912, 1114212787141492788]
-banned_users = [250929980614115329]
+banned_users = []
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 
