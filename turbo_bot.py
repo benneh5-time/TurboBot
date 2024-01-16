@@ -894,12 +894,9 @@ async def process_archive(ctx, category_name):
                 match = pattern.search(chan_name)
                 print(match.group(1))
 
-                if match:
-                    thread_id_only = match.group(1)
-                    process(thread_id_only)
-                    
-                else:
-                    continue
+                thread_id_only = str(match.group(1))
+                process(thread_id_only)
+
         else:
             await ctx.send(f"Category {category_name} not found on Turbo DVC server. Try again.")
     except Exception as error:
@@ -1232,6 +1229,7 @@ def process(thread_id):
         mafia_list.append(player['username'])
     
     title = summary_json['title']
+    print(title, flush=True)
 
     start_index = title.find(" - [")
     if start_index != -1:
