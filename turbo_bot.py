@@ -886,6 +886,8 @@ async def process_archive(ctx, category_name):
     try:
         if category:
             print(category.text_channels)
+            channel_list = list(category.text_channels)
+            print(channel_list)
             for channel in category.text_channels:
                 match = pattern.search(channel.name)
 
