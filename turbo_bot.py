@@ -1262,10 +1262,10 @@ def process(thread_id):
         start_index = title_content.find(" - [")
         if start_index != -1:
             start_index += len(" - [")
-            end_index = title.find(" game]", start_index)
+            end_index = title_content.find(" game]", start_index)
 
             if end_index != -1:
-                extracted_setup = title[start_index:end_index]
+                extracted_setup = title_content[start_index:end_index]
             else: 
                 print("No setup found", flush=True)
         else:
