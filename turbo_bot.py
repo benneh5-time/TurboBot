@@ -885,6 +885,7 @@ async def process_archive(ctx, category_name):
     category = discord.utils.get(guild.categories, name=category_name)
     try:
         if category:
+            print(category.text_channels)
             for channel in category.channels:
                 if isinstance(channel, discord.TextChannel):
                     match = pattern.search(channel.name)
