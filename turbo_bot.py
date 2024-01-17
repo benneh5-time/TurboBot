@@ -28,6 +28,7 @@ player_limit = 10
 players = {}
 waiting_list = {}
 recruit_list = {}
+spec_list = {}
 recruit_timer = 0
 aliases = {}
 dvc_roles = {}
@@ -73,6 +74,17 @@ def save_recruit_list():
 def load_recruit_list():
     try:
         with open('recruit_list.json', 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+def save_spec_list():
+    with open('spec_list.json', 'w') as f:
+        json.dump(recruit_list, f)
+
+def load_spec_list():
+    try:
+        with open('spec_list.json', 'r') as f:
             return json.load(f)
     except FileNotFoundError:
         return {}
@@ -148,6 +160,7 @@ async def on_ready():
     load_messages()
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     recruit_list = load_recruit_list()
+    spec_list = load_spec_list()
     if players is None:
         players = {}
     if waiting_list is None:
@@ -981,7 +994,7 @@ async def update_players():
         await update_status()
     except:
         print("Error updating players with update_player function", flush=True)
-        
+""""        
 @bot.command()
 async def spec(ctx, arg: int):
     if ctx.channel.id != dvc_channel:
@@ -1013,7 +1026,7 @@ async def spec(ctx, arg: int):
 
     else:
         await ctx.send('Invalid argument. Please provide the 5-digit number of the game thread. You can find this at the beginning of the URL for the game thread or from my rand comment in #turbo-chat. Please try again with !spec xxxxx')
-        
+"""       
 @bot.command()
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -1140,7 +1153,15 @@ async def rand(ctx, *args):
                             await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
                         except:
                             await channel.send(f"failed to add {host} to dvc.")
-
+                for spec in spec_list:
+                    if spec not in mention_list:
+                        try:
+                            spec_member = guild.get_member(spec)
+                            await spec_member.add_roles(role)
+                            await channel.send("<@{spec}> is spectating, welcome to dvc")
+                        except:
+                            continue
+                    
                 await new_game_spec_message(bot, thread_id, game_title)
                 postgame_players = players
                 game_host_name = ["The Turbo Team"]
@@ -1402,6 +1423,45 @@ async def recruit(ctx, *args):
             await ctx.send(' '.join(mention_list) + " come turbo!!")
         else:
             await ctx.send("No players have opted in to be recruited")
+
+@bot.command()
+async def spec(ctx, *args):
+    if ctx.channel.id not in allowed_channels:  
+        return
+    global spec_list
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-opt_in', action='store_true')
+    parser.add_argument('-opt_out', action='store_true')
+    
+    try:
+        args_parsed = parser.parse_args(args)
+    except SystemExit:
+        await ctx.send(f"wrong syntax dumbass")
+        pass
+    except Exception as e:
+        await ctx.send(f"Invalid arguments. Please check your command syntax.\n{str(e)}")
+        return
+        
+    if args_parsed.opt_in and args_parsed.opt_out:
+        await ctx.send("You can't opt in and opt out at the same time.")
+        return
+        
+    if args_parsed.opt_in:
+        if str(ctx.author.id) not in spec_list:
+            spec_list[str(ctx.author.id)] = str(ctx.author.id)
+            save_spec_list()
+            await ctx.send(f"{ctx.author.mention} has opted in to auto-spec all games they are not in. Please note you will automatically join DVC and be ineligible for subbing so long as you are opted in..")
+        else:
+            await ctx.send("You're already on the spec list.")
+        
+    elif args_parsed.opt_out:
+        if str(ctx.author.id) in spec_list:
+            del spec_list[str(ctx.author.id)]
+            save_spec_list()
+            await ctx.send(f"{ctx.author.mention} has opted out of auto-spec.")
+        else:
+            await ctx.send("You're not on the spec list.")
 
 async def new_game_spec_message(bot, thread_id, title):
     global message_ids
