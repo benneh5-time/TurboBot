@@ -1154,13 +1154,14 @@ async def rand(ctx, *args):
                         except:
                             await channel.send(f"failed to add {host} to dvc.")
                 for spec in spec_list:
-                    if spec not in mention_list:
+                    if int(spec) not in mention_list:
                         try:
-                            spec_member = guild.get_member(spec)
+                            spec_int = int(spec)
+                            spec_member = guild.get_member(spec_int)
                             await spec_member.add_roles(role)
-                            await channel.send("<@{spec}> is spectating, welcome to dvc")
-                        except:
-                            continue
+                            await channel.send("<@{spec_int}> is spectating, welcome to dvc")
+                        except Exception as error:
+                            print(f"Error: {error}")
                     
                 await new_game_spec_message(bot, thread_id, game_title)
                 postgame_players = players
