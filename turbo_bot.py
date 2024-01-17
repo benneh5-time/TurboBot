@@ -1156,17 +1156,17 @@ async def rand(ctx, *args):
                 for spec in spec_list:
                     print(spec, flush=True)
                     if int(spec) in mention_list:
-                        print(f"{spec} not in list, continuing to next")
+                        print(f"{spec} not in list, continuing to next", flush=True)
                         continue
                     else:
                         try:
-                            print(f"Trying to add {spec_int} to dvc")
+                            print(f"Trying to add {spec_int} to dvc",flush=True)
                             spec_int = int(spec)
                             spec_member = guild.get_member(spec_int)
                             await spec_member.add_roles(role)
                             await channel.send("<@{spec}> is spectating, welcome to dvc")
                         except Exception as error:
-                            print(f"Error: {error}")
+                            print(f"Error: {error}", flush=True)
                     
                 await new_game_spec_message(bot, thread_id, game_title)
                 postgame_players = players
