@@ -1156,9 +1156,11 @@ async def rand(ctx, *args):
                 for spec in spec_list:
                     print(spec, flush=True)
                     if int(spec) in mention_list:
+                        print(f"{spec} not in list, continuing to next")
                         continue
                     else:
                         try:
+                            print(f"Trying to add {spec_int} to dvc")
                             spec_int = int(spec)
                             spec_member = guild.get_member(spec_int)
                             await spec_member.add_roles(role)
