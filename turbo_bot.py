@@ -80,7 +80,7 @@ def load_recruit_list():
 
 def save_spec_list():
     with open('spec_list.json', 'w') as f:
-        json.dump(recruit_list, f)
+        json.dump(spec_list, f)
 
 def load_spec_list():
     try:
