@@ -1154,6 +1154,7 @@ async def rand(ctx, *args):
                         except:
                             await channel.send(f"failed to add {host} to dvc.")
                 for spec in spec_list:
+                    print(spec, flush=True)
                     if int(spec) in mention_list:
                         continue
                     else:
