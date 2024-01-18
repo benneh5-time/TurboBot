@@ -1169,7 +1169,7 @@ async def rand(ctx, *args):
 
                             spec_member = guild.get_member(spec_int)
                             await spec_member.add_roles(role)
-                            await channel.send("<@{spec}> is spectating, welcome to dvc")
+                            await channel.send(f"<@{spec}> is spectating, welcome to dvc")
                         except Exception as error:
                             print(f"Error: {error}", flush=True)
                     
