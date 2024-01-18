@@ -1459,6 +1459,8 @@ async def spec(ctx, *args):
         return
         
     if args_parsed.opt_in:
+        print(f"Author ID: {ctx.author.id}")
+        print(f"Current spec list: {spec_list}")
         if str(ctx.author.id) not in spec_list:
             spec_list[str(ctx.author.id)] = str(ctx.author.id)
             save_spec_list()
