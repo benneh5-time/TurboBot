@@ -1031,7 +1031,7 @@ async def spec(ctx, arg: int):
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
-    global player_limit, game_host_name, current_setup, is_rand_running, current_game
+    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list
 
     allowed_randers = []
     player_aliases = list(players.keys())[:player_limit]
@@ -1153,6 +1153,7 @@ async def rand(ctx, *args):
                             await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
                         except:
                             await channel.send(f"failed to add {host} to dvc.")
+
                 for spec in spec_list:
                     print(spec, flush=True)
                     if int(spec) in mention_list:
@@ -1160,8 +1161,9 @@ async def rand(ctx, *args):
                         continue
                     else:
                         try:
-                            print(f"Trying to add {spec_int} to dvc",flush=True)
                             spec_int = int(spec)
+                            print(f"Trying to add {spec_int} to dvc",flush=True)
+
                             spec_member = guild.get_member(spec_int)
                             await spec_member.add_roles(role)
                             await channel.send("<@{spec}> is spectating, welcome to dvc")
