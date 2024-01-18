@@ -155,7 +155,7 @@ def find_key_by_value(dictionary, value):
 
 @bot.event
 async def on_ready():
-    global players, waiting_list, current_setup, game_host_name, player_limit, recruit_list
+    global players, waiting_list, current_setup, game_host_name, player_limit, recruit_list, spec_list
     print(f"We have logged in as {bot.user}", flush=True)
     load_aliases()
     load_dvc_roles()
@@ -1459,8 +1459,8 @@ async def spec(ctx, *args):
         return
         
     if args_parsed.opt_in:
-        print(f"Author ID: {ctx.author.id}")
-        print(f"Current spec list: {spec_list}")
+        print(f"Author ID: {ctx.author.id}", flush=True)
+        print(f"Current spec list: {spec_list}", flush=True)
         if str(ctx.author.id) not in spec_list:
             spec_list[str(ctx.author.id)] = str(ctx.author.id)
             save_spec_list()
