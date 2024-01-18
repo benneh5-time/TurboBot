@@ -85,8 +85,10 @@ def save_spec_list():
 def load_spec_list():
     try:
         with open('spec_list.json', 'r') as f:
+            print("loaded spec list successfully", flush=True)
             return json.load(f)
     except FileNotFoundError:
+        print("Failed to load spec list", flush=True)
         return {}
 
 def save_messages():
@@ -161,6 +163,7 @@ async def on_ready():
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     recruit_list = load_recruit_list()
     spec_list = load_spec_list()
+    print(f"Printing Spec List: {spec_list}", flush=True)
     if players is None:
         players = {}
     if waiting_list is None:
