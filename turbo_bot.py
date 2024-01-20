@@ -538,10 +538,65 @@ async def flavor(ctx, charname=None, charimage=None):
             existing_flavor.append(added_flavor)
         else:
             await ctx.send("No character image selected, try again using quotes.")
+            return
     else:
         await ctx.send("No character name selected, try again using quotes")
+        return
     
     save_flavor_json('turboers.json', existing_flavor)
+    await ctx.send("flavor add successful thxxxbai")
+
+@bot.command()
+async def wolf_flavor(ctx, charname=None, charimage=None):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for flaking and are not allowed to in turbos.")
+        return    
+    
+    if ctx.author.id not in mods:
+        return
+    existing_flavor = load_flavor_json('wolves.json')
+    added_flavor = {'character_name': charname, 'character_image': charimage}
+    if charname:
+        if charimage:
+            existing_flavor.append(added_flavor)
+        else:
+            await ctx.send("No character image selected, try again using quotes.")
+            return
+    else:
+        await ctx.send("No character name selected, try again using quotes")
+        return
+    
+    save_flavor_json('wolves.json', existing_flavor)
+    await ctx.send("flavor add successful thxxxbai")
+
+@bot.command()
+async def pr_flavor(ctx, charname=None, charimage=None):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for flaking and are not allowed to in turbos.")
+        return    
+    
+    if ctx.author.id not in mods:
+        return
+    existing_flavor = load_flavor_json('powerroles.json')
+    added_flavor = {'character_name': charname, 'character_image': charimage}
+    if charname:
+        if charimage:
+            existing_flavor.append(added_flavor)
+        else:
+            await ctx.send("No character image selected, try again using quotes.")
+            return
+    else:
+        await ctx.send("No character name selected, try again using quotes")
+        return
+    
+    save_flavor_json('powerroles.json', existing_flavor)
+    await ctx.send("flavor add successful thxxxbai")
 
 @bot.command(name="in")
 async def in_(ctx, time: int = 60):
