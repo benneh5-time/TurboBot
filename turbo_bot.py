@@ -534,6 +534,7 @@ async def flavor(ctx, charname=None, charimage=None):
     existing_flavor = load_flavor_json('turboers.json')
     added_flavor = {'character_name': charname, 'character_image': charimage}
     if charname:
+        found_flavor = False
         if charimage:
             existing_flavor.append(added_flavor)
         else:
