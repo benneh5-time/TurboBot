@@ -532,9 +532,10 @@ async def flavor(ctx, charname=None, charimage=None):
     if ctx.author.id not in mods:
         return
     existing_flavor = load_flavor_json('turboers.json')
+    added_flavor = {'character_name': charname, 'character_image': charimage}
     if charname:
         if charimage:
-            existing_flavor.append(f"{'character_name': '{charname}', 'character_image': '{charimage}'}")
+            existing_flavor.append(added_flavor)
         else:
             await ctx.send("No character image selected, try again using quotes.")
     else:
