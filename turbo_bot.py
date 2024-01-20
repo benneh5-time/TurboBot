@@ -564,12 +564,17 @@ async def wolf_flavor(ctx, charname=None, charimage=None):
         return
     existing_flavor = load_flavor_json('wolves.json')
     added_flavor = {'character_name': charname, 'character_image': charimage}
-    if charname:
-        if charimage:
+    if charname != None:
+        if charimage != None:
             existing_flavor.append(added_flavor)
+            await ctx.send("flavor add successful thxxxbai")
         else:
-            await ctx.send("No character image selected, try again using quotes.")
-            return
+            for i in existing_flavor:
+                if i['character_name'].lower() == charname.lower():
+                    await ctx.send(f"Flavor found for {i['character_name']}: {i['character_image']}")
+                    return
+            await ctx.send(f"No flavor found for {charname}. Try again noob")
+
     else:
         await ctx.send("No character name selected, try again using quotes")
         return
@@ -590,12 +595,17 @@ async def pr_flavor(ctx, charname=None, charimage=None):
         return
     existing_flavor = load_flavor_json('powerroles.json')
     added_flavor = {'character_name': charname, 'character_image': charimage}
-    if charname:
-        if charimage:
+    if charname != None:
+        if charimage != None:
             existing_flavor.append(added_flavor)
+            await ctx.send("flavor add successful thxxxbai")
         else:
-            await ctx.send("No character image selected, try again using quotes.")
-            return
+            for i in existing_flavor:
+                if i['character_name'].lower() == charname.lower():
+                    await ctx.send(f"Flavor found for {i['character_name']}: {i['character_image']}")
+                    return
+            await ctx.send(f"No flavor found for {charname}. Try again noob")
+
     else:
         await ctx.send("No character name selected, try again using quotes")
         return
