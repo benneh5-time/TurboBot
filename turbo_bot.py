@@ -571,7 +571,16 @@ async def wolf_flavor(ctx, charname=None, charimage=None):
         return    
     
     if ctx.author.id not in mods:
+        if charname != None:
+            if charimage != None:
+                await ctx.send(f"You don't have privs to add flavor. Doing flavor lookup for {charname} instead.")
+            for i in existing_flavor:
+                if i['character_name'].lower() == charname.lower():
+                    await ctx.send(f"Flavor found for {i['character_name']}: {i['character_image']}")
+                    return
+            await ctx.send(f"No flavor found for {charname}. Try again noob")
         return
+    
     existing_flavor = load_flavor_json('wolves.json')
     added_flavor = {'character_name': charname, 'character_image': charimage}
     if charname != None:
@@ -602,6 +611,14 @@ async def pr_flavor(ctx, charname=None, charimage=None):
         return    
     
     if ctx.author.id not in mods:
+        if charname != None:
+            if charimage != None:
+                await ctx.send(f"You don't have privs to add flavor. Doing flavor lookup for {charname} instead.")
+            for i in existing_flavor:
+                if i['character_name'].lower() == charname.lower():
+                    await ctx.send(f"Flavor found for {i['character_name']}: {i['character_image']}")
+                    return
+            await ctx.send(f"No flavor found for {charname}. Try again noob")
         return
     existing_flavor = load_flavor_json('powerroles.json')
     added_flavor = {'character_name': charname, 'character_image': charimage}
