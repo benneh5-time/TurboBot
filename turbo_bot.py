@@ -541,7 +541,7 @@ async def flavor(ctx, charname=None, charimage=None):
     else:
         await ctx.send("No character name selected, try again using quotes")
     
-    save_flavor_json(existing_flavor)
+    save_flavor_json('turboers.json', existing_flavor)
 
 @bot.command(name="in")
 async def in_(ctx, time: int = 60):
