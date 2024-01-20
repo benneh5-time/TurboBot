@@ -534,7 +534,6 @@ async def flavor(ctx, charname=None, charimage=None):
     existing_flavor = load_flavor_json('turboers.json')
     added_flavor = {'character_name': charname, 'character_image': charimage}
     if charname != None:
-        found_flavor = False
         if charimage != None:
             existing_flavor.append(added_flavor)
             await ctx.send("flavor add successful thxxxbai")
@@ -542,10 +541,9 @@ async def flavor(ctx, charname=None, charimage=None):
             for i in existing_flavor:
                 if i['character_name'].lower() == charname.lower():
                     await ctx.send(f"Flavor found for {i['character_name']}: {i['character_image']}")
-                    found_flavor = True
-        if found_flavor:
-            await ctx.send("No character image selected, try again using quotes.")
-            return
+                    return
+            await ctx.send(f"No flavor found for {charname}. Try again noob")
+
     else:
         await ctx.send("No character name selected, try again using quotes")
         return
