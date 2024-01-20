@@ -539,9 +539,9 @@ async def flavor(ctx, charname=None, charimage=None):
             existing_flavor.append(added_flavor)
             await ctx.send("flavor add successful thxxxbai")
         else:
-            for key, value in existing_flavor:
-                if charname.lower() == key:
-                    await ctx.send(f"Flavor found for {charname}: {value}")
+            for i in existing_flavor:
+                if i['charname.lower()'] == value:
+                    await ctx.send(f"Flavor found for {i['character_name']}: {i['character_image']}")
                     found_flavor = True
         if found_flavor:
             await ctx.send("No character image selected, try again using quotes.")
