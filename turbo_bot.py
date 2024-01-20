@@ -77,6 +77,17 @@ def load_recruit_list():
             return json.load(f)
     except FileNotFoundError:
         return {}
+    
+def load_flavor_json(file):
+    try:
+        with open(file, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+def save_flavor_json(file):
+    with open(file, 'w') as f:
+        json.dump(file, f)
 
 def save_spec_list():
     with open('spec_list.json', 'w') as f:
@@ -508,6 +519,28 @@ async def phases(ctx, timer_name=None):
     else:
         await ctx.send(f"'{timer_name}' is not a valid setup name. Please choose from: {', '.join(valid_timers)}.")
     await update_status()     
+
+@bot.command()
+async def flavor(ctx, charname=None, charimage=None):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for flaking and are not allowed to in turbos.")
+        return    
+    
+    if ctx.author.id not in mods:
+        return
+    existing_flavor = load_flavor_json('turboers.json')
+    if charname:
+        if charimage:
+            existing_flavor.append(f"{'character_name': '{charname}', 'character_image': '{charimage}'}")
+        else:
+            await ctx.send("No character image selected, try again using quotes.")
+    else:
+        await ctx.send("No character name selected, try again using quotes")
+    
+    save_flavor_json(existing_flavor)
 
 @bot.command(name="in")
 async def in_(ctx, time: int = 60):
