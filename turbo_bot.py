@@ -533,10 +533,11 @@ async def flavor(ctx, charname=None, charimage=None):
     
     existing_flavor = load_flavor_json('turboers.json')
     added_flavor = {'character_name': charname, 'character_image': charimage}
-    if charname:
+    if charname != None:
         found_flavor = False
-        if charimage:
+        if charimage != None:
             existing_flavor.append(added_flavor)
+            await ctx.send("flavor add successful thxxxbai")
         else:
             for key, value in existing_flavor:
                 if charname.lower() == key:
@@ -550,7 +551,7 @@ async def flavor(ctx, charname=None, charimage=None):
         return
     
     save_flavor_json('turboers.json', existing_flavor)
-    await ctx.send("flavor add successful thxxxbai")
+
 
 @bot.command()
 async def wolf_flavor(ctx, charname=None, charimage=None):
