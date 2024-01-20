@@ -9,7 +9,6 @@ import random
 import requests
 import csv
 from bs4 import BeautifulSoup
-import stats
 import pandas as pd
 import re
 
@@ -531,12 +530,18 @@ async def flavor(ctx, charname=None, charimage=None):
     
     if ctx.author.id not in mods:
         return
+    
     existing_flavor = load_flavor_json('turboers.json')
     added_flavor = {'character_name': charname, 'character_image': charimage}
     if charname:
         if charimage:
             existing_flavor.append(added_flavor)
         else:
+            for key, value in existing_flavor:
+                if charname.lower() == key:
+                    await ctx.send(f"Flavor found for {charname}: {value}")
+                    found_flavor = True
+        if found_flavor:
             await ctx.send("No character image selected, try again using quotes.")
             return
     else:
