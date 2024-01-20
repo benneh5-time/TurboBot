@@ -545,6 +545,10 @@ async def flavor(ctx, charname=None, charimage=None):
     added_flavor = {'character_name': charname, 'character_image': charimage}
     if charname != None:
         if charimage != None:
+            for i in existing_flavor:
+                if i['character_name'].lower() == charname.lower():
+                    added_flavor = {'character_name': charname, 'character_image': i['character_image']}
+
             existing_flavor.append(added_flavor)
             await ctx.send("flavor add successful thxxxbai")
         else:
@@ -585,6 +589,10 @@ async def wolf_flavor(ctx, charname=None, charimage=None):
     added_flavor = {'character_name': charname, 'character_image': charimage}
     if charname != None:
         if charimage != None:
+            for i in existing_flavor:
+                if i['character_name'].lower() == charname.lower():
+                    added_flavor = {'character_name': charname, 'character_image': i['character_image']}
+
             existing_flavor.append(added_flavor)
             await ctx.send("flavor add successful thxxxbai")
         else:
@@ -624,6 +632,10 @@ async def pr_flavor(ctx, charname=None, charimage=None):
     added_flavor = {'character_name': charname, 'character_image': charimage}
     if charname != None:
         if charimage != None:
+            for i in existing_flavor:
+                if i['character_name'].lower() == charname.lower():
+                    added_flavor = {'character_name': charname, 'character_image': i['character_image']}
+
             existing_flavor.append(added_flavor)
             await ctx.send("flavor add successful thxxxbai")
         else:
