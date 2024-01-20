@@ -611,7 +611,6 @@ async def wolf_flavor(ctx, charname=None, charimage=None):
         return
     
     save_flavor_json('wolves.json', existing_flavor)
-    await ctx.send("flavor add successful thxxxbai")
 
 @bot.command()
 async def pr_flavor(ctx, charname=None, charimage=None):
@@ -656,7 +655,6 @@ async def pr_flavor(ctx, charname=None, charimage=None):
         return
     
     save_flavor_json('powerroles.json', existing_flavor)
-    await ctx.send("flavor add successful thxxxbai")
 
 @bot.command(name="in")
 async def in_(ctx, time: int = 60):
