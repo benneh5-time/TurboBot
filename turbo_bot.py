@@ -306,9 +306,26 @@ class ThreadmarkProcessor:
 							await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
 					else:
 						await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-		            
+                   
 				elif "Results: No one died" in event:
 					pass
+				elif "Suicide Bomb (1):" in event:
+					results = event.split("Suicide Bomb (1):")[1].strip()
+					players = results.split(", ")
+		            
+					for player in players:
+						if " was " in player:
+							username = player.split(" was ")[0].strip().lower()
+							if username in aliases.values():
+								try:
+									mention_id = find_key_by_value(aliases, username)
+									member = guild.get_member(mention_id)
+									await member.add_roles(role)
+									await channel.send(f"<@{mention_id}> has been added to DVC.")
+								except:
+									await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
+							else:
+								await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
 		            
 				elif "Results:" in event:
 					results = event.split("Results:")[1].strip()
