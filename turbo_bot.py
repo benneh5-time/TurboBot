@@ -648,6 +648,7 @@ async def pr_flavor(ctx, charname=None, charimage=None):
                     return
             await ctx.send(f"No flavor found for {charname}. Try again noob")
         return
+    
     existing_flavor = load_flavor_json('powerroles.json')
     added_flavor = {'character_name': charname, 'character_image': charimage}
     if charname != None:
