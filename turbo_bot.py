@@ -307,7 +307,7 @@ class ThreadmarkProcessor:
 					else:
 						await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
                    
-				elif "Results: No one died" in event:
+				elif "Results: No one died" in event or "Event" in event or "Game Information" in event:
 					pass
 				elif "Suicide Bomb (1):" in event:
 					results = event.split("Suicide Bomb (1):")[1].strip()
@@ -612,7 +612,7 @@ async def wolf_flavor(ctx, charname=None, charimage=None):
                 if item['character_name'].lower() == charname.lower():
                     existing_flavor[i]['character_image'] = charimage
                     await ctx.send("flavor updated successfully thxxxbai")
-                    save_flavor_json('turboers.json', existing_flavor)
+                    save_flavor_json('wolves.json', existing_flavor)
                     return
             existing_flavor.append(added_flavor)
             await ctx.send("flavor add successful thxxxbai")
@@ -656,7 +656,7 @@ async def pr_flavor(ctx, charname=None, charimage=None):
                 if item['character_name'].lower() == charname.lower():
                     existing_flavor[i]['character_image'] = charimage
                     await ctx.send("flavor updated successfully thxxxbai")
-                    save_flavor_json('turboers.json', existing_flavor)
+                    save_flavor_json('powerroles.json', existing_flavor)
                     return
             existing_flavor.append(added_flavor)
             await ctx.send("flavor add successful thxxxbai")
