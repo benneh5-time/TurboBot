@@ -913,7 +913,7 @@ async def status(ctx, *args):
         
     global game_host_name, status_id, status_channel
 
-    embed = discord.Embed(title="**Turbo sign-ups!**", description="2023 Award Winner for Best Mechanic!\nTurbo Bot v2.1 (with subs!) by benneh\nHelp keep Turby running by supporting its GoFundMe: https://gofund.me/64aaddfd", color=0x3381ff)
+    embed = discord.Embed(title="**Turbo Champs 2024 is Live!**", description="Turbo Champs Leaderboards: https://docs.google.com/spreadsheets/d/12miB_U152zmB8i7Mc2pNeNoSvxgYqr7FQzHt9lQjtCM/edit#gid=2035874120 \n\n2023 Award Winner for Best Mechanic!\nTurbo Bot v2.1 (with subs!) by benneh\nHelp keep Turby running by supporting its GoFundMe: https://gofund.me/64aaddfd", color=0x3381ff)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
     host_list = [f"{host}\n" for host in game_host_name]
     hosts = ''.join(host_list)
