@@ -1730,13 +1730,13 @@ async def on_reaction_add(reaction, user):
             else:
                 if len(players) < player_limit:
                     players[alias] = 60            
-                    await reaction.message.channel.send(f'{user.name} joined the game!')
+                    await reaction.message.channel.send(f'{alias} joined the game!')
                     #await ctx.message.add_reaction('👍')
                 else:
                     waiting_list[alias] = 60
                     #await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
                     #await ctx.message.add_reaction('👍')           
-                    await reaction.message.channel.send(f'{user.name} joined the waiting list!')
+                    await reaction.message.channel.send(f'{alias} joined the waiting list!')
             await update_status()
 
     if reaction.message.id == status_id:
@@ -1782,13 +1782,13 @@ async def on_reaction_add(reaction, user):
             else:
                 if len(players) < player_limit:
                     players[alias] = 60            
-                    await reaction.message.channel.send(f'{user.name} joined the game!')
+                    await reaction.message.channel.send(f'{alias} joined the game!')
                     #await ctx.message.add_reaction('👍')
                 else:
                     waiting_list[alias] = 60
                     #await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
                     #await ctx.message.add_reaction('👍')           
-                    await reaction.message.channel.send(f'{user.name} joined the waiting list!')
+                    await reaction.message.channel.send(f'{alias} joined the waiting list!')
             await update_status()
 
     if reaction.message.id in message_ids.values():
