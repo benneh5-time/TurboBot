@@ -549,22 +549,20 @@ async def flavors(ctx):
 
 
 
-    async def send_embed(flavor, role, ctx):
+    async def send_message(flavor, role, ctx):
         charnames = []
-        charimages = []
         message = "```f{role}\n\n"
-        for item in vt_flavor:
+        for i, item in enumerate(flavor):
             
-            message += f"{item['character_name']} | "
-            message += f"{item['character_image']}\n"
+            message += f"{i + 1}. {item['character_name']}\n"
         
         message += "```"
 
         await ctx.author.send(message)
     
-    await send_embed(vt_flavor, "Vanilla Towns", ctx)
-    await send_embed(pr_flavor, "Power Roles", ctx)
-    await send_embed(wolf_flavor, "Wolves", ctx)
+    await send_message(vt_flavor, "Vanilla Towns", ctx)
+    await send_message(pr_flavor, "Power Roles", ctx)
+    await send_message(wolf_flavor, "Wolves", ctx)
     
 
 
