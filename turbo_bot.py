@@ -551,7 +551,7 @@ async def flavors(ctx):
 
     async def send_message(flavor, role, ctx):
         charnames = []
-        message = "```f{role}\n\n"
+        message = f"```{role}\n\n"
         for i, item in enumerate(flavor):
             
             message += f"{i + 1}. {item['character_name']}\n"
