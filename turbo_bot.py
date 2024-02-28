@@ -555,7 +555,7 @@ async def flavors(ctx):
         message = "```f{role}\n\n"
         for item in vt_flavor:
             
-            message += f"{item['character_name']}" + (25 - len(item['character_name'])) + "| "
+            message += f"{item['character_name']} | "
             message += f"{item['character_image']}\n"
         
         message += "```"
