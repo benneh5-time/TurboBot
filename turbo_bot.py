@@ -552,16 +552,15 @@ async def flavors(ctx):
     async def send_embed(flavor, role, ctx):
         charnames = []
         charimages = []
+        message = "```f{role}\n\n"
         for item in vt_flavor:
-            charnames.append(f"{item['character_name']}")
-            charimages.append(f"{item['character_image']}")
+            
+            message += f"{item['character_name']}" + (25 - len(item['character_name'])) + "| "
+            message += f"{item['character_image']}\n"
+        
+        message += "```"
 
-        embed = discord.Embed(title=role, description="", color=0x3381ff)
-        embed.add_field(name="Names", value=charnames, inline=True) 
-        embed.add_field(name="", value="", inline=True) 
-        embed.add_field(name="Flavor", value=charimages, inline=True)
-
-        await ctx.author.send(embed=embed)
+        await ctx.author.send(message)
     
     await send_embed(vt_flavor, "Vanilla Towns", ctx)
     await send_embed(pr_flavor, "Power Roles", ctx)
