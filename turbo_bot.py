@@ -536,6 +536,39 @@ async def phases(ctx, timer_name=None):
         await ctx.send(f"'{timer_name}' is not a valid setup name. Please choose from: {', '.join(valid_timers)}.")
     await update_status()     
 
+
+
+@bot.command()
+async def flavors(ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    
+    vt_flavor = load_flavor_json('turboers.json')
+    pr_flavor = load_flavor_json('powerroles.json')
+    wolf_flavor = load_flavor_json('wolves.json')
+
+
+
+    async def send_embed(flavor, role, ctx):
+        charnames = []
+        charimages = []
+        for item in vt_flavor:
+            charnames.append(f"{item['character_name']}")
+            charimages.append(f"{item['character_image']}")
+
+        embed = discord.Embed(title=role, description="", color=0x3381ff)
+        embed.add_field(name="Names", value=charnames, inline=True) 
+        embed.add_field(name="", value="", inline=True) 
+        embed.add_field(name="Flavor", value=charimages, inline=True)
+
+        await ctx.author.send(embed=embed)
+    
+    await send_embed(vt_flavor, "Vanilla Towns", ctx)
+    await send_embed(pr_flavor, "Power Roles", ctx)
+    await send_embed(wolf_flavor, "Wolves", ctx)
+    
+
+
 @bot.command()
 async def flavor(ctx, charname=None, charimage=None):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
