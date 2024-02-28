@@ -588,8 +588,6 @@ async def flavor(ctx, charname=None, charimage=None):
             await ctx.send(f"No flavor found for {charname}. Try again noob")
         return
     
-    existing_flavor = load_flavor_json('turboers.json')
-    added_flavor = {'character_name': charname, 'character_image': charimage}
     if charname != None:
         if charimage != None:
             for i, item in enumerate(existing_flavor):
@@ -622,7 +620,10 @@ async def wolf_flavor(ctx, charname=None, charimage=None):
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for flaking and are not allowed to in turbos.")
         return    
-    
+
+    existing_flavor = load_flavor_json('wolves.json')
+    added_flavor = {'character_name': charname, 'character_image': charimage}
+
     if ctx.author.id not in mods:
         if charname != None:
             if charimage != None:
@@ -634,8 +635,7 @@ async def wolf_flavor(ctx, charname=None, charimage=None):
             await ctx.send(f"No flavor found for {charname}. Try again noob")
         return
     
-    existing_flavor = load_flavor_json('wolves.json')
-    added_flavor = {'character_name': charname, 'character_image': charimage}
+
     if charname != None:
         if charimage != None:
             for i, item in enumerate(existing_flavor):
@@ -667,7 +667,8 @@ async def pr_flavor(ctx, charname=None, charimage=None):
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for flaking and are not allowed to in turbos.")
         return    
-    
+    existing_flavor = load_flavor_json('powerroles.json')
+    added_flavor = {'character_name': charname, 'character_image': charimage}
     if ctx.author.id not in mods:
         if charname != None:
             if charimage != None:
@@ -679,8 +680,7 @@ async def pr_flavor(ctx, charname=None, charimage=None):
             await ctx.send(f"No flavor found for {charname}. Try again noob")
         return
     
-    existing_flavor = load_flavor_json('powerroles.json')
-    added_flavor = {'character_name': charname, 'character_image': charimage}
+
     if charname != None:
         if charimage != None:
             for i, item in enumerate(existing_flavor):
