@@ -962,7 +962,10 @@ async def status(ctx, *args):
         player_message = ""
         time_message = ""
         for i, (alias, remaining_time) in enumerate(players.items(), 1):
-            player_message += f"{alias}\n"
+            if alias == 'benneh':
+                player_message += f"{alias} <a:wolfnod:1090085464318427296>\n"
+            else:
+                player_message += f"{alias}\n"
             time_message += f"{remaining_time} minutes\n"
             
         spots_left = player_limit - len(players)
