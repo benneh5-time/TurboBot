@@ -967,7 +967,7 @@ async def status(ctx, *args):
             player_msg = alias
             for item in status_flavor:
                 if alias == item['alias']:
-                    player_msg = f"{item['icon']}"
+                    player_msg = f"{alias} {item['icon']}"
             player_message += f"{player_msg}\n"
             time_message += f"{remaining_time} minutes\n"
             
@@ -1040,7 +1040,7 @@ async def update_status():
             player_msg = alias
             for item in status_flavor:
                 if alias == item['alias']:
-                    player_msg = f"{item['icon']}"
+                    player_msg = f"{alias} {item['icon']}"
             player_message += f"{player_msg}\n"
             time_message += f"{remaining_time} minutes\n"
             
