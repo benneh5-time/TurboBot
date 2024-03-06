@@ -957,15 +957,18 @@ async def status(ctx, *args):
     embed.add_field(name="", value="", inline=True)
     embed.add_field(name="", value="", inline=True)
     embed.add_field(name="", value="", inline=True)
-    
+
+    status_flavor = load_flavor_json('icons.json')    
+
     if players:
         player_message = ""
         time_message = ""
         for i, (alias, remaining_time) in enumerate(players.items(), 1):
-            if alias == 'benneh':
-                player_message += f"{alias} <a:wolfnod:1090085464318427296>\n"
-            else:
-                player_message += f"{alias}\n"
+            player_msg = alias
+            for item in status_flavor:
+                if alias == item['alias']:
+                    player_msg = f"{item['icon']}"
+            player_message += f"{player_msg}\n"
             time_message += f"{remaining_time} minutes\n"
             
         spots_left = player_limit - len(players)
@@ -1028,11 +1031,17 @@ async def update_status():
     embed.set_field_at(2, name="**Phases**", value=str(day_length) + "m Days, " + str(night_length) + "m Nights", inline=True)
     
 
+    status_flavor = load_flavor_json('icons.json')    
+
     if players:
         player_message = ""
         time_message = ""
         for i, (alias, remaining_time) in enumerate(players.items(), 1):
-            player_message += f"{alias}\n"
+            player_msg = alias
+            for item in status_flavor:
+                if alias == item['alias']:
+                    player_msg = f"{item['icon']}"
+            player_message += f"{player_msg}\n"
             time_message += f"{remaining_time} minutes\n"
             
         spots_left = player_limit - len(players)
