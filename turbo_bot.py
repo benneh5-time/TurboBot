@@ -37,7 +37,7 @@ mods = [178647349369765888, 93432503863353344]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
-valid_setups = ["joat10", "vig10", "bomb10", "cop9", "cop13", "doublejoat13", "alexa25", "random10er"] #future setups
+valid_setups = ["joat10", "vig10", "bomb10", "cop9", "cop13", "doublejoat13", "alexa25", "random10er", "closedrandom10er"] #future setups
 valid_timers = ["sunbae", "14-3", "16-5"]
 day_length = 14
 night_length = 3
@@ -469,6 +469,8 @@ async def game(ctx, setup_name=None):
         elif setup_name == "bomb10":
             new_player_limit = 10
         elif setup_name == "random10er":
+            new_player_limit = 10
+        elif setup_name == "closedrandom10er":
             new_player_limit = 10
         elif setup_name == "cop13":
             new_player_limit = 13
@@ -1319,15 +1321,20 @@ async def rand(ctx, *args):
             if current_setup == "random10er":
                 potential_setups = ["joat10", "vig10", "bomb10"]
                 final_game_setup = random.choice(potential_setups)
+                setup_title = final_game_setup
+            elif current_setup == "closedrandom10er":
+                setup_title = "closedrandom10er"
+                final_game_setup = "closedrandom10er"
             else:
                 final_game_setup = current_setup
+                setup_title = final_game_setup
 
             if not game_title:
                 game_title = mu.generate_game_thread_uuid()
                 
             if not thread_id:
                 print(f"Attempting to post new thread with {game_title}", flush=True)
-                thread_id = mu.post_thread(session, game_title, security_token, final_game_setup)
+                thread_id = mu.post_thread(session, game_title, security_token, setup_title)
             host_list = [f"{host}" for host in game_host_name]
             hosts = ', '.join(host_list)
             await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
