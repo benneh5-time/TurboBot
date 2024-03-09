@@ -376,8 +376,8 @@ def add_bml_roles(game_title):
     
 
     current_inven = town_inventor_dayvig.copy()
-    current_inven['character_name'] = powerroles_bml[i]["character_name"]
-    current_inven['character_image'] = powerroles_bml[i]["character_image"]
+    current_inven['character_name'] = powerroles_bml[0]["character_name"]
+    current_inven['character_image'] = powerroles_bml[0]["character_image"]
     inven_json = json.dumps(current_inven)
     data.add("roles[]", inven_json)
     data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Village Inventor (x2 Day Vigilante)[/COLOR][/B]. You win when all threats to the Village have been eliminated.\n\n[SIZE=4][B][I]Village Inventor[/I][/B][/SIZE]\n\nAs [B][COLOR=#339933]Village Inventor[/COLOR][/B], you have access to the [B]Give Item[/B] Night Action. Give Item allows you to send your target one of your items from the options below. The description you see below each item are the abilities your targets will receive. Each item is a single-use action or passive ability that will disappear once it has been used by your target.\n\n[SIZE=4]Item(s): [B][I]x2 Day Vigilante[/I][/B][/SIZE][QUOTE]You have access to the [B]Shoot[/B] Day Action. Players targeted with this action will die within one minute after submission unless protected. Only one shot can be fired per player per Day. Submit your action during the Day using the form below the game thread.[/QUOTE]\n\nSubmit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf you do not submit an action, you will forego your action on that day. Keep in mind that if you have at least two different types of items, you must cycle through all of the types before you can give the same one out again.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
