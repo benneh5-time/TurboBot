@@ -37,7 +37,7 @@ mods = [178647349369765888, 93432503863353344]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
-valid_setups = ["joat10", "vig10", "bomb10", "cop9", "cop13", "doublejoat13", "alexa25", "random10er", "closedrandom10er"] #future setups
+valid_setups = ["joat10", "vig10", "bomb10", "bml10", "cop9", "cop13", "doublejoat13", "random10er", "closedrandom10er"] #future setups
 valid_timers = ["sunbae", "14-3", "16-5"]
 day_length = 14
 night_length = 3
@@ -46,9 +46,6 @@ react_channels = [223260125786406912, 1114212787141492788]
 banned_users = []
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
-
-    #DVC Arhchive 11
-# dvc_archive = 1191478882411491338
 
 status_id = None
 status_channel = None
@@ -465,6 +462,8 @@ async def game(ctx, setup_name=None):
         elif setup_name == "vig10":
             new_player_limit = 10
         elif setup_name == "joat10":
+            new_player_limit = 10
+        elif setup_name == "bml10":
             new_player_limit = 10
         elif setup_name == "bomb10":
             new_player_limit = 10
@@ -1319,7 +1318,7 @@ async def rand(ctx, *args):
             thread_id = args_parsed.thread_id
 
             if current_setup == "random10er":
-                potential_setups = ["joat10", "vig10", "bomb10"]
+                potential_setups = ["joat10", "vig10", "bomb10", "bml10"]
                 final_game_setup = random.choice(potential_setups)
                 setup_title = final_game_setup
             elif current_setup == "closedrandom10er":
@@ -1577,7 +1576,7 @@ async def help(ctx):
     embed.add_field(name="!clear", value="Resets the current game to defaults. Must be confirmed with `!clear -confirm`.", inline=False)
     embed.add_field(name="!list", value="Displays the current list of the game, including player list, waiting list, host, and setup.", inline=False)
     embed.add_field(name="!host", value="Sets the host of the game. By default, it will use your defined alias. You can specify a different host's username, e.g. `!host MU_Username`.", inline=False)
-    embed.add_field(name="!game", value="Sets the game setup. Must specify setup name from available options: cop9, cop13, joat10, vig10, bomb10, doublejoat13, alexa25, random10er. The random10er setup randomizes between a vig, bomb, and joat game. E.g. `!game cop9`.", inline=False)
+    embed.add_field(name="!game", value="Sets the game setup. Must specify setup name from available options: cop9, cop13, joat10, vig10, bomb10, bml10, doublejoat13, random10er or closedrandom10er. The random10er setup randomizes between a vig, bomb, and joat game. E.g. `!game cop9`.", inline=False)
     await ctx.send(embed=embed)
 
 @bot.command()

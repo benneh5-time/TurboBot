@@ -5,7 +5,7 @@ from urllib3._collections import HTTPHeaderDict
 import uuid
 import json
 import random
-from roles import vanilla_town_dict, mafia_goon_dict, joat_dict, cop_dict, vig_dict, big_ham_dict, frankie_dict, vanchilla_dict, vinnie_dict, zippy_dict, kingpin_dict, zippy13_dict, kingpin_joat_dict, town_ic_dict, village_sui, wolf_prkiller, wolf_bpv, town_inventor_sui, wolf_1x_rb
+from roles import vanilla_town_dict, mafia_goon_dict, joat_dict, cop_dict, vig_dict, big_ham_dict, frankie_dict, vanchilla_dict, vinnie_dict, zippy_dict, kingpin_dict, zippy13_dict, kingpin_joat_dict, town_ic_dict, village_sui, wolf_prkiller, wolf_bpv, town_inventor_sui, wolf_1x_rb, town_inventor_dayvig
 from bs4 import BeautifulSoup
 # from flavor import joat_flavor, cop9_flavor, cop13_flavor, vig_flavor
 
@@ -175,22 +175,15 @@ def new_game_token(session, thread_id):
 
 def start_game(session, security_token, game_title, thread_id, player_aliases, game_setup, day_length, night_length, host_name):
     global data
-    """
-   if game_setup == "random10er":
-        potential_setups = ["joat10", "vig10", "bomb10"]
-        final_game_setup = random.choice(potential_setups)
-    else:
-        final_game_setup = game_setup
-    """
 
     if game_setup == "random10er":
-        potential_setups = ["joat10", "vig10", "bomb10"]
+        potential_setups = ["joat10", "vig10", "bomb10", "bml10"]
         final_game_setup = random.choice(potential_setups)
         setup_title = final_game_setup
         data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': f"[Turbo Champs 2024!] - {game_title} - [{setup_title} game]", 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Open', 'period': 'day', 'phase': '1', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'aliased': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '1', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
 
     elif game_setup == "closedrandom10er":
-        potential_setups = ["closedjoat10", "closedvig10", "closedbomb10"]
+        potential_setups = ["closedjoat10", "closedvig10", "closedbomb10", "closedbml10"]
         setup_title = "closedrandom10er"
         final_game_setup = random.choice(potential_setups)
         data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': f"{game_title} - [{setup_title} game]", 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Closed', 'period': 'day', 'phase': '1', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'aliased': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '1', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
@@ -219,6 +212,10 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
     if final_game_setup == "vig10" or final_game_setup == "closedvig10":
         add_vig_roles(game_title)
         data.add("preset", "vig-10") 
+        data.add('num_players', '10')
+    if final_game_setup == "bml10" or final_game_setup == "closedbml10":
+        add_bml_roles(game_title)
+        data.add("preset", "custom")
         data.add('num_players', '10')
     if final_game_setup == "cop9":
         add_cop9_roles(game_title)
@@ -341,7 +338,7 @@ def add_bomb_roles(game_title):
             current_inven['character_image'] = powerroles_bomb[i]["character_image"]
             inven_json = json.dumps(current_inven)
             data.add("roles[]", inven_json)
-            data.add("role_pms[]", f"[CENTER][TITLE]Role PM for testt[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Town Inventor (x1 Suicide Bomber)[/COLOR][/B]. You win when all threats to Town have been eliminated.\n\n[SIZE=4][B][I]Town Inventor[/I][/B][/SIZE]\n\nAs [B][COLOR=#339933]Town Inventor[/COLOR][/B], you have access to the [B]Give Item[/B] Night Action. Give Item allows you to send your target one of your items from the options below. The description you see below each item are the abilities your targets will receive. Each item is a single-use action or passive ability that will disappear once it has been used by your target.\n\n[SIZE=4]Item(s): [B][I]x1 Suicide Bomber[/I][/B][/SIZE][QUOTE]You have access to the [B]Suicide Bomb[/B] Day Action. You and the player targeted with this action will die within one minute after submission unless protected.[/QUOTE]\n\nSubmit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf you do not submit an action, you will forego your action on that day. Keep in mind that if you have at least two different types of items, you must cycle through all of the types before you can give the same one out again.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+            data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Village Inventor (x1 Suicide Bomber)[/COLOR][/B]. You win when all threats to the Village have been eliminated.\n\n[SIZE=4][B][I]Village Inventor[/I][/B][/SIZE]\n\nAs [B][COLOR=#339933]Village Inventor[/COLOR][/B], you have access to the [B]Give Item[/B] Night Action. Give Item allows you to send your target one of your items from the options below. The description you see below each item are the abilities your targets will receive. Each item is a single-use action or passive ability that will disappear once it has been used by your target.\n\n[SIZE=4]Item(s): [B][I]x1 Suicide Bomber[/I][/B][/SIZE][QUOTE]You have access to the [B]Suicide Bomb[/B] Day Action. You and the player targeted with this action will die within one minute after submission unless protected.[/QUOTE]\n\nSubmit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf you do not submit an action, you will forego your action on that day. Keep in mind that if you have at least two different types of items, you must cycle through all of the types before you can give the same one out again.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
             
     for i in range(0,2):
         if i < 1:
@@ -357,8 +354,50 @@ def add_bomb_roles(game_title):
             current_wolves['character_image'] = wolves[i]['character_image']
             wolf_json = json.dumps(current_wolves)
             data.add("roles[]", wolf_json)
-            data.add("role_pms[]", f"[CENTER][TITLE]Role PM for testt[/TITLE][/CENTER]\n\nYou are [B][COLOR=#ff2244]Wolf Roleblocker | 1-Shot, Non-consecutive[/COLOR][/B]. You win when you overpower the Town and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n\n[SIZE=4][B][I]Wolf Team[/I][/B][/SIZE]\n\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\n\nAs [B][COLOR=#ff2244]Wolf[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\nIf no Wolf submits an action, a player will be picked at random from the living non-Wolf players.\n\n[hr][/hr][SIZE=4][B][I]Wolf Roleblocker[/I][/B][/SIZE]\n\nAs [B][COLOR=#ff2244]Wolf Roleblocker[/COLOR][/B], you have access to the [B]Roleblock[/B] Night Action. Roleblocking another player prevents them from being able to successfully use any Night Action that they might have that night. You will not learn whether your target had a Night Action. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf you do not submit an action, you will forego your action on that night.\n\n[SIZE=4][B][I]Non-consecutive[/I][/B][/SIZE]\n\nThe [B]Non-consecutive[/B] modifier prohibits you from targeting the same player two Cycles in a row.\n\n[SIZE=4][B][I]X-Shot[/I][/B][/SIZE]\n\nThe [B]X-Shot[/B] modifier limits the number of times you can use your Night actions. If you spend all of your shots then you will not be able to use Night actions anymore.\n\nYou have [B]1 shots[/B] at the start of the game.{{HIDE_FROM_FLIP}}\n\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+            data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#ff2244]Wolf Roleblocker | 1-Shot, Non-consecutive[/COLOR][/B]. You win when you overpower the Village and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n\n[SIZE=4][B][I]Wolf Team[/I][/B][/SIZE]\n\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\n\nAs [B][COLOR=#ff2244]Wolf[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\nIf no Wolf submits an action, a player will be picked at random from the living non-Wolf players.\n\n[hr][/hr][SIZE=4][B][I]Wolf Roleblocker[/I][/B][/SIZE]\n\nAs [B][COLOR=#ff2244]Wolf Roleblocker[/COLOR][/B], you have access to the [B]Roleblock[/B] Night Action. Roleblocking another player prevents them from being able to successfully use any Night Action that they might have that night. You will not learn whether your target had a Night Action. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf you do not submit an action, you will forego your action on that night.\n\n[SIZE=4][B][I]Non-consecutive[/I][/B][/SIZE]\n\nThe [B]Non-consecutive[/B] modifier prohibits you from targeting the same player two Cycles in a row.\n\n[SIZE=4][B][I]X-Shot[/I][/B][/SIZE]\n\nThe [B]X-Shot[/B] modifier limits the number of times you can use your Night actions. If you spend all of your shots then you will not be able to use Night actions anymore.\n\nYou have [B]1 shots[/B] at the start of the game.{{HIDE_FROM_FLIP}}\n\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+
+
+def add_bml_roles(game_title):
+    global data
     
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
+
+    villagers = random.sample(name_image_pairs, 6)
+    powerroles_bml = random.sample(pr_name_image_pairs, 2)
+    wolves = random.sample(wolf_name_image_pairs, 2)
+
+    for i in range(0,7):
+        current_vanchilla = vanchilla_dict.copy()
+        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_image'] = villagers[i]["character_image"]
+        vt_json = json.dumps(current_vanchilla)
+        data.add("roles[]", vt_json)
+        data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+    
+
+    current_inven = town_inventor_dayvig.copy()
+    current_inven['character_name'] = powerroles_bml[i]["character_name"]
+    current_inven['character_image'] = powerroles_bml[i]["character_image"]
+    inven_json = json.dumps(current_inven)
+    data.add("roles[]", inven_json)
+    data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Village Inventor (x2 Day Vigilante)[/COLOR][/B]. You win when all threats to the Village have been eliminated.\n\n[SIZE=4][B][I]Village Inventor[/I][/B][/SIZE]\n\nAs [B][COLOR=#339933]Village Inventor[/COLOR][/B], you have access to the [B]Give Item[/B] Night Action. Give Item allows you to send your target one of your items from the options below. The description you see below each item are the abilities your targets will receive. Each item is a single-use action or passive ability that will disappear once it has been used by your target.\n\n[SIZE=4]Item(s): [B][I]x2 Day Vigilante[/I][/B][/SIZE][QUOTE]You have access to the [B]Shoot[/B] Day Action. Players targeted with this action will die within one minute after submission unless protected. Only one shot can be fired per player per Day. Submit your action during the Day using the form below the game thread.[/QUOTE]\n\nSubmit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf you do not submit an action, you will forego your action on that day. Keep in mind that if you have at least two different types of items, you must cycle through all of the types before you can give the same one out again.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+    
+    for i in range(0,2):
+        if i < 1:
+            current_wolves = wolf_bpv.copy()
+            current_wolves['character_name'] = wolves[i]['character_name']
+            current_wolves['character_image'] = wolves[i]['character_image']
+            wolf_json = json.dumps(current_wolves)
+            data.add("roles[]", wolf_json)
+            data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#ff2244]Wolf | x1 Bulletproof Vest[/COLOR][/B]. You win when you overpower the Village and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n[SIZE=4][B][I]Wolf Team[/I][/B][/SIZE]\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\nAs [B][COLOR=#ff2244]Wolf[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf no Wolf submits an action, a player will be picked at random from the living non-Wolf players.\n[hr][/hr]\n[SIZE=4][B][I]BPV (Bulletproof Vest)[/I][/B][/SIZE]\n\nThe [B]BPV[/B] modifier gives you one or more Bulletproof Vests that passively protect you from one shot each. Each time you are shot, your number of BPVs will decrease by one. If you lose all of your BPVs then you can be killed like everyone else. You will not be notified if a BPV is broken.\n\nYou have [B]1 BPVs[/B] at the start of the game.\n{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+        else:
+            current_wolves = wolf_1x_rb.copy()
+            current_wolves['character_name'] = wolves[i]['character_name']
+            current_wolves['character_image'] = wolves[i]['character_image']
+            wolf_json = json.dumps(current_wolves)
+            data.add("roles[]", wolf_json)
+            data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#ff2244]Wolf Roleblocker | 1-Shot, Non-consecutive[/COLOR][/B]. You win when you overpower the Village and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n\n[SIZE=4][B][I]Wolf Team[/I][/B][/SIZE]\n\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\n\nAs [B][COLOR=#ff2244]Wolf[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\nIf no Wolf submits an action, a player will be picked at random from the living non-Wolf players.\n\n[hr][/hr][SIZE=4][B][I]Wolf Roleblocker[/I][/B][/SIZE]\n\nAs [B][COLOR=#ff2244]Wolf Roleblocker[/COLOR][/B], you have access to the [B]Roleblock[/B] Night Action. Roleblocking another player prevents them from being able to successfully use any Night Action that they might have that night. You will not learn whether your target had a Night Action. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf you do not submit an action, you will forego your action on that night.\n\n[SIZE=4][B][I]Non-consecutive[/I][/B][/SIZE]\n\nThe [B]Non-consecutive[/B] modifier prohibits you from targeting the same player two Cycles in a row.\n\n[SIZE=4][B][I]X-Shot[/I][/B][/SIZE]\n\nThe [B]X-Shot[/B] modifier limits the number of times you can use your Night actions. If you spend all of your shots then you will not be able to use Night actions anymore.\n\nYou have [B]1 shots[/B] at the start of the game.{{HIDE_FROM_FLIP}}\n\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+       
 
 
 
