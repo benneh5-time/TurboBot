@@ -362,7 +362,7 @@ def add_bml_roles(game_title):
     
     name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
 
-    villagers = random.sample(name_image_pairs, 6)
+    villagers = random.sample(name_image_pairs, 7)
     powerroles_bml = random.sample(pr_name_image_pairs, 2)
     wolves = random.sample(wolf_name_image_pairs, 2)
 
