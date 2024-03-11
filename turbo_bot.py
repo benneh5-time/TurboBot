@@ -1318,7 +1318,7 @@ async def rand(ctx, *args):
             thread_id = args_parsed.thread_id
 
             if current_setup == "random10er":
-                potential_setups = ["joat10", "vig10", "bomb10", "bml10"]
+                potential_setups = ["joat10", "vig10", "bomb10"]
                 final_game_setup = random.choice(potential_setups)
                 setup_title = final_game_setup
             elif current_setup == "closedrandom10er":
