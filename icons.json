@@ -18,5 +18,6 @@
     {"alias": "xanjori", "icon": ":prince:"},
     {"alias": "purrito", "icon": ":cat:"},
     {"alias": "akasuki", "icon": ":umbrella2:"},
-    {"alias": "luna", "icon": ":crescent_moon:"}
+    {"alias": "luna", "icon": ":crescent_moon:"},
+    {"alias": "clouds", "icon": ":cloud_lightning:"}
 ]
