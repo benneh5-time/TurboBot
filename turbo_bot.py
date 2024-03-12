@@ -317,6 +317,10 @@ class ThreadmarkProcessor:
 					await start_itas(current_game)
 				elif "Day 2 Start" in event and game_setup == 'ita13':
 					await start_itas(current_game)
+				elif "Day 3 Start" in event and game_setup == 'ita10':
+					await start_itas(current_game)
+				elif "Day 3 Start" in event and game_setup == 'ita13':
+					await start_itas(current_game)
 				elif "Suicide Bomb (1):" in event:
 					results = event.split("Suicide Bomb (1):")[1].strip()
 					players = results.split(", ")
