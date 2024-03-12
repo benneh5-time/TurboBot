@@ -996,8 +996,8 @@ async def status(ctx, *args):
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
         time_message +=  "!in or react ✅ to join!\n"  
         embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
-        embed.set_field_at(4, name="**Time Remaining:**", value=time_message, inline=True)
-        embed.set_field_at(5, name="", value="", inline=True)
+        embed.set_field_at(5, name="**Time Remaining:**", value=time_message, inline=True)
+        embed.set_field_at(4, name="", value="", inline=True)
     if waiting_list:
         waiting_list_message = ""
         time_message = ""
@@ -1070,7 +1070,7 @@ async def update_status():
         time_message +=  "!in or react ✅ to join!\n"
         
         embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
-        embed.set_field_at(4, name="**Time Remaining:**", value=time_message, inline=True)
+        embed.set_field_at(5, name="**Time Remaining:**", value=time_message, inline=True)
     
     if waiting_list:
         waiting_list_message = ""
@@ -1079,8 +1079,8 @@ async def update_status():
             waiting_list_message += f"{alias}\n"
             time_message += f"{remaining_time} minutes\n"            
 
-        embed.set_field_at(5, name="**Waiting List:**", value=waiting_list_message, inline=True)
-        embed.set_field_at(6, name="**Time Remaining:**", value=time_message, inline=True)
+        embed.set_field_at(6, name="**Waiting List:**", value=waiting_list_message, inline=True)
+        embed.set_field_at(7, name="**Time Remaining:**", value=time_message, inline=True)
         
     if not players and not waiting_list:
         embed.set_field_at(3, name="No players are currently signed up.", value="", inline=False)
