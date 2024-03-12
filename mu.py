@@ -80,6 +80,18 @@ def open_game_thread(session, thread_id):
 
     return game_id, security_token 
 
+def ita_window(session, game_id, security_token):
+    url = "https://www.mafiauniverse.com/forums/modbot/ita-window.php"
+
+    payload = {
+        "do": "open",
+        "game_id": game_id,
+        "timeout": "10",
+        "securitytoken": security_token
+        }
+    itas = session.post(url, data=payload)
+    return itas.text
+
 def sub_player(session, game_id, player, player_in, security_token):
     url = "https://www.mafiauniverse.com/forums/modbot/subs.php"
 
@@ -217,6 +229,14 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         add_bml_roles(game_title)
         data.add("preset", "custom")
         data.add('num_players', '10')
+    if final_game_setup == "ita10":
+        add_ita10_roles(game_title)
+        data.add("preset", "custom")
+        data.add("num_players", "10")
+        data.add("itas_enables", "1")
+        data.add("default_ita_hit", "15")
+        data.add("default_ita_count", "1")
+        data.add("ita_immune_policy", "0")
     if final_game_setup == "cop9":
         add_cop9_roles(game_title)
         data.add("preset", "cop-9")
@@ -273,6 +293,31 @@ def load_flavor_jsons():
     pr_name_image_pairs = load_json_file('powerroles.json')
     wolf_name_image_pairs = load_json_file('wolves.json')
     return name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs
+
+def add_ita10_roles(game_title):
+    global data
+    
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
+
+    villagers = random.sample(name_image_pairs, 8)
+    wolves = random.sample(wolf_name_image_pairs, 2)
+
+    for i in range(0,8):
+        current_vanchilla = vanchilla_dict.copy()
+        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_image'] = villagers[i]["character_image"]
+        vt_json = json.dumps(current_vanchilla)
+        data.add("roles[]", vt_json)
+        data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+      
+    for i in range(0,2):
+        current_wolves = mafia_goon_dict.copy()
+        current_wolves['character_name'] = wolves[i]['character_name']
+        current_wolves['character_image'] = wolves[i]['character_image']
+        wolf_json = json.dumps(current_wolves)
+        data.add("roles[]", wolf_json)
+        data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#ff2244]Wolf[/COLOR][/B]. You win when you overpower the Village and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n[SIZE=4][B][I]Wolf Team[/I][/B][/SIZE]\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\nAs [B][COLOR=#ff2244]Wolf[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf no Wolves submit an action, a player will be picked at random from the living non-Wolf players.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")    
+
 
 def add_joat_roles(game_title):
     global data

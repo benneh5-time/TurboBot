@@ -37,7 +37,7 @@ mods = [178647349369765888, 93432503863353344]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
-valid_setups = ["joat10", "vig10", "bomb10", "bml10", "cop9", "cop13", "doublejoat13", "random10er", "closedrandom10er"] #future setups
+valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "cop9", "cop13", "doublejoat13", "random10er", "closedrandom10er"] #future setups
 valid_timers = ["sunbae", "14-3", "16-5"]
 day_length = 14
 night_length = 3
@@ -267,12 +267,19 @@ async def delete_dvc_role(channel, role):
             await channel.send("DVC Role deleted for post-game clean up.")
         except:
             await channel.send("Failed to delete dvc role")
-    
+
+async def start_itas(current_game):
+    username = os.environ.get('MUUN')
+    password = os.environ.get('MUPW')
+    ita_session = mu.login(username, password)
+    ita_game_id, ita_security_token = mu.open_game_thread(ita_session, current_game)
+    mu.ita_window(ita_session, ita_game_id, ita_security_token)
+
 class ThreadmarkProcessor:
 	def __init__(self):
 		self.processed_threadmarks = []
 
-	async def process_threadmarks(self, thread_id, player_aliases, role, guild, channel_id):
+	async def process_threadmarks(self, thread_id, player_aliases, role, guild, channel_id, game_setup, current_game):
 
 		while True:		
 			url = f"https://www.mafiauniverse.com/forums/threadmarks/{thread_id}"
@@ -306,6 +313,8 @@ class ThreadmarkProcessor:
                    
 				elif "Results: No one died" in event or "Event" in event or "Game Information" in event:
 					pass
+				elif "Day 2 start" in event and game_setup == 'ita10':
+					await start_itas(current_game)
 				elif "Suicide Bomb (1):" in event:
 					results = event.split("Suicide Bomb (1):")[1].strip()
 					players = results.split(", ")
@@ -462,6 +471,8 @@ async def game(ctx, setup_name=None):
         elif setup_name == "vig10":
             new_player_limit = 10
         elif setup_name == "joat10":
+            new_player_limit = 10
+        elif setup_name == "ita10":
             new_player_limit = 10
         elif setup_name == "bml10":
             new_player_limit = 10
@@ -1360,16 +1371,22 @@ async def rand(ctx, *args):
                 role, channel_id, guild = await create_dvc(thread_id)
                 print(f"DVC thread created. Clearing variables", flush=True)
                 channel = bot.get_channel(channel_id)
+
+                host_msg = "Hosts for the current game: "
                 for host in game_host_name:
                     if host in aliases.values():
                         try:
                             mention_id = find_key_by_value(aliases, host)
                             member = guild.get_member(mention_id)
                             await member.add_roles(role)
-                            await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
+                            host_msg += f"<@{mention_id}> "
+                            #await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
                         except:
-                            await channel.send(f"failed to add {host} to dvc.")
+                            print(f"Can't add {host} to dvc", flush=True)
+                            #await channel.send(f"failed to add {host} to dvc.")
+                await channel.send(host_msg)
 
+                spec_msg = "Specs for the current game: "
                 for spec in spec_list:
                     print(spec, flush=True)
                     if int(spec) in mention_list:
@@ -1382,10 +1399,14 @@ async def rand(ctx, *args):
 
                             spec_member = guild.get_member(spec_int)
                             await spec_member.add_roles(role)
-                            await channel.send(f"<@{spec}> is spectating, welcome to dvc")
+                            spec_msg += f"<@{spec}> "
+                            #await channel.send(f"<@{spec}> is spectating, welcome to dvc")
                         except Exception as error:
                             print(f"Error: {error}", flush=True)
-                    
+                await channel.send(spec_msg)
+                
+                await channel.send(f"MU Link for the current game: \n\n{game_url}")
+
                 await new_game_spec_message(bot, thread_id, game_title)
                 postgame_players = players
                 game_host_name = ["The Turbo Team"]
@@ -1395,7 +1416,7 @@ async def rand(ctx, *args):
                 print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
                 is_rand_running = False
                 current_game = thread_id
-                await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id)
+                await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
                 print(f"Threadmark processor finished. rand function finished.", flush=True)
                 await edit_dvc(channel, guild)
                 await delete_dvc_role(channel, role)
