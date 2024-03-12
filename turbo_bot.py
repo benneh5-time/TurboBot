@@ -37,7 +37,7 @@ mods = [178647349369765888, 93432503863353344]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
-valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "cop9", "cop13", "doublejoat13", "random10er", "closedrandom10er"] #future setups
+valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandom10er"] #future setups
 valid_timers = ["sunbae", "14-3", "16-5"]
 day_length = 14
 night_length = 3
@@ -315,6 +315,8 @@ class ThreadmarkProcessor:
 					pass
 				elif "Day 2 Start" in event and game_setup == 'ita10':
 					await start_itas(current_game)
+				elif "Day 2 Start" in event and game_setup == 'ita13':
+					await start_itas(current_game)
 				elif "Suicide Bomb (1):" in event:
 					results = event.split("Suicide Bomb (1):")[1].strip()
 					players = results.split(", ")
@@ -474,6 +476,8 @@ async def game(ctx, setup_name=None):
             new_player_limit = 10
         elif setup_name == "ita10":
             new_player_limit = 10
+        elif setup_name == "ita13":
+            new_player_limit = 13
         elif setup_name == "bml10":
             new_player_limit = 10
         elif setup_name == "bomb10":

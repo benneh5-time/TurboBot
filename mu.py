@@ -237,6 +237,14 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         data.add("default_ita_hit", "18")
         data.add("default_ita_count", "1")
         data.add("ita_immune_policy", "0")
+    if final_game_setup == "ita13":
+        add_ita10_roles(game_title)
+        data.add("preset", "custom")
+        data.add("num_players", "10")
+        data.add("itas_enables", "1")
+        data.add("default_ita_hit", "18")
+        data.add("default_ita_count", "1")
+        data.add("ita_immune_policy", "0")
     if final_game_setup == "cop9":
         add_cop9_roles(game_title)
         data.add("preset", "cop-9")
