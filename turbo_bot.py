@@ -313,14 +313,13 @@ class ThreadmarkProcessor:
                    
 				elif "Results: No one died" in event or "Event" in event or "Game Information" in event:
 					pass
-				elif "Day 2 Start" in event and game_setup == 'ita10':
+
+				elif ("Day 2 Start" in event or "Day 3 Start" in event) and (game_setup == 'ita10' or game_setup == 'ita13'):
 					await start_itas(current_game)
-				elif "Day 2 Start" in event and game_setup == 'ita13':
-					await start_itas(current_game)
-				elif "Day 3 Start" in event and game_setup == 'ita10':
-					await start_itas(current_game)
-				elif "Day 3 Start" in event and game_setup == 'ita13':
-					await start_itas(current_game)
+                
+				#elif "In-Thread Attack: " in event:
+                #    results = event.split()
+
 				elif "Suicide Bomb (1):" in event:
 					results = event.split("Suicide Bomb (1):")[1].strip()
 					players = results.split(", ")
