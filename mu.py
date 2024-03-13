@@ -234,7 +234,7 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         data.add("preset", "custom")
         data.add("num_players", "10")
         data.add("itas_enables", "1")
-        data.add("default_ita_hit", "18")
+        data.add("default_ita_hit", "22")
         data.add("default_ita_count", "1")
         data.add("ita_immune_policy", "0")
     if final_game_setup == "ita13":

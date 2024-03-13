@@ -314,7 +314,7 @@ class ThreadmarkProcessor:
 				elif "Results: No one died" in event or "Event" in event or "Game Information" in event:
 					pass
 
-				elif ("Day 1 Start" in event or "Day 2 Start" in event) and (game_setup == 'ita10' or game_setup == 'ita13'):
+				elif ("Day 3 Start" in event or "Day 2 Start" in event) and (game_setup == 'ita10' or game_setup == 'ita13'):
 					await start_itas(current_game)
                 
 				#elif "In-Thread Attack: " in event:
