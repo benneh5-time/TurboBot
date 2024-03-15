@@ -640,9 +640,12 @@ async def bigping(ctx):
         return  
     
     await ctx.send('''# bigping 2.0 (Alphabet update)
-**If i pinged you although you already inned, please help recruiting. Thank You <3**
+
+                   **If i pinged you although you already inned, please help recruiting. Thank You <3**
+                   <@917835877747654687>
 <@167327838398054401>  
 <@300106589455646722> 
+                   <@178647349369765888>
 <@366981001693495317> 
 <@1081319891195408464> 
 <@259104738925215744> 
