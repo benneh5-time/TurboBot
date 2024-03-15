@@ -43,7 +43,7 @@ day_length = 14
 night_length = 3
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 react_channels = [223260125786406912, 1114212787141492788]
-banned_users = [612706340623876137, 1173036536166621286]
+banned_users = [612706340623876137, 1173036536166621286, 438413352616722435]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 
@@ -378,7 +378,7 @@ async def sub(ctx, player=None):
     if ctx.channel.id not in allowed_channels:
         return
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to adjust turbos.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return 
     if player == None:
         await ctx.send("Use !sub [Player_to_replace] to sub into the game. You will need an alias set in order to sub.")
@@ -413,7 +413,7 @@ async def stats(ctx):
         return
     
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to adjust turbos.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return   
 
     df = pd.read_csv('game_database.csv')
@@ -463,7 +463,7 @@ async def game(ctx, setup_name=None):
         return
     
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to adjust turbos.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return
 
     global current_setup, player_limit, players, waiting_list
@@ -523,7 +523,7 @@ async def phases(ctx, timer_name=None):
         return
     
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to adjust turbos.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return
 
     global current_timer, day_length, night_length
@@ -591,7 +591,7 @@ async def flavor(ctx, charname=None, charimage=None):
         return
     
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to in turbos.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
         return    
     existing_flavor = load_flavor_json('turboers.json')
     added_flavor = {'character_name': charname, 'character_image': charimage}
@@ -637,7 +637,7 @@ async def wolf_flavor(ctx, charname=None, charimage=None):
         return
     
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to in turbos.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
         return    
 
     existing_flavor = load_flavor_json('wolves.json')
@@ -684,7 +684,7 @@ async def pr_flavor(ctx, charname=None, charimage=None):
         return
     
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to in turbos.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
         return    
     existing_flavor = load_flavor_json('powerroles.json')
     added_flavor = {'character_name': charname, 'character_image': charimage}
@@ -729,7 +729,7 @@ async def in_(ctx, time: int = 60):
         return
     
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to in turbos.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
         return
 
     if ctx.author.id not in aliases:
@@ -789,7 +789,7 @@ async def out(ctx):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to adjust turbos.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return
         
     global game_host_name, player_limit, players, waiting_list 
@@ -838,7 +838,7 @@ async def alias(ctx, *, alias):
         return
     
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to change your alias.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to change your alias.")
         return
 
     alias = alias.lower()
@@ -863,7 +863,7 @@ async def add(ctx, *, alias):
         return
     
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to in turbos.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
         return
     alias = alias.lower()
     global game_host_name, player_limit, players, waiting_list
@@ -917,7 +917,7 @@ async def remove(ctx, *, alias):
         return
     
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to in turbos.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
         return
     alias = alias.lower()
     global game_host_name, player_limit, players, waiting_list
@@ -1275,7 +1275,7 @@ async def rand(ctx, *args):
                 allowed_randers.append(int(key))    
 
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to rand turbos.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to rand turbos.")
         return   
     
     if ctx.author.id not in allowed_randers:
@@ -1567,7 +1567,7 @@ async def clear(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for flaking and are not allowed to clear turbos.")
+        await ctx.send("You have been banned for misusing bigping and are not allowed to clear turbos.")
         return        
     global players, waiting_list, game_host_name, current_setup, player_limit    
     
@@ -1766,7 +1766,7 @@ async def on_reaction_add(reaction, user):
     if reaction.message.id == turbo_ping_message:
         if reaction.emoji == '✅':
             if user.id in banned_users:
-                await reaction.message.channel.send("You have been banned for flaking and are not allowed to in turbos.")
+                await reaction.message.channel.send("You have been banned for misusing bigping and are not allowed to in turbos.")
                 return
             if user.id not in aliases:
                 await reaction.message.channel.send("Please set your MU username by using !alias MU_Username before inning!")
@@ -1818,7 +1818,7 @@ async def on_reaction_add(reaction, user):
     if reaction.message.id == status_id:
         if reaction.emoji == '✅':
             if user.id in banned_users:
-                await reaction.message.channel.send("You have been banned for flaking and are not allowed to in turbos.")
+                await reaction.message.channel.send("You have been banned for misusing bigping and are not allowed to in turbos.")
                 return
             if user.id not in aliases:
                 await reaction.message.channel.send("Please set your MU username by using !alias MU_Username before inning!")
