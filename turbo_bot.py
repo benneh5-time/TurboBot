@@ -43,7 +43,7 @@ day_length = 14
 night_length = 3
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 react_channels = [223260125786406912, 1114212787141492788]
-banned_users = [612706340623876137, 1173036536166621286, 438413352616722435]
+banned_users = [612706340623876137, 1173036536166621286]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 
@@ -630,6 +630,55 @@ async def flavor(ctx, charname=None, charimage=None):
     
     save_flavor_json('turboers.json', existing_flavor)
 
+@bot.command()
+async def bigping(ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
+        return  
+    
+    await ctx.send('''# bigping 2.0 (Alphabet update)
+**If i pinged you although you already inned, please help recruiting. Thank You <3**
+<@167327838398054401>  
+<@300106589455646722> 
+<@366981001693495317> 
+<@1081319891195408464> 
+<@259104738925215744> 
+<@151768400815849472> 
+<@695652367101853817> 
+<@1165837566587715614> 
+<@394695675838988298> 
+<@212014896873734145> 
+<@158019233438105600> 
+<@169683596318212096> 
+<@851954038068478002> 
+<@286411781512101888> 
+<@461713326536130570> 
+<@245216167713701888> 
+<@642348801046347836> 
+<@924804445303349269> 
+<@224153529483264000> 
+<@601099134585274378> 
+<@388374748163211284> 
+<@761534093916766208> 
+<@858544846531592222> 
+<@303054042492305418> 
+<@272144630789963779> 
+
+
+# **!in to participate in the TURBO CHAMIPONSSHIP!!!**
+Link to the _Leaderbords:_
+https://docs.google.com/spreadsheets/d/12miB_U152zmB8i7Mc2pNeNoSvxgYqr7FQzHt9lQjtCM/edit#gid=2035874120
+Link to the _Thread:_
+https://www.mafiauniverse.com/forums/threads/42942-Turbo-Championship-2024-%E2%80%93-Feb-20th-to-March-31st?p=7576209&viewfull=1#post7576209
+
+
+**To be added to the bigping list, type in the turbo chat or dm me. **
+To be removed, dm me. 
+||im not on bigping tho haha||
+**Feel free to use the bigping list Yourself!**''')
 
 @bot.command()
 async def wolf_flavor(ctx, charname=None, charimage=None):
