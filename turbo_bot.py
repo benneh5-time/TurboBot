@@ -316,10 +316,11 @@ class ThreadmarkProcessor:
                             await channel.send(f"<@{mention_id}> has been added to DVC.")
                         except:
                             await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
+                    else:
+                        await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")                    
                     if "neil the eel" in flavor:
                         await have_you_seen_this_fish(thread_id)
-                    else:
-                        await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+
 
 
         
@@ -369,11 +370,12 @@ class ThreadmarkProcessor:
                                     await channel.send(f"<@{mention_id}> has been added to DVC.")
                                 except:
                                     await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
-                            if "neil the eel" in flavor:
-                                await have_you_seen_this_fish(thread_id)
+
                             else:
                                 await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-                                            
+                            if "neil the eel" in flavor:
+                                await have_you_seen_this_fish(thread_id)
+
                 elif "Elimination: Sleep" in event:
                     await channel.send("Players voted sleep. Wusses.")
         
@@ -703,8 +705,7 @@ async def bigping(ctx):
 <@858544846531592222>
 <@235081166586249218>
 <@90896191767719936>
-<@219163122521341952>
-<@696089972364542031>                                      
+<@219163122521341952>                                    
 <@225964753208475649>
                    
 
