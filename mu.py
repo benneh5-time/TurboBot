@@ -550,13 +550,13 @@ def add_neil_roles(game_title):
 
     name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
     for i in range(0,2):
-        current_vanchilla = vanchilla_dict.copy()
+        current_vanchilla = joat_dict.copy()
         current_vanchilla['character_name'] = "neil the eel"
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
-        data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+        #data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
     
-    current_wolves = mafia_goon_dict.copy()
+    current_wolves = wolf_2x_rb.copy()
     current_wolves['character_name'] = "neil the eel"
     wolf_json = json.dumps(current_wolves)
     data.add("roles[]", wolf_json)
