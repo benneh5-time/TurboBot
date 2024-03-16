@@ -37,7 +37,7 @@ mods = [178647349369765888, 93432503863353344]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
-valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandom10er"] #future setups
+valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandom10er", "neilgame"] #future setups
 valid_timers = ["sunbae", "14-3", "16-5"]
 day_length = 14
 night_length = 3
@@ -268,6 +268,13 @@ async def delete_dvc_role(channel, role):
         except:
             await channel.send("Failed to delete dvc role")
 
+async def have_you_seen_this_fish(thread_id):
+    username = os.environ.get('MUUN')
+    password = os.environ.get('MUPW')
+    session = mu.login(username,password)
+    game_id, security_token = mu.open_game_thread(session, thread_id)
+    mu.post_neil(session, thread_id, security_token)
+
 async def start_itas(current_game):
     username = os.environ.get('MUUN')
     password = os.environ.get('MUPW')
@@ -276,98 +283,109 @@ async def start_itas(current_game):
     mu.ita_window(ita_session, ita_game_id, ita_security_token)
 
 class ThreadmarkProcessor:
-	def __init__(self):
-		self.processed_threadmarks = []
+    def __init__(self):
+        self.processed_threadmarks = []
 
-	async def process_threadmarks(self, thread_id, player_aliases, role, guild, channel_id, game_setup, current_game):
+    async def process_threadmarks(self, thread_id, player_aliases, role, guild, channel_id, game_setup, current_game):
 
-		while True:		
-			url = f"https://www.mafiauniverse.com/forums/threadmarks/{thread_id}"
-			response = requests.get(url)
-			html = response.text
-			soup = BeautifulSoup(html, "html.parser")
-			event_div = soup.find("div", class_="bbc_threadmarks view-threadmarks")
-			channel = bot.get_channel(channel_id)
-			pl_list = [item.lower() for item in player_aliases]
-			for i, row in enumerate(reversed(event_div.find_all("div", class_="threadmark-row"))):
-				event = row.find("div", class_="threadmark-event").text
-				
-				if event in self.processed_threadmarks:
-					continue
-		                    
-				await channel.send(event)
-		                    
-				if "Elimination:" in event and " was " in event:
-					results = event.split("Elimination: ")[1].strip()
-					username = results.split(" was ")[0].strip().lower()
-					if username in aliases.values():
-						try:
-							mention_id = find_key_by_value(aliases, username)
-							member = guild.get_member(mention_id)
-							await member.add_roles(role)
-							await channel.send(f"<@{mention_id}> has been added to DVC.")
-						except:
-							await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
-					else:
-						await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-                   
-				elif "Results: No one died" in event or "Event" in event or "Game Information" in event:
-					pass
-
-				elif ("Day 3 Start" in event or "Day 2 Start" in event) and (game_setup == 'ita10' or game_setup == 'ita13'):
-					await start_itas(current_game)
+        while True:		
+            url = f"https://www.mafiauniverse.com/forums/threadmarks/{thread_id}"
+            response = requests.get(url)
+            html = response.text
+            soup = BeautifulSoup(html, "html.parser")
+            event_div = soup.find("div", class_="bbc_threadmarks view-threadmarks")
+            channel = bot.get_channel(channel_id)
+            pl_list = [item.lower() for item in player_aliases]
+            for i, row in enumerate(reversed(event_div.find_all("div", class_="threadmark-row"))):
+                event = row.find("div", class_="threadmark-event").text
                 
-				#elif "In-Thread Attack: " in event:
+                if event in self.processed_threadmarks:
+                    continue
+                            
+                await channel.send(event)
+                            
+                if "Elimination:" in event and " was " in event:
+                    results = event.split("Elimination: ")[1].strip()
+                    username = results.split(" was ")[0].strip().lower()
+                    flavor = results.split(" was ")[1].strip().lower()
+                    if username in aliases.values():
+                        try:
+                            mention_id = find_key_by_value(aliases, username)
+                            member = guild.get_member(mention_id)
+                            await member.add_roles(role)
+                            await channel.send(f"<@{mention_id}> has been added to DVC.")
+                        except:
+                            await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
+                    if "neil the eel" in flavor:
+                        await have_you_seen_this_fish(thread_id)
+                    else:
+                        await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+
+
+        
+                elif "Results: No one died" in event or "Event" in event or "Game Information" in event:
+                    pass
+
+                elif ("Day 3 Start" in event or "Day 2 Start" in event) and (game_setup == 'ita10' or game_setup == 'ita13'):
+                    await start_itas(current_game)
+                
+                #elif "In-Thread Attack: " in event:
                 #    results = event.split()
 
-				elif "Suicide Bomb (1):" in event:
-					results = event.split("Suicide Bomb (1):")[1].strip()
-					players = results.split(", ")
-		            
-					for player in players:
-						if " was " in player:
-							username = player.split(" was ")[0].strip().lower()
-							if username in aliases.values():
-								try:
-									mention_id = find_key_by_value(aliases, username)
-									member = guild.get_member(mention_id)
-									await member.add_roles(role)
-									await channel.send(f"<@{mention_id}> has been added to DVC.")
-								except:
-									await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
-							else:
-								await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-		            
-				elif "Results:" in event:
-					results = event.split("Results:")[1].strip()
-					players = results.split(", ")
-		            
-					for player in players:
-						if " was " in player:
-							username = player.split(" was ")[0].strip().lower()
-							if username in aliases.values():
-								try:
-									mention_id = find_key_by_value(aliases, username)
-									member = guild.get_member(mention_id)
-									await member.add_roles(role)
-									await channel.send(f"<@{mention_id}> has been added to DVC.")
-								except:
-									await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
-							else:
-								await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-		                                    
-				elif "Elimination: Sleep" in event:
-					await channel.send("Players voted sleep. Wusses.")
-		
-				elif "Game Over:" in event:
-					await channel.send("Game concluded -- attempting channel housekeeping/clean up")
-					# Not used anymore
+                elif "Suicide Bomb (1):" in event:
+                    results = event.split("Suicide Bomb (1):")[1].strip()
+                    players = results.split(", ")
+                    
+                    for player in players:
+                        if " was " in player:
+                            username = player.split(" was ")[0].strip().lower()
+                            flavor = results.split(" was ")[1].strip().lower()
+                            if username in aliases.values():
+                                try:
+                                    mention_id = find_key_by_value(aliases, username)
+                                    member = guild.get_member(mention_id)
+                                    await member.add_roles(role)
+                                    await channel.send(f"<@{mention_id}> has been added to DVC.")
+                                except:
+                                    await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
+                            if "neil the eel" in flavor:
+                                await have_you_seen_this_fish(thread_id)
+                        else:
+                            await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+                    
+                elif "Results:" in event:
+                    results = event.split("Results:")[1].strip()
+                    players = results.split(", ")
+                    
+                    for player in players:
+                        if " was " in player:
+                            username = player.split(" was ")[0].strip().lower()
+                            flavor = results.split(" was ")[1].strip().lower()
+                            if username in aliases.values():
+                                try:
+                                    mention_id = find_key_by_value(aliases, username)
+                                    member = guild.get_member(mention_id)
+                                    await member.add_roles(role)
+                                    await channel.send(f"<@{mention_id}> has been added to DVC.")
+                                except:
+                                    await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
+                            if "neil the eel" in flavor:
+                                await have_you_seen_this_fish(thread_id)
+                            else:
+                                await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+                                            
+                elif "Elimination: Sleep" in event:
+                    await channel.send("Players voted sleep. Wusses.")
+        
+                elif "Game Over:" in event:
+                    await channel.send("Game concluded -- attempting channel housekeeping/clean up")
+                    # Not used anymore
                     # process_threadmarks.stop()
-					self.processed_threadmarks.clear()
-					return
-				self.processed_threadmarks.append(event)
+                    self.processed_threadmarks.clear()
+                    return
+                self.processed_threadmarks.append(event)
 
-			await asyncio.sleep(30)
+            await asyncio.sleep(30)
 
 processor = ThreadmarkProcessor()
 
@@ -477,6 +495,8 @@ async def game(ctx, setup_name=None):
             new_player_limit = 10
         elif setup_name == "joat10":
             new_player_limit = 10
+        elif setup_name == "neilgame":
+            new_player_limit = 3
         elif setup_name == "ita10":
             new_player_limit = 10
         elif setup_name == "ita13":
