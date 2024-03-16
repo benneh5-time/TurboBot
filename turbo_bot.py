@@ -639,7 +639,7 @@ async def bigping(ctx):
         await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
         return  
     
-    await ctx.send('''# bigping 2.0 (Alphabet update)
+    await ctx.send('''# bigping 2.1 (turby update)
 
 **If i pinged you although you already inned, please help recruiting. Thank You <3**
 <@917835877747654687>
@@ -670,7 +670,23 @@ async def bigping(ctx):
 <@858544846531592222> 
 <@303054042492305418> 
 <@272144630789963779> 
-
+<@1201936195597389878>
+<@212014896873734145>
+<@438413352616722435>
+<@866009287398522901>
+<@745438545535303760>
+<@1218338901828042772>
+<@827416091889762325>
+<@1217289211745407026>
+<@1171228755147112553>
+<@970410416624775189>
+<@858544846531592222>
+<@235081166586249218>
+<@90896191767719936>
+<@219163122521341952>
+<@696089972364542031>                                      
+<@225964753208475649>
+                   
 
 # **!in to participate in the TURBO CHAMIPONSSHIP!!!**
 Link to the _Leaderbords:_
