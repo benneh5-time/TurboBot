@@ -240,7 +240,7 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
     if final_game_setup == "ita13":
         add_ita10_roles(game_title)
         data.add("preset", "custom")
-        data.add("num_players", "10")
+        data.add("num_players", "13")
         data.add("itas_enabled", "1")
         data.add("default_ita_hit", "25")
         data.add("default_ita_count", "2")
