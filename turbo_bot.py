@@ -38,7 +38,7 @@ current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
 valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandom10er", "neilgame"] #future setups
-valid_timers = ["sunbae", "14-3", "16-5"]
+valid_timers = ["sunbae", "14-3", "16-5", "8-2"]
 day_length = 14
 night_length = 3
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
@@ -562,6 +562,9 @@ async def phases(ctx, timer_name=None):
         elif timer_name == "16-5":
             new_day_length = 16
             new_night_length = 5
+        elif timer_name == "8-2":
+            new_day_length = 8
+            new_night_length = 2
 
         else:
             await ctx.send(f"'{timer_name}' is not a valid phase. Please choose from: {', '.join(valid_timers)}.")

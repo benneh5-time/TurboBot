@@ -86,7 +86,7 @@ def ita_window(session, game_id, security_token):
     payload = {
         "do": "open",
         "game_id": game_id,
-        "timeout": "10",
+        "timeout": "60",
         "securitytoken": security_token
         }
     itas = session.post(url, data=payload)
@@ -233,17 +233,17 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         add_ita10_roles(game_title)
         data.add("preset", "custom")
         data.add("num_players", "10")
-        data.add("itas_enables", "1")
-        data.add("default_ita_hit", "22")
-        data.add("default_ita_count", "1")
+        data.add("itas_enabled", "1")
+        data.add("default_ita_hit", "25")
+        data.add("default_ita_count", "2")
         data.add("ita_immune_policy", "0")
     if final_game_setup == "ita13":
         add_ita10_roles(game_title)
         data.add("preset", "custom")
         data.add("num_players", "10")
-        data.add("itas_enables", "1")
-        data.add("default_ita_hit", "18")
-        data.add("default_ita_count", "1")
+        data.add("itas_enabled", "1")
+        data.add("default_ita_hit", "25")
+        data.add("default_ita_count", "2")
         data.add("ita_immune_policy", "0")
     if final_game_setup == "cop9":
         add_cop9_roles(game_title)
