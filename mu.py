@@ -237,6 +237,8 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         data.add("default_ita_hit", "25")
         data.add("default_ita_count", "2")
         data.add("ita_immune_policy", "0")
+        data.add("mafia_kill_enabled","3")
+        data.add("auto_majority", "1")
     if final_game_setup == "ita13":
         add_ita13_roles(game_title)
         data.add("preset", "custom")
@@ -245,6 +247,8 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         data.add("default_ita_hit", "25")
         data.add("default_ita_count", "2")
         data.add("ita_immune_policy", "0")
+        data.add("mafia_kill_enabled","3")
+        data.add("auto_majority", "1")
     if final_game_setup == "cop9":
         add_cop9_roles(game_title)
         data.add("preset", "cop-9")
