@@ -268,12 +268,12 @@ async def delete_dvc_role(channel, role):
         except:
             await channel.send("Failed to delete dvc role")
 
-async def have_you_seen_this_fish(thread_id):
+async def post_game_reply(thread_id, message):
     username = os.environ.get('MUUN')
     password = os.environ.get('MUPW')
     session = mu.login(username,password)
     game_id, security_token = mu.open_game_thread(session, thread_id)
-    mu.post_neil(session, thread_id, security_token)
+    mu.post(session, thread_id, security_token, message)
 
 async def start_itas(current_game):
     username = os.environ.get('MUUN')
@@ -319,7 +319,7 @@ class ThreadmarkProcessor:
                     else:
                         await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")                    
                     if "neil the eel" in flavor:
-                        await have_you_seen_this_fish(thread_id)
+                        await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
 
 
 
@@ -350,7 +350,7 @@ class ThreadmarkProcessor:
                                 except:
                                     await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
                             if "neil the eel" in flavor:
-                                await have_you_seen_this_fish(thread_id)
+                                await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
                         else:
                             await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
                     
@@ -374,10 +374,11 @@ class ThreadmarkProcessor:
                             else:
                                 await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
                             if "neil the eel" in flavor:
-                                await have_you_seen_this_fish(thread_id)
+                                await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
 
                 elif "Elimination: Sleep" in event:
                     await channel.send("Players voted sleep. Wusses.")
+                    await post_game_reply(thread_id, "eepy\n\n[img]https://www.mafiauniverse.com/forums/image.php?u=12335&dateline=1704653927&type=thumb[/img]\n\neepy")
         
                 elif "Game Over:" in event:
                     await channel.send("Game concluded -- attempting channel housekeeping/clean up")

@@ -592,7 +592,7 @@ def add_neil_roles(game_title):
 
 
 
-def post_neil(session, thread_id, security_token):
+def post(session, thread_id, security_token, message):
 	url = f"https://www.mafiauniverse.com/forums/newreply.php?do=postreply&t={thread_id}"
 	payload = {
 		"do": "postreply",
@@ -600,8 +600,8 @@ def post_neil(session, thread_id, security_token):
 		"p": "who cares",
 		"sbutton": "Post Quick Reply",
 		"wysiwyg": "0",
-		"message": "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have",
-		"message_backup": "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have",
+		"message": message,
+		"message_backup": message,
 		"fromquickreply": "1",
 		"securitytoken": security_token
 		}
