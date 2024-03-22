@@ -46,6 +46,7 @@ react_channels = [223260125786406912, 1114212787141492788]
 banned_users = [612706340623876137, 1173036536166621286]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
+anon_enabled = False
 
 status_id = None
 status_channel = None
@@ -477,6 +478,30 @@ async def stats(ctx):
         town_win_percentage = (town_wins / count) * 100
 
         await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%```")
+
+@bot.command()
+async def anongame(ctx, anon=None):
+    if ctx.channel.id not in allowed_channels:  
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
+        return
+    
+    global anon_enabled
+
+    if anon is None:
+        await ctx.send(f"The current game is set as Anon: {anon_enabled}, use !anon on or !anon off to turn anon games on and off.")
+    
+    elif anon.lower() is "on":
+        anon_enabled = True
+        await ctx.send(f"The current game is set to anonymous/aliased.")
+    elif anon.lower() is "off":
+        anon_enabled = False
+        await ctx.send(f"The current game is set to normal accounts.")
+    else:
+        await ctx.send(f"The current game is set as Anon: {anon_enabled}, use !anon on or !anon off to turn anon games on and off.")       
+
 
 @bot.command()
 async def game(ctx, setup_name=None):
@@ -1351,7 +1376,7 @@ async def spec(ctx, arg: int):
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
-    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list
+    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled
 
     allowed_randers = []
     player_aliases = list(players.keys())[:player_limit]
@@ -1449,7 +1474,7 @@ async def rand(ctx, *args):
             print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
             security_token = mu.new_game_token(session, thread_id)
 
-            response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, final_game_setup, day_length, night_length, game_host_name)
+            response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, final_game_setup, day_length, night_length, game_host_name, anon_enabled)
             
             if "was created successfully." in response_message:
                 # Use aliases to get the Discord IDs
@@ -1510,7 +1535,8 @@ async def rand(ctx, *args):
                 game_host_name = ["The Turbo Team"]
                 players.clear()
                 players.update(waiting_list)
-                waiting_list.clear()   
+                waiting_list.clear()  
+                anon_enabled = False 
                 print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
                 is_rand_running = False
                 current_game = thread_id
