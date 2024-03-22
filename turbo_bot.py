@@ -491,16 +491,16 @@ async def anongame(ctx, anon=None):
     global anon_enabled
 
     if anon is None:
-        await ctx.send(f"The current game is set as Anon: {anon_enabled}, use !anon on or !anon off to turn anon games on and off.")
+        await ctx.send(f"The current game is set as Anon: {anon_enabled}, use !anongame on or !anongame off to turn anon games on and off.")
     
-    elif anon is "on":
+    elif anon.lower() == "on":
         anon_enabled = True
         await ctx.send(f"The current game is set to anonymous/aliased.")
-    elif anon is "off":
+    elif anon.lower() == "off":
         anon_enabled = False
         await ctx.send(f"The current game is set to normal accounts.")
     else:
-        await ctx.send(f"The current game is set as Anon: {anon_enabled}, use !anon on or !anon off to turn anon games on and off.")       
+        await ctx.send(f"The current game is set as Anon: {anon_enabled}, use !anongame on or !anongame off to turn anon games on and off.")       
 
 
 @bot.command()
