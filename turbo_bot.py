@@ -493,10 +493,10 @@ async def anongame(ctx, anon=None):
     if anon is None:
         await ctx.send(f"The current game is set as Anon: {anon_enabled}, use !anon on or !anon off to turn anon games on and off.")
     
-    elif anon.lower() is "on":
+    elif anon is "on":
         anon_enabled = True
         await ctx.send(f"The current game is set to anonymous/aliased.")
-    elif anon.lower() is "off":
+    elif anon is "off":
         anon_enabled = False
         await ctx.send(f"The current game is set to normal accounts.")
     else:
