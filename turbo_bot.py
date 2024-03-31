@@ -732,14 +732,6 @@ async def bigping(ctx):
 <@235081166586249218>
 <@90896191767719936>                                 
 <@225964753208475649>
-                   
-
-# **!in to participate in the TURBO CHAMIPONSSHIP!!!**
-Link to the _Leaderbords:_
-https://docs.google.com/spreadsheets/d/12miB_U152zmB8i7Mc2pNeNoSvxgYqr7FQzHt9lQjtCM/edit#gid=2035874120
-Link to the _Thread:_
-https://www.mafiauniverse.com/forums/threads/42942-Turbo-Championship-2024-%E2%80%93-Feb-20th-to-March-31st?p=7576209&viewfull=1#post7576209
-
 
 **To be added to the bigping list, type in the turbo chat or dm me. **
 To be removed, dm me. 
@@ -1077,7 +1069,7 @@ async def status(ctx, *args):
         
     global game_host_name, status_id, status_channel
 
-    embed = discord.Embed(title="**Turbo Champs 2024 is Live!**", description="Turbo Champs Leaderboards: https://docs.google.com/spreadsheets/d/12miB_U152zmB8i7Mc2pNeNoSvxgYqr7FQzHt9lQjtCM/edit#gid=2035874120 \n\n2023 Award Winner for Best Mechanic!\nTurbo Bot v2.1 (with subs!) by benneh\nHelp keep Turby running by supporting its GoFundMe: https://gofund.me/64aaddfd", color=0x3381ff)
+    embed = discord.Embed(title="**2023 Award Winner for Best Mechanic!\nTurbo Bot v2.1 (with subs!) by benneh\nHelp keep Turby running by supporting its GoFundMe: https://gofund.me/64aaddfd", color=0x3381ff)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
     host_list = [f"{host}\n" for host in game_host_name]
     hosts = ''.join(host_list)
