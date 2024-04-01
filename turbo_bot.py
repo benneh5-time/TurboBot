@@ -1863,7 +1863,7 @@ async def on_message(message):
             spots = player_limit - len(players)
             opt_in_mentions = ' '.join(mention_list)
             response = await message.channel.send(f'ITS TURBO TIME! {opt_in_mentions}!! +{spots} spots!  React to ✅ to join the next turbo!')
-             turbo_ping_message = response.id
+            turbo_ping_message = response.id
             await response.add_reaction('✅')
     await bot.process_commands(message)
 
