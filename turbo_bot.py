@@ -693,8 +693,7 @@ async def bigping(ctx):
         await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
         return  
     
-    await ctx.send("!BigPing is for paid users only.")
-    """await ctx.send('''# bigping 2.1 (turby update)
+    await ctx.send('''# bigping 2.1 (turby update)
 
 **If i pinged you although you already inned, please help recruiting. Thank You <3**
 <@917835877747654687>
@@ -739,7 +738,7 @@ async def bigping(ctx):
 **To be added to the bigping list, type in the turbo chat or dm me. **
 To be removed, dm me. 
 ||im not on bigping tho haha||
-**Feel free to use the bigping list Yourself!**''')"""
+**Feel free to use the bigping list Yourself!**''')
 
 @bot.command()
 async def wolf_flavor(ctx, charname=None, charimage=None):
@@ -1863,9 +1862,8 @@ async def on_message(message):
             mention_list = [f"<@{id}>" for id in recruit_list if str(id) not in players]                    
             spots = player_limit - len(players)
             opt_in_mentions = ' '.join(mention_list)
-            #response = await message.channel.send(f'ITS TURBO TIME! {opt_in_mentions}!! +{spots} spots!  React to ✅ to join the next turbo!')
-            response = await message.channel.send(f'Pinging @turbo is a feature for paid users only. Please donate to Turby in order to use this function.')
-            turbo_ping_message = response.id
+            response = await message.channel.send(f'ITS TURBO TIME! {opt_in_mentions}!! +{spots} spots!  React to ✅ to join the next turbo!')
+             turbo_ping_message = response.id
             await response.add_reaction('✅')
     await bot.process_commands(message)
 
