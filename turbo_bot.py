@@ -1380,7 +1380,7 @@ async def live_dvc(ctx, thread_id):
 	
     game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"
     await channel.send(f"MU Link for the current game: \n\n{game_url}")
-    
+    await new_game_spec_message(bot, thread_id, "Custom/Live DVC")
     current_game = thread_id 
     await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
 
