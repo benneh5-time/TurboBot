@@ -515,7 +515,8 @@ async def game(ctx, setup_name=None):
     global current_setup, player_limit, players, waiting_list
 
     if setup_name is None:
-        await ctx.send(f"The current game setup is '{current_setup}'. To change the setup, use !game <setup_name>. Valid setup names are: {', '.join(valid_setups)}.")
+        #await ctx.send(f"The current game setup is '{current_setup}'. To change the setup, use !game <setup_name>. Valid setup names are: {', '.join(valid_setups)}.")
+        await ctx.send(f"The current game setup is 'Mountainous GOAT'. To change the setup, use !game Mountainous GOAT. Valid setup names are: just Mountainous GOAT.")
     elif setup_name in valid_setups:
         if setup_name == "cop9":
             new_player_limit = 9
@@ -550,7 +551,8 @@ async def game(ctx, setup_name=None):
             return
         
         if new_player_limit < len(players):
-            await ctx.send(f"Cannot change setup to '{setup_name}'. The current number of players ({len(players)}) exceeds the player limit for this setup ({new_player_limit}).")
+            #await ctx.send(f"Cannot change setup to '{setup_name}'. The current number of players ({len(players)}) exceeds the player limit for this setup ({new_player_limit}).")
+            await ctx.send(f"Cannot change setup to '{setup_name}'. Only Mountainous GOAT is a valid setup")
             return
         
         while new_player_limit > len(players) and len(waiting_list) > 0:
@@ -560,9 +562,11 @@ async def game(ctx, setup_name=None):
         current_setup = setup_name
         player_limit = new_player_limit
 
-        await ctx.send(f"The game setup has been changed to '{current_setup}'")
+        #await ctx.send(f"The game setup has been changed to '{current_setup}'")
+        await ctx.send("Setup is still 'Mountainous GOAT'")
     else:
-        await ctx.send(f"'{setup_name}' is not a valid setup name. Please choose from: {', '.join(valid_setups)}.")
+        #await ctx.send(f"'{setup_name}' is not a valid setup name. Please choose from: {', '.join(valid_setups)}.")
+        await ctx.send(f"Mountainous GOAT")
     await update_status()        
 
 @bot.command()
@@ -1069,11 +1073,13 @@ async def status(ctx, *args):
     global game_host_name, status_id, status_channel
 
     embed = discord.Embed(title="**2023 Award Winner for Best Mechanic!\nTurbo Bot v2.1 (with subs!) by benneh\nHelp keep Turby running by supporting its GoFundMe: https://gofund.me/64aaddfd", color=0x3381ff)
-    embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
+    #embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
+    embed.add_field(name="**Game Setup**", value="Mountainous GOAT", inline=True)    
     host_list = [f"{host}\n" for host in game_host_name]
     hosts = ''.join(host_list)
     embed.add_field(name="**Host**", value=hosts, inline=True)
-    embed.add_field(name="**Phases**", value=str(day_length) + "m Days, " + str(night_length) + "m Nights", inline=True)
+    #embed.add_field(name="**Phases**", value=str(day_length) + "m Days, " + str(night_length) + "m Nights", inline=True)
+    embed.add_field(name="**Phases**", value="48h Days, 24h Nights", inline=True)
 
     embed.add_field(name="", value="", inline=True)
     embed.add_field(name="", value="", inline=True)
@@ -1149,11 +1155,13 @@ async def update_status():
     embed.set_field_at(6, name="", value="", inline=True)
     embed.set_field_at(7, name="", value="", inline=True)"""
 
-    embed.set_field_at(0, name="**Game Setup**", value=current_setup, inline=True)
+    #embed.set_field_at(0, name="**Game Setup**", value=current_setup, inline=True)
+    embed.set_field_at(0, name="**Game Setup**", value="Mountainous GOAT", inline=True)
     host_list = [f"{host}\n" for host in game_host_name]
     hosts = ''.join(host_list)
     embed.set_field_at(1, name="**Host**", value=hosts, inline=True)
-    embed.set_field_at(2, name="**Phases**", value=str(day_length) + "m Days, " + str(night_length) + "m Nights", inline=True)
+    #embed.set_field_at(2, name="**Phases**", value=str(day_length) + "m Days, " + str(night_length) + "m Nights", inline=True)
+    embed.set_field_at(2, name="**Phases**", value="48h Days, 24h Nights", inline=True)
     
 
     status_flavor = load_flavor_json('icons.json')    
@@ -1460,7 +1468,8 @@ async def rand(ctx, *args):
                 thread_id = mu.post_thread(session, game_title, security_token, setup_title)
             host_list = [f"{host}" for host in game_host_name]
             hosts = ', '.join(host_list)
-            await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
+            #await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
+            await ctx.send(f"Attempting to rand `{game_title}`, a Mountainous game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
             print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
             security_token = mu.new_game_token(session, thread_id)
 
@@ -1693,7 +1702,7 @@ async def clear(ctx, *args):
         player_limit = 10
         game_host_name = ["The Turbo Team"]
         current_setup = "joat10"        
-        await ctx.send("Player and waiting list has been cleared. Game is JOAT10 and host is The Turbo Team")
+        await ctx.send("Player and waiting list has been cleared. Game is Mountainous and host is The Turbo Team")
     else:
         await ctx.send("To clear, run !clear -confirm")
         
