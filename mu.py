@@ -219,10 +219,14 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
     
 
     if final_game_setup == "joat10" or final_game_setup == "closedjoat10":
-        add_joat_roles(game_title)
+        #add_joat_roles(game_title)
+        add_mountainous_roles(game_title)
         data.add("preset", "custom")
         data.add('num_players', '10')
         data.add('roles_dropdown', '39')
+        data.add('day_length', "48")
+        data.add('night_length', '24')
+        data.add('day_units', 'hours')
     if final_game_setup == "bomb10"or final_game_setup == "closedbomb10":
         add_bomb_roles(game_title)
         data.add("preset", "custom")
@@ -576,6 +580,20 @@ def add_alexa25_roles(game_title):
     for i in range(0,6):
         data.add("roles[]", mafia_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#ff2244]Mafia Goon[/COLOR][/B]. You win when you overpower the Town and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n[SIZE=4][B][I]Mafia Team[/I][/B][/SIZE]\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\nAs [B][COLOR=#ff2244]Mafia[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf no Mafia submit an action, a player will be picked at random from the living non-Mafia players.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+
+def add_mountainous_roles(game_title):
+    vanilla_town_json = json.dumps(vanilla_town_dict)
+    mafia_json = json.dumps(mafia_goon_dict)
+    global data
+
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
+    for i in range(0,8):
+        data.add("roles[]", vanilla_town_json)
+        data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Town[/COLOR][/B]. You win when all threats to Town have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+    for i in range(0,2):
+        data.add("roles[]", mafia_json)
+        data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#ff2244]Mafia Goon[/COLOR][/B]. You win when you overpower the Town and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n[SIZE=4][B][I]Mafia Team[/I][/B][/SIZE]\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\nAs [B][COLOR=#ff2244]Mafia[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf no Mafia submit an action, a player will be picked at random from the living non-Mafia players.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+
 
 def add_neil_roles(game_title):
     vanilla_town_json = json.dumps(vanilla_town_dict)
