@@ -321,10 +321,10 @@ def add_ita10_roles(game_title):
     
     name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
 
-    villagers = random.sample(name_image_pairs, 8)
-    wolves = random.sample(wolf_name_image_pairs, 2)
+    villagers = random.sample(name_image_pairs, 7)
+    wolves = random.sample(wolf_name_image_pairs, 3)
 
-    for i in range(0,8):
+    for i in range(0,7):
         current_vanchilla = vanchilla_dict.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
@@ -332,7 +332,7 @@ def add_ita10_roles(game_title):
         data.add("roles[]", vt_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
       
-    for i in range(0,2):
+    for i in range(0,3):
         current_wolves = mafia_goon_dict.copy()
         current_wolves['character_name'] = wolves[i]['character_name']
         current_wolves['character_image'] = wolves[i]['character_image']
@@ -345,10 +345,10 @@ def add_ita13_roles(game_title):
     
     name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
 
-    villagers = random.sample(name_image_pairs, 10)
-    wolves = random.sample(wolf_name_image_pairs, 3)
+    villagers = random.sample(name_image_pairs, 9)
+    wolves = random.sample(wolf_name_image_pairs, 4)
 
-    for i in range(0,10):
+    for i in range(0,9):
         current_vanchilla = vanchilla_dict.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
@@ -356,7 +356,7 @@ def add_ita13_roles(game_title):
         data.add("roles[]", vt_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
       
-    for i in range(0,3):
+    for i in range(0,4):
         current_wolves = mafia_goon_dict.copy()
         current_wolves['character_name'] = wolves[i]['character_name']
         current_wolves['character_image'] = wolves[i]['character_image']
