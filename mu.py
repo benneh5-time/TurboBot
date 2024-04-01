@@ -219,14 +219,10 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
     
 
     if final_game_setup == "joat10" or final_game_setup == "closedjoat10":
-        #add_joat_roles(game_title)
-        add_mountainous_roles(game_title)
+        add_joat_roles(game_title)
         data.add("preset", "custom")
         data.add('num_players', '10')
         data.add('roles_dropdown', '39')
-        data.add('day_length', "48")
-        data.add('night_length', '24')
-        data.add('day_units', 'hours')
     if final_game_setup == "bomb10"or final_game_setup == "closedbomb10":
         add_bomb_roles(game_title)
         data.add("preset", "custom")
