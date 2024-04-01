@@ -1364,7 +1364,31 @@ async def spec(ctx, arg: int):
 
     else:
         await ctx.send('Invalid argument. Please provide the 5-digit number of the game thread. You can find this at the beginning of the URL for the game thread or from my rand comment in #turbo-chat. Please try again with !spec xxxxx')
-"""       
+"""      
+
+@bot.command()
+async def live_dvc(ctx, thread_id):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+
+    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled
+    player_aliases = []
+    final_game_setup = "custom"
+	
+    role, channel_id, guild = await create_dvc(thread_id)
+    channel = bot.get_channel(channel_id)
+	
+    game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"
+    await channel.send(f"MU Link for the current game: \n\n{game_url}")
+    
+    current_game = thread_id 
+    await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
+
+    await edit_dvc(channel, guild)
+    await delete_dvc_role(channel, role)
+    current_game = None
+    
+
 @bot.command()
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
