@@ -250,20 +250,16 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         data.add("num_players", "10")
         data.add("itas_enabled", "1")
         data.add("default_ita_hit", "25")
-        data.add("default_ita_count", "2")
+        data.add("default_ita_count", "1")
         data.add("ita_immune_policy", "0")
-        data.add("mafia_kill_enabled","3")
-        data.add("auto_majority", "1")
     if final_game_setup == "ita13":
         add_ita13_roles(game_title)
         data.add("preset", "custom")
         data.add("num_players", "13")
         data.add("itas_enabled", "1")
         data.add("default_ita_hit", "25")
-        data.add("default_ita_count", "2")
+        data.add("default_ita_count", "1")
         data.add("ita_immune_policy", "0")
-        data.add("mafia_kill_enabled","3")
-        data.add("auto_majority", "1")
     if final_game_setup == "cop9":
         add_cop9_roles(game_title)
         data.add("preset", "cop-9")
@@ -352,10 +348,10 @@ def add_ita10_roles(game_title):
     
     name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
 
-    villagers = random.sample(name_image_pairs, 7)
-    wolves = random.sample(wolf_name_image_pairs, 3)
+    villagers = random.sample(name_image_pairs, 8)
+    wolves = random.sample(wolf_name_image_pairs, 2)
 
-    for i in range(0,7):
+    for i in range(0,8):
         current_vanchilla = vanchilla_dict.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
@@ -363,7 +359,7 @@ def add_ita10_roles(game_title):
         data.add("roles[]", vt_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
       
-    for i in range(0,3):
+    for i in range(0,2):
         current_wolves = mafia_goon_dict.copy()
         current_wolves['character_name'] = wolves[i]['character_name']
         current_wolves['character_image'] = wolves[i]['character_image']
