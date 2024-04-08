@@ -6,6 +6,7 @@ import uuid
 import json
 import random
 from roles import vanilla_town_dict, mafia_goon_dict, joat_dict, cop_dict, vig_dict, big_ham_dict, frankie_dict, vanchilla_dict, vinnie_dict, zippy_dict, kingpin_dict, zippy13_dict, kingpin_joat_dict, town_ic_dict, village_sui, wolf_prkiller, wolf_bpv, town_inventor_sui, wolf_1x_rb, town_inventor_dayvig, wolf_2x_rb
+import rolemadness
 from bs4 import BeautifulSoup
 # from flavor import joat_flavor, cop9_flavor, cop13_flavor, vig_flavor
 
@@ -199,6 +200,9 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         setup_title = "closedrandom10er"
         final_game_setup = random.choice(potential_setups)
         data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': f"{game_title} - [{setup_title} game]", 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Closed', 'period': 'day', 'phase': '1', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '1', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
+    elif game_setup == "rolemadness13":
+        setup_title = "turby role madness 13er!"
+        data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': f"{game_title} - [{setup_title} game]", 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Closed', 'period': 'day', 'phase': '1', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '1', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
 
     else:
         final_game_setup = game_setup
@@ -235,6 +239,10 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         add_bml_roles(game_title)
         data.add("preset", "custom")
         data.add('num_players', '10')
+    if final_game_setup == "rolemadness13":
+        add_rm13_roles(game_title)
+        data.add("preset", "custom")
+        data.add('num_players', '13')
     if final_game_setup == "ita10":
         add_ita10_roles(game_title)
         data.add("preset", "custom")
@@ -315,6 +323,28 @@ def load_flavor_jsons():
     pr_name_image_pairs = load_json_file('powerroles.json')
     wolf_name_image_pairs = load_json_file('wolves.json')
     return name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs
+
+def add_rm13_roles(game_title):
+    global data
+    
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
+
+    villagers = random.sample(name_image_pairs, 10)
+    wolves = random.sample(wolf_name_image_pairs, 3)
+
+    for i in range(0,10):
+        randomized_role_data = rolemadness.create_role_data('village')
+        randomized_role_data['character_name'] = villagers[i]["character_name"]
+        randomized_role_data['character_image'] = villagers[i]["character_image"]
+        role_json = json.dumps(randomized_role_data)
+        data.add("roles[]", role_json)
+  
+    for i in range(0,3):
+        randomized_role_data = rolemadness.create_role_data('wolf')
+        randomized_role_data['character_name'] = wolves[i]["character_name"]
+        randomized_role_data['character_image'] = wolves[i]["character_image"]
+        role_json = json.dumps(randomized_role_data)
+        data.add("roles[]", role_json)
 
 def add_ita10_roles(game_title):
     global data

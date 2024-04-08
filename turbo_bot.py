@@ -37,7 +37,7 @@ mods = [178647349369765888, 93432503863353344]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
-valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandom10er", "neilgame"] #future setups
+valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandom10er", "rolemadness13"] #future setups
 valid_timers = ["sunbae", "14-3", "16-5", "8-2"]
 day_length = 14
 night_length = 3
@@ -541,6 +541,8 @@ async def game(ctx, setup_name=None):
         elif setup_name == "cop13":
             new_player_limit = 13
         elif setup_name == "doublejoat13":
+            new_player_limit = 13
+        elif setup_name == "rolemadness13":
             new_player_limit = 13
         elif setup_name == "alexa25":
             new_player_limit = 25
