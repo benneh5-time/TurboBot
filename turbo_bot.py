@@ -191,6 +191,7 @@ async def create_dvc(thread_id):
     # DVC Archive cat_id
     # category_id = 1114340515006136411
     category_id = 1117176858304336012
+    voice_id = 1216555729138221066
     role = await guild.create_role(name=f"DVC: {thread_id}", permissions=discord.Permissions.none())
     dvc_roles[int(thread_id)] = role.id
     save_dvc_roles()
@@ -206,6 +207,9 @@ async def create_dvc(thread_id):
         position = 0
 
     )
+    voice_channel = guild.get_channel(voice_id)
+    await voice_channel.set_permissions(role, connect=True, speak=True)
+
     return role, channel.id, guild
 
 async def dvc_limit():
