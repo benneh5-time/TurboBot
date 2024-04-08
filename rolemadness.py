@@ -89,7 +89,7 @@ v_joat_abilities = {
 }
 
 w_joat_abilities = {
-    "faction":"",
+    "faction":"Wolf",
     "bpv_status":0,
     "ninja":0,
     "x_shot_limit":0,
@@ -136,7 +136,7 @@ w_joat_abilities = {
     "ita_shield_status":0,
     "ita_booster":0,
     "ita_nerfer":0,
-    "alignment":"wolves",
+    "alignment":"wolf",
     "faction_color":"#ff2244"
 }
 
@@ -195,7 +195,7 @@ village_abilities = {
 }
 
 wolf_abilities = {
-    "faction":"",
+    "faction":"Wolf",
     "bpv_status":0,
     "ninja":0,
     "x_shot_limit":0,
@@ -242,7 +242,7 @@ wolf_abilities = {
     "ita_shield_status":0,
     "ita_booster":0,
     "ita_nerfer":0,
-    "alignment":"wolves",
+    "alignment":"wolf",
     "faction_color":"#ff2244",
     "character_name": "",
     "character_image": ""
