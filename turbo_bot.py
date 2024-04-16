@@ -689,6 +689,21 @@ async def flavor(ctx, charname=None, charimage=None):
         return
     
     save_flavor_json('turboers.json', existing_flavor)
+@bot.command()
+async def smallping(ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
+        return  
+    
+    await ctx.send('''# smallping 1.0 (siggi update)
+                   
+                   **if i pinged you although you already inned, please help recruiting. Thank you <3**
+                   <@1120140293275127848>
+
+                   **Feel free to use the bigping list Yourself!**''')
 
 @bot.command()
 async def bigping(ctx):
