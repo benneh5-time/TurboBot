@@ -700,10 +700,11 @@ async def smallping(ctx):
     
     await ctx.send('''# smallping 1.0 (siggi update)
                    
-                   **if i pinged you although you already inned, please help recruiting. Thank you <3**
-                   <@1120140293275127848>
+**if i pinged you although you already inned, please help recruiting. Thank you <3**
+<@1120140293275127848>
+<@438413352616722435>
 
-                   **Feel free to use the bigping list Yourself!**''')
+**Feel free to use the smallping list Yourself!**''')
 
 @bot.command()
 async def bigping(ctx):
