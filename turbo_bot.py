@@ -731,6 +731,18 @@ async def smallestping(ctx):
 @ banned user''')
 
 @bot.command()
+async def smallpig(ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
+        return  
+    
+    await ctx.send('''smallestpig 1.0 update (pork edition)
+@924804445303349269''')
+
+@bot.command()
 async def bigping(ctx):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
