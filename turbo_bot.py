@@ -740,7 +740,7 @@ async def smallpig(ctx):
         return  
     
     await ctx.send('''smallestpig 1.0 update (pork edition)
-@924804445303349269''')
+<@924804445303349269>''')
 
 @bot.command()
 async def bigping(ctx):
