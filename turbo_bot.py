@@ -32,7 +32,7 @@ recruit_timer = 0
 aliases = {}
 dvc_roles = {}
 message_ids = {}
-game_host_name = ["The Turbo Team"]
+game_host_name = ["Turby"]
 mods = [178647349369765888, 93432503863353344, 1120140293275127848]
 current_game = None
 current_setup = "joat10"
@@ -179,7 +179,7 @@ async def on_ready():
     if current_setup is None:
         current_setup = "joat10" 
     if game_host_name is None:
-        game_host_name = ["The Turbo Team"] 
+        game_host_name = ["Turby"] 
     if player_limit is None:
         player_limit = 10  
     update_players.start()  # Start background task
@@ -911,13 +911,13 @@ async def in_(ctx, time: int = 60):
         
     if alias in game_host_name:
         if len(game_host_name) == 1:
-            game_host_name = ["The Turbo Team"]
+            game_host_name = ["Turby"]
             if len(players) < player_limit:
                 players[alias] = time
-                await ctx.send(f"{alias} has been removed as host and added to the list for the next {time} minutes. Your current host is The Turbo Team.")
+                await ctx.send(f"{alias} has been removed as host and added to the list for the next {time} minutes. Your current host is Turby :3")
             else:
                 waiting_list[alias] = time
-                await ctx.send(f"{alias} has been removed as host and added to the waiting list for the next {time} minutes. Your current host is The Turbo Team.")
+                await ctx.send(f"{alias} has been removed as host and added to the waiting list for the next {time} minutes. Your current host is Turby :3")
             await update_status()
             return
             
@@ -968,8 +968,8 @@ async def out(ctx):
     
     if alias in (hostname.lower() for hostname in game_host_name):
         if len(game_host_name) == 1:
-            game_host_name = ["The Turbo Team"]
-            await ctx.send(f"{alias} has been removed as host. The Turbo Team has been set back to the default host.")
+            game_host_name = ["Turby"]
+            await ctx.send(f"{alias} has been removed as host. Turby :3 has been set back to the default host.")
             await update_status()
             return
         else:
@@ -1036,13 +1036,13 @@ async def add(ctx, *, alias):
     
     if alias in game_host_name:
         if len(game_host_name) == 1:
-            game_host_name = ["The Turbo Team"]
+            game_host_name = ["Turby"]
             if len(players) < player_limit:
                 players[alias] = 60
-                await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes. Your current host is The Turbo Team.")
+                await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes. Your current host is Turby :3.")
             else:
                 waiting_list[alias] = 60
-                await ctx.send(f"{alias} has been removed as host and added to the waiting list for the next 60 minutes. Your current host is The Turbo Team.")
+                await ctx.send(f"{alias} has been removed as host and added to the waiting list for the next 60 minutes. Your current host is Turby :3.")
             await update_status()
             return
             
@@ -1090,8 +1090,8 @@ async def remove(ctx, *, alias):
     
     if alias in (hostname.lower() for hostname in game_host_name):
         if len(game_host_name) == 1:
-            game_host_name = ["The Turbo Team"]
-            await ctx.send(f"{alias} has been removed as host. The Turbo Team has been set back to the default host.")
+            game_host_name = ["Turby"]
+            await ctx.send(f"{alias} has been removed as host. Turby :3 has been set back to the default host.")
             await update_status()
             return
         else:
@@ -1325,10 +1325,10 @@ async def host(ctx, *, host_name=None):
         return
     global game_host_name
     
-    if host_name == "The Turbo Team":
-        game_host_name = ["The Turbo Team"]
+    if host_name == "Turby":
+        game_host_name = ["Turby"]
         await update_status()
-        await ctx.send("Host setting has been set to default for The Turbo Team and cleared all other hosts.")
+        await ctx.send("Host setting has been set to default for Turby :3 and cleared all other hosts.")
         return
 
     if host_name is not None and host_name.lower() in game_host_name:
@@ -1606,7 +1606,7 @@ async def rand(ctx, *args):
 
                 await new_game_spec_message(bot, thread_id, game_title)
                 postgame_players = players
-                game_host_name = ["The Turbo Team"]
+                game_host_name = ["Turby"]
                 players.clear()
                 players.update(waiting_list)
                 waiting_list.clear()  
@@ -1775,9 +1775,9 @@ async def clear(ctx, *args):
         players = {}
         waiting_list = {}
         player_limit = 10
-        game_host_name = ["The Turbo Team"]
+        game_host_name = ["Turby"]
         current_setup = "joat10"        
-        await ctx.send("Player and waiting list has been cleared. Game is JOAT10 and host is The Turbo Team")
+        await ctx.send("Player and waiting list has been cleared. Game is JOAT10 and host is Turby :3")
     else:
         await ctx.send("To clear, run !clear -confirm")
         
@@ -1967,7 +1967,7 @@ async def on_reaction_add(reaction, user):
 
             if alias in game_host_name:
                 if len(game_host_name) == 1:
-                    game_host_name = ["The Turbo Team"]    
+                    game_host_name = ["Turby"]    
                     if len(players) < player_limit:
                         players[alias] = 60
                         await reaction.message.channel.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
@@ -2019,7 +2019,7 @@ async def on_reaction_add(reaction, user):
 
             if alias in game_host_name:
                 if len(game_host_name) == 1:
-                    game_host_name = ["The Turbo Team"]    
+                    game_host_name = ["Turby"]    
                     if len(players) < player_limit:
                         players[alias] = 60
                         await reaction.message.channel.send(f"{alias} has been removed as host and added to the list for the next 60 minutes.")
