@@ -650,7 +650,7 @@ vig_dict = {
     "faction": "",
     "bpv_status": 0,
     "ninja": 0,
-    "x_shot_limit": 0,
+    "x_shot_limit": 2,
     "strongman": 0,
     "janitor": 0,
     "even_night": 0,
