@@ -751,7 +751,10 @@ async def bigping(ctx):
         await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
         return  
     
-    await ctx.send('''# bigping 2.1 (turby update)
+    await ctx.send ("bigping has been big banned")
+    return
+
+    """await ctx.send('''# bigping 2.1 (turby update)
 
 **If i pinged you although you already inned, please help recruiting. Thank You <3**
 <@917835877747654687>
@@ -794,7 +797,7 @@ async def bigping(ctx):
 **To be added to the bigping list, type in the turbo chat or dm me. **
 To be removed, dm me. 
 ||im not on bigping tho haha||
-**Feel free to use the bigping list Yourself!**''')
+**Feel free to use the bigping list Yourself!**''')"""
 
 @bot.command()
 async def wolf_flavor(ctx, charname=None, charimage=None):
