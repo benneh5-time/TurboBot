@@ -313,7 +313,6 @@ class ThreadmarkProcessor:
                     results = event.split("Elimination: ")[1].strip()
                     username = results.split(" was ")[0].strip().lower()
                     flavor = results.split(" was ")[1].strip().lower()
-                    await post_game_reply(thread_id, "lol nice lunch noobs")
                     if username in aliases.values():
                         try:
                             mention_id = find_key_by_value(aliases, username)
@@ -344,6 +343,7 @@ class ThreadmarkProcessor:
                     players = results.split(", ")
                     
                     for player in players:
+                        username = None
                         if " was " in player:
                             username = player.split(" was ")[0].strip().lower()
                             flavor = results.split(" was ")[1].strip().lower()
@@ -358,7 +358,8 @@ class ThreadmarkProcessor:
                             if "neil the eel" in flavor:
                                 await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
                         else:
-                            await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+                            if username:
+                                await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
                     
                 elif "Results:" in event:
                     results = event.split("Results:")[1].strip()
@@ -383,8 +384,8 @@ class ThreadmarkProcessor:
                                 await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
 
                 elif "Elimination: Sleep" in event:
-                    await channel.send("Players voted sleep. Wusses.")
-                    await post_game_reply(thread_id, "eepy\n\n[img]https://www.mafiauniverse.com/forums/image.php?u=12335&dateline=1704653927&type=thumb[/img]\n\neepy")
+                    await channel.send("Players voted sleep. ZzZZZZzzzZzzz.")
+                    await post_game_reply(thread_id, "eepy\n\n[img]https://media1.tenor.com/m/VdIKn05yIh8AAAAd/cat-sleep.gif[/img]\n\neepy")
         
                 elif "Game Over:" in event:
                     await channel.send("Game concluded -- attempting channel housekeeping/clean up")
