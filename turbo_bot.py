@@ -385,6 +385,7 @@ class ThreadmarkProcessor:
 
                 elif "Elimination: Sleep" in event:
                     await channel.send("Players voted sleep. ZzZZZZzzzZzzz.")
+                    await channel.send("https://media1.tenor.com/m/VdIKn05yIh8AAAAd/cat-sleep.gif")
                     await post_game_reply(thread_id, "eepy\n\n[img]https://media1.tenor.com/m/VdIKn05yIh8AAAAd/cat-sleep.gif[/img]\n\neepy")
         
                 elif "Game Over:" in event:
@@ -792,6 +793,7 @@ async def bigping(ctx):
 <@683757633769046028>
 <@90896191767719936>                                 
 <@225964753208475649>
+<@745438545535303760>
 
 **To be added to the bigping list, type in the turbo chat or dm me. **
 To be removed, dm me. 
