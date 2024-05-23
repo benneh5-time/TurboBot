@@ -10,7 +10,6 @@ import town_roles
 import roles
 import rolemadness
 from bs4 import BeautifulSoup
-# from flavor import joat_flavor, cop9_flavor, cop13_flavor, vig_flavor
 
 def load_json_file(json_file):
     with open(json_file, 'r') as f:
@@ -46,7 +45,6 @@ def login(username, password):
         "s": "",
         "securitytoken": "guest"
     }
-
 
     # Send POST request to login
     response = session.post(login_url, data=payload)
@@ -109,7 +107,6 @@ def sub_player(session, game_id, player, player_in, security_token):
     subs = session.post(url, data=payload)
     return subs.text
     
-
 def new_thread_token(session):
     protected_url = "https://www.mafiauniverse.com/forums/newthread.php"
     
@@ -127,6 +124,10 @@ def new_thread_token(session):
     else:
         print("Failed to extract security token.")
 
+def list_dicts_in_module(module):
+    dict_names = [name for name in dir(module) if isinstance(getattr(module, name), dict)]
+    return dict_names
+
 def post_thread(session, game_title, security_token, setup):
 
     flavor = load_json_file('flavor.json')
@@ -134,7 +135,16 @@ def post_thread(session, game_title, security_token, setup):
 
     protected_url = "https://www.mafiauniverse.com/forums/newthread.php"
 
-    game_flavor = random.choice(flavors)
+    if setup == "closedrandom10er":
+        town_role_names = [name for name in dir(town_roles) if not name.startswith('__')]
+        mafia_role_names = [name for name in dir(mafia_roles)  if not name.startswith('__')]
+
+        town_flavor = "\n".join(town_role_names)
+        mafia_flavor = "\n".join(mafia_role_names)
+
+        game_flavor = f"This is a closed and random 10er. Roles have been randomly selected from a pool of roles Turby has access to that is ever growing. There are at most 2 PRs for the village and at most 2 for the wolves.\nThese are the roles possible for the village:\n{town_flavor}\n\nThese are the roles possible for wolves:\n{mafia_flavor}"
+    else:
+        game_flavor = random.choice(flavors)
         
     payload = {
         "do": "postthread",
@@ -187,7 +197,6 @@ def new_game_token(session, thread_id):
     else:
         print("Failed to extract security token.")
         
-
 def start_game(session, security_token, game_title, thread_id, player_aliases, game_setup, day_length, night_length, host_name, anon_enabled):
     global data
 
@@ -373,7 +382,6 @@ def add_closedrandom10er_roles(game_title):
         vt_json = json.dumps(current_vt)
         data.add("roles[]", vt_json)
 
-    
 
 def add_rm13_roles(game_title):
     global data
