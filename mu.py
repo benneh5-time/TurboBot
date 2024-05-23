@@ -139,10 +139,10 @@ def post_thread(session, game_title, security_token, setup):
         town_role_names = [name for name in dir(town_roles) if not name.startswith('__')]
         mafia_role_names = [name for name in dir(mafia_roles)  if not name.startswith('__')]
 
-        town_flavor = "\n".join(town_role_names)
-        mafia_flavor = "\n".join(mafia_role_names)
+        town_flavor = "<br>".join(town_role_names)
+        mafia_flavor = "<br>".join(mafia_role_names)
 
-        game_flavor = f"This is a closed and random 10er. Roles have been randomly selected from a pool of roles Turby has access to that is ever growing. There are at most 2 PRs for the village and at most 2 for the wolves.\nThese are the roles possible for the village:\n{town_flavor}\n\nThese are the roles possible for wolves:\n{mafia_flavor}"
+        game_flavor = f"This is a closed and random 10er. Roles have been randomly selected from a pool of roles Turby has access to that is ever growing. <br><br>There are at most 2 PRs for the village and at most 2 for the wolves. <br><br>These are the roles possible for the village: <br><br>{town_flavor}<br><br>These are the roles possible for wolves:<br><br>{mafia_flavor}"
     else:
         game_flavor = random.choice(flavors)
         
