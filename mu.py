@@ -7,6 +7,7 @@ import json
 import random
 import mafia_roles
 import town_roles
+import roles
 import rolemadness
 from bs4 import BeautifulSoup
 # from flavor import joat_flavor, cop9_flavor, cop13_flavor, vig_flavor
@@ -359,14 +360,14 @@ def add_closedrandom10er_roles(game_title):
 
     for i in range(0, wolf_goon_count):
         wolf = wolves.pop(0)
-        current_wolf = mafia_roles.mafia_goon.copy()
+        current_wolf = roles.goon.copy()
         current_wolf['character_name'] = wolf['character_name']
         current_wolf['character_image'] = wolf['character_image']
         wolf_json = json.dumps(current_wolf)
         data.add("roles[]", wolf_json)
 
     for i in range(0, village_vt_count):
-        current_vt = town_roles.vt.copy()
+        current_vt = roles.vt.copy()
         current_vt['character_name'] = villagers[i]['character_name']
         current_vt['character_image'] = villagers[i]['character_image']
         vt_json = json.dumps(current_vt)
@@ -405,7 +406,7 @@ def add_ita10_roles(game_title):
     wolves = random.sample(wolf_name_image_pairs, 2)
 
     for i in range(0,8):
-        current_vanchilla = town_roles.vt.copy()
+        current_vanchilla = roles.vt.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
@@ -413,7 +414,7 @@ def add_ita10_roles(game_title):
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
       
     for i in range(0,2):
-        current_wolves = mafia_roles.mafia_goon.copy()
+        current_wolves = roles.goon.copy()
         current_wolves['character_name'] = wolves[i]['character_name']
         current_wolves['character_image'] = wolves[i]['character_image']
         wolf_json = json.dumps(current_wolves)
@@ -429,7 +430,7 @@ def add_ita13_roles(game_title):
     wolves = random.sample(wolf_name_image_pairs, 4)
 
     for i in range(0,9):
-        current_vanchilla = town_roles.vt.copy()
+        current_vanchilla = roles.vt.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
@@ -437,7 +438,7 @@ def add_ita13_roles(game_title):
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
       
     for i in range(0,4):
-        current_wolves = mafia_roles.mafia_goon.copy()
+        current_wolves = roles.goon.copy()
         current_wolves['character_name'] = wolves[i]['character_name']
         current_wolves['character_image'] = wolves[i]['character_image']
         wolf_json = json.dumps(current_wolves)
@@ -455,7 +456,7 @@ def add_joat_roles(game_title):
     wolves = random.sample(wolf_name_image_pairs, 2)
 
     for i in range(0,7):
-        current_vanchilla = town_roles.vt.copy()
+        current_vanchilla = roles.vt.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
@@ -471,7 +472,7 @@ def add_joat_roles(game_title):
     data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Village Jack of All Trades (x1 Alignment Cop, x1 Doctor, x1 Vigilante)[/COLOR][/B]. You win when all threats to the Village have been eliminated.\n\n[SIZE=4][B][I]Village Jack Of All Trades[/I][/B][/SIZE]\n\nAs [B][COLOR=#339933]Village Jack Of All Trades[/COLOR][/B], you have access to one or more miscellaneous night actions.\n\n[SIZE=4][B][I]x1 Alignment Cop[/I][/B][/SIZE]\n\nYou have access to the [B]Alignment Inspection[/B] Night Action. Alignment Inspection will reveal a target's alignment. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\n[SIZE=4][B][I]x1 Doctor[/I][/B][/SIZE]\n\nYou have access to the [B]Protection[/B] Night Action. Protection will protect your target from being killed. You will not learn whether you successfully protected someone. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\n[SIZE=4][B][I]x1 Vigilante[/I][/B][/SIZE]\n\nYou have access to the [B]Shoot[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\nSubmit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\nIf you do not submit an action, you will forego your action on that day. Keep in mind that if you have multiple uses of your abilities, you must cycle through all of them before being allowed to reuse any of them.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")       
     
     for i in range(0,2):
-        current_wolves = mafia_roles.mafia_goon.copy()
+        current_wolves = roles.goon.copy()
         current_wolves['character_name'] = wolves[i]['character_name']
         current_wolves['character_image'] = wolves[i]['character_image']
         wolf_json = json.dumps(current_wolves)
@@ -488,7 +489,7 @@ def add_bomb_roles(game_title):
     wolves = random.sample(wolf_name_image_pairs, 2)
 
     for i in range(0,6):
-        current_vanchilla = town_roles.vt.copy()
+        current_vanchilla = roles.vt.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
@@ -538,7 +539,7 @@ def add_bml_roles(game_title):
     wolves = random.sample(wolf_name_image_pairs, 2)
 
     for i in range(0,7):
-        current_vanchilla = town_roles.vt.copy()
+        current_vanchilla = roles.vt.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
@@ -555,7 +556,7 @@ def add_bml_roles(game_title):
     
     for i in range(0,2):
         if i < 1:
-            current_wolves = mafia_roles.mafia_goon.copy()
+            current_wolves = roles.goon.copy()
             current_wolves['character_name'] = wolves[i]['character_name']
             current_wolves['character_image'] = wolves[i]['character_image']
             wolf_json = json.dumps(current_wolves)
@@ -582,7 +583,7 @@ def add_doublejoat13_roles(game_title):
     wolves = random.sample(wolf_name_image_pairs, 3)    
 
     for i in range(0,9):
-        current_vanchilla = town_roles.vt.copy()
+        current_vanchilla = roles.vt.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
@@ -598,7 +599,7 @@ def add_doublejoat13_roles(game_title):
     
     for i in range(0,3):
         if i < 2:
-            current_wolves = mafia_roles.mafia_goon.copy()
+            current_wolves = roles.goon.copy()
             current_wolves['character_name'] = wolves[i]['character_name']
             current_wolves['character_image'] = wolves[i]['character_image']
             wolf_json = json.dumps(current_wolves)
@@ -622,7 +623,7 @@ def add_vig_roles(game_title):
     wolves = random.sample(wolf_name_image_pairs, 2)
 
     for i in range(0,7):
-        current_vanchilla = town_roles.vt.copy()
+        current_vanchilla = roles.vt.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
@@ -637,7 +638,7 @@ def add_vig_roles(game_title):
     data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Village Vigilante | 2-shot[/COLOR][/B]. You win when all threats to the Village have been eliminated.\n\n[SIZE=4][B][I]Village Vigilante[/I][/B][/SIZE]\n\nAs [B][COLOR=#339933]Village Vigilante[/COLOR][/B], you have access to the [B]Shoot[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\nIf you do not submit an action, you will forego your action on that night.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")        
     
     for i in range(0,2):
-        current_wolves = mafia_roles.mafia_goon.copy()
+        current_wolves = roles.goon.copy()
         current_wolves['character_name'] = wolves[i]['character_name']
         current_wolves['character_image'] = wolves[i]['character_image']
         wolf_json = json.dumps(current_wolves)
@@ -670,7 +671,7 @@ def add_cop9_roles(game_title):
     wolves = random.sample(wolf_name_image_pairs, 2)
 
     for i in range(0,6):
-        current_vanchilla = town_roles.vt.copy()
+        current_vanchilla = roles.vt.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
@@ -685,7 +686,7 @@ def add_cop9_roles(game_title):
     data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Village Alignment Cop[/COLOR][/B]. You win when all threats to the Village have been eliminated.\n\n[SIZE=4][B][I]Village Alignment Cop[/I][/B][/SIZE]\n\nAs [B][COLOR=#339933]Village Alignment Cop[/COLOR][/B], you have access to the [B]Alignment Inspection[/B] Night Action. Alignment Inspection will reveal a target's alignment. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\nIf you do not submit an action, a player will be picked at random from the un-Inspected living players.{{HIDE_FROM_FLIP}}\n\n{{NIGHT_0_PEEKS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
      
     for i in range(0,2):
-        current_wolves = mafia_roles.mafia_goon.copy()
+        current_wolves = roles.goon.copy()
         current_wolves['character_name'] = wolves[i]['character_name']
         current_wolves['character_image'] = wolves[i]['character_image']
         wolf_json = json.dumps(current_wolves)
@@ -703,7 +704,7 @@ def add_cop13_roles(game_title):
     wolves = random.sample(wolf_name_image_pairs, 3)
 
     for i in range(0,9):
-        current_vanchilla = town_roles.vt.copy()
+        current_vanchilla = roles.vt.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
@@ -718,7 +719,7 @@ def add_cop13_roles(game_title):
     data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Village Alignment Cop[/COLOR][/B]. You win when all threats to the Village have been eliminated.\n\n[SIZE=4][B][I]Village Alignment Cop[/I][/B][/SIZE]\n\nAs [B][COLOR=#339933]Village Alignment Cop[/COLOR][/B], you have access to the [B]Alignment Inspection[/B] Night Action. Alignment Inspection will reveal a target's alignment. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\n\nIf you do not submit an action, a player will be picked at random from the un-Inspected living players.{{HIDE_FROM_FLIP}}\n\n{{NIGHT_0_PEEKS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
      
     for i in range(0,3):
-        current_wolves = mafia_roles.mafia_goon.copy()
+        current_wolves = roles.goon.copy()
         current_wolves['character_name'] = wolves[i]['character_name']
         current_wolves['character_image'] = wolves[i]['character_image']
         wolf_json = json.dumps(current_wolves)
