@@ -356,7 +356,7 @@ def add_closedrandom10er_roles(game_title):
         current_wolf['character_image'] = wolf['character_image']
         wolf_json = json.dumps(current_wolf)
         data.add("roles[]", wolf_json)
-        
+
     for i in range(0, wolf_goon_count):
         wolf = wolves.pop(0)
         current_wolf = mafia_roles.mafia_goon.copy()
@@ -370,6 +370,7 @@ def add_closedrandom10er_roles(game_title):
         current_vt['character_name'] = villagers[i]['character_name']
         current_vt['character_image'] = villagers[i]['character_image']
         vt_json = json.dumps(current_vt)
+        data.add("roles[]", vt_json)
 
     
 
