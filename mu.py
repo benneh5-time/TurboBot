@@ -615,7 +615,7 @@ def add_doublejoat13_roles(game_title):
             data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#ff2244]Wolf[/COLOR][/B]. You win when you overpower the Village and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n[SIZE=4][B][I]Wolf Team[/I][/B][/SIZE]\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\nAs [B][COLOR=#ff2244]Wolf[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf no Wolf submits an  action, a player will be picked at random from the living non-Wolf players.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")    
         
         else:
-            current_wolves = mafia_roles.joat.copy()
+            current_wolves = mafia_roles.joat_rb_rd_track.copy()
             current_wolves['character_name'] = wolves[i]['character_name']
             current_wolves['character_image'] = wolves[i]['character_image']
             wolf_json = json.dumps(current_wolves)
