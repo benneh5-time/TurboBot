@@ -758,7 +758,6 @@ async def bigping(ctx):
 
 **If i pinged you although you already inned, please help recruiting. Thank You <3**
 <@917835877747654687>
-<@167327838398054401>  
 <@300106589455646722> 
 <@178647349369765888>
 <@366981001693495317> 
