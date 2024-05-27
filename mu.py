@@ -346,8 +346,8 @@ def add_closedrandom10er_roles(game_title):
     village_prs = random.sample(pr_name_image_pairs, village_pr_count)
     wolves = random.sample(wolf_name_image_pairs, 2)
 
-    village_roles = [value for key, value in vars(town_roles).items() if isinstance(value, dict)]
-    wolf_roles = [value for key, value in vars(mafia_roles).items() if isinstance(value, dict)]
+    village_roles = [value for key, value in vars(town_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
+    wolf_roles = [value for key, value in vars(mafia_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
 
     selected_village_roles = random.sample(village_roles, village_pr_count)
     selected_wolf_roles = random.sample(wolf_roles, wolf_pr_count)
