@@ -1,6 +1,6 @@
 vt = {
     "role": "1",
-    "role_name": "Vanilla Villager",
+    "role_name": "Vanilla Town",
     "faction": "",
     "bpv_status": 0,
     "ninja": 0,
@@ -55,8 +55,8 @@ vt = {
     "ita_shield_status": 0,
     "ita_booster": 0,
     "ita_nerfer": 0,
-    "character_name": "Van Chilla",
-    "character_image": "https://c.tenor.com/tc_6iH63G6cAAAAd/tany.gif",
+    "character_name": "",
+    "character_image": "",
     "alignment": "village",
     "faction_color": "#339933"
 }
