@@ -386,6 +386,7 @@ def add_closedrandom10er_roles(game_title):
         current_vt['character_image'] = villagers[i]['character_image']
         vt_json = json.dumps(current_vt)
         data.add("roles[]", vt_json)
+        data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
 
 
 def add_rm13_roles(game_title):
