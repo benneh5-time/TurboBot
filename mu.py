@@ -477,7 +477,7 @@ def add_joat_roles(game_title):
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
     
 
-    current_joat = town_roles.joat.copy()
+    current_joat = town_roles.joat_peekvigdoc.copy()
     current_joat['character_name'] = joat[0]["character_name"]
     current_joat['character_image'] = joat[0]["character_image"]
     joat_json = json.dumps(current_joat)
@@ -603,7 +603,7 @@ def add_doublejoat13_roles(game_title):
         data.add("roles[]", vt_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
       
-    current_joat = town_roles.joat.copy()
+    current_joat = town_roles.joat_peekvigdoc.copy()
     current_joat['character_name'] = joat[0]["character_name"]
     current_joat['character_image'] = joat[0]["character_image"]
     joat_json = json.dumps(current_joat)
@@ -643,7 +643,7 @@ def add_vig_roles(game_title):
         data.add("roles[]", vt_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
     
-    current_vig = town_roles.vig.copy()
+    current_vig = town_roles.vig_2x.copy()
     current_vig['character_name'] = vig[0]['character_name']
     current_vig['character_image'] = vig[0]['character_image']
     vig_json = json.dumps(current_vig)
