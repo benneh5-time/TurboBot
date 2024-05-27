@@ -527,7 +527,7 @@ def add_bomb_roles(game_title):
             
     for i in range(0,2):
         if i < 1:
-            current_wolves = mafia_roles.prk.copy()
+            current_wolves = mafia_roles.prk_1x.copy()
             current_wolves['character_name'] = wolves[i]['character_name']
             current_wolves['character_image'] = wolves[i]['character_image']
             wolf_json = json.dumps(current_wolves)
