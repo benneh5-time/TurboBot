@@ -352,6 +352,19 @@ def add_closedrandom10er_roles(game_title):
     selected_village_roles = random.sample(village_roles, village_pr_count)
     selected_wolf_roles = random.sample(wolf_roles, wolf_pr_count)
 
+    for i in range(0, village_vt_count):
+        miller_rand = random.random()
+
+        if miller_rand <=.05:
+            current_vt = roles.miller.copy()
+        else:
+            current_vt = roles.vt.copy()
+        current_vt['character_name'] = villagers[i]['character_name']
+        current_vt['character_image'] = villagers[i]['character_image']
+        vt_json = json.dumps(current_vt)
+        data.add("roles[]", vt_json)
+        data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+
     for i in range(0, village_pr_count):
         current_pr = selected_village_roles[i].copy()
         current_pr['character_name'] = village_prs[i]['character_name']
@@ -374,18 +387,6 @@ def add_closedrandom10er_roles(game_title):
         current_wolf['character_image'] = wolf['character_image']
         wolf_json = json.dumps(current_wolf)
         data.add("roles[]", wolf_json)
-
-    for i in range(0, village_vt_count):
-        miller_rand = random.random()
-
-        if miller_rand <=.05:
-            current_vt = roles.miller.copy()
-        else:
-            current_vt = roles.vt.copy()
-        current_vt['character_name'] = villagers[i]['character_name']
-        current_vt['character_image'] = villagers[i]['character_image']
-        vt_json = json.dumps(current_vt)
-        data.add("roles[]", vt_json)
 
 def add_rm13_roles(game_title):
     global data

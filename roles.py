@@ -1,6 +1,6 @@
 vt = {
     "role": "1",
-    "role_name": "Vanilla Town",
+    "role_name": "Vanilla Villager",
     "faction": "",
     "bpv_status": 0,
     "ninja": 0,
