@@ -7,6 +7,7 @@ import json
 import random
 import mafia_roles
 import town_roles
+import independent_roles
 import roles
 import rolemadness
 from bs4 import BeautifulSoup
@@ -138,11 +139,13 @@ def post_thread(session, game_title, security_token, setup):
     if setup == "closedrandom10er":
         town_role_names = [name for name in dir(town_roles) if not name.startswith('__')]
         mafia_role_names = [name for name in dir(mafia_roles)  if not name.startswith('__')]
+        independent_role_names = [name for name in dir(independent_roles) if not name.startswith('__')]
 
         town_flavor = "<br>".join(town_role_names)
         mafia_flavor = "<br>".join(mafia_role_names)
+        independent_flavor = "<br>".join(independent_role_names)
 
-        game_flavor = f"This is a closed and random 10er. Roles have been randomly selected from a pool of roles Turby has access to that is ever growing. <br><br>This cannot rand as mountainous.<br><br>The village rands between 1 and 2 PRs. If the village rands 1 PR, the wolves rand between 0 and 1 PRs. If the village rands 2 PRs, the wolves rand between 1 and 2 PRs. There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed.<br><br>Millers can be randed into this setup. Each VT has a standalone 5% chance to rand as a miller instead. This does [b]NOT[/b] confirm or deny the existance of cops. Millers do not count as a 'PR' slot for the town. Godfathers may exist for mafia, but only as PR roles and the ones that are are noted in the role list below. <br><br>There are at most 2 PRs for the village and at most 2 for the wolves. <br><br>These are the roles possible for the village: <br><br>{town_flavor}<br><br>These are the roles possible for wolves:<br><br>{mafia_flavor}<br><br><br>[COLOR=\"#FF0000\"][U][B]Suffix Legend:[/B][/U][/COLOR]<br>[B]d(x)[/B] - Day (x) use of the PR<br>[B]de[/B] - Disabled in Endgame<br>[B]c [/B]- Compulsive<br>[B]m [/B]- Macho<br>[B]st [/B]- Self-Targetable<br>[B]gf [/B]- Godfather"
+        game_flavor = f"This is a closed and random 10er. Roles have been randomly selected from a pool of roles Turby has access to that is ever growing. <br><br>This cannot rand as mountainous.<br><br>The village rands between 1 and 2 PRs. There is a [b]1% chance[/b] that each village PR rands as an independent role instead. If the village rands 1 PR, the wolves rand between 0 and 1 PRs. If the village rands 2 PRs, the wolves rand between 1 and 2 PRs. There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed.<br><br>Millers can be randed into this setup. Each VT has a standalone 5% chance to rand as a miller instead. This does [b]NOT[/b] confirm or deny the existance of cops. Millers do not count as a 'PR' slot for the town. Godfathers may exist for mafia, but only as PR roles and the ones that are are noted in the role list below. <br><br>There are at most 2 PRs for the village and at most 2 for the wolves. <br><br>These are the roles possible for the village: <br><br>{town_flavor}<br><br>These are the roles possible for 3rd-party/independent:<br><br>{independent_flavor}<br><br>These are the roles possible for wolves:<br><br>{mafia_flavor}<br><br><br>[COLOR=\"#FF0000\"][U][B]Suffix Legend:[/B][/U][/COLOR]<br>[B]d(x)[/B] - Day (x) use of the PR<br>[B]de[/B] - Disabled in Endgame<br>[B]c [/B]- Compulsive<br>[B]m [/B]- Macho<br>[B]st [/B]- Self-Targetable<br>[B]gf [/B]- Godfather"
     else:
         game_flavor = random.choice(flavors)
         
@@ -344,13 +347,16 @@ def add_closedrandom10er_roles(game_title):
 
     villagers = random.sample(name_image_pairs, village_vt_count)
     village_prs = random.sample(pr_name_image_pairs, village_pr_count)
+    independent_prs = random.sample(pr_name_image_pairs, village_pr_count)
     wolves = random.sample(wolf_name_image_pairs, 2)
 
     village_roles = [value for key, value in vars(town_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
     wolf_roles = [value for key, value in vars(mafia_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
+    independent_roles = [value for key, value in vars(independent_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
 
     selected_village_roles = random.sample(village_roles, village_pr_count)
     selected_wolf_roles = random.sample(wolf_roles, wolf_pr_count)
+    selected_independent_roles = random.sample(independent_roles, village_pr_count)
 
     for i in range(0, village_vt_count):
         miller_rand = random.random()
@@ -366,7 +372,12 @@ def add_closedrandom10er_roles(game_title):
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
 
     for i in range(0, village_pr_count):
-        current_pr = selected_village_roles[i].copy()
+        independent_rand = random.random()
+
+        if independent_rand <=.01:
+            current_pr = selected_independent_roles[i].copy()
+        else:
+            current_pr = selected_village_roles[i].copy()
         current_pr['character_name'] = village_prs[i]['character_name']
         current_pr['character_image'] = village_prs[i]['character_image']
         pr_json = json.dumps(current_pr)
