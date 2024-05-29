@@ -141,11 +141,46 @@ def post_thread(session, game_title, security_token, setup):
         mafia_role_names = [name for name in dir(mafia_roles)  if not name.startswith('__')]
         independent_role_names = [name for name in dir(independent_roles) if not name.startswith('__')]
 
-        town_flavor = "<br>".join(town_role_names)
-        mafia_flavor = "<br>".join(mafia_role_names)
-        independent_flavor = "<br>".join(independent_role_names)
+        town_flavor = "<br>[*]".join(town_role_names)
+        mafia_flavor = "<br>[*]".join(mafia_role_names)
+        independent_flavor = "<br>[*]".join(independent_role_names)
 
-        game_flavor = f"This is a closed and random 10er. Roles have been randomly selected from a pool of roles Turby has access to that is ever growing. <br><br>This cannot rand as mountainous.<br><br>The village rands between 1 and 2 PRs. There is a [b]1% chance[/b] that each village PR rands as an independent role instead. If the village rands 1 PR, the wolves rand between 0 and 1 PRs. If the village rands 2 PRs, the wolves rand between 1 and 2 PRs. There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed.<br><br>Millers can be randed into this setup. Each VT has a standalone 5% chance to rand as a miller instead. This does [b]NOT[/b] confirm or deny the existance of cops. Millers do not count as a 'PR' slot for the town. Godfathers may exist for mafia, but only as PR roles and the ones that are are noted in the role list below. <br><br>There are at most 2 PRs for the village and at most 2 for the wolves. <br><br>These are the roles possible for the village: <br><br>{town_flavor}<br><br>These are the roles possible for 3rd-party/independent:<br><br>{independent_flavor}<br><br>These are the roles possible for wolves:<br><br>{mafia_flavor}<br><br><br>[COLOR=\"#FF0000\"][U][B]Suffix Legend:[/B][/U][/COLOR]<br>[B]d(x)[/B] - Day (x) use of the PR<br>[B]de[/B] - Disabled in Endgame<br>[B]c [/B]- Compulsive<br>[B]m [/B]- Macho<br>[B]st [/B]- Self-Targetable<br>[B]gf [/B]- Godfather"
+        game_flavor = f"[CENTER][TITLE][B]This is a closed and random 10er[/B][/TITLE][/CENTER]
+<br><br>[B][SIZE=4]Roles have been randomly selected from a pool of roles Turby has access to that is ever growing.[/SIZE][/B]
+<br><br>[BOX=Setup possibilities]
+<br><br>[LIST]
+<br>[*]This cannot rand as mountainous. 
+<br>[*]The [COLOR=#008000][B]village [/B][/COLOR]rands either 1 or 2 PRs. 
+<br>[*]If the [COLOR=#008000][B]village [/B][/COLOR]has [COLOR=#008000][B]1 PR[/B][/COLOR], the [COLOR=#ff0000][B]wolves [/B][/COLOR]will rand either[B] [COLOR=#ff0000]0 or 1 PRs.[/COLOR][/B] 
+<br>[*]If the[COLOR=#008000][B] village[/B][/COLOR] rands [B][COLOR=#008000]2 PRs[/COLOR][/B], the [COLOR=#ff0000][B]wolves [/B][/COLOR]rand between [COLOR=#ff0000][B]1 and 2 PRs.[/B][/COLOR] 
+<br>[*]There is a [COLOR=#800080][B]1% chance[/B][/COLOR] [B]PER [/B]village PR wherein it rands as an [B][COLOR=#800080]independent role[/COLOR][/B] instead. 
+<br>[*]There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed. 
+<br>[/LIST]
+<br>[/BOX]
+<br><br>[BOX=Cop Checks may not be trustworthy!]
+<br>[LIST]
+<br>[*][COLOR=#8b4513][B]Millers [/B][/COLOR]can be randed into this setup. 
+<br>[*]Each [B][COLOR=#008000]VT [/COLOR][/B]has a standalone [B]5%[/B] chance to rand as a miller instead. 
+<br>[*]The existence of a flipped [B][COLOR=#8b4513]Miller[/COLOR][/B] does NOT confirm or deny the existence of any [B]cops [/B]in the setup. 
+<br>[*][COLOR=#8b4513][B]Millers [/B][/COLOR]do not count as a '[COLOR=#008000][B]PR[/B][/COLOR]' slot for the town - they only replace [B][COLOR=#008000]VTs[/COLOR][/B]. 
+<br>[*][COLOR=#ff0000][B]Godfathers [/B][/COLOR]may exist for [COLOR=#ff0000][B]mafia[/B][/COLOR], but only as [B][COLOR=#ff0000]PR [/COLOR][/B]roles and the ones that are are noted in the role list below. 
+<br>[/LIST]
+<br>[/BOX]
+<br><br>[BOX=Possible Village Roles][LIST=1]
+{town_flavor}[/LIST][/BOX]
+<br><br>[BOX=Possible Independent Roles][LIST=1]
+{independent_flavor}[/LIST][/BOX]
+<br><br>[BOX=Possible Wolf Roles][LIST=1]
+{mafia_flavor}[/LIST][/BOX]
+<br><br>[BOX=Suffix Legend][LIST=1]
+[*][B]d(x)[/B] - Day (x) use of the PR
+[*][B]de[/B] - Disabled in Endgame
+[*][B]c [/B]- Compulsive
+[*][B]m [/B]- Macho
+[*][B]st [/B]- Self-Targetable
+[*][B]gf [/B]- Godfather[/LIST][/BOX]"
+
+        #game_flavor = f"[CENTER][TITLE][B]This is a closed and random 10er[/B][/TITLE][/CENTER]<br><br>[B][SIZE=4]Roles have been randomly selected from a pool of roles Turby has access to that is ever growing.[/SIZE][/B]<br><br>[BOX=Setup possibilities][LIST][*]This cannot rand as mountainous.<br>[*]The village rands between 1 and 2 PRs. There is a [b]1% chance[/b] that each village PR rands as an independent role instead. If the village rands 1 PR, the wolves rand between 0 and 1 PRs. If the village rands 2 PRs, the wolves rand between 1 and 2 PRs. There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed.<br><br>Millers can be randed into this setup. Each VT has a standalone 5% chance to rand as a miller instead. This does [b]NOT[/b] confirm or deny the existance of cops. Millers do not count as a 'PR' slot for the town. Godfathers may exist for mafia, but only as PR roles and the ones that are are noted in the role list below. <br><br>There are at most 2 PRs for the village and at most 2 for the wolves. <br><br>These are the roles possible for the village: <br><br>{town_flavor}<br><br>These are the roles possible for 3rd-party/independent:<br><br>{independent_flavor}<br><br>These are the roles possible for wolves:<br><br>{mafia_flavor}<br><br><br>[COLOR=\"#FF0000\"][U][B]Suffix Legend:[/B][/U][/COLOR]<br>[B]d(x)[/B] - Day (x) use of the PR<br>[B]de[/B] - Disabled in Endgame<br>[B]c [/B]- Compulsive<br>[B]m [/B]- Macho<br>[B]st [/B]- Self-Targetable<br>[B]gf [/B]- Godfather"
     else:
         game_flavor = random.choice(flavors)
         
