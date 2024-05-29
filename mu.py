@@ -145,7 +145,7 @@ def post_thread(session, game_title, security_token, setup):
         mafia_flavor = "<br>[*]".join(mafia_role_names)
         independent_flavor = "<br>[*]".join(independent_role_names)
 
-        game_flavor = f"[CENTER][TITLE][B]This is a closed and random 10er[/B][/TITLE][/CENTER]
+        game_flavor = f'''[CENTER][TITLE][B]This is a closed and random 10er[/B][/TITLE][/CENTER]
 <br><br>[B][SIZE=4]Roles have been randomly selected from a pool of roles Turby has access to that is ever growing.[/SIZE][/B]
 <br><br>[BOX=Setup possibilities]
 <br><br>[LIST]
@@ -178,7 +178,7 @@ def post_thread(session, game_title, security_token, setup):
 [*][B]c [/B]- Compulsive
 [*][B]m [/B]- Macho
 [*][B]st [/B]- Self-Targetable
-[*][B]gf [/B]- Godfather[/LIST][/BOX]"
+[*][B]gf [/B]- Godfather[/LIST][/BOX]'''
 
         #game_flavor = f"[CENTER][TITLE][B]This is a closed and random 10er[/B][/TITLE][/CENTER]<br><br>[B][SIZE=4]Roles have been randomly selected from a pool of roles Turby has access to that is ever growing.[/SIZE][/B]<br><br>[BOX=Setup possibilities][LIST][*]This cannot rand as mountainous.<br>[*]The village rands between 1 and 2 PRs. There is a [b]1% chance[/b] that each village PR rands as an independent role instead. If the village rands 1 PR, the wolves rand between 0 and 1 PRs. If the village rands 2 PRs, the wolves rand between 1 and 2 PRs. There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed.<br><br>Millers can be randed into this setup. Each VT has a standalone 5% chance to rand as a miller instead. This does [b]NOT[/b] confirm or deny the existance of cops. Millers do not count as a 'PR' slot for the town. Godfathers may exist for mafia, but only as PR roles and the ones that are are noted in the role list below. <br><br>There are at most 2 PRs for the village and at most 2 for the wolves. <br><br>These are the roles possible for the village: <br><br>{town_flavor}<br><br>These are the roles possible for 3rd-party/independent:<br><br>{independent_flavor}<br><br>These are the roles possible for wolves:<br><br>{mafia_flavor}<br><br><br>[COLOR=\"#FF0000\"][U][B]Suffix Legend:[/B][/U][/COLOR]<br>[B]d(x)[/B] - Day (x) use of the PR<br>[B]de[/B] - Disabled in Endgame<br>[B]c [/B]- Compulsive<br>[B]m [/B]- Macho<br>[B]st [/B]- Self-Targetable<br>[B]gf [/B]- Godfather"
     else:
