@@ -374,7 +374,7 @@ def add_closedrandom10er_roles(game_title):
     for i in range(0, village_pr_count):
         independent_rand = random.random()
 
-        if independent_rand <=.01:
+        if independent_rand <=.99:
             current_pr = selected_independent_roles[i].copy()
         else:
             current_pr = selected_village_roles[i].copy()
