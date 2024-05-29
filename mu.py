@@ -352,11 +352,11 @@ def add_closedrandom10er_roles(game_title):
 
     village_roles = [value for key, value in vars(town_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
     wolf_roles = [value for key, value in vars(mafia_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
-    independent_roles = [value for key, value in vars(independent_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
+    thirdparty_roles = [value for key, value in vars(independent_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
 
     selected_village_roles = random.sample(village_roles, village_pr_count)
     selected_wolf_roles = random.sample(wolf_roles, wolf_pr_count)
-    selected_independent_roles = random.sample(independent_roles, village_pr_count)
+    selected_independent_roles = random.sample(thirdparty_roles, village_pr_count)
 
     for i in range(0, village_vt_count):
         miller_rand = random.random()
