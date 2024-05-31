@@ -153,13 +153,13 @@ def post_thread(session, game_title, security_token, setup):
 <br>[*]The [COLOR=#008000][B]village [/B][/COLOR]rands either 1 or 2 PRs. 
 <br>[*]If the [COLOR=#008000][B]village [/B][/COLOR]has [COLOR=#008000][B]1 PR[/B][/COLOR], the [COLOR=#ff0000][B]wolves [/B][/COLOR]will rand either[B] [COLOR=#ff0000]0 or 1 PRs.[/COLOR][/B] 
 <br>[*]If the[COLOR=#008000][B] village[/B][/COLOR] rands [B][COLOR=#008000]2 PRs[/COLOR][/B], the [COLOR=#ff0000][B]wolves [/B][/COLOR]rand between [COLOR=#ff0000][B]1 and 2 PRs.[/B][/COLOR] 
-<br>[*]There is a [COLOR=#800080][B]1% chance[/B][/COLOR] [B]PER [/B]village PR wherein it rands as an [B][COLOR=#800080]independent role[/COLOR][/B] instead. 
+<br>[*]There is a [COLOR=#800080][B]4% chance[/B][/COLOR] [B]PER [/B]village PR wherein it rands as an [B][COLOR=#800080]independent role[/COLOR][/B] instead. 
 <br>[*]There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed. 
 <br>[/LIST]
 <br>[/BOX]
 <br><br>[BOX=Cop Checks may not be trustworthy!]
 <br>[LIST]
-<br>[*][COLOR=#8b4513][B]Millers [/B][/COLOR]can be randed into this setup. 
+<br>[*][COLOR=#8b4513][B]Millers [/B][/COLOR]can be randed into this setup. Millers are unaware and show as vanilla villagers in their role PMs.
 <br>[*]Each [B][COLOR=#008000]VT [/COLOR][/B]has a standalone [B]5%[/B] chance to rand as a miller instead. 
 <br>[*]The existence of a flipped [B][COLOR=#8b4513]Miller[/COLOR][/B] does NOT confirm or deny the existence of any [B]cops [/B]in the setup. 
 <br>[*][COLOR=#8b4513][B]Millers [/B][/COLOR]do not count as a '[COLOR=#008000][B]PR[/B][/COLOR]' slot for the town - they only replace [B][COLOR=#008000]VTs[/COLOR][/B]. 
@@ -409,7 +409,7 @@ def add_closedrandom10er_roles(game_title):
     for i in range(0, village_pr_count):
         independent_rand = random.random()
 
-        if independent_rand <=.01:
+        if independent_rand <=.04:
             current_pr = selected_independent_roles[i].copy()
         else:
             current_pr = selected_village_roles[i].copy()
