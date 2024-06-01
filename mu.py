@@ -141,9 +141,28 @@ def post_thread(session, game_title, security_token, setup):
         mafia_role_names = [name for name in dir(mafia_roles)  if not name.startswith('__')]
         independent_role_names = [name for name in dir(independent_roles) if not name.startswith('__')]
 
-        town_flavor = "<br>[*]".join(town_role_names)
-        mafia_flavor = "<br>[*]".join(mafia_role_names)
-        independent_flavor = "<br>[*]".join(independent_role_names)
+        town_descriptions = []
+        mafia_descriptions = []
+        independent_descriptions = []
+
+        for name in town_role_names:
+            role = getattr(town_roles, name)
+            town_descriptions.append(role.get('description', 'Unknown role, tell @benneh to fix this!'))
+        for name in mafia_role_names:
+            role = getattr(mafia_roles, name)
+            mafia_descriptions.append(role.get('description', 'Unknown role, tell @benneh to fix this!'))
+        for name in independent_role_names:
+            role = getattr(independent_roles, name)
+            independent_descriptions.append(role.get('description', 'Unknown role, tell @benneh to fix this!'))
+
+
+        town_flavor = "<br>[*]".join(town_descriptions)
+        mafia_flavor = "<br>[*]".join(mafia_descriptions)
+        independent_flavor = "<br>[*]".join(independent_descriptions)
+
+        town_flavor = "[*]" + town_flavor
+        mafia_flavor = "[*]" + mafia_flavor
+        independent_flavor = "[*]" + independent_flavor
 
         game_flavor = f'''[CENTER][TITLE][B]This is a closed and random 10er[/B][/TITLE][/CENTER]
 <br><br>[B][SIZE=4]Roles have been randomly selected from a pool of roles Turby has access to that is ever growing.[/SIZE][/B]
