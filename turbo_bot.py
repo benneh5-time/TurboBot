@@ -507,7 +507,7 @@ async def stats(ctx, game_setup=None):
         count = setup_total_games[setup]
         await display_setup_stats(ctx, setup, count, setup_wins)"""
     if game_setup is None:
-        setup_embed = Embed(title="Setup Stats", color=0xff0000)
+        setup_embed = discord.Embed(title="Setup Stats", color=0xff0000)
         for setup_name, count in setup_total_games.items():
             setup_embed.add_field(name=f"{setup_name} Stats", value=f"Total Games: {count}", inline=False)
             setup_embed.add_field(name="Mafia Win Percentage", value=f"{(setup_wins[setup_name]['mafia'] / count) * 100:.2f}%", inline=True)
@@ -521,7 +521,7 @@ async def stats(ctx, game_setup=None):
                 setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{(setup_wins[setup_name]['evil_independent'] / count) * 100:.2f}%", inline=True)
         await ctx.send(embed=setup_embed)
     else:
-        setup = setup.lower()
+        game_setup = setup.lower()
         if setup not in setup_total_games:
             await ctx.send("Setup not found in the database.")
             return
