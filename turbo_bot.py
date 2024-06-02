@@ -518,7 +518,11 @@ async def stats(ctx, game_setup=None):
             setup_embed.add_field(name="Mafia Win Percentage", value=f"{(setup_wins[setup_name]['mafia'] / (count - overall_draws)) * 100:.2f}%", inline=True)
             setup_embed.add_field(name="Town Win Percentage", value=f"{(setup_wins[setup_name]['town'] / (count - overall_draws)) * 100:.2f}%", inline=True)
             if setup_wins[setup_name]['evil_independent']:
-                setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{(setup_wins[setup_name]['evil_independent'] / (count - overall_draws)) * 100:.2f}%", inline=True)
+                setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{(setup_wins[setup_name]['evil_independent'] / (count - overall_draws)) * 100:.2f}%", inline=True) 
+                num_fields += 3
+            else: 
+                num_fields += 2
+        
         await ctx.send(embed=setup_embed)
     else:
         game_setup = game_setup.lower()
