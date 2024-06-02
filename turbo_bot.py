@@ -495,20 +495,13 @@ async def stats(ctx, game_setup=None):
     overall_draw_percentage = (overall_draws / total_games) * 100
 
     # Display overall stats
-    """if setup is None:
-        await ctx.send(f"```Since September 5 2023, Turby has randed and collected stats for {total_games} games.\nOverall Mafia Win Percentage: {overall_mafia_win_percentage:.2f}%\nOverall Town Win Percentage: {overall_town_win_percentage:.2f}%```")
-        for setup_name, count in setup_total_games.items():
-            await display_setup_stats(ctx, setup_name, count, setup_wins)
-    else:
-        setup = setup.lower()
-        if setup not in setup_total_games:
-            await ctx.send("No games played with that setup!")
-            return
-        count = setup_total_games[setup]
-        await display_setup_stats(ctx, setup, count, setup_wins)"""
+
     if game_setup is None:
         setup_embed = discord.Embed(title="Setup Stats", color=0x3381ff)
-        num_fields = 0
+        num_fields = 3
+        setup_embed.add_field(name=f'Overall Stats', value=f"Total Games since September 2023: {total_games}", inline=False)
+        setup_embed.add_field(name="Town Win Percentage", value=f'{overall_town_win_percentage}', inline=True)
+        setup_embed.add_field(name='Mafia Win Percentage', value=f'{overall_mafia_win_percentage}', inline=True)
         for setup_name, count in setup_total_games.items():
             if num_fields + 4 > 24:
                 setup_embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1149013467790053420/1246701427380850751/images.png?ex=665d58ae&is=665c072e&hm=b84fa3677984afac2e13d4636c5c527fdeefb22d561b5c234472cd36d8c6fdc2&")                
