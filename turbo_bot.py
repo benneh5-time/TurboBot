@@ -507,12 +507,12 @@ async def stats(ctx, game_setup=None):
         count = setup_total_games[setup]
         await display_setup_stats(ctx, setup, count, setup_wins)"""
     if game_setup is None:
-        setup_embed = discord.Embed(title="Setup Stats", color=0xff0000)
+        setup_embed = discord.Embed(title="Setup Stats", color=0x3381ff)
         num_fields = 0
         for setup_name, count in setup_total_games.items():
             if num_fields + 4 > 24:
-                await ctx.send(embed=setup_embed)
-                setup_embed = discord.Embed(title="Setup Stats (continued)", color=0xff0000)
+                setup_embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1149013467790053420/1246701427380850751/images.png?ex=665d58ae&is=665c072e&hm=b84fa3677984afac2e13d4636c5c527fdeefb22d561b5c234472cd36d8c6fdc2&")                await ctx.send(embed=setup_embed)
+                setup_embed = discord.Embed(title="Setup Stats (continued)", color=0x3381ff)
                 num_fields = 0
             setup_embed.add_field(name=f"{setup_name} Stats", value=f"Total Games: {count}", inline=False)
             setup_embed.add_field(name="Mafia Win Percentage", value=f"{(setup_wins[setup_name]['mafia'] / count) * 100:.2f}%", inline=True)
@@ -522,6 +522,7 @@ async def stats(ctx, game_setup=None):
                 num_fields += 4
             else: 
                 num_fields += 3
+        setup_embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1149013467790053420/1246701427380850751/images.png?ex=665d58ae&is=665c072e&hm=b84fa3677984afac2e13d4636c5c527fdeefb22d561b5c234472cd36d8c6fdc2&")
         await ctx.send(embed=setup_embed)
     else:
         game_setup = game_setup.lower()
@@ -544,14 +545,15 @@ async def display_setup_stats(ctx, setup, count, setup_wins):
     independent_win_percentage = (independent_wins / (count - draws)) * 100
     draw_percentage = (draws / count) * 100
 
-    setup_embed = discord.Embed(title=f"{setup} Stats", color=0xff0000)
-    setup_embed.add_field(name="Total Games", value=count, inline=True)
+    setup_embed = discord.Embed(title=f"{setup} Stats", color=0x3381ff)
+    setup_embed.add_field(name="Total Games", value=count, inline=False)
     setup_embed.add_field(name="Mafia Win Percentage", value=f"{mafia_win_percentage:.2f}%", inline=True)
     setup_embed.add_field(name="Town Win Percentage", value=f"{town_win_percentage:.2f}%", inline=True)
 
     if independent_wins:
         setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{independent_win_percentage:.2f}%", inline=True)
-    
+    setup_embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1149013467790053420/1246701427380850751/images.png?ex=665d58ae&is=665c072e&hm=b84fa3677984afac2e13d4636c5c527fdeefb22d561b5c234472cd36d8c6fdc2&")
+
     await ctx.send(embed=setup_embed)
 
 @bot.command()
