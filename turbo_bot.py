@@ -471,7 +471,7 @@ async def stats(ctx):
             overall_independent_wins += 1
         elif winning_team == 'villagers':
             overall_town_wins += 1
-        else:
+        elif winning_team == 'Draw':
             overall_draws += 1
 
         setup = row['Setup']
@@ -480,11 +480,11 @@ async def stats(ctx):
 
         if winning_team == 'wolves':
             setup_wins[setup]['mafia'] += 1
-        elif winning_team == 'town':
+        elif winning_team == 'villagers':
             setup_wins[setup]['town'] += 1
-        elif winning_team == 'evil_independent':
+        elif winning_team == 'independent':
             setup_wins[setup]['evil_independent'] += 1        
-        else:
+        elif winning_team == 'Draw':
             setup_wins[setup]['draw'] += 1
 
     # Calculate overall win percentages
