@@ -449,31 +449,50 @@ async def stats(ctx):
 
     overall_mafia_wins = 0
     overall_town_wins = 0
+    overall_independent_wins = 0
+    overall_draws = 0
 
     setup_wins = {}
     setup_total_games = {}
 
     for index, row in df.iterrows():
-        winning_team = 'wolves' if row['Winning Alignment'] == 'Mafia' else 'villagers'
-        
+        if row['Winning Alignment'] == 'Mafia':
+            winning_team = 'wolves'
+        elif row['Winning Alignment'] == 'Evil Independent':
+            winning_team = 'independent'
+        elif row['Winning Alignment'] == 'Town':
+            winning_team = 'villagers'
+        else:
+            winning_team = 'Draw'
+
         if winning_team == 'wolves':
             overall_mafia_wins += 1
-        else:
+        elif winning_team == 'independent':
+            overall_independent_wins += 1
+        elif winning_team == 'villagers':
             overall_town_wins += 1
+        else:
+            overall_draws += 1
 
         setup = row['Setup']
-        setup_wins[setup] = setup_wins.get(setup, {'mafia': 0, 'town': 0})
+        setup_wins[setup] = setup_wins.get(setup, {'mafia': 0, 'town': 0, 'evil_independent': 0, 'draw': 0})
         setup_total_games[setup] = setup_total_games.get(setup, 0) + 1
 
         if winning_team == 'wolves':
             setup_wins[setup]['mafia'] += 1
-        else:
+        elif winning_team == 'town':
             setup_wins[setup]['town'] += 1
+        elif winning_team == 'evil_independent':
+            setup_wins[setup]['evil_independent'] += 1        
+        else:
+            setup_wins[setup]['draw'] += 1
 
     # Calculate overall win percentages
     total_games = len(df)
     overall_mafia_win_percentage = (overall_mafia_wins / total_games) * 100
     overall_town_win_percentage = (overall_town_wins / total_games) * 100
+    overall_ind_win_percentage = (overall_independent_wins / total_games) * 100
+    overall_draw_percentage = (overall_draws / total_games) * 100
 
     # Display overall stats
     await ctx.send(f"```Since September 5 2023, Turbot has randed and collected stats for {total_games} games.\nOverall Mafia Win Percentage: {overall_mafia_win_percentage:.2f}%\nOverall Town Win Percentage: {overall_town_win_percentage:.2f}%```")
@@ -481,10 +500,22 @@ async def stats(ctx):
     for setup, count in setup_total_games.items():
         mafia_wins = setup_wins[setup]['mafia']
         town_wins = setup_wins[setup]['town']
+        independent_wins = setup_wins[setup]['evil_independent']
+        draws = setup_wins[setup]['evil_independent']
+
         mafia_win_percentage = (mafia_wins / count) * 100
         town_win_percentage = (town_wins / count) * 100
+        independent_win_percentage = (independent_wins / count) * 100
+        draw_percentage = (draws / count) * 100
 
-        await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%```")
+        if independent_wins and draws:
+            await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%\n  {setup}  Evil Independent Win Percentage: {independent_win_percentage:.2f}%\n  {setup}  Draws: {draw_percentage:.2f}%```")
+        elif draws:
+            await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%\n  {setup}  Draws: {draw_percentage:.2f}%```")
+        elif independent_wins:
+            await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%\n  {setup}  Evil Independent Win Percentage: {independent_win_percentage:.2f}%```")
+        else:
+            await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%```")
 
 @bot.command()
 async def anongame(ctx, anon=None):
