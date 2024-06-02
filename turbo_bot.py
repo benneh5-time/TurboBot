@@ -436,7 +436,7 @@ async def sub(ctx, player=None):
 
 
 @bot.command()
-async def stats(ctx, setup=None):
+async def stats(ctx, game_setup=None):
 
     if ctx.channel.id not in allowed_channels:  
         return
@@ -506,7 +506,7 @@ async def stats(ctx, setup=None):
             return
         count = setup_total_games[setup]
         await display_setup_stats(ctx, setup, count, setup_wins)"""
-    if setup is None:
+    if game_setup is None:
         setup_embed = Embed(title="Setup Stats", color=0xff0000)
         for setup_name, count in setup_total_games.items():
             setup_embed.add_field(name=f"{setup_name} Stats", value=f"Total Games: {count}", inline=False)
