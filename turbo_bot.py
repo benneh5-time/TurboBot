@@ -498,24 +498,10 @@ async def stats(ctx, game_setup=None):
 
     if game_setup is None:
         setup_embed = discord.Embed(title="Setup Stats", color=0x3381ff)
-        num_fields = 3
         setup_embed.add_field(name=f'Overall Stats', value=f"Total Games since September 2023: {total_games}", inline=False)
         setup_embed.add_field(name="Town Win Percentage", value=f'{overall_town_win_percentage}', inline=True)
         setup_embed.add_field(name='Mafia Win Percentage', value=f'{overall_mafia_win_percentage}', inline=True)
-        for setup_name, count in setup_total_games.items():
-            if num_fields + 4 > 24:
-                setup_embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1149013467790053420/1246701427380850751/images.png?ex=665d58ae&is=665c072e&hm=b84fa3677984afac2e13d4636c5c527fdeefb22d561b5c234472cd36d8c6fdc2&")                
-                await ctx.send(embed=setup_embed)
-                setup_embed = discord.Embed(title="Setup Stats (continued)", color=0x3381ff)
-                num_fields = 0
-            setup_embed.add_field(name=f"{setup_name} Stats", value=f"Total Games: {count}", inline=False)
-            setup_embed.add_field(name="Mafia Win Percentage", value=f"{(setup_wins[setup_name]['mafia'] / count) * 100:.2f}%", inline=True)
-            setup_embed.add_field(name="Town Win Percentage", value=f"{(setup_wins[setup_name]['town'] / count) * 100:.2f}%", inline=True)
-            if setup_wins[setup_name]['evil_independent']:
-                setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{(setup_wins[setup_name]['evil_independent'] / count) * 100:.2f}%", inline=False) 
-                num_fields += 4
-            else: 
-                num_fields += 3
+        setup_embed.add_field(name=f"Use !stats [{valid_setups}] to get individual setup stats!")
         setup_embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1149013467790053420/1246701427380850751/images.png?ex=665d58ae&is=665c072e&hm=b84fa3677984afac2e13d4636c5c527fdeefb22d561b5c234472cd36d8c6fdc2&")
         await ctx.send(embed=setup_embed)
     else:
