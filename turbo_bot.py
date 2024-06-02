@@ -510,7 +510,7 @@ async def stats(ctx, game_setup=None):
         setup_embed = discord.Embed(title="Setup Stats", color=0xff0000)
         num_fields = 0
         for setup_name, count in setup_total_games.items():
-            if num_fields + 3 > 25:
+            if num_fields + 3 > 24:
                 await ctx.send(embed=setup_embed)
                 setup_embed = discord.Embed(title="Setup Stats (continued", color=0xff0000)
                 num_fields = 0
@@ -546,7 +546,7 @@ async def display_setup_stats(ctx, setup, count, setup_wins):
     draw_percentage = (draws / count) * 100
 
     setup_embed = discord.Embed(title=f"{setup} Stats", color=0xff0000)
-    setup_embed.add_field(name="Total Games", value=count, inline=False)
+    setup_embed.add_field(name="Total Games", value=count, inline=True)
     setup_embed.add_field(name="Mafia Win Percentage", value=f"{mafia_win_percentage:.2f}%", inline=True)
     setup_embed.add_field(name="Town Win Percentage", value=f"{town_win_percentage:.2f}%", inline=True)
 
