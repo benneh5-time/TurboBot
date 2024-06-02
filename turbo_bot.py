@@ -510,24 +510,19 @@ async def stats(ctx, game_setup=None):
         setup_embed = discord.Embed(title="Setup Stats", color=0xff0000)
         for setup_name, count in setup_total_games.items():
             setup_embed.add_field(name=f"{setup_name} Stats", value=f"Total Games: {count}", inline=False)
-            setup_embed.add_field(name="Mafia Win Percentage", value=f"{(setup_wins[setup_name]['mafia'] / count) * 100:.2f}%", inline=True)
-            setup_embed.add_field(name="Town Win Percentage", value=f"{(setup_wins[setup_name]['town'] / count) * 100:.2f}%", inline=True)
-            if setup_wins[setup_name]['evil_independent'] and setup_wins[setup_name]['draw']:
-                setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{(setup_wins[setup_name]['evil_independent'] / count) * 100:.2f}%", inline=True)
-                setup_embed.add_field(name="Draw Percentage", value=f"{(setup_wins[setup_name]['draw'] / count) * 100:.2f}%", inline=True)
-            elif setup_wins[setup_name]['draw']:
-                setup_embed.add_field(name="Draw Percentage", value=f"{(setup_wins[setup_name]['draw'] / count) * 100:.2f}%", inline=True)
-            elif setup_wins[setup_name]['evil_independent']:
-                setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{(setup_wins[setup_name]['evil_independent'] / count) * 100:.2f}%", inline=True)
+            setup_embed.add_field(name="Mafia Win Percentage", value=f"{(setup_wins[setup_name]['mafia'] / count - overall_draws) * 100:.2f}%", inline=True)
+            setup_embed.add_field(name="Town Win Percentage", value=f"{(setup_wins[setup_name]['town'] / count - overall_draws) * 100:.2f}%", inline=True)
+            if setup_wins[setup_name]['evil_independent']:
+                setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{(setup_wins[setup_name]['evil_independent'] / count - overall_draws) * 100:.2f}%", inline=True)
         await ctx.send(embed=setup_embed)
     else:
-        game_setup = setup.lower()
-        if setup not in setup_total_games:
+        game_setup = game_setup.lower()
+        if game_setup not in setup_total_games:
             await ctx.send("Setup not found in the database.")
             return
 
         count = setup_total_games[setup]
-        await display_setup_stats(ctx, setup, count, setup_wins)
+        await display_setup_stats(ctx, game_setup, count, setup_wins)
 
 async def display_setup_stats(ctx, setup, count, setup_wins):
 
@@ -536,21 +531,17 @@ async def display_setup_stats(ctx, setup, count, setup_wins):
     independent_wins = setup_wins[setup]['evil_independent']
     draws = setup_wins[setup]['draw']
 
-    mafia_win_percentage = (mafia_wins / count) * 100
-    town_win_percentage = (town_wins / count) * 100
-    independent_win_percentage = (independent_wins / count) * 100
+    mafia_win_percentage = (mafia_wins / count - draws) * 100
+    town_win_percentage = (town_wins / count - draws) * 100
+    independent_win_percentage = (independent_wins / count - draws) * 100
     draw_percentage = (draws / count) * 100
 
     setup_embed = discord.Embed(title=f"{setup} Stats", color=0xff0000)
     setup_embed.add_field(name="Total Games", value=count, inline=False)
     setup_embed.add_field(name="Mafia Win Percentage", value=f"{mafia_win_percentage:.2f}%", inline=True)
     setup_embed.add_field(name="Town Win Percentage", value=f"{town_win_percentage:.2f}%", inline=True)
-    if independent_wins and draws:
-        setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{independent_win_percentage:.2f}%", inline=True)
-        setup_embed.add_field(name="Draw Percentage", value=f"{draw_percentage:.2f}%", inline=True)
-    elif draws:
-        setup_embed.add_field(name="Draw Percentage", value=f"{draw_percentage:.2f}%", inline=True)
-    elif independent_wins:
+
+    if independent_wins:
         setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{independent_win_percentage:.2f}%", inline=True)
     await ctx.send(embed=setup_embed)
 @bot.command()
