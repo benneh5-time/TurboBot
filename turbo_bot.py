@@ -510,7 +510,7 @@ async def stats(ctx, game_setup=None):
         setup_embed = discord.Embed(title="Setup Stats", color=0xff0000)
         num_fields = 0
         for setup_name, count in setup_total_games.items():
-            if num_fields + 3 > 24:
+            if num_fields + 4 > 24:
                 await ctx.send(embed=setup_embed)
                 setup_embed = discord.Embed(title="Setup Stats (continued", color=0xff0000)
                 num_fields = 0
@@ -519,10 +519,9 @@ async def stats(ctx, game_setup=None):
             setup_embed.add_field(name="Town Win Percentage", value=f"{(setup_wins[setup_name]['town'] / (count - overall_draws)) * 100:.2f}%", inline=True)
             if setup_wins[setup_name]['evil_independent']:
                 setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{(setup_wins[setup_name]['evil_independent'] / (count - overall_draws)) * 100:.2f}%", inline=True) 
-                num_fields += 3
+                num_fields += 4
             else: 
-                num_fields += 2
-        print(len(setup_embed.fields()))
+                num_fields += 3
         await ctx.send(embed=setup_embed)
     else:
         game_setup = game_setup.lower()
