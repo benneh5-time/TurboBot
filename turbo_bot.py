@@ -512,13 +512,13 @@ async def stats(ctx, game_setup=None):
         for setup_name, count in setup_total_games.items():
             if num_fields + 4 > 24:
                 await ctx.send(embed=setup_embed)
-                setup_embed = discord.Embed(title="Setup Stats (continued", color=0xff0000)
+                setup_embed = discord.Embed(title="Setup Stats (continued)", color=0xff0000)
                 num_fields = 0
             setup_embed.add_field(name=f"{setup_name} Stats", value=f"Total Games: {count}", inline=False)
-            setup_embed.add_field(name="Mafia Win Percentage", value=f"{(setup_wins[setup_name]['mafia'] / (count - overall_draws)) * 100:.2f}%", inline=True)
-            setup_embed.add_field(name="Town Win Percentage", value=f"{(setup_wins[setup_name]['town'] / (count - overall_draws)) * 100:.2f}%", inline=True)
+            setup_embed.add_field(name="Mafia Win Percentage", value=f"{(setup_wins[setup_name]['mafia'] / count) * 100:.2f}%", inline=True)
+            setup_embed.add_field(name="Town Win Percentage", value=f"{(setup_wins[setup_name]['town'] / count) * 100:.2f}%", inline=True)
             if setup_wins[setup_name]['evil_independent']:
-                setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{(setup_wins[setup_name]['evil_independent'] / (count - overall_draws)) * 100:.2f}%", inline=True) 
+                setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{(setup_wins[setup_name]['evil_independent'] / count) * 100:.2f}%", inline=False) 
                 num_fields += 4
             else: 
                 num_fields += 3
