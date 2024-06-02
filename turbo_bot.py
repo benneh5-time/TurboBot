@@ -495,7 +495,7 @@ async def stats(ctx, setup=None):
     overall_draw_percentage = (overall_draws / total_games) * 100
 
     # Display overall stats
-    if setup is None:
+    """if setup is None:
         await ctx.send(f"```Since September 5 2023, Turby has randed and collected stats for {total_games} games.\nOverall Mafia Win Percentage: {overall_mafia_win_percentage:.2f}%\nOverall Town Win Percentage: {overall_town_win_percentage:.2f}%```")
         for setup_name, count in setup_total_games.items():
             await display_setup_stats(ctx, setup_name, count, setup_wins)
@@ -504,6 +504,28 @@ async def stats(ctx, setup=None):
         if setup not in setup_total_games:
             await ctx.send("No games played with that setup!")
             return
+        count = setup_total_games[setup]
+        await display_setup_stats(ctx, setup, count, setup_wins)"""
+    if setup is None:
+        setup_embed = Embed(title="Setup Stats", color=0xff0000)
+        for setup_name, count in setup_total_games.items():
+            setup_embed.add_field(name=f"{setup_name} Stats", value=f"Total Games: {count}", inline=False)
+            setup_embed.add_field(name="Mafia Win Percentage", value=f"{(setup_wins[setup_name]['mafia'] / count) * 100:.2f}%", inline=True)
+            setup_embed.add_field(name="Town Win Percentage", value=f"{(setup_wins[setup_name]['town'] / count) * 100:.2f}%", inline=True)
+            if setup_wins[setup_name]['evil_independent'] and setup_wins[setup_name]['draw']:
+                setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{(setup_wins[setup_name]['evil_independent'] / count) * 100:.2f}%", inline=True)
+                setup_embed.add_field(name="Draw Percentage", value=f"{(setup_wins[setup_name]['draw'] / count) * 100:.2f}%", inline=True)
+            elif setup_wins[setup_name]['draw']:
+                setup_embed.add_field(name="Draw Percentage", value=f"{(setup_wins[setup_name]['draw'] / count) * 100:.2f}%", inline=True)
+            elif setup_wins[setup_name]['evil_independent']:
+                setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{(setup_wins[setup_name]['evil_independent'] / count) * 100:.2f}%", inline=True)
+        await ctx.send(embed=setup_embed)
+    else:
+        setup = setup.lower()
+        if setup not in setup_total_games:
+            await ctx.send("Setup not found in the database.")
+            return
+
         count = setup_total_games[setup]
         await display_setup_stats(ctx, setup, count, setup_wins)
 
@@ -519,15 +541,18 @@ async def display_setup_stats(ctx, setup, count, setup_wins):
     independent_win_percentage = (independent_wins / count) * 100
     draw_percentage = (draws / count) * 100
 
+    setup_embed = Embed(title=f"{setup} Stats", color=0xff0000)
+    setup_embed.add_field(name="Total Games", value=count, inline=False)
+    setup_embed.add_field(name="Mafia Win Percentage", value=f"{mafia_win_percentage:.2f}%", inline=True)
+    setup_embed.add_field(name="Town Win Percentage", value=f"{town_win_percentage:.2f}%", inline=True)
     if independent_wins and draws:
-        await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%\n  {setup} Evil Independent Win Percentage: {independent_win_percentage:.2f}%\n  {setup} Draws: {draw_percentage:.2f}%```")
+        setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{independent_win_percentage:.2f}%", inline=True)
+        setup_embed.add_field(name="Draw Percentage", value=f"{draw_percentage:.2f}%", inline=True)
     elif draws:
-        await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%\n  {setup} Draws: {draw_percentage:.2f}%```")
+        setup_embed.add_field(name="Draw Percentage", value=f"{draw_percentage:.2f}%", inline=True)
     elif independent_wins:
-        await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%\n  {setup} Evil Independent Win Percentage: {independent_win_percentage:.2f}%```")
-    else:
-        await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%```")
-
+        setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{independent_win_percentage:.2f}%", inline=True)
+    await ctx.send(embed=setup_embed)
 @bot.command()
 async def anongame(ctx, anon=None):
     if ctx.channel.id not in allowed_channels:  
