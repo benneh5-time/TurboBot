@@ -449,9 +449,9 @@ def add_closedrandom10er_roles(game_title):
         gf_rand = random.random()
 
         current_wolf = selected_wolf_roles[i].copy()
-        if bpv_rand <=.99:
+        if bpv_rand <=.1:
             current_wolf['bpv_status'] = "1"
-        if gf_rand <=.99:
+        if gf_rand <=.1:
             current_wolf['godfather'] = "1"
         current_wolf['character_name'] = wolf['character_name']
         current_wolf['character_image'] = wolf['character_image']
@@ -464,9 +464,9 @@ def add_closedrandom10er_roles(game_title):
         gf_rand = random.random()
 
         current_wolf = roles.goon.copy()
-        if bpv_rand <=.99:
+        if bpv_rand <=.1:
             current_wolf['bpv_status'] = "1"
-        if gf_rand <=.99:
+        if gf_rand <=.1:
             current_wolf['godfather'] = "1"
 
         current_wolf['character_name'] = wolf['character_name']
@@ -532,9 +532,9 @@ def add_closedrandom13er_roles(game_title):
         gf_rand = random.random()
 
         current_wolf = selected_wolf_roles[i].copy()
-        if bpv_rand <=.99:
+        if bpv_rand <=.1:
             current_wolf['bpv_status'] = "1"
-        if gf_rand <=.99:
+        if gf_rand <=.1:
             current_wolf['godfather'] = "1"
         current_wolf['character_name'] = wolf['character_name']
         current_wolf['character_image'] = wolf['character_image']
@@ -547,9 +547,9 @@ def add_closedrandom13er_roles(game_title):
         gf_rand = random.random()
 
         current_wolf = roles.goon.copy()
-        if bpv_rand <=.99:
+        if bpv_rand <=.1:
             current_wolf['bpv_status'] = "1"
-        if gf_rand <=.99:
+        if gf_rand <=.1:
             current_wolf['godfather'] = "1"
 
         current_wolf['character_name'] = wolf['character_name']
