@@ -507,7 +507,7 @@ async def stats(ctx, setup=None):
         count = setup_total_games[setup]
         await display_setup_stats(ctx, setup, count, setup_wins)
 
-async def display_setup_stats(ctx, setup, count, setup_wins)
+async def display_setup_stats(ctx, setup, count, setup_wins):
 
     mafia_wins = setup_wins[setup]['mafia']
     town_wins = setup_wins[setup]['town']
