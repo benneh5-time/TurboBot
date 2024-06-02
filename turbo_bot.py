@@ -436,7 +436,7 @@ async def sub(ctx, player=None):
 
 
 @bot.command()
-async def stats(ctx):
+async def stats(ctx, setup=None):
 
     if ctx.channel.id not in allowed_channels:  
         return
@@ -495,27 +495,38 @@ async def stats(ctx):
     overall_draw_percentage = (overall_draws / total_games) * 100
 
     # Display overall stats
-    await ctx.send(f"```Since September 5 2023, Turbot has randed and collected stats for {total_games} games.\nOverall Mafia Win Percentage: {overall_mafia_win_percentage:.2f}%\nOverall Town Win Percentage: {overall_town_win_percentage:.2f}%```")
+    if setup is None:
+        await ctx.send(f"```Since September 5 2023, Turby has randed and collected stats for {total_games} games.\nOverall Mafia Win Percentage: {overall_mafia_win_percentage:.2f}%\nOverall Town Win Percentage: {overall_town_win_percentage:.2f}%```")
+        for setup_name, count in setup_total_games.items():
+            await display_setup_stats(ctx, setup_name, count, setup_wins)
+    else:
+        setup = setup.lower()
+        if setup not in setup_total_games:
+            await ctx.send("No games played with that setup!")
+            return
+        count = setup_total_games[setup]
+        await display_setup_stats(ctx, setup, count, setup_wins)
 
-    for setup, count in setup_total_games.items():
-        mafia_wins = setup_wins[setup]['mafia']
-        town_wins = setup_wins[setup]['town']
-        independent_wins = setup_wins[setup]['evil_independent']
-        draws = setup_wins[setup]['evil_independent']
+async def display_setup_stats(ctx, setup, count, setup_wins)
 
-        mafia_win_percentage = (mafia_wins / count) * 100
-        town_win_percentage = (town_wins / count) * 100
-        independent_win_percentage = (independent_wins / count) * 100
-        draw_percentage = (draws / count) * 100
+    mafia_wins = setup_wins[setup]['mafia']
+    town_wins = setup_wins[setup]['town']
+    independent_wins = setup_wins[setup]['evil_independent']
+    draws = setup_wins[setup]['draw']
 
-        if independent_wins and draws:
-            await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%\n  {setup}  Evil Independent Win Percentage: {independent_win_percentage:.2f}%\n  {setup}  Draws: {draw_percentage:.2f}%```")
-        elif draws:
-            await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%\n  {setup}  Draws: {draw_percentage:.2f}%```")
-        elif independent_wins:
-            await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%\n  {setup}  Evil Independent Win Percentage: {independent_win_percentage:.2f}%```")
-        else:
-            await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%```")
+    mafia_win_percentage = (mafia_wins / count) * 100
+    town_win_percentage = (town_wins / count) * 100
+    independent_win_percentage = (independent_wins / count) * 100
+    draw_percentage = (draws / count) * 100
+
+    if independent_wins and draws:
+        await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%\n  {setup} Evil Independent Win Percentage: {independent_win_percentage:.2f}%\n  {setup} Draws: {draw_percentage:.2f}%```")
+    elif draws:
+        await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%\n  {setup} Draws: {draw_percentage:.2f}%```")
+    elif independent_wins:
+        await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%\n  {setup} Evil Independent Win Percentage: {independent_win_percentage:.2f}%```")
+    else:
+        await ctx.send(f"```{setup} setups have been run {count} times\n  {setup} Mafia Win Percentage: {mafia_win_percentage:.2f}%\n  {setup} Town Win Percentage: {town_win_percentage:.2f}%```")
 
 @bot.command()
 async def anongame(ctx, anon=None):
