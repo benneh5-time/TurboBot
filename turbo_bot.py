@@ -499,9 +499,9 @@ async def stats(ctx, game_setup=None):
     if game_setup is None:
         setup_embed = discord.Embed(title="Setup Stats", color=0x3381ff)
         setup_embed.add_field(name=f'Overall Stats', value=f"Total Games since September 2023: {total_games}", inline=False)
-        setup_embed.add_field(name="Town Win Percentage", value=f'{overall_town_win_percentage}', inline=True)
-        setup_embed.add_field(name='Mafia Win Percentage', value=f'{overall_mafia_win_percentage}', inline=True)
-        setup_embed.add_field(name="Stats by Turby!", value=f"Use !stats [{valid_setups}] to get individual setup stats!")
+        setup_embed.add_field(name="Town Win Percentage", value=f'{overall_town_win_percentage:.2f}%', inline=True)
+        setup_embed.add_field(name='Mafia Win Percentage', value=f'{overall_mafia_win_percentage:.2f}%', inline=True)
+        setup_embed.add_field(name="Stats by Turby!", value=f"Use !stats [setup] to get individual setup stats!", inline=False)
         setup_embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1149013467790053420/1246701427380850751/images.png?ex=665d58ae&is=665c072e&hm=b84fa3677984afac2e13d4636c5c527fdeefb22d561b5c234472cd36d8c6fdc2&")
         await ctx.send(embed=setup_embed)
     else:
