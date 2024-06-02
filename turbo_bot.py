@@ -530,7 +530,7 @@ async def stats(ctx, game_setup=None):
             await ctx.send("Setup not found in the database.")
             return
 
-        count = setup_total_games[setup]
+        count = setup_total_games[game_setup]
         await display_setup_stats(ctx, game_setup, count, setup_wins)
 
 async def display_setup_stats(ctx, setup, count, setup_wins):
