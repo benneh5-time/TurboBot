@@ -522,7 +522,7 @@ async def stats(ctx, game_setup=None):
                 num_fields += 3
             else: 
                 num_fields += 2
-        
+        print(len(setup_embed.fields()))
         await ctx.send(embed=setup_embed)
     else:
         game_setup = game_setup.lower()
