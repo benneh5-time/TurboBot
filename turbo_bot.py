@@ -541,7 +541,7 @@ async def display_setup_stats(ctx, setup, count, setup_wins):
     independent_win_percentage = (independent_wins / count) * 100
     draw_percentage = (draws / count) * 100
 
-    setup_embed = Embed(title=f"{setup} Stats", color=0xff0000)
+    setup_embed = discord.Embed(title=f"{setup} Stats", color=0xff0000)
     setup_embed.add_field(name="Total Games", value=count, inline=False)
     setup_embed.add_field(name="Mafia Win Percentage", value=f"{mafia_win_percentage:.2f}%", inline=True)
     setup_embed.add_field(name="Town Win Percentage", value=f"{town_win_percentage:.2f}%", inline=True)
