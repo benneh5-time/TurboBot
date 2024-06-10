@@ -136,7 +136,7 @@ def post_thread(session, game_title, security_token, setup):
 
     protected_url = "https://www.mafiauniverse.com/forums/newthread.php"
 
-    if setup == "closedrandom10er" or setup == "closedrandom13er":
+    if setup == "closedrandom10er" or setup == "closedrandomXer":
         town_role_names = [name for name in dir(town_roles) if not name.startswith('__')]
         mafia_role_names = [name for name in dir(mafia_roles)  if not name.startswith('__')]
         independent_role_names = [name for name in dir(independent_roles) if not name.startswith('__')]
@@ -256,7 +256,7 @@ def new_game_token(session, thread_id):
     else:
         print("Failed to extract security token.")
         
-def start_game(session, security_token, game_title, thread_id, player_aliases, game_setup, day_length, night_length, host_name, anon_enabled):
+def start_game(session, security_token, game_title, thread_id, player_aliases, game_setup, day_length, night_length, host_name, anon_enabled, player_limit):
     global data
 
     if game_setup == "random10er":
@@ -270,8 +270,8 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         final_game_setup = game_setup
         data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': f"{game_title} - [{setup_title} game]", 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Closed', 'period': 'day', 'phase': '1', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '1', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
     
-    elif game_setup == "closedrandom13er":
-        setup_title = "closedrandom13er"
+    elif game_setup == "closedrandomXer":
+        setup_title = "closedrandomXer"
         final_game_setup = game_setup
         data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': f"{game_title} - [{setup_title} game]", 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Closed', 'period': 'day', 'phase': '1', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '1', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
         
@@ -319,10 +319,10 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         add_closedrandom10er_roles(game_title)
         data.add("preset", "custom")
         data.add('num_players', '10')
-    if final_game_setup == "closedrandom13er":
-        add_closedrandom13er_roles(game_title)
+    if final_game_setup == "closedrandomXer":
+        add_closedrandomXer_roles(game_title, player_limit)
         data.add("preset", "custom")
-        data.add('num_players', '13')
+        data.add('num_players', player_limit)
     if final_game_setup == "rolemadness13":
         add_rm13_roles(game_title)
         data.add("preset", "custom")
@@ -479,7 +479,7 @@ def add_closedrandom10er_roles(game_title):
         wolf_json = json.dumps(current_wolf)
         data.add("roles[]", wolf_json)
 
-def add_closedrandom13er_roles(game_title, player_limit=13):
+def add_closedrandomXer_roles(game_title, player_limit=13):
     global data
     
     name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()

@@ -37,7 +37,7 @@ mods = [178647349369765888, 93432503863353344]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
-valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandom10er", "closedrandom13er"] #future setups
+valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandom10er", "closedrandomXer"] #future setups
 valid_timers = ["sunbae", "14-3", "16-5", "8-2"]
 day_length = 14
 night_length = 3
@@ -561,7 +561,7 @@ async def anongame(ctx, anon=None):
 
 
 @bot.command()
-async def game(ctx, setup_name=None):
+async def game(ctx, setup_name=None, Xer_Players: int = None):
     if ctx.channel.id not in allowed_channels:  
         return
     
@@ -594,8 +594,10 @@ async def game(ctx, setup_name=None):
             new_player_limit = 10
         elif setup_name == "closedrandom10er":
             new_player_limit = 10
-        elif setup_name == "closedrandom13er":
-            new_player_limit = 13
+        elif setup_name == "closedrandomXer" and Xer_Players is not None:
+            new_player_limit = Xer_Players
+        elif setup_name == "closedrandomXer":
+            await ctx.send("Please include the number of players after !game closedrandomXer [#] and try again")
         elif setup_name == "cop13":
             new_player_limit = 13
         elif setup_name == "doublejoat13":
@@ -1600,7 +1602,7 @@ async def rand(ctx, *args):
             print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
             security_token = mu.new_game_token(session, thread_id)
 
-            response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, final_game_setup, day_length, night_length, game_host_name, anon_enabled)
+            response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, final_game_setup, day_length, night_length, game_host_name, anon_enabled,player_limit)
             
             if "was created successfully." in response_message:
                 # Use aliases to get the Discord IDs
