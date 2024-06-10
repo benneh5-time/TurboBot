@@ -498,7 +498,7 @@ def add_closedrandom13er_roles(game_title, player_limit=13):
     villagers = random.sample(name_image_pairs, village_vt_count)
     village_prs = random.sample(pr_name_image_pairs, village_pr_count)
     independent_prs = random.sample(pr_name_image_pairs, village_pr_count)
-    wolves = random.sample(wolf_name_image_pairs, wolf_goon_count)
+    wolves = random.sample(wolf_name_image_pairs, wolf_count)
 
     village_roles = [value for key, value in vars(town_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
     wolf_roles = [value for key, value in vars(mafia_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
