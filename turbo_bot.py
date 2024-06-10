@@ -594,7 +594,7 @@ async def game(ctx, setup_name=None):
             new_player_limit = 10
         elif setup_name == "closedrandom10er":
             new_player_limit = 10
-        elif setup_name == "closedrandom10er":
+        elif setup_name == "closedrandom13er":
             new_player_limit = 13
         elif setup_name == "cop13":
             new_player_limit = 13
