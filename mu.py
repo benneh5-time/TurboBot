@@ -164,7 +164,8 @@ def post_thread(session, game_title, security_token, setup):
         mafia_flavor = "[*]" + mafia_flavor
         independent_flavor = "[*]" + independent_flavor
 
-        game_flavor = f'''[CENTER][TITLE][B]This is a closed and random 10er[/B][/TITLE][/CENTER]
+        if setup == "closedrandom10er":
+            game_flavor = f'''[CENTER][TITLE][B]This is a closed and random 10er[/B][/TITLE][/CENTER]
 <br><br>[B][SIZE=4]Roles have been randomly selected from a pool of roles Turby has access to that is ever growing.[/SIZE][/B]
 <br><br>[BOX=Setup possibilities]
 <br><br>[LIST]
@@ -176,6 +177,42 @@ def post_thread(session, game_title, security_token, setup):
 <br>[*]There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed. 
 <br>[*]There is an [b]10%[/b] chance for any wolf to rand a bulletproof vest in addition to the rest of it's role.
 <br>[*]In closedrandom13ers, wolves always rand the same amount of PRs as the villagers.
+<br>[/LIST]
+<br>[/BOX]
+<br><br>[BOX=Cop Checks may not be trustworthy!]
+<br>[LIST]
+<br>[*][COLOR=#8b4513][B]Millers and Godfathers[/B][/COLOR]can be randed into this setup. Millers are unaware and show as vanilla villagers in their role PMs.
+<br>[*]Each [B][COLOR=#008000]VT [/COLOR][/B]has a standalone [B]5%[/B] chance to rand as a miller instead. 
+<br>[*][b]EVERY[/b] [B][COLOR=#ff0000]wolf [/COLOR][/B]has a standalone [B]10%[/B] chance to rand as a godfather in addition to the rest of it's role. 
+<br>[*]The existence of a flipped [B][COLOR=#8b4513]Miller or Godfather[/COLOR][/B]  does NOT confirm or deny the existence of any [B]cops [/B]in the setup. 
+<br>[*][COLOR=#8b4513][B]Millers [/B][/COLOR]do not count as a '[COLOR=#008000][B]PR[/B][/COLOR]' slot for the town - they only replace [B][COLOR=#008000]VTs[/COLOR][/B]. 
+<br>[/LIST]
+<br>[/BOX]
+<br><br>[BOX=Possible Village Roles][LIST=1]
+{town_flavor}[/LIST][/BOX]
+<br><br>[BOX=Possible Independent Roles][LIST=1]
+{independent_flavor}[/LIST][/BOX]
+<br><br>[BOX=Possible Wolf Roles][LIST=1]
+{mafia_flavor}[/LIST][/BOX]
+<br><br>[BOX=Suffix Legend][LIST=1]
+[*][B]d(x)[/B] - Day (x) use of the PR
+[*][B]de[/B] - Disabled in Endgame
+[*][B]c [/B]- Compulsive
+[*][B]m [/B]- Macho
+[*][B]st [/B]- Self-Targetable
+[*][B]gf [/B]- Godfather[/LIST][/BOX]'''
+        elif setup == "closedrandomXer":
+            game_flavor = f'''[CENTER][TITLE][B]This is a closed and random Xer[/B][/TITLE][/CENTER]
+<br><br>[B][SIZE=4]Roles have been randomly selected from a pool of roles Turby has access to that is ever growing.[/SIZE][/B]
+<br><br>[BOX=Setup possibilities]
+<br><br>[LIST]
+<br>[*]This cannot rand as mountainous (unless the setup only has 1 wolf). 
+<br>[*]The wolf team will always be 25% of the total players, rounded down. (e.g. 12 players = 3 wolves, 15 players = 3 wolves, 16 players = 4 wolves)
+<br>[*]The amount of PRs for each team will be either (# of wolves / 2) or ((# of wolves / 2) + 1), e.g. 4 wolves = 2 PRs minimum, possibly 3
+<br>[*]Both teams will have the same amount of PRs in closedrandomXers, unless there is a 3rd party rand.
+<br>[*]There is a [COLOR=#800080][B]1.5% chance[/B][/COLOR] [B]PER [/B]village PR wherein it rands as an [B][COLOR=#800080]independent role[/COLOR][/B] instead. 
+<br>[*]There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed. 
+<br>[*]There is an [b]10%[/b] chance for any wolf to rand a bulletproof vest in addition to the rest of it's role.
 <br>[/LIST]
 <br>[/BOX]
 <br><br>[BOX=Cop Checks may not be trustworthy!]
