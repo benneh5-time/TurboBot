@@ -1539,6 +1539,7 @@ async def rand(ctx, *args):
     parser = argparse.ArgumentParser()
     parser.add_argument('-title', default=None)
     parser.add_argument('-thread_id', default=None)
+    parser.add_argument('-wolves', default=None)
     
     try:
         args_parsed = parser.parse_args(args)
@@ -1548,7 +1549,7 @@ async def rand(ctx, *args):
     except Exception as e:
         await ctx.send(f"An unexpected error occurred. Please try again.\n{str(e)}")
         return
-    
+
     is_rand_running = True
 
     mentions = " ".join([f"<@{id}>" for id in allowed_randers])
@@ -1579,6 +1580,10 @@ async def rand(ctx, *args):
             
             game_title = args_parsed.title
             thread_id = args_parsed.thread_id
+            wolves = args_parsed.wolves
+
+            if wolves is not None:
+                await ctx.send(f"{wolves} have been set as the wolf team, proceeding with rand.")
 
             if current_setup == "random10er":
                 potential_setups = ["joat10", "vig10", "bomb10"]
