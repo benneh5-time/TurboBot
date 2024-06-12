@@ -44,6 +44,7 @@ night_length = 3
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
 react_channels = [223260125786406912, 1114212787141492788]
 banned_users = [612706340623876137, 1173036536166621286]
+future_banned = [190312702692818946]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 anon_enabled = False
@@ -564,7 +565,8 @@ async def anongame(ctx, anon=None):
 async def game(ctx, setup_name=None, Xer_Players: int = None):
     if ctx.channel.id not in allowed_channels:  
         return
-    
+    if ctx.author.id in future_banned:
+        await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.")
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return
@@ -954,6 +956,8 @@ async def in_(ctx, time: int = 60):
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
         return
+    if ctx.author.id in future_banned:
+        await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.")
 
     if ctx.author.id not in aliases:
         await ctx.send("Please set your MU username by using !alias MU_Username before inning!")
@@ -1014,7 +1018,8 @@ async def out(ctx):
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return
-        
+    if ctx.author.id in future_banned:
+        await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.")
     global game_host_name, player_limit, players, waiting_list 
     
     if ctx.author.id not in aliases:
@@ -1182,7 +1187,8 @@ async def remove(ctx, *, alias):
 async def status(ctx, *args):
     if ctx.guild is not None and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
-        
+    if ctx.author.id in future_banned:
+        await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.") 
     global game_host_name, status_id, status_channel
 
     embed = discord.Embed(title="**2023 Award Winner for Best Mechanic!\nTurbo Bot v2.1 (with subs!) by benneh\nHelp keep Turby running by supporting its GoFundMe: https://gofund.me/64aaddfd", color=0x3381ff)
