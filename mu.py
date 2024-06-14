@@ -561,8 +561,8 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
     else:
         village_killing_role_count = random.randint(0, village_pr_count)
         village_utility_role_count = village_pr_count - village_killing_role_count
-        wolf_killing_role_count = village_killing_role_count
-        wolf_utility_role_count = village_utility_role_count
+        wolf_killing_role_count = random.randint(0, wolf_pr_count)
+        wolf_utility_role_count = wolf_pr_count - wolf_killing_role_count
     
     village_vt_count = village_count - village_pr_count
     wolf_goon_count = wolf_count - wolf_pr_count
