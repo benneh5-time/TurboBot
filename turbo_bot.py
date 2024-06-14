@@ -1609,7 +1609,7 @@ async def rand(ctx, *args):
                 
             if not thread_id:
                 print(f"Attempting to post new thread with {game_title}", flush=True)
-                thread_id = mu.post_thread(session, game_title, security_token, setup_title)
+                thread_id = mu.post_thread(session, game_title, security_token, setup_title,test=False)
             host_list = [f"{host}" for host in game_host_name]
             hosts = ', '.join(host_list)
             await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
@@ -1742,6 +1742,195 @@ async def rand(ctx, *args):
         
         finally:
             is_rand_running = False
+
+@bot.command()
+async def test_rand(ctx, *args):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled
+
+    player_aliases = ["abraham delacey", "seel", "sprigatito", "dark forces", "butterr", "gamer", "deine mudda", "joe bruin", "eepy", "the turbo team"]
+        
+    if is_rand_running:
+        await ctx.send("The !rand command is currently being processed. Please wait.")
+        return
+    
+    if ctx.author.id not in mods:
+        await ctx.send("Test rands only allowed for turby subscribers")
+        return
+    
+    # args = shlex.split(' '.join(args))
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-title', default=None)
+    parser.add_argument('-thread_id', default=None)
+    
+    args_parsed = parser.parse_args(args)
+
+    is_rand_running = True
+
+    await ctx.send("Randing, stfu")
+    
+    try:
+    
+        username = os.environ.get('MUUN')
+        password = os.environ.get('MUPW')
+        
+        #Login and get Initial Token
+        session = mu.login(username, password)
+        security_token = mu.new_thread_token(session)
+        
+        game_title = args_parsed.title
+        thread_id = args_parsed.thread_id
+
+        if current_setup == "random10er":
+            potential_setups = ["joat10", "vig10", "bomb10"]
+            final_game_setup = random.choice(potential_setups)
+            setup_title = final_game_setup
+        elif current_setup == "closedrandom10er":
+            setup_title = "closedrandom10er"
+            final_game_setup = "closedrandom10er"
+        else:
+            final_game_setup = current_setup
+            setup_title = final_game_setup
+
+        if not game_title:
+            game_title = mu.generate_game_thread_uuid()
+            
+        if not thread_id:
+            print(f"Attempting to post new thread with {game_title}", flush=True)
+            thread_id = mu.post_thread(session, game_title, security_token, setup_title,test=True)
+        host_list = [f"{host}" for host in game_host_name]
+        hosts = ', '.join(host_list)
+        await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
+        print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
+        security_token = mu.new_game_token(session, thread_id)
+
+        response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, final_game_setup, day_length, night_length, game_host_name, anon_enabled,player_limit)
+        
+        if "was created successfully." in response_message:
+            # Use aliases to get the Discord IDs
+            print("Success. Gathering player list for mentions", flush=True)
+            mention_list = []
+            
+            for player in player_aliases:
+                for key, value in aliases.items():
+                    if player == value:
+                        mention_list.append(int(key))
+                        
+            player_mentions = " ".join([f"<@{id}>" for id in mention_list])
+            game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
+            await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}\nType !dvc to join the turbo DVC/Graveyard. You will be auto-in'd to the graveyard channel upon your death if you are in that server!")
+            
+
+            role, channel_id, guild = await create_dvc(thread_id)
+            print(f"DVC thread created. Clearing variables", flush=True)
+            channel = bot.get_channel(channel_id)
+
+            host_msg = "Hosts for the current game: "
+            for host in game_host_name:
+                if host in aliases.values():
+                    try:
+                        mention_id = find_key_by_value(aliases, host)
+                        member = guild.get_member(mention_id)
+                        await member.add_roles(role)
+                        host_msg += f"<@{mention_id}> "
+                        #await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
+                    except:
+                        print(f"Can't add {host} to dvc", flush=True)
+                        #await channel.send(f"failed to add {host} to dvc.")
+            await channel.send(host_msg)
+
+            spec_msg = "Specs for the current game: "
+            for spec in spec_list:
+                print(spec, flush=True)
+                if int(spec) in mention_list:
+                    print(f"{spec} not in list, continuing to next", flush=True)
+                    continue
+                else:
+                    try:
+                        spec_int = int(spec)
+                        print(f"Trying to add {spec_int} to dvc",flush=True)
+
+                        spec_member = guild.get_member(spec_int)
+                        await spec_member.add_roles(role)
+                        spec_msg += f"<@{spec}> "
+                        #await channel.send(f"<@{spec}> is spectating, welcome to dvc")
+                    except Exception as error:
+                        print(f"Error: {error}", flush=True)
+            await channel.send(spec_msg)
+            
+            await channel.send(f"MU Link for the current game: \n\n{game_url}")
+
+            await new_game_spec_message(bot, thread_id, game_title)
+            postgame_players = players
+            game_host_name = ["Turby"]
+            players.clear()
+            players.update(waiting_list)
+            waiting_list.clear()  
+            anon_enabled = False 
+            print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
+            is_rand_running = False
+            current_game = thread_id
+            await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
+            print(f"Threadmark processor finished. rand function finished.", flush=True)
+            await edit_dvc(channel, guild)
+            await delete_dvc_role(channel, role)
+            current_game = None
+            
+            summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
+            summary_response = requests.get(summary_url)
+            summary_json = summary_response.json()
+
+            summary_csv = 'game_database.csv'
+            summary_headers = ['Turbo Title', 'Setup', 'Thread ID', 'Game ID', 'Winning Alignment', 'Villagers', 'Wolves']
+            town = summary_json['players']['town']
+            mafia = summary_json['players']['mafia']
+
+            town_list = []
+            mafia_list = []
+
+            for player in town:
+                town_list.append(player['username'])
+                
+            for player in mafia:
+                mafia_list.append(player['username'])
+            
+            title = summary_json['title']
+            start_index = title.find(" - [")
+            if start_index != -1:
+                start_index += len(" - [")
+                end_index = title.find(" game]", start_index)
+
+                if end_index != -1:
+                    extracted_setup = title[start_index:end_index]
+                else:
+                    print("No setup found", flush=True)
+            else:
+                print("No setup found", flush=True)
+
+            with open(summary_csv, 'a', newline='') as csvfile:
+                csv_writer = csv.DictWriter(csvfile, fieldnames=summary_headers)
+
+                if csvfile.tell() == 0:
+                    csv_writer.writeheader()
+                
+                csv_writer.writerow({
+                    "Turbo Title": summary_json['title'],
+                    "Setup": extracted_setup,
+                    "Thread ID": summary_json['threadid'],
+                    "Game ID": summary_json['id'],
+                    "Winning Alignment": summary_json['winning_alignment'],
+                    "Villagers": town_list,
+                    "Wolves": mafia_list,                          
+                })
+
+
+        elif "Error" in response_message:
+            print(f"Game failed to rand, reason: {response_message}", flush=True)
+            await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
+    
+    finally:
+        is_rand_running = False
 
 def process(thread_id):
     summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"

@@ -129,7 +129,7 @@ def list_dicts_in_module(module):
     dict_names = [name for name in dir(module) if isinstance(getattr(module, name), dict)]
     return dict_names
 
-def post_thread(session, game_title, security_token, setup):
+def post_thread(session, game_title, security_token, setup, test):
 
     flavor = load_json_file('flavor.json')
     flavors = flavor['flavors']
@@ -145,12 +145,31 @@ def post_thread(session, game_title, security_token, setup):
         mafia_descriptions = []
         independent_descriptions = []
 
+        def extract_descriptions(role_categories):
+            descriptions = []
+            for category in role_categories:
+                if isinstance(category, dict):
+                    for role in category.values():
+                        descriptions.append(role.get('description', 'Unknown role, tell @benneh to fix this!'))
+            return descriptions    
+        """
         for name in town_role_names:
             role = getattr(town_roles, name)
             town_descriptions.append(role.get('description', 'Unknown role, tell @benneh to fix this!'))
         for name in mafia_role_names:
             role = getattr(mafia_roles, name)
             mafia_descriptions.append(role.get('description', 'Unknown role, tell @benneh to fix this!'))
+        for name in independent_role_names:
+            role = getattr(independent_roles, name)
+            independent_descriptions.append(role.get('description', 'Unknown role, tell @benneh to fix this!'))
+        """
+        town_role_categories = [town_roles.killing_roles, town_roles.utility_roles]
+        town_descriptions.extend(extract_descriptions(town_role_categories))
+
+        # Extract descriptions for mafia roles
+        mafia_role_categories = [mafia_roles.killing_roles, mafia_roles.utility_roles]
+        mafia_descriptions.extend(extract_descriptions(mafia_role_categories))
+
         for name in independent_role_names:
             role = getattr(independent_roles, name)
             independent_descriptions.append(role.get('description', 'Unknown role, tell @benneh to fix this!'))
@@ -181,7 +200,7 @@ def post_thread(session, game_title, security_token, setup):
 <br>[/BOX]
 <br><br>[BOX=Cop Checks may not be trustworthy!]
 <br>[LIST]
-<br>[*][COLOR=#8b4513][B]Millers and Godfathers[/B][/COLOR]can be randed into this setup. Millers are unaware and show as vanilla villagers in their role PMs.
+<br>[*][COLOR=#8b4513][B]Millers and Godfathers[/B][/COLOR] can be randed into this setup. Millers are unaware and show as vanilla villagers in their role PMs.
 <br>[*]Each [B][COLOR=#008000]VT [/COLOR][/B]has a standalone [B]5%[/B] chance to rand as a miller instead. 
 <br>[*][b]EVERY[/b] [B][COLOR=#ff0000]wolf [/COLOR][/B]has a standalone [B]10%[/B] chance to rand as a godfather in addition to the rest of it's role. 
 <br>[*]The existence of a flipped [B][COLOR=#8b4513]Miller or Godfather[/COLOR][/B]  does NOT confirm or deny the existence of any [B]cops [/B]in the setup. 
@@ -207,17 +226,19 @@ def post_thread(session, game_title, security_token, setup):
 <br><br>[BOX=Setup possibilities]
 <br><br>[LIST]
 <br>[*]This cannot rand as mountainous (unless the setup only has 1 wolf). 
-<br>[*]The wolf team will always be 25% of the total players, rounded down. (e.g. 12 players = 3 wolves, 15 players = 3 wolves, 16 players = 4 wolves)
+<br>[*]The [B][COLOR=#ff0000]wolf team[/B][/COLOR] will always be 25% of the total players, rounded down. (e.g. 12 players = 3 wolves, 15 players = 3 wolves, 16 players = 4 wolves)
 <br>[*]The amount of PRs for each team will be either (# of wolves / 2) or ((# of wolves / 2) + 1), e.g. 4 wolves = 2 PRs minimum, possibly 3
 <br>[*]Both teams will have the same amount of PRs in closedrandomXers, unless there is a 3rd party rand.
-<br>[*]There is a [COLOR=#800080][B]1.5% chance[/B][/COLOR] [B]PER [/B]village PR wherein it rands as an [B][COLOR=#800080]independent role[/COLOR][/B] instead. 
+<br>[*]There is a [COLOR=#800080][B]1.5% chance[/B][/COLOR] [B]PER [/B] for the last vanilla villager to rand as an [B][COLOR=#800080]independent role[/COLOR][/B] instead. Independent roles no longer take up town PR slots.
+<br>[*]In [b]2 POWER ROLE SETUPS[/b], there will be a MAXIMUM of 1 Killing role per team and 1 utility role. 
+<br>[*]If there is 1 POWER ROLE or 3 or MORE POWER ROLES, any combination of KILLING/UTILITY can rand for both teams.
 <br>[*]There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed. 
 <br>[*]There is an [b]10%[/b] chance for any wolf to rand a bulletproof vest in addition to the rest of it's role.
 <br>[/LIST]
 <br>[/BOX]
 <br><br>[BOX=Cop Checks may not be trustworthy!]
 <br>[LIST]
-<br>[*][COLOR=#8b4513][B]Millers and Godfathers[/B][/COLOR]can be randed into this setup. Millers are unaware and show as vanilla villagers in their role PMs.
+<br>[*][COLOR=#8b4513][B]Millers and Godfathers[/B][/COLOR] can be randed into this setup. Millers are unaware and show as vanilla villagers in their role PMs.
 <br>[*]Each [B][COLOR=#008000]VT [/COLOR][/B]has a standalone [B]5%[/B] chance to rand as a miller instead. 
 <br>[*][b]EVERY[/b] [B][COLOR=#ff0000]wolf [/COLOR][/B]has a standalone [B]10%[/B] chance to rand as a godfather in addition to the rest of it's role. 
 <br>[*]The existence of a flipped [B][COLOR=#8b4513]Miller or Godfather[/COLOR][/B]  does NOT confirm or deny the existence of any [B]cops [/B]in the setup. 
@@ -241,10 +262,15 @@ def post_thread(session, game_title, security_token, setup):
         #game_flavor = f"[CENTER][TITLE][B]This is a closed and random 10er[/B][/TITLE][/CENTER]<br><br>[B][SIZE=4]Roles have been randomly selected from a pool of roles Turby has access to that is ever growing.[/SIZE][/B]<br><br>[BOX=Setup possibilities][LIST][*]This cannot rand as mountainous.<br>[*]The village rands between 1 and 2 PRs. There is a [b]1% chance[/b] that each village PR rands as an independent role instead. If the village rands 1 PR, the wolves rand between 0 and 1 PRs. If the village rands 2 PRs, the wolves rand between 1 and 2 PRs. There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed.<br><br>Millers can be randed into this setup. Each VT has a standalone 5% chance to rand as a miller instead. This does [b]NOT[/b] confirm or deny the existance of cops. Millers do not count as a 'PR' slot for the town. Godfathers may exist for mafia, but only as PR roles and the ones that are are noted in the role list below. <br><br>There are at most 2 PRs for the village and at most 2 for the wolves. <br><br>These are the roles possible for the village: <br><br>{town_flavor}<br><br>These are the roles possible for 3rd-party/independent:<br><br>{independent_flavor}<br><br>These are the roles possible for wolves:<br><br>{mafia_flavor}<br><br><br>[COLOR=\"#FF0000\"][U][B]Suffix Legend:[/B][/U][/COLOR]<br>[B]d(x)[/B] - Day (x) use of the PR<br>[B]de[/B] - Disabled in Endgame<br>[B]c [/B]- Compulsive<br>[B]m [/B]- Macho<br>[B]st [/B]- Self-Targetable<br>[B]gf [/B]- Godfather"
     else:
         game_flavor = random.choice(flavors)
+
+    if test == False:
+        forum = "8"
+    else:
+        forum = "48"
         
     payload = {
         "do": "postthread",
-        "f": "8",
+        "f": forum,
         "s": "",
         "prefixid": "GameThread",
         "subject": f"{game_title} - [{setup} game]",
@@ -427,6 +453,7 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
     else:
         print("Game rand fucked up")
 
+
 def load_flavor_jsons():
     name_image_pairs = load_json_file('turboers.json')
     pr_name_image_pairs = load_json_file('powerroles.json')
@@ -528,6 +555,14 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
 
     village_pr_count = random.randint(pr_base_count, pr_base_count + 1)
     wolf_pr_count = village_pr_count
+
+    if village_pr_count == 2:
+        village_killing_role_count, wolf_killing_role_count, village_utility_role_count, wolf_utility_role_count = 1, 1, 1, 1
+    else:
+        village_killing_role_count = random.randint(0, village_pr_count)
+        village_utility_role_count = village_pr_count - village_killing_role_count
+        wolf_killing_role_count = village_killing_role_count
+        wolf_utility_role_count = village_utility_role_count
     
     village_vt_count = village_count - village_pr_count
     wolf_goon_count = wolf_count - wolf_pr_count
@@ -537,34 +572,58 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
     independent_prs = random.sample(pr_name_image_pairs, village_pr_count)
     wolves = random.sample(wolf_name_image_pairs, wolf_count)
 
-    village_roles = [value for key, value in vars(town_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
-    wolf_roles = [value for key, value in vars(mafia_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
+    village_killing_roles = [value for key, value in town_roles.killing_roles.items()]
+    village_utility_roles = [value for key, value in town_roles.utility_roles.items()]
+ 
+    wolf_killing_roles = [value for key, value in mafia_roles.killing_roles.items()]
+    wolf_utility_roles = [value for key, value in mafia_roles.utility_roles.items()]
+
     thirdparty_roles = [value for key, value in vars(independent_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
 
-    selected_village_roles = random.sample(village_roles, village_pr_count)
-    selected_wolf_roles = random.sample(wolf_roles, wolf_pr_count)
-    selected_independent_roles = random.sample(thirdparty_roles, village_pr_count)
+    selected_village_killing_roles = random.sample(village_killing_roles, village_killing_role_count)
+    selected_village_utility_roles = random.sample(village_utility_roles, village_utility_role_count)
+    selected_wolf_killing_roles = random.sample(wolf_killing_roles, wolf_killing_role_count)
+    selected_wolf_utility_roles = random.sample(wolf_utility_roles, wolf_utility_role_count)
+
+    selected_village_roles = selected_village_killing_roles + selected_village_utility_roles
+    selected_wolf_roles = selected_wolf_killing_roles + selected_wolf_utility_roles
+    selected_independent_roles = random.sample(thirdparty_roles, 1)
 
     for i in range(0, village_vt_count):
-        miller_rand = random.random()
 
-        if miller_rand <=.05:
-            current_vt = roles.miller.copy()
+        if i == village_vt_count - 1:
+            independent_rand = random.random()
+            if independent_rand <=.015:
+                current_ind = selected_independent_roles[i].copy()
+                current_ind['character_name'] = villagers[i]['character_name']
+                current_ind['character_image'] = villagers[i]['character_image']
+                ind_json = json.dumps(current_ind)
+                data.add("roles[]", ind_json)
+            else:
+                miller_rand = random.random()
+                if miller_rand <=.05:
+                    current_vt = roles.miller.copy()
+                else:
+                    current_vt = roles.vt.copy()
+                current_vt['character_name'] = villagers[i]['character_name']
+                current_vt['character_image'] = villagers[i]['character_image']
+                vt_json = json.dumps(current_vt)
+                data.add("roles[]", vt_json)
+                data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
         else:
-            current_vt = roles.vt.copy()
-        current_vt['character_name'] = villagers[i]['character_name']
-        current_vt['character_image'] = villagers[i]['character_image']
-        vt_json = json.dumps(current_vt)
-        data.add("roles[]", vt_json)
-        data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+            miller_rand = random.random()
+            if miller_rand <=.05:
+                current_vt = roles.miller.copy()
+            else:
+                current_vt = roles.vt.copy()
+            current_vt['character_name'] = villagers[i]['character_name']
+            current_vt['character_image'] = villagers[i]['character_image']
+            vt_json = json.dumps(current_vt)
+            data.add("roles[]", vt_json)
+            data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
 
     for i in range(0, village_pr_count):
-        independent_rand = random.random()
-
-        if independent_rand <=.015:
-            current_pr = selected_independent_roles[i].copy()
-        else:
-            current_pr = selected_village_roles[i].copy()
+        current_pr = selected_village_roles[i].copy()
         current_pr['character_name'] = village_prs[i]['character_name']
         current_pr['character_image'] = village_prs[i]['character_image']
         pr_json = json.dumps(current_pr)
