@@ -815,7 +815,17 @@ async def bugping(ctx):
 <@1223419673907822603>
 <@970410416624775189>''')
 
-
+@bot.command()
+async def begping(ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
+        return  
+    
+    await ctx.send('''begping 1.0 (pathetic edition
+PLEASE FUCKIJN JOIN I NEED U IN THIS TURB PLEASE JFC PLEASE)''')
 @bot.command()
 async def bigping(ctx):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
