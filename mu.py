@@ -592,7 +592,7 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
     
     neighbor_rand = random.random()
 
-    vvneighbors, vprvneighbors, vtwneighbors, vprwneighbors = False, False, False, False
+    vvneighbors, vprvneighbors, vtwneighbors, vprwneighbors, wwneighbors = False, False, False, False, False
 
     if 0.0 <= neighbor_rand < 0.05:
         vvneighbors = True
@@ -600,7 +600,7 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
         vprvneighbors = True
     elif 0.1 <= neighbor_rand < 0.15:
         vtwneighbors = True
-    elif 0.15 <= neighbor_rand < 1:
+    elif 0.15 <= neighbor_rand < .2:
         vprwneighbors = True
 
     for i in range(0, village_vt_count):
