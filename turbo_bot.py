@@ -572,13 +572,9 @@ async def game(ctx, setup_name=None, Xer_Players: int = None):
 
     global current_setup, player_limit, players, waiting_list
 
-    valid_setup = {setup.lower() for setup in valid_setups}
-    if setup_name:
-        setup_name = setup_name.lower()
-
     if setup_name is None:
         await ctx.send(f"The current game setup is '{current_setup}'. To change the setup, use !game <setup_name>. Valid setup names are: {', '.join(valid_setups)}.")
-    elif setup_name in valid_setup:
+    elif setup_name in valid_setups:
         if setup_name == "cop9":
             new_player_limit = 9
         elif setup_name == "vig10":
@@ -597,7 +593,7 @@ async def game(ctx, setup_name=None, Xer_Players: int = None):
             new_player_limit = 10
         elif setup_name == "random10er":
             new_player_limit = 10
-        elif setup_name == "closedrandomxer" and Xer_Players is not None:
+        elif setup_name == "closedrandomXer" and Xer_Players is not None:
             new_player_limit = Xer_Players
             if new_player_limit < 7:
                 await ctx.send(f"Cannot change setup to '{setup_name} - {new_player_limit}'. Minimum number of players for closedrandomXers is 7")
@@ -607,7 +603,7 @@ async def game(ctx, setup_name=None, Xer_Players: int = None):
                 return
             await ctx.send(f"Player limit has been increased to {Xer_Players}!")
 
-        elif setup_name == "closedrandomxer":
+        elif setup_name == "closedrandomXer":
             await ctx.send("Please include the number of players after !game closedrandomXer [#] and try again")
         elif setup_name == "cop13":
             new_player_limit = 13
