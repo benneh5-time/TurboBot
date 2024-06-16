@@ -573,7 +573,8 @@ async def game(ctx, setup_name=None, Xer_Players: int = None):
     global current_setup, player_limit, players, waiting_list
 
     valid_setup = {setup.lower() for setup in valid_setups}
-    setup_name = setup_name.lower()
+    if setup_name:
+        setup_name = setup_name.lower()
 
     if setup_name is None:
         await ctx.send(f"The current game setup is '{current_setup}'. To change the setup, use !game <setup_name>. Valid setup names are: {', '.join(valid_setups)}.")
