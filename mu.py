@@ -567,6 +567,7 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
     village_vt_count = village_count - village_pr_count
     wolf_goon_count = wolf_count - wolf_pr_count
 
+
     villagers = random.sample(name_image_pairs, village_vt_count)
     village_prs = random.sample(pr_name_image_pairs, village_pr_count)
     independent_prs = random.sample(pr_name_image_pairs, village_pr_count)
@@ -588,6 +589,17 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
     selected_village_roles = selected_village_killing_roles + selected_village_utility_roles
     selected_wolf_roles = selected_wolf_killing_roles + selected_wolf_utility_roles
     selected_independent_roles = random.sample(thirdparty_roles, 1)
+    
+    neighbor_rand = random.random()
+
+    if 0.0 <= neighbor_rand < 0.05:
+        vvneighbors = True
+    elif 0.05 <= neighbor_rand < 0.1:
+        vprvneighbors = True
+    elif 0.1 <= neighbor_rand < 0.15:
+        vtwneighbors = True
+    elif 0.15 <= neighbor_rand < 1:
+        vprwneighbors = True
 
     for i in range(0, village_vt_count):
 
@@ -611,21 +623,40 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
                 data.add("roles[]", vt_json)
                 data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
         else:
-            miller_rand = random.random()
-            if miller_rand <=.05:
-                current_vt = roles.miller.copy()
-            else:
+            if vvneighbors and i in [0, 1]:
                 current_vt = roles.vt.copy()
-            current_vt['character_name'] = villagers[i]['character_name']
-            current_vt['character_image'] = villagers[i]['character_image']
-            vt_json = json.dumps(current_vt)
-            data.add("roles[]", vt_json)
-            data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+                current_vt['character_name'] = villagers[i]['character_name']
+                current_vt['character_image'] = villagers[i]['character_image']
+                current_vt['neighbor'] = "a"
+                vt_json = json.dumps(current_vt)
+                data.add("roles[]", vt_json)
+            elif (vtwneighbors and i in [0]) or (vprvneighbors and i in [0]):
+                current_vt = roles.vt.copy()
+                current_vt['character_name'] = villagers[i]['character_name']
+                current_vt['character_image'] = villagers[i]['character_image']
+                current_vt['neighbor'] = "a"
+                vt_json = json.dumps(current_vt)
+                data.add("roles[]", vt_json)
+            else:
+                miller_rand = random.random()
+                if miller_rand <=.05:
+                    current_vt = roles.miller.copy()
+                else:
+                    current_vt = roles.vt.copy()
+                current_vt['character_name'] = villagers[i]['character_name']
+                current_vt['character_image'] = villagers[i]['character_image']
+                vt_json = json.dumps(current_vt)
+                data.add("roles[]", vt_json)
+                data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
 
     for i in range(0, village_pr_count):
         current_pr = selected_village_roles[i].copy()
         current_pr['character_name'] = village_prs[i]['character_name']
         current_pr['character_image'] = village_prs[i]['character_image']
+        if vprvneighbors and i in [0]:
+            current_pr['neighbor'] = "a"
+        elif vprwneighbors and i in [0]:
+            current_pr['neighbor'] = "a"
         pr_json = json.dumps(current_pr)
         data.add("roles[]", pr_json)
         
@@ -639,6 +670,10 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
             current_wolf['bpv_status'] = "1"
         if gf_rand <=.1:
             current_wolf['godfather'] = "1"
+        if vtwneighbors and i in [0]:
+            current_wolf['neighbor'] = "a"
+        elif vprwneighbors and i in [0]:
+            current_wolf['neighbor'] = "a"
         current_wolf['character_name'] = wolf['character_name']
         current_wolf['character_image'] = wolf['character_image']
         wolf_json = json.dumps(current_wolf)

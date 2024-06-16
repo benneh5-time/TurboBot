@@ -826,6 +826,7 @@ async def begping(ctx):
     
     await ctx.send('''begping 1.0 (pathetic edition
 PLEASE FUCKIJN JOIN I NEED U IN THIS TURB PLEASE JFC PLEASE)''')
+    
 @bot.command()
 async def bigping(ctx):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
