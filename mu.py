@@ -136,7 +136,7 @@ def post_thread(session, game_title, security_token, setup, test):
 
     protected_url = "https://www.mafiauniverse.com/forums/newthread.php"
 
-    if setup == "closedrandom10er" or setup == "closedrandomXer":
+    if setup == "closedrandomXer":
         town_role_names = [name for name in dir(town_roles) if not name.startswith('__')]
         mafia_role_names = [name for name in dir(mafia_roles)  if not name.startswith('__')]
         independent_role_names = [name for name in dir(independent_roles) if not name.startswith('__')]
@@ -183,44 +183,7 @@ def post_thread(session, game_title, security_token, setup, test):
         mafia_flavor = "[*]" + mafia_flavor
         independent_flavor = "[*]" + independent_flavor
 
-        if setup == "closedrandom10er":
-            game_flavor = f'''[CENTER][TITLE][B]This is a closed and random 10er[/B][/TITLE][/CENTER]
-<br><br>[B][SIZE=4]Roles have been randomly selected from a pool of roles Turby has access to that is ever growing.[/SIZE][/B]
-<br><br>[BOX=Setup possibilities]
-<br><br>[LIST]
-<br>[*]This cannot rand as mountainous. 
-<br>[*]The [COLOR=#008000][B]village [/B][/COLOR]rands either 1 or 2 PRs. 
-<br>[*]If the [COLOR=#008000][B]village [/B][/COLOR]has [COLOR=#008000][B]1 PR[/B][/COLOR], the [COLOR=#ff0000][B]wolves [/B][/COLOR]will rand either[B] [COLOR=#ff0000]0 or 1 PRs.[/COLOR][/B] 
-<br>[*]If the[COLOR=#008000][B] village[/B][/COLOR] rands [B][COLOR=#008000]2 PRs[/COLOR][/B], the [COLOR=#ff0000][B]wolves [/B][/COLOR]rand between [COLOR=#ff0000][B]1 and 2 PRs.[/B][/COLOR] 
-<br>[*]There is a [COLOR=#800080][B]1.5% chance[/B][/COLOR] [B]PER [/B]village PR wherein it rands as an [B][COLOR=#800080]independent role[/COLOR][/B] instead. 
-<br>[*]There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed. 
-<br>[*]There is an [b]10%[/b] chance for any wolf to rand a bulletproof vest in addition to the rest of it's role.
-<br>[*]In closedrandom13ers, wolves always rand the same amount of PRs as the villagers.
-<br>[/LIST]
-<br>[/BOX]
-<br><br>[BOX=Cop Checks may not be trustworthy!]
-<br>[LIST]
-<br>[*][COLOR=#8b4513][B]Millers and Godfathers[/B][/COLOR] can be randed into this setup. Millers are unaware and show as vanilla villagers in their role PMs.
-<br>[*]Each [B][COLOR=#008000]VT [/COLOR][/B]has a standalone [B]5%[/B] chance to rand as a miller instead. 
-<br>[*][b]EVERY[/b] [B][COLOR=#ff0000]wolf [/COLOR][/B]has a standalone [B]10%[/B] chance to rand as a godfather in addition to the rest of it's role. 
-<br>[*]The existence of a flipped [B][COLOR=#8b4513]Miller or Godfather[/COLOR][/B]  does NOT confirm or deny the existence of any [B]cops [/B]in the setup. 
-<br>[*][COLOR=#8b4513][B]Millers [/B][/COLOR]do not count as a '[COLOR=#008000][B]PR[/B][/COLOR]' slot for the town - they only replace [B][COLOR=#008000]VTs[/COLOR][/B]. 
-<br>[/LIST]
-<br>[/BOX]
-<br><br>[BOX=Possible Village Roles][LIST=1]
-{town_flavor}[/LIST][/BOX]
-<br><br>[BOX=Possible Independent Roles][LIST=1]
-{independent_flavor}[/LIST][/BOX]
-<br><br>[BOX=Possible Wolf Roles][LIST=1]
-{mafia_flavor}[/LIST][/BOX]
-<br><br>[BOX=Suffix Legend][LIST=1]
-[*][B]d(x)[/B] - Day (x) use of the PR
-[*][B]de[/B] - Disabled in Endgame
-[*][B]c [/B]- Compulsive
-[*][B]m [/B]- Macho
-[*][B]st [/B]- Self-Targetable
-[*][B]gf [/B]- Godfather[/LIST][/BOX]'''
-        elif setup == "closedrandomXer":
+        if setup == "closedrandomXer":
             game_flavor = f'''[CENTER][TITLE][B]This is a closed and random Xer[/B][/TITLE][/CENTER]
 <br><br>[B][SIZE=4]Roles have been randomly selected from a pool of roles Turby has access to that is ever growing.[/SIZE][/B]
 <br><br>[BOX=Setup possibilities]
@@ -240,8 +203,8 @@ def post_thread(session, game_title, security_token, setup, test):
 <br><br>[BOX=Cop Checks may not be trustworthy!]
 <br>[LIST]
 <br>[*][COLOR=#8b4513][B]Millers and Godfathers[/B][/COLOR] can be randed into this setup. Millers are unaware and show as vanilla villagers in their role PMs.
-<br>[*]Each [B][COLOR=#008000]VT [/COLOR][/B]has a standalone [B]5%[/B] chance to rand as a miller instead. 
-<br>[*][b]EVERY[/b] [B][COLOR=#ff0000]wolf [/COLOR][/B]has a standalone [B]10%[/B] chance to rand as a godfather in addition to the rest of it's role. 
+<br>[*]Each [B][COLOR=#008000]VT [/COLOR][/B]has a standalone [B]2.5%[/B] chance to rand as a miller instead. 
+<br>[*][b]EVERY[/b] [B][COLOR=#ff0000]wolf [/COLOR][/B]has a standalone [B]5%[/B] chance to rand as a godfather in addition to the rest of it's role. 
 <br>[*]The existence of a flipped [B][COLOR=#8b4513]Miller or Godfather[/COLOR][/B]  does NOT confirm or deny the existence of any [B]cops [/B]in the setup. 
 <br>[*][COLOR=#8b4513][B]Millers [/B][/COLOR]do not count as a '[COLOR=#008000][B]PR[/B][/COLOR]' slot for the town - they only replace [B][COLOR=#008000]VTs[/COLOR][/B]. 
 <br>[/LIST]
@@ -329,11 +292,6 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         setup_title = final_game_setup
         data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': f"{game_title} - [{setup_title} game]", 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Open', 'period': 'day', 'phase': '1', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '1', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
 
-    elif game_setup == "closedrandom10er":
-        setup_title = "closedrandom10er"
-        final_game_setup = game_setup
-        data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': f"{game_title} - [{setup_title} game]", 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Closed', 'period': 'day', 'phase': '1', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '1', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
-    
     elif game_setup == "closedrandomXer":
         setup_title = "closedrandomXer"
         final_game_setup = game_setup
@@ -377,10 +335,6 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         data.add('num_players', '10')
     if final_game_setup == "bml10":
         add_bml_roles(game_title)
-        data.add("preset", "custom")
-        data.add('num_players', '10')
-    if final_game_setup == "closedrandom10er":
-        add_closedrandom10er_roles(game_title)
         data.add("preset", "custom")
         data.add('num_players', '10')
     if final_game_setup == "closedrandomXer":
@@ -461,89 +415,6 @@ def load_flavor_jsons():
     wolf_name_image_pairs = load_json_file('wolves.json')
     return name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs
 
-def add_closedrandom10er_roles(game_title):
-    global data
-    
-    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
-
-    village_pr_count = random.randint(1,2)
-    if village_pr_count == 2:
-        wolf_pr_count = random.randint(1,2)
-    else:
-        wolf_pr_count = random.randint(0,1)
-    
-    village_vt_count = 8 - village_pr_count
-    wolf_goon_count = 2 - wolf_pr_count
-
-    villagers = random.sample(name_image_pairs, village_vt_count)
-    village_prs = random.sample(pr_name_image_pairs, village_pr_count)
-    independent_prs = random.sample(pr_name_image_pairs, village_pr_count)
-    wolves = random.sample(wolf_name_image_pairs, 2)
-
-    village_roles = [value for key, value in vars(town_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
-    wolf_roles = [value for key, value in vars(mafia_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
-    thirdparty_roles = [value for key, value in vars(independent_roles).items() if isinstance(value, dict) and '__name__' not in value.keys()]
-
-    selected_village_roles = random.sample(village_roles, village_pr_count)
-    selected_wolf_roles = random.sample(wolf_roles, wolf_pr_count)
-    selected_independent_roles = random.sample(thirdparty_roles, village_pr_count)
-
-    for i in range(0, village_vt_count):
-        miller_rand = random.random()
-
-        if miller_rand <=.05:
-            current_vt = roles.miller.copy()
-        else:
-            current_vt = roles.vt.copy()
-        current_vt['character_name'] = villagers[i]['character_name']
-        current_vt['character_image'] = villagers[i]['character_image']
-        vt_json = json.dumps(current_vt)
-        data.add("roles[]", vt_json)
-        data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
-
-    for i in range(0, village_pr_count):
-        independent_rand = random.random()
-
-        if independent_rand <=.015:
-            current_pr = selected_independent_roles[i].copy()
-        else:
-            current_pr = selected_village_roles[i].copy()
-        current_pr['character_name'] = village_prs[i]['character_name']
-        current_pr['character_image'] = village_prs[i]['character_image']
-        pr_json = json.dumps(current_pr)
-        data.add("roles[]", pr_json)
-        
-    for i in range(0, wolf_pr_count):
-        wolf = wolves.pop(0)
-        bpv_rand = random.random()
-        gf_rand = random.random()
-
-        current_wolf = selected_wolf_roles[i].copy()
-        if bpv_rand <=.1:
-            current_wolf['bpv_status'] = "1"
-        if gf_rand <=.1:
-            current_wolf['godfather'] = "1"
-        current_wolf['character_name'] = wolf['character_name']
-        current_wolf['character_image'] = wolf['character_image']
-        wolf_json = json.dumps(current_wolf)
-        data.add("roles[]", wolf_json)
-
-    for i in range(0, wolf_goon_count):
-        wolf = wolves.pop(0)
-        bpv_rand = random.random()
-        gf_rand = random.random()
-
-        current_wolf = roles.goon.copy()
-        if bpv_rand <=.1:
-            current_wolf['bpv_status'] = "1"
-        if gf_rand <=.1:
-            current_wolf['godfather'] = "1"
-
-        current_wolf['character_name'] = wolf['character_name']
-        current_wolf['character_image'] = wolf['character_image']
-        wolf_json = json.dumps(current_wolf)
-        data.add("roles[]", wolf_json)
-
 def add_closedrandomXer_roles(game_title, player_limit=13):
     global data
     
@@ -616,7 +487,7 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
                 data.add("roles[]", ind_json)
             else:
                 miller_rand = random.random()
-                if miller_rand <=1:
+                if miller_rand <=.025:
                     current_vt = roles.miller.copy()
                     data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
 
@@ -644,10 +515,9 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
                 data.add("roles[]", vt_json)
             else:
                 miller_rand = random.random()
-                if miller_rand <=1:
+                if miller_rand <=.025:
                     current_vt = roles.miller.copy()
                     data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
-
                 else:
                     current_vt = roles.vt.copy()
                 current_vt['character_name'] = villagers[i]['character_name']
@@ -675,7 +545,7 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
         current_wolf = selected_wolf_roles[i].copy()
         if bpv_rand <=.1:
             current_wolf['bpv_status'] = "1"
-        if gf_rand <=.1:
+        if gf_rand <=.05:
             current_wolf['godfather'] = "1"
         if vtwneighbors and i in [0]:
             current_wolf['neighbor'] = "a"
@@ -694,7 +564,7 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
         current_wolf = roles.goon.copy()
         if bpv_rand <=.1:
             current_wolf['bpv_status'] = "1"
-        if gf_rand <=.1:
+        if gf_rand <=.05:
             current_wolf['godfather'] = "1"
 
         current_wolf['character_name'] = wolf['character_name']
