@@ -234,6 +234,7 @@ def post_thread(session, game_title, security_token, setup, test):
 <br>[*]If there is 1 POWER ROLE or 3 or MORE POWER ROLES, any combination of KILLING/UTILITY can rand for both teams.
 <br>[*]There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed. 
 <br>[*]There is an [b]10%[/b] chance for any wolf to rand a bulletproof vest in addition to the rest of it's role.
+<br>[*]There is a [b]20%[/b] total chance for neighbors to rand into the setup. They can be any pairing of VT/PR/Wolves.
 <br>[/LIST]
 <br>[/BOX]
 <br><br>[BOX=Cop Checks may not be trustworthy!]
