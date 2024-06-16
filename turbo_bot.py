@@ -37,7 +37,7 @@ mods = [178647349369765888, 93432503863353344]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
-valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandom10er", "closedrandomXer"] #future setups
+valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandomXer"] #future setups
 valid_timers = ["sunbae", "14-3", "16-5", "8-2"]
 day_length = 14
 night_length = 3
@@ -593,10 +593,11 @@ async def game(ctx, setup_name=None, Xer_Players: int = None):
             new_player_limit = 10
         elif setup_name == "random10er":
             new_player_limit = 10
-        elif setup_name == "closedrandom10er":
-            new_player_limit = 10
         elif setup_name.lower() == "closedrandomxer" and Xer_Players is not None:
             new_player_limit = Xer_Players
+            if new_player_limit < len(players):
+                await ctx.send(f"Cannot change setup to '{setup_name} - {new_player_limit}'. The current number of players ({len(players)}) exceeds the player limit for this setup ({new_player_limit}).")
+                return
             await ctx.send(f"Player limit has been increased to {Xer_Players}!")
         elif setup_name == "closedrandomXer":
             await ctx.send("Please include the number of players after !game closedrandomXer [#] and try again")
@@ -1622,9 +1623,6 @@ async def rand(ctx, *args):
                 potential_setups = ["joat10", "vig10", "bomb10"]
                 final_game_setup = random.choice(potential_setups)
                 setup_title = final_game_setup
-            elif current_setup == "closedrandom10er":
-                setup_title = "closedrandom10er"
-                final_game_setup = "closedrandom10er"
             else:
                 final_game_setup = current_setup
                 setup_title = final_game_setup
@@ -1811,9 +1809,6 @@ async def test_rand(ctx, *args):
             potential_setups = ["joat10", "vig10", "bomb10"]
             final_game_setup = random.choice(potential_setups)
             setup_title = final_game_setup
-        elif current_setup == "closedrandom10er":
-            setup_title = "closedrandom10er"
-            final_game_setup = "closedrandom10er"
         else:
             final_game_setup = current_setup
             setup_title = final_game_setup
@@ -2077,7 +2072,7 @@ async def help(ctx):
     embed.add_field(name="!clear", value="Resets the current game to defaults. Must be confirmed with `!clear -confirm`.", inline=False)
     embed.add_field(name="!list", value="Displays the current list of the game, including player list, waiting list, host, and setup.", inline=False)
     embed.add_field(name="!host", value="Sets the host of the game. By default, it will use your defined alias. You can specify a different host's username, e.g. `!host MU_Username`.", inline=False)
-    embed.add_field(name="!game", value="Sets the game setup. Must specify setup name from available options: cop9, cop13, joat10, vig10, bomb10, bml10, doublejoat13, random10er or closedrandom10er. The random10er setup randomizes between a vig, bomb, and joat game. E.g. `!game cop9`.", inline=False)
+    embed.add_field(name="!game", value="Sets the game setup. Must specify setup name from available options: cop9, cop13, joat10, vig10, bomb10, bml10, doublejoat13, random10er or closedrandomXer [PlayerLimit]. The random10er setup randomizes between a vig, bomb, and joat game. E.g. `!game cop9`.", inline=False)
     await ctx.send(embed=embed)
 
 @bot.command()
