@@ -616,8 +616,10 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
                 data.add("roles[]", ind_json)
             else:
                 miller_rand = random.random()
-                if miller_rand <=.05:
+                if miller_rand <=1:
                     current_vt = roles.miller.copy()
+                    data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+
                 else:
                     current_vt = roles.vt.copy()
                 current_vt['character_name'] = villagers[i]['character_name']
@@ -642,8 +644,10 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
                 data.add("roles[]", vt_json)
             else:
                 miller_rand = random.random()
-                if miller_rand <=.05:
+                if miller_rand <=1:
                     current_vt = roles.miller.copy()
+                    data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
+
                 else:
                     current_vt = roles.vt.copy()
                 current_vt['character_name'] = villagers[i]['character_name']
