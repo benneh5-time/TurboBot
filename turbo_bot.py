@@ -595,10 +595,14 @@ async def game(ctx, setup_name=None, Xer_Players: int = None):
             new_player_limit = 10
         elif setup_name.lower() == "closedrandomxer" and Xer_Players is not None:
             new_player_limit = Xer_Players
+            if new_player_limit < 7:
+                await ctx.send(f"Cannot change setup to '{setup_name} - {new_player_limit}'. Minimum number of players for closedrandomXers is 7")
+                return
             if new_player_limit < len(players):
                 await ctx.send(f"Cannot change setup to '{setup_name} - {new_player_limit}'. The current number of players ({len(players)}) exceeds the player limit for this setup ({new_player_limit}).")
                 return
             await ctx.send(f"Player limit has been increased to {Xer_Players}!")
+            
         elif setup_name == "closedrandomXer":
             await ctx.send("Please include the number of players after !game closedrandomXer [#] and try again")
         elif setup_name == "cop13":
