@@ -661,7 +661,7 @@ def add_joat_roles(game_title):
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
     
 
-    current_joat = town_roles.joat_peekvigdoc.copy()
+    current_joat = town_roles.utility_roles['joat_peekvigdoc'].copy()
     current_joat['character_name'] = joat[0]["character_name"]
     current_joat['character_image'] = joat[0]["character_image"]
     joat_json = json.dumps(current_joat)
@@ -695,14 +695,14 @@ def add_bomb_roles(game_title):
     
     for i in range (0,2):
         if i < 1:
-            current_ic = town_roles.ic.copy()
+            current_ic = town_roles.utility_roles['ic'].copy()
             current_ic['character_name'] = powerroles_bomb[i]["character_name"]
             current_ic['character_image'] = powerroles_bomb[i]["character_image"]
             ic_json = json.dumps(current_ic)
             data.add("roles[]", ic_json)
             data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#339933]Village Innocent Child[/COLOR][/B]. You win when all threats to the Village have been eliminated.\n[SIZE=4][B][I]Village Innocent Child[/I][/B][/SIZE]\nAs [B][COLOR=#339933]Village Innocent Child[/COLOR][/B], you have access to the [B]Claim Innocence[/B] Day action. Claiming your innocence announces your role and alignment in the Game thread for all to see. Submit your claim at any time during a Day, and your role and alignment will be announced in the Game thread. Submit your action using the form below the game thread.\n[B]Note:[/B] Innocence claims may take up to one minute to process.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")       
         else: 
-            current_inven = town_roles.inv_1xsuibomb.copy()
+            current_inven = town_roles.killing_roles['inv_1xsuibomb'].copy()
             current_inven['character_name'] = powerroles_bomb[i]["character_name"]
             current_inven['character_image'] = powerroles_bomb[i]["character_image"]
             inven_json = json.dumps(current_inven)
@@ -711,14 +711,14 @@ def add_bomb_roles(game_title):
             
     for i in range(0,2):
         if i < 1:
-            current_wolves = mafia_roles.prk_1x.copy()
+            current_wolves = mafia_roles.killing_roles['prk_1x.copy']()
             current_wolves['character_name'] = wolves[i]['character_name']
             current_wolves['character_image'] = wolves[i]['character_image']
             wolf_json = json.dumps(current_wolves)
             data.add("roles[]", wolf_json)
             data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#ff2244]Wolf Power Role Killer[/COLOR][/B]. You win when you overpower the Village and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n[SIZE=4][B][I]Wolf Team[/I][/B][/SIZE]\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\nAs [B][COLOR=#ff2244]Wolf[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf no Wolf submits an action, a player will be picked at random from the living non-Wolf players.\n[hr][/hr]\n[SIZE=4][B][I]Wolf Power Role Killer[/I][/B][/SIZE]\nAs [B][COLOR=#ff2244]Wolf Power Role Killer[/COLOR][/B], you have access to the [B]Power Role Kill[/B] Night Action. Players targeted with this action will die if they have a power role (i.e. are not a Vanilla Villager or Wolf) at the end of the Night unless protected. If they do not have a power role (i.e. are not a Vanilla Villager or Wolf Goon), this action will not affect them. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf you do not submit an action, you will forego your action on that night.\n{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
         else:
-            current_wolves = mafia_roles.rb_1x.copy()
+            current_wolves = mafia_roles.utility_roles['rb_1x'].copy()
             current_wolves['character_name'] = wolves[i]['character_name']
             current_wolves['character_image'] = wolves[i]['character_image']
             wolf_json = json.dumps(current_wolves)
@@ -744,7 +744,7 @@ def add_bml_roles(game_title):
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
     
 
-    current_inven = town_roles.inv_2xdayvig.copy()
+    current_inven = town_roles.killing_roles['inv_2xdayvig'].copy()
     current_inven['character_name'] = powerroles_bml[0]["character_name"]
     current_inven['character_image'] = powerroles_bml[0]["character_image"]
     inven_json = json.dumps(current_inven)
@@ -760,7 +760,7 @@ def add_bml_roles(game_title):
             data.add("roles[]", wolf_json)
             data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#ff2244]Wolf[/COLOR][/B]. You win when you overpower the Village and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n[SIZE=4][B][I]Wolf Team[/I][/B][/SIZE]\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\nAs [B][COLOR=#ff2244]Wolf[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf no Wolf submits an  action, a player will be picked at random from the living non-Wolf players.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
         else:
-            current_wolves = mafia_roles.rb_2x.copy()
+            current_wolves = mafia_roles.utility_roles['rb_2x'].copy()
             current_wolves['character_name'] = wolves[i]['character_name']
             current_wolves['character_image'] = wolves[i]['character_image']
             wolf_json = json.dumps(current_wolves)
@@ -787,7 +787,7 @@ def add_doublejoat13_roles(game_title):
         data.add("roles[]", vt_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
       
-    current_joat = town_roles.joat_peekvigdoc.copy()
+    current_joat = town_roles.utility_roles['joat_peekvigdoc'].copy()
     current_joat['character_name'] = joat[0]["character_name"]
     current_joat['character_image'] = joat[0]["character_image"]
     joat_json = json.dumps(current_joat)
@@ -804,7 +804,7 @@ def add_doublejoat13_roles(game_title):
             data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\nYou are [B][COLOR=#ff2244]Wolf[/COLOR][/B]. You win when you overpower the Village and are the only evil faction remaining.{{HIDE_FROM_FLIP}} Your teammates are:\n[SIZE=4][B][I]Wolf Team[/I][/B][/SIZE]\n{{TEAM_MEMBERS_GENERATED_DURING_RAND}}{{/HIDE_FROM_FLIP}}\nAs [B][COLOR=#ff2244]Wolf[/COLOR][/B], you have access to the [B]Factional Night Kill[/B] Night Action. Players targeted with this action will die at the end of the Night unless protected. Submit your Night Action each night using the form below the game thread. You may change your target as many times as you want. The last action submitted will be used.\nIf no Wolf submits an  action, a player will be picked at random from the living non-Wolf players.{{HIDE_FROM_FLIP}}\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")    
         
         else:
-            current_wolves = mafia_roles.joat_rb_rd_track.copy()
+            current_wolves = mafia_roles.utility_roles['joat_rb_rd_track'].copy()
             current_wolves['character_name'] = wolves[i]['character_name']
             current_wolves['character_image'] = wolves[i]['character_image']
             wolf_json = json.dumps(current_wolves)
@@ -827,7 +827,7 @@ def add_vig_roles(game_title):
         data.add("roles[]", vt_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
     
-    current_vig = town_roles.vig_2x.copy()
+    current_vig = town_roles.killing_roles['vig_2x'].copy()
     current_vig['character_name'] = vig[0]['character_name']
     current_vig['character_image'] = vig[0]['character_image']
     vig_json = json.dumps(current_vig)
@@ -875,7 +875,7 @@ def add_cop9_roles(game_title):
         data.add("roles[]", vt_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
   
-    current_cop = town_roles.cop.copy()
+    current_cop = town_roles.utility_roles['cop'].copy()
     current_cop['character_name'] = cop[0]["character_name"]
     current_cop['character_image'] = cop[0]["character_image"]
     cop_json = json.dumps(current_cop)
@@ -908,7 +908,7 @@ def add_cop13_roles(game_title):
         data.add("roles[]", vt_json)
         data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
   
-    current_cop = town_roles.cop.copy()
+    current_cop = town_roles.utility_roles['cop'].copy()
     current_cop['character_name'] = cop[0]["character_name"]
     current_cop['character_image'] = cop[0]["character_image"]
     cop_json = json.dumps(current_cop)
