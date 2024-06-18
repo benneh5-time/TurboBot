@@ -486,13 +486,7 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
                 ind_json = json.dumps(current_ind)
                 data.add("roles[]", ind_json)
             else:
-                miller_rand = random.random()
-                if miller_rand <=.025:
-                    current_vt = roles.miller.copy()
-                    data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
-
-                else:
-                    current_vt = roles.vt.copy()
+                current_vt = roles.vt.copy()
                 current_vt['character_name'] = villagers[i]['character_name']
                 current_vt['character_image'] = villagers[i]['character_image']
                 vt_json = json.dumps(current_vt)
@@ -514,17 +508,11 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
                 vt_json = json.dumps(current_vt)
                 data.add("roles[]", vt_json)
             else:
-                miller_rand = random.random()
-                if miller_rand <=.025:
-                    current_vt = roles.miller.copy()
-                    data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
-                else:
-                    current_vt = roles.vt.copy()
+                current_vt = roles.vt.copy()
                 current_vt['character_name'] = villagers[i]['character_name']
                 current_vt['character_image'] = villagers[i]['character_image']
                 vt_json = json.dumps(current_vt)
                 data.add("roles[]", vt_json)
-                data.add("role_pms[]", f"[CENTER][TITLE]Role PM for {game_title}[/TITLE][/CENTER]\n\nYou are [B][COLOR=#339933]Vanilla Villager[/COLOR][/B]. You win when all threats to the Village have been eliminated.{{HIDE_FROM_FLIP}}\n\n{{ROLE_PM_FOOTER_LINKS}}{{/HIDE_FROM_FLIP}}")
 
     for i in range(0, village_pr_count):
         current_pr = selected_village_roles[i].copy()
