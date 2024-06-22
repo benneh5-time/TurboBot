@@ -844,7 +844,7 @@ async def betping(ctx):
         return  
     
     await ctx.send('''```Zara bets Suki isnt playing a turbo tonight, Akane bets Suki will play one.
-loser has to change their pfp -- won by Zara!!```''')
+loser has to change their pfp -- won by Zara (suki is banned)!!```''')
     
 @bot.command()
 async def bigping(ctx):
