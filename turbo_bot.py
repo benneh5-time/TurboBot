@@ -843,7 +843,8 @@ async def betping(ctx):
         await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
         return  
     
-    await ctx.send('''No current bets!''')
+    await ctx.send('''```Zara bets Suki isnt playing a turbo tonight, Akane bets Suki will play one.
+loser has to change their pfp```''')
     
 @bot.command()
 async def bigping(ctx):
