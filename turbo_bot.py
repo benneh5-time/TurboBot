@@ -1791,7 +1791,7 @@ async def test_rand(ctx, *args):
         return
     global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled
 
-    player_aliases = ["abraham delacey", "seel", "sprigatito", "dark forces", "butterr", "gamer", "deine mudda", "joe bruin", "eepy", "the turbo team"]
+    player_aliases = ["abraham delacey", "sprigatito", "dark forces", "butterr", "joe bruin", "the turbo team", "ex lion tamer", "moppo", "Big ham, mafia goon", "thread pull"]
         
     if is_rand_running:
         await ctx.send("The !rand command is currently being processed. Please wait.")
