@@ -192,7 +192,7 @@ def post_thread(session, game_title, security_token, setup, test):
 <br>[*]The [B][COLOR=#ff0000]wolf team[/B][/COLOR] will always be 25% of the total players, rounded down. (e.g. 12 players = 3 wolves, 15 players = 3 wolves, 16 players = 4 wolves)
 <br>[*]The amount of PRs for each team will be: (# of wolves / 2) [b]or[/b] ((# of wolves / 2) + 1), e.g. 4 wolves = 2 PRs minimum, possibly 3
 <br>[*]Both teams will have the same amount of PRs in closedrandomXers.
-<br>[*]There is a [COLOR=#800080][B]1.5% chance[/B][/COLOR] [B]PER [/B] for the last vanilla villager to rand as an [B][COLOR=#800080]independent role[/COLOR][/B] instead. Independent roles no longer take up town PR slots.
+<br>[*]There is a [COLOR=#800080][B]1.5% chance for the last vanilla villager to rand as an [/B][/COLOR][B][COLOR=#800080]independent role[/COLOR][/B] instead.[COLOR=#800080][B] Independent roles no longer take up town PR slots.[/b][/color]
 <br>[*]In [b]2 POWER ROLE SETUPS[/b], there will be a MAXIMUM of 1 Killing role per team, but killing roles are NO LONGER GUARANTEED in these setups. 2 util roles for both teams are now possible or 2 util for one team, and 1 util 1 killing for the other. The only thing that is not possible is a team having 2 killing roles. 
 <br>[*]If there is 1 POWER ROLE or 3 or MORE POWER ROLES, any combination of KILLING/UTILITY can rand for both teams.
 <br>[*]There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed. 
