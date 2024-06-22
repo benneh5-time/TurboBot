@@ -833,6 +833,17 @@ PLEASE FUCKIJN JOIN I NEED U IN THIS TURB PLEASE JFC PLEASE)
                    
                    ALSO JOIN ANNI RIGHT FUCKING MEOW OR ILL WANNA JUTS CRY AND BE FROZEN IN HOSTS CHATS WTFWERFJLKE:FW:LJFWEFJWKEFJ:EWLKF
                    https://www.mafiauniverse.com/forums/threads/46903-Mafia-Universe-Anniversary-2024''')
+
+@bot.command()
+async def betping(ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
+        return  
+    
+    await ctx.send('''No current bets!''')
     
 @bot.command()
 async def bigping(ctx):
