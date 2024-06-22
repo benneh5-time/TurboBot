@@ -829,7 +829,10 @@ async def begping(ctx):
         return  
     
     await ctx.send('''begping 1.0 (pathetic edition
-PLEASE FUCKIJN JOIN I NEED U IN THIS TURB PLEASE JFC PLEASE)''')
+PLEASE FUCKIJN JOIN I NEED U IN THIS TURB PLEASE JFC PLEASE)
+                   
+                   ALSO JOIN ANNI RIGHT FUCKING MEOW OR ILL WANNA JUTS CRY AND BE FROZEN IN HOSTS CHATS WTFWERFJLKE:FW:LJFWEFJWKEFJ:EWLKF
+                   https://www.mafiauniverse.com/forums/threads/46903-Mafia-Universe-Anniversary-2024''')
     
 @bot.command()
 async def bigping(ctx):
