@@ -1810,6 +1810,8 @@ async def test_rand(ctx, *args):
 
     is_rand_running = True
 
+    test_hosts = ["benneh", "Turby"]
+
     await ctx.send("Randing, stfu")
     
     try:
@@ -1838,13 +1840,13 @@ async def test_rand(ctx, *args):
         if not thread_id:
             print(f"Attempting to post new thread with {game_title}", flush=True)
             thread_id = mu.post_thread(session, game_title, security_token, setup_title,test=True)
-        host_list = [f"{host}" for host in game_host_name]
+        host_list = [f"{host}" for host in test_hosts]
         hosts = ', '.join(host_list)
         await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
         print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
         security_token = mu.new_game_token(session, thread_id)
 
-        response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, final_game_setup, day_length, night_length, game_host_name, anon_enabled,player_limit)
+        response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, final_game_setup, day_length, night_length, test_hosts, anon_enabled,player_limit)
         
         if "was created successfully." in response_message:
             # Use aliases to get the Discord IDs
