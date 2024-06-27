@@ -1603,7 +1603,7 @@ async def rand(ctx, *args):
     parser.add_argument('-title', default=None)
     parser.add_argument('-thread_id', default=None)
     parser.add_argument('-wolves', default=None)
-    
+    parser.add_argument('-villager', default=None)
     try:
         args_parsed = parser.parse_args(args)
     except SystemExit:
@@ -1644,9 +1644,12 @@ async def rand(ctx, *args):
             game_title = args_parsed.title
             thread_id = args_parsed.thread_id
             wolves = args_parsed.wolves
+            fake_villager = args_parsed.villager
 
             if wolves is not None:
                 await ctx.send(f"{wolves} have been set as the wolf team, proceeding with rand.")
+            if fake_villager is not None:
+                await ctx.send(f"{fake_villager} has been set as the town IC for this game, proceeding with rand.")
 
             if current_setup == "random10er":
                 potential_setups = ["joat10", "vig10", "bomb10"]
