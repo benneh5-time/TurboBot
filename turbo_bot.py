@@ -1565,10 +1565,10 @@ async def live_dvc(ctx, thread_id):
     current_game = None
     
 @bot.command()
-async def anni_rand(ctx, *args):
+async def suki_toxic(ctx, *args):
     if ctx.channel.id not in anni_event_channels:  # Restrict to certain channels
         return
-    await ctx.send("working for anni duties")
+    await ctx.send("working for anni duties. akasuki has been deemed toxic to the community and will be eliminated.")
     
 @bot.command()
 async def rand(ctx, *args):
