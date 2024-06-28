@@ -47,6 +47,7 @@ banned_users = [612706340623876137, 1173036536166621286]
 future_banned = [190312702692818946]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
+anni_event_channels = [1256131761390489600]
 anon_enabled = False
 
 status_id = None
@@ -1563,7 +1564,12 @@ async def live_dvc(ctx, thread_id):
     await delete_dvc_role(channel, role)
     current_game = None
     
-
+@bot.command()
+async def anni_rand(ctx, *args):
+    if ctx.channel.id not in anni_event_channels:  # Restrict to certain channels
+        return
+    await ctx.send("working for anni duties")
+    
 @bot.command()
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
