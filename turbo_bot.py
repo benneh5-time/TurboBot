@@ -2251,7 +2251,7 @@ async def on_message(message):
             target_channel = bot.get_channel(223260125786406912)
             await target_channel.send(f"{message.content}")   
 
-    if message.author == bot.user or message.channel.id not in allowed_channels:
+    if message.author == bot.user or message.channel.id not in allowed_channels or message.channel.id not in anni_event_channels:
         return
 
 
