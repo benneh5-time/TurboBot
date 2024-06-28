@@ -42,6 +42,7 @@ valid_timers = ["sunbae", "14-3", "16-5", "8-2"]
 day_length = 14
 night_length = 3
 allowed_channels = [223260125786406912]  # turbo-chat channel ID
+all_channels = [223260125786406912, 1256131761390489600]
 react_channels = [223260125786406912, 1114212787141492788]
 banned_users = [612706340623876137, 1173036536166621286]
 future_banned = [190312702692818946]
@@ -2251,7 +2252,7 @@ async def on_message(message):
             target_channel = bot.get_channel(223260125786406912)
             await target_channel.send(f"{message.content}")   
 
-    if message.author == bot.user or message.channel.id not in allowed_channels or message.channel.id not in anni_event_channels:
+    if message.author == bot.user or message.channel.id not in all_channels:
         return
 
 
