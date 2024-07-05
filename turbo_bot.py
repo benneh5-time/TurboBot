@@ -1632,7 +1632,7 @@ async def anni_rand(ctx, *args):
                 await ctx.send("Setup info wrong, try again")
                 
             print(f"Attempting to post new thread with {game_title}", flush=True)
-            thread_id = mu.post_thread(session, game_title, security_token, game_title,test=False)
+            thread_id = mu.post_thread(session, game_title, security_token, game_title,test=True)
 
             host_list = ["Turby"]
             hosts = ', '.join(host_list)
