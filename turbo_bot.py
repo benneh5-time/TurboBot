@@ -48,7 +48,7 @@ banned_users = [612706340623876137, 1173036536166621286]
 future_banned = [190312702692818946]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
-anni_event_channels = [1256131761390489600]
+anni_event_channels = [1258668573006495774]
 anon_enabled = False
 
 status_id = None
@@ -1566,10 +1566,50 @@ async def live_dvc(ctx, thread_id):
     current_game = None
     
 @bot.command()
-async def suki_toxic(ctx, *args):
+async def anni_rand(ctx, *args):
     if ctx.channel.id not in anni_event_channels:  # Restrict to certain channels
         return
-    await ctx.send("working for anni duties. akasuki has been deemed toxic to the community and will be eliminated.")
+    allowed_randers = [178647349369765888]
+
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-title', default=None)
+    parser.add_argument('-thread_id', default=None)
+    parser.add_argument('-setup', default=None)
+    parser.add_argument('-players', default=None)
+
+    try:
+        args_parsed = parser.parse_args(args)
+    except SystemExit:
+        await ctx.send(f"Invalid arguments. Please check your command syntax. Do not use `-`, `--`, or `:` in your titles and try again.")
+        return
+    except Exception as e:
+        await ctx.send(f"An unexpected error occurred. Please try again.\n{str(e)}")
+        return
+    
+    if args_parsed.players:
+        args_parsed.players = args_parsed.players.split(';')
+
+    cancel = await ctx.send(f"The game will rand in 15 seconds unless canceled by reacting with '❌'")
+    await cancel.add_reaction('❌')
+
+    def check(reaction, user):
+        return str(reaction.emoji) == '❌' and user.id in allowed_randers and reaction.message.id == cancel.id
+
+    try:
+        reaction, user = await bot.wait_for('reaction_add', timeout=15, check=check)
+
+        if str(reaction.emoji) == '❌':
+            await ctx.send(f"Rand canceled")
+            is_rand_running = False
+            return
+    except asyncio.TimeoutError:
+        await ctx.send("Randing, stfu")
+
+        await ctx.send(f"Fake rand sent\n\n{args_parsed.players}")
+
+    
+
     
 @bot.command()
 async def rand(ctx, *args):
