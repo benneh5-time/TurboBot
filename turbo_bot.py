@@ -1628,6 +1628,8 @@ async def anni_rand(ctx, *args):
             if len(anni_players) < 10:
                 await ctx.send("Player list not 10, try again")
                 return
+            if anni_setup not in valid_setups:
+                await ctx.send("Setup info wrong, try again")
                 
             print(f"Attempting to post new thread with {game_title}", flush=True)
             thread_id = mu.post_thread(session, game_title, security_token, game_title,test=False)
