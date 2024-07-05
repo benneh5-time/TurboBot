@@ -1606,7 +1606,61 @@ async def anni_rand(ctx, *args):
     except asyncio.TimeoutError:
         await ctx.send("Randing, stfu")
 
-        await ctx.send(f"Fake rand sent\n\n{args_parsed.players}")
+        try:
+        
+            username = os.environ.get('MUUN')
+            password = os.environ.get('MUPW')
+            
+            #Login and get Initial Token
+            session = mu.login(username, password)
+            security_token = mu.new_thread_token(session)
+            
+            game_title = args_parsed.title
+            anni_setup = args_parsed.setup
+            anni_players = args_parsed.players
+
+            if not game_title:
+                await ctx.send("Try again with a title")
+                return
+            if not anni_setup:
+                await ctx.send("Try again with a setup")
+                return
+            if len(anni_players) < 10:
+                await ctx.send("Player list not 10, try again")
+                return
+                
+            print(f"Attempting to post new thread with {game_title}", flush=True)
+            thread_id = mu.post_thread(session, game_title, security_token, game_title,test=False)
+
+            host_list = ["Turby"]
+            hosts = ', '.join(host_list)
+            await ctx.send(f"Attempting to rand `{game_title}`, a {anni_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
+            print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
+
+            security_token = mu.new_game_token(session, thread_id)
+
+            anni_day = 8
+            anni_night = 2
+            anni_player_limit = 10
+
+            response_message = mu.start_game(session, security_token, game_title, thread_id, anni_players, anni_setup, anni_day, anni_night, host_list, anon_enabled,anni_player_limit)
+            
+            if "was created successfully." in response_message:
+                # Use aliases to get the Discord IDs
+                print("Success. Gathering player list for mentions", flush=True)
+                            
+                player_mentions = " ".join([f"<@{id}>" for id in mention_list])
+                game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
+
+                
+                await ctx.send(f"MU Link for the current game: \n\n{game_url}")
+
+            elif "Error" in response_message:
+                print(f"Game failed to rand, reason: {response_message}", flush=True)
+                await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
+        
+        finally:
+            await ctx.send("Rand complete")
 
     
 
