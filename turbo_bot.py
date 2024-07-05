@@ -1632,7 +1632,7 @@ async def anni_rand(ctx, *args):
                 await ctx.send("Setup info wrong, try again")
                 
             print(f"Attempting to post new thread with {game_title}", flush=True)
-            thread_id = mu.post_thread(session, game_title, security_token, game_title,test=True)
+            thread_id = mu.post_thread(session, game_title, security_token, anni_setup,test=True)
 
             host_list = ["Turby"]
             hosts = ', '.join(host_list)
@@ -1650,11 +1650,7 @@ async def anni_rand(ctx, *args):
             if "was created successfully." in response_message:
                 # Use aliases to get the Discord IDs
                 print("Success. Gathering player list for mentions", flush=True)
-                            
-                player_mentions = " ".join([f"<@{id}>" for id in mention_list])
                 game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
-
-                
                 await ctx.send(f"MU Link for the current game: \n\n{game_url}")
 
             elif "Error" in response_message:
