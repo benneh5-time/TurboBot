@@ -1630,9 +1630,10 @@ async def anni_rand(ctx, *args):
                 return
             if anni_setup not in valid_setups:
                 await ctx.send("Setup info wrong, try again")
+                return
                 
             print(f"Attempting to post new thread with {game_title}", flush=True)
-            thread_id = mu.post_thread(session, game_title, security_token, anni_setup,test=True)
+            thread_id = mu.post_thread(session, game_title, security_token, anni_setup,test=False)
 
             host_list = ["Turby"]
             hosts = ', '.join(host_list)
