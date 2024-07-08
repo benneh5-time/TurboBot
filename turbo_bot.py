@@ -1626,7 +1626,7 @@ async def anni_rand(ctx, *args):
                 await ctx.send("Try again with a setup")
                 return
             if len(anni_players) < 13:
-                await ctx.send("Player list not 10, try again")
+                await ctx.send("Player list not 13, try again")
                 return
             if anni_setup not in valid_setups:
                 await ctx.send("Setup info wrong, try again")
