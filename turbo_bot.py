@@ -1625,7 +1625,7 @@ async def anni_rand(ctx, *args):
             if not anni_setup:
                 await ctx.send("Try again with a setup")
                 return
-            if len(anni_players) < 10:
+            if len(anni_players) < 19:
                 await ctx.send("Player list not 10, try again")
                 return
             if anni_setup not in valid_setups:
@@ -1644,7 +1644,7 @@ async def anni_rand(ctx, *args):
 
             anni_day = 8
             anni_night = 2
-            anni_player_limit = 10
+            anni_player_limit = 19
 
             response_message = mu.start_game(session, security_token, game_title, thread_id, anni_players, anni_setup, anni_day, anni_night, host_list, anon_enabled,anni_player_limit)
             
