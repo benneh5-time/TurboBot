@@ -831,10 +831,7 @@ async def begping(ctx):
         return  
     
     await ctx.send('''begping 1.0 (pathetic edition
-PWEASE 🥺  FUCKIJN 🥺 JOIN 🥺 I 🥺 NEED 🥺 U 🥺 IN 🥺 THIS 🥺 TUWB 🥺 PWEASE 🥺 JFC 🥺 PWEASE)
-
-                   ALSO 🥺 JOIN 🥺 ANNI 🥺 WIGHT 🥺 FUCKING 🥺 MEOW 🥺 OR 🥺 ILL 🥺 WANNA 🥺 JUTS 🥺 CWY 😭  AND  🥺 BE 🥺 FWOZEN 🧊  IN 🥺 HOSTS  🥺CHATS  🥺WTFWERFJLKE:FW:LJFWEFJWKEFJ:EWLKF 🥺
-                   https://www.mafiauniverse.com/forums/threads/46903-Mafia-Universe-Anniversary-2024''')
+PWEASE 🥺  FUCKIJN 🥺 JOIN 🥺 I 🥺 NEED 🥺 U 🥺 IN 🥺 THIS 🥺 TUWB 🥺 PWEASE 🥺 JFC 🥺 PWEASE)''')
 @bot.command()
 async def benping(ctx):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
