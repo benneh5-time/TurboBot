@@ -50,6 +50,7 @@ dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 anni_event_channels = [1258668573006495774]
 anon_enabled = False
+baitping = False
 
 status_id = None
 status_channel = None
@@ -1243,7 +1244,9 @@ async def baitping(ctx, *args):
         return
     if ctx.author.id in future_banned:
         await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.") 
-    global game_host_name, status_id, status_channel
+    global game_host_name, status_id, status_channel, baitping
+
+    baitping = True
 
     embed = discord.Embed(title="**2023 Award Winner for Best Mechanic!\nTurbo Bot v2.1 (with subs!) by benneh\nHelp keep Turby running by supporting its GoFundMe: https://gofund.me/64aaddfd", color=0x3381ff)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
@@ -1282,7 +1285,7 @@ async def baitping(ctx, *args):
         else:
             player_message += "alexa.\n"
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
-        time_message +=  "!in or react ✅ to join!\n"  
+        time_message +=  "10 minutes\n!in or react ✅ to join!\n"  
         embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
         embed.set_field_at(5, name="**Time Remaining:**", value=time_message, inline=True)
         embed.set_field_at(4, name="", value="", inline=True)
@@ -1313,7 +1316,9 @@ async def status(ctx, *args):
         return
     if ctx.author.id in future_banned:
         await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.") 
-    global game_host_name, status_id, status_channel
+    global game_host_name, status_id, status_channel, baitping
+
+    baitping = False
 
     embed = discord.Embed(title="**2023 Award Winner for Best Mechanic!\nTurbo Bot v2.1 (with subs!) by benneh\nHelp keep Turby running by supporting its GoFundMe: https://gofund.me/64aaddfd", color=0x3381ff)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
@@ -1375,7 +1380,7 @@ async def status(ctx, *args):
 
 async def update_status():
 
-    global status_id
+    global status_id, baitping
     
     if status_id is None or status_channel is None:
         return
@@ -1415,13 +1420,21 @@ async def update_status():
                     player_msg = f"{alias} {item['icon']}"
             player_message += f"{player_msg}\n"
             time_message += f"{remaining_time} minutes\n"
+        if baitping:
+            time_message += "10 minutes\b"
             
         spots_left = player_limit - len(players)
         if spots_left > 1:
+            if baitping:
+                player_message += "alexa.\n"
             player_message += f"+{spots_left} !!\n"
         elif spots_left == 1:
+            if baitping:
+                player_message += "alexa.\n"
             player_message += "+1 HERO NEEDED\n"
         else:
+            if baitping:
+                player_message += "alexa.\n"
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
         time_message +=  "!in or react ✅ to join!\n"
         
