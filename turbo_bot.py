@@ -1421,7 +1421,7 @@ async def update_status():
             player_message += f"{player_msg}\n"
             time_message += f"{remaining_time} minutes\n"
         if baitping:
-            time_message += "10 minutes\b"
+            time_message += "10 minutes\n"
             
         spots_left = player_limit - len(players)
         if spots_left > 1:
