@@ -1278,10 +1278,10 @@ async def baitping(ctx, *args):
         spots_left = player_limit - len(players)
         if spots_left > 1:
             player_message += "alexa.\n"
-            player_message += f"+{spots_left} !!\n"
+            player_message += f"+{spots_left -1} !!\n"
         elif spots_left == 1:
             player_message += "alexa.\n"
-            player_message += "+1 HERO NEEDED (for when alexa outs)\n"
+            player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"
         else:
             player_message += "alexa.\n"
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
