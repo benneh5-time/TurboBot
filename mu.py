@@ -677,7 +677,7 @@ def add_bomb_roles(game_title):
   
     for i in range (0,2):
         if i < 1:
-            current_ic = town_roles.utility_roles['ic'].copy()
+            current_ic = town_roles.utility_roles['ic_d2plus'].copy()
             current_ic['character_name'] = powerroles_bomb[i]["character_name"]
             current_ic['character_image'] = powerroles_bomb[i]["character_image"]
             ic_json = json.dumps(current_ic)
