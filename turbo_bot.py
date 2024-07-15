@@ -1754,7 +1754,7 @@ async def anni_rand(ctx, *args):
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
-    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled
+    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled, baitping
 
     allowed_randers = []
     player_aliases = list(players.keys())[:player_limit]
@@ -1775,6 +1775,9 @@ async def rand(ctx, *args):
     if ctx.author.id not in allowed_randers:
         await ctx.send("Only hosts and players on the list are allowed to execute this function.")
         return 
+    
+    if len(players) < player_limit and baitping:
+        await ctx.send(f"You got baited by alexa, not enough players to start a game. Need {player_limit} players.")
 
     if len(players) < player_limit:
         await ctx.send(f"Not enough players to start a game. Need {player_limit} players.")
