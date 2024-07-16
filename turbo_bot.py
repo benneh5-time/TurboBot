@@ -844,7 +844,29 @@ async def benping(ctx):
     
     await ctx.send('''benping 1.0 (dad edition)
                    
+                   
+                   
 <@178647349369765888> - hi ben pls join?''')
+    
+@bot.command()
+async def pinguin(ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
+        return  
+    
+    await ctx.send('''pingu ping 1.0 (flightless birb edition)
+                   
+                   
+                   
+<@158337985727692800>
+<@164800310341009408>
+                   
+join!!!''')
+    
+
 @bot.command()
 async def betping(ctx):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
