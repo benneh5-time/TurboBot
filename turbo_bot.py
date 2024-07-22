@@ -927,6 +927,7 @@ async def bigping(ctx):
 <@225964753208475649>
 <@745438545535303760>
 <@358292734962040842>
+<@712361670638305304>
 
 **To be added to the bigping list, type in the turbo chat or dm me. **
 To be removed, dm me. 
