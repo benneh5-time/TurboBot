@@ -44,7 +44,10 @@ def login(username, password):
         "vb_login_md5password": md5_password,
         "vb_login_md5password_utf": md5_password,
         "s": "",
-        "securitytoken": "guest"
+        "securitytoken": "guest",
+		"vb_login_password": "",
+		"vb_login_password_hint": "Password",
+		"cookieuser": "1"
     }
 
     # Send POST request to login
