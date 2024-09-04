@@ -108,7 +108,7 @@ def sub_player(session, game_id, player, player_in, security_token):
     subs = session.post(url, data=payload)
     return subs.text
     
-def new_thread_token(session):
+def new_thread_token():
     protected_url = "https://www.mafiauniverse.com/forums/newthread.php"
     #
     payload = {
