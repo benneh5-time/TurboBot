@@ -2037,7 +2037,7 @@ async def test_rand(ctx, *args):
     test_hosts = ["benneh", "Turby"]
 
     await ctx.send("Randing, stfu")
-    
+    #
     try:
     
         username = os.environ.get('MUUN')

@@ -110,7 +110,7 @@ def sub_player(session, game_id, player, player_in, security_token):
     
 def new_thread_token(session):
     protected_url = "https://www.mafiauniverse.com/forums/newthread.php"
-    
+    #
     payload = {
         "do": "newthread",
         "f": "8"
