@@ -336,7 +336,7 @@ async def get_wolf_info(game_title, setup_title):
 
     if link:
         link_content_html = session.get(base_url + link)
-        link_content_parsed = BeautifulSoup(link_content_html, 'html.parser')
+        link_content_parsed = BeautifulSoup(link_content_html.text, 'html.parser')
         mafia_section = link_content_parsed.find('font', string='Mafia Players (Roles)').find_next('br').find_all_next('b')
 
         for player in mafia_section:
