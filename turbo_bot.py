@@ -1962,7 +1962,7 @@ async def rand(ctx, *args):
 
                 wc_msg = "Wolf chat: "
                 for wolf in wolf_team:
-                    if wolf in aliases.values():
+                    if wolf.lower() in aliases.values():
                         try:
                             mention_id = find_key_by_value(aliases, wolf)
                             wolf_id = wc_guild.get_member(mention_id)
