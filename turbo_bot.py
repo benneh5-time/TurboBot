@@ -216,6 +216,29 @@ async def create_dvc(thread_id):
 
     return role, channel.id, guild
 
+async def create_wolf_chat(thread_id):
+    guild = bot.get_guild(dvc_server)
+    # DVC Archive cat_id
+    # category_id = 1114340515006136411
+    category_id = 1117176858304336012
+    role = await guild.create_role(name=f"WC: {thread_id}", permissions=discord.Permissions.none())
+    dvc_roles[int(thread_id)] = role.id
+    save_dvc_roles()
+    await guild.me.add_roles(role)
+    category = guild.get_channel(category_id)
+    channel = await guild.create_text_channel(
+        name = f"WC {thread_id}",
+        overwrites={
+            guild.default_role: discord.PermissionOverwrite(read_messages=False),
+            role: discord.PermissionOverwrite(read_messages=True)
+        },
+        category = category,
+        position = 0
+
+    )
+
+    return role, channel.id, guild
+
 async def dvc_limit():
 
     category = bot.get_channel(dvc_archive)
@@ -290,6 +313,39 @@ async def start_itas(current_game):
     ita_session = mu.login(username, password)
     ita_game_id, ita_security_token = mu.open_game_thread(ita_session, current_game)
     mu.ita_window(ita_session, ita_game_id, ita_security_token)
+
+async def get_wolf_info(game_title, setup_title):
+    username = os.environ.get('MUUN')
+    password = os.environ.get('MUPW')
+    session = mu.login(username, password)
+    mafia_players = []
+
+    pms = session.get("https://www.mafiauniverse.com/forums/private.php")
+    pm_html_list = BeautifulSoup(pms.text, 'html.parser')
+    pm_list_parsed = pm_html_list.find_all('li', class_='blockrow pmbit')
+
+    link = None
+    for pm in pm_list_parsed:
+        unread_span = pm.find('span', class_='unread')
+        if unread_span:
+            title = unread_span.find('a', class_='title')
+            if title.text == f"{game_title} - [{setup_title} game] Host Information":
+                link = title['href']
+
+    base_url = "https://www.mafiauniverse.com/forums/"
+
+    if link:
+        link_content_html = session.get(base_url + link)
+        link_content_parsed = BeautifulSoup(link_content_html, 'html.parser')
+        mafia_section = link_content_parsed.find('font', string='Mafia Players (Roles)').find_next('br').find_all_next('b')
+
+        for player in mafia_section:
+            username = player.find('span', style="color: #ff2244;")
+            if username:
+                mafia_players.append(username.text)
+    return mafia_players
+            
+    
 
 class ThreadmarkProcessor:
     def __init__(self):
@@ -2086,6 +2142,25 @@ async def test_rand(ctx, *args):
             game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
             await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}\nType !dvc to join the turbo DVC/Graveyard. You will be auto-in'd to the graveyard channel upon your death if you are in that server!")
             
+            ###################################################
+            ####################### new code for wolf chat adds
+            wolf_team = get_wolf_info(game_title, setup_title)
+            wc_role, wc_channel_id, wc_guild = await create_wolf_chat(thread_id)
+            wc_channel = bot.get_channel(wc_channel_id)
+
+            wc_msg = "Wolf chat: "
+            for wolf in wolf_team:
+                if wolf in aliases.values():
+                    try:
+                        mention_id = find_key_by_value(aliases, wolf)
+                        wolf_id = wc_guild.get_member(mention_id)
+                        await member.add_roles(wc_role)
+                        wc_msg += f"<@{mention_id}"
+                    except:
+                        print(f"Can't add {wolf} to wc", flush=True)
+            await wc_channel.send(wc_msg)
+            #####################################################
+            #####################################################
 
             role, channel_id, guild = await create_dvc(thread_id)
             print(f"DVC thread created. Clearing variables", flush=True)
@@ -2098,7 +2173,7 @@ async def test_rand(ctx, *args):
                         mention_id = find_key_by_value(aliases, host)
                         member = guild.get_member(mention_id)
                         await member.add_roles(role)
-                        host_msg += f"<@{mention_id}> "
+                        host_msg += f"<@{mention_id}>"
                         #await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
                     except:
                         print(f"Can't add {host} to dvc", flush=True)
