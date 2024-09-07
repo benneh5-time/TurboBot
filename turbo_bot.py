@@ -2025,7 +2025,9 @@ async def rand(ctx, *args):
                 await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
                 print(f"Threadmark processor finished. rand function finished.", flush=True)
                 await edit_dvc(channel, guild)
+                #await edit_dvc(wc_channel, wc_guild)
                 await delete_dvc_role(channel, role)
+                #await delete_dvc_role(wc_channel, wc_role)
                 current_game = None
                 
                 summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
@@ -2168,11 +2170,11 @@ async def test_rand(ctx, *args):
 
             wc_msg = "Wolf chat: "
             for wolf in wolf_team:
-                if wolf in aliases.values():
+                if wolf.lower() in aliases.values():
                     try:
                         mention_id = find_key_by_value(aliases, wolf)
                         wolf_id = wc_guild.get_member(mention_id)
-                        await member.add_roles(wc_role)
+                        await wolf_id.add_roles(wc_role)
                         wc_msg += f"<@{mention_id}"
                     except:
                         print(f"Can't add {wolf} to wc", flush=True)
