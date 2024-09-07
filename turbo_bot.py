@@ -2144,7 +2144,7 @@ async def test_rand(ctx, *args):
             
             ###################################################
             ####################### new code for wolf chat adds
-            wolf_team = get_wolf_info(game_title, setup_title)
+            wolf_team = await get_wolf_info(game_title, setup_title)
             wc_role, wc_channel_id, wc_guild = await create_wolf_chat(thread_id)
             wc_channel = bot.get_channel(wc_channel_id)
 
