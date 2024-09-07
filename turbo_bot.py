@@ -1966,7 +1966,7 @@ async def rand(ctx, *args):
                         try:
                             mention_id = find_key_by_value(aliases, wolf)
                             wolf_id = wc_guild.get_member(mention_id)
-                            await member.add_roles(wc_role)
+                            await wolf_id.add_roles(wc_role)
                             wc_msg += f"<@{mention_id}"
                         except:
                             print(f"Can't add {wolf} to wc", flush=True)
