@@ -289,7 +289,6 @@ def new_game_token(session, thread_id):
 def start_game(session, security_token, game_title, thread_id, player_aliases, game_setup, day_length, night_length, host_name, anon_enabled, player_limit):
     global data
 
-
     if game_setup == "closedrandomXer":
         setup_title = "closedrandomXer"
         final_game_setup = game_setup
