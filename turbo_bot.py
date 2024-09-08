@@ -221,23 +221,24 @@ async def create_wolf_chat(thread_id):
     # DVC Archive cat_id
     # category_id = 1114340515006136411
     category_id = 1117176858304336012
-    role = await guild.create_role(name=f"WC: {thread_id}", permissions=discord.Permissions.none())
-    dvc_roles[int(thread_id)] = role.id
-    save_dvc_roles()
-    await guild.me.add_roles(role)
+    #role = await guild.create_role(name=f"WC: {thread_id}", permissions=discord.Permissions.none())
+    #dvc_roles[int(thread_id)] = role.id
+    #save_dvc_roles()
+    #await guild.me.add_roles(role)
     category = guild.get_channel(category_id)
     channel = await guild.create_text_channel(
         name = f"WC {thread_id}",
         overwrites={
             guild.default_role: discord.PermissionOverwrite(read_messages=False),
-            role: discord.PermissionOverwrite(read_messages=True)
+            #role: discord.PermissionOverwrite(read_messages=True)
         },
         category = category,
         position = 0
 
     )
 
-    return role, channel.id, guild
+    #return role, channel.id, guild
+    return channel.id, guild
 
 async def dvc_limit():
 
@@ -378,6 +379,7 @@ class ThreadmarkProcessor:
                             mention_id = find_key_by_value(aliases, username)
                             member = guild.get_member(mention_id)
                             await member.add_roles(role)
+                            # await channel.set_permissions(member, read_messages=True, send_messages=True)
                             await channel.send(f"<@{mention_id}> has been added to DVC.")
                         except:
                             await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
@@ -1957,7 +1959,7 @@ async def rand(ctx, *args):
                 ###################################################
                 ####################### new code for wolf chat adds
                 wolf_team = await get_wolf_info(game_title, setup_title)
-                wc_role, wc_channel_id, wc_guild = await create_wolf_chat(thread_id)
+                wc_channel_id, wc_guild = await create_wolf_chat(thread_id)
                 wc_channel = bot.get_channel(wc_channel_id)
 
                 wc_msg = "Wolf chat: "
@@ -1966,8 +1968,9 @@ async def rand(ctx, *args):
                         try:
                             mention_id = find_key_by_value(aliases, wolf)
                             wolf_id = wc_guild.get_member(mention_id)
-                            await wolf_id.add_roles(wc_role)
-                            wc_msg += f"<@{mention_id}"
+                            # await wolf_id.add_roles(wc_role)
+                            await wc_channel.set_permissions(wolf_id, read_messages=True, send_messages=True)
+                            wc_msg += f"<@{mention_id}> "
                         except:
                             print(f"Can't add {wolf} to wc", flush=True)
                 await wc_channel.send(wc_msg)
@@ -2027,7 +2030,7 @@ async def rand(ctx, *args):
                 await edit_dvc(channel, guild)
                 await edit_dvc(wc_channel, wc_guild)
                 await delete_dvc_role(channel, role)
-                await delete_dvc_role(wc_channel, wc_role)
+                # await delete_dvc_role(wc_channel, wc_role)
                 current_game = None
                 
                 summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
@@ -2165,7 +2168,7 @@ async def test_rand(ctx, *args):
             ###################################################
             ####################### new code for wolf chat adds
             wolf_team = await get_wolf_info(game_title, setup_title)
-            wc_role, wc_channel_id, wc_guild = await create_wolf_chat(thread_id)
+            wc_channel_id, wc_guild = await create_wolf_chat(thread_id)
             wc_channel = bot.get_channel(wc_channel_id)
 
             wc_msg = "Wolf chat: "
@@ -2174,8 +2177,9 @@ async def test_rand(ctx, *args):
                     try:
                         mention_id = find_key_by_value(aliases, wolf)
                         wolf_id = wc_guild.get_member(mention_id)
-                        await wolf_id.add_roles(wc_role)
-                        wc_msg += f"<@{mention_id}"
+                        # await wolf_id.add_roles(wc_role)
+                        await wc_channel.set_permissions(wolf_id, read_messages=True, send_messages=True)
+                        wc_msg += f"<@{mention_id}> "
                     except:
                         print(f"Can't add {wolf} to wc", flush=True)
             await wc_channel.send(wc_msg)
