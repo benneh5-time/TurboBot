@@ -1965,7 +1965,7 @@ async def rand(ctx, *args):
                 for wolf in wolf_team:
                     if wolf.lower() in aliases.values():
                         try:
-                            mention_id = find_key_by_value(aliases, wolf)
+                            mention_id = find_key_by_value(aliases, wolf.lower())
                             wolf_id = wc_guild.get_member(mention_id)
                             # await wolf_id.add_roles(wc_role)
                             await wc_channel.set_permissions(wolf_id, read_messages=True, send_messages=True)
