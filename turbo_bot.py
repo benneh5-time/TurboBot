@@ -88,7 +88,7 @@ def load_flavor_json(file):
 
 def save_flavor_json(file, existing_flavor):
     with open(file, 'w') as f:
-        json.dump(existing_flavor, f)
+        json.dump(existing_flavor, f, indent=4)
 
 def save_spec_list():
     with open('spec_list.json', 'w') as f:
