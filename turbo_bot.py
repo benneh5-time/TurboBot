@@ -66,11 +66,11 @@ print(f"Current dvc archive: {dvc_archive}")
 
 def save_dvc_archive(new_archive):
     with open('dvc_archive.json', 'w') as f:
-        json.dump(new_archive, f)
+        json.dump(new_archive, f, indent=4)
 
 def save_recruit_list():
     with open('recruit_list.json', 'w') as f:
-        json.dump(recruit_list, f)
+        json.dump(recruit_list, f, indent=4)
 
 def load_recruit_list():
     try:
@@ -92,7 +92,7 @@ def save_flavor_json(file, existing_flavor):
 
 def save_spec_list():
     with open('spec_list.json', 'w') as f:
-        json.dump(spec_list, f)
+        json.dump(spec_list, f, indent=4)
 
 def load_spec_list():
     try:
@@ -105,7 +105,7 @@ def load_spec_list():
 
 def save_messages():
     with open('messages.json', 'w') as f:
-        json.dump(message_ids, f)
+        json.dump(message_ids, f, indent=4)
 
 def load_messages():
     try:
@@ -117,7 +117,7 @@ def load_messages():
 
 def save_aliases():
     with open('aliases.json', 'w') as f:
-        json.dump(aliases, f)
+        json.dump(aliases, f, indent=4)
 
 def load_aliases():
     try:
@@ -129,7 +129,7 @@ def load_aliases():
 
 def save_dvc_roles():
     with open('dvc_roles.json', 'w') as f:
-        json.dump(dvc_roles, f)
+        json.dump(dvc_roles, f, indent=4)
 
 def load_dvc_roles():
     try:
@@ -141,7 +141,7 @@ def load_dvc_roles():
 
 def save_player_list(player_list, waiting_list, current_setup, game_host_name, player_limit):
     with open('player_list_data.json', 'w') as f:
-        json.dump({"player_list": player_list, "waiting_list": waiting_list, "current_setup": current_setup, "game_host_name": game_host_name, "player_limit": player_limit}, f)
+        json.dump({"player_list": player_list, "waiting_list": waiting_list, "current_setup": current_setup, "game_host_name": game_host_name, "player_limit": player_limit}, f, indent=4)
        
 def load_player_list():
     global player_list, waiting_list, current_setup, game_host_name, player_limit
