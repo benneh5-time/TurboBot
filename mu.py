@@ -119,7 +119,6 @@ def new_thread_token(session):
         return security_token
     else:
         print("Failed to extract security token.")
-        
 def extract_descriptions(role_categories):
     descriptions = []
     for category in role_categories:
@@ -144,6 +143,8 @@ def post_thread(session, game_title, security_token, setup, test):
         mafia_descriptions = []
         independent_descriptions = []
 
+
+
         town_role_categories = [town_roles.killing_roles, town_roles.utility_roles]
         town_descriptions.extend(extract_descriptions(town_role_categories))
 
@@ -163,12 +164,55 @@ def post_thread(session, game_title, security_token, setup, test):
         town_flavor = "[*]" + town_flavor
         mafia_flavor = "[*]" + mafia_flavor
         independent_flavor = "[*]" + independent_flavor
-        game_flavor = flavor['crx_flavor']
 
+        if setup == "closedrandomXer":
+            game_flavor = f'''[CENTER][TITLE][B]This is a closed and random Xer[/B][/TITLE][/CENTER]
+<br><br>[B][SIZE=4]Roles have been randomly selected from a pool of roles Turby has access to that is ever growing.[/SIZE][/B]
+<br><br>[BOX=Setup possibilities]
+<br><br>[LIST]
+<br>[*]This cannot rand as mountainous (unless the setup only has 1 wolf). 
+<br>[*]The [B][COLOR=#ff0000]wolf team[/B][/COLOR] will always be 25% of the total players, rounded down. (e.g. 12 players = 3 wolves, 15 players = 3 wolves, 16 players = 4 wolves)
+<br>[*]The amount of PRs for each team will be: (# of wolves / 2) [b]or[/b] ((# of wolves / 2) + 1), e.g. 4 wolves = 2 PRs minimum, possibly 3
+<br>[*]Both teams will have the same amount of PRs in closedrandomXers.
+<br>[*]There is a [COLOR=#800080][B]1.5% chance for the last vanilla villager to rand as an [/B][/COLOR][B][COLOR=#800080]independent role[/COLOR][/B] instead.[COLOR=#800080][B] Independent roles no longer take up town PR slots.[/b][/color]
+<br>[*]In [b]2 POWER ROLE SETUPS[/b], there will be a MAXIMUM of 1 Killing role per team, but killing roles are NO LONGER GUARANTEED in these setups. 2 util roles for both teams are now possible or 2 util for one team, and 1 util 1 killing for the other. The only thing that is not possible is a team having 2 killing roles. 
+<br>[*]If there is 1 POWER ROLE or 3 or MORE POWER ROLES, any combination of KILLING/UTILITY can rand for both teams.
+<br>[*]There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed. 
+<br>[*]There is an [b]10%[/b] chance for any wolf to rand a bulletproof vest in addition to the rest of it's role.
+<br>[*]There is a [b]20%[/b] total chance for neighbors to rand into the setup. They can be any pairing of VT/PR/Wolves.
+<br>[/LIST]
+<br>[/BOX]
+<br><br>[BOX=Cop Checks may not be trustworthy!]
+<br>[LIST]
+<br>[*][COLOR=#8b4513][B]Millers and Godfathers[/B][/COLOR] can be randed into this setup. Millers are unaware and show as vanilla villagers in their role PMs.
+<br>[*]Each [B][COLOR=#008000]VT [/COLOR][/B]has a standalone [B]2.5%[/B] chance to rand as a miller instead. 
+<br>[*][b]EVERY[/b] [B][COLOR=#ff0000]wolf [/COLOR][/B]has a standalone [B]5%[/B] chance to rand as a godfather in addition to the rest of it's role. 
+<br>[*]The existence of a flipped [B][COLOR=#8b4513]Miller or Godfather[/COLOR][/B]  does NOT confirm or deny the existence of any [B]cops [/B]in the setup. 
+<br>[*][COLOR=#8b4513][B]Millers [/B][/COLOR]do not count as a '[COLOR=#008000][B]PR[/B][/COLOR]' slot for the town - they only replace [B][COLOR=#008000]VTs[/COLOR][/B]. 
+<br>[/LIST]
+<br>[/BOX]
+<br><br>[BOX=Possible Village Roles][LIST=1]
+{town_flavor}[/LIST][/BOX]
+<br><br>[BOX=Possible Independent Roles][LIST=1]
+{independent_flavor}[/LIST][/BOX]
+<br><br>[BOX=Possible Wolf Roles][LIST=1]
+{mafia_flavor}[/LIST][/BOX]
+<br><br>[BOX=Suffix Legend][LIST=1]
+[*][B]d(x)[/B] - Day (x) use of the PR
+[*][B]de[/B] - Disabled in Endgame
+[*][B]c [/B]- Compulsive
+[*][B]m [/B]- Macho
+[*][B]st [/B]- Self-Targetable
+[*][B]gf [/B]- Godfather[/LIST][/BOX]'''
+
+        #game_flavor = f"[CENTER][TITLE][B]This is a closed and random 10er[/B][/TITLE][/CENTER]<br><br>[B][SIZE=4]Roles have been randomly selected from a pool of roles Turby has access to that is ever growing.[/SIZE][/B]<br><br>[BOX=Setup possibilities][LIST][*]This cannot rand as mountainous.<br>[*]The village rands between 1 and 2 PRs. There is a [b]1% chance[/b] that each village PR rands as an independent role instead. If the village rands 1 PR, the wolves rand between 0 and 1 PRs. If the village rands 2 PRs, the wolves rand between 1 and 2 PRs. There is no weight assigned to any power roles--any variation of these setups is possible and balance is not guaranteed.<br><br>Millers can be randed into this setup. Each VT has a standalone 5% chance to rand as a miller instead. This does [b]NOT[/b] confirm or deny the existance of cops. Millers do not count as a 'PR' slot for the town. Godfathers may exist for mafia, but only as PR roles and the ones that are are noted in the role list below. <br><br>There are at most 2 PRs for the village and at most 2 for the wolves. <br><br>These are the roles possible for the village: <br><br>{town_flavor}<br><br>These are the roles possible for 3rd-party/independent:<br><br>{independent_flavor}<br><br>These are the roles possible for wolves:<br><br>{mafia_flavor}<br><br><br>[COLOR=\"#FF0000\"][U][B]Suffix Legend:[/B][/U][/COLOR]<br>[B]d(x)[/B] - Day (x) use of the PR<br>[B]de[/B] - Disabled in Endgame<br>[B]c [/B]- Compulsive<br>[B]m [/B]- Macho<br>[B]st [/B]- Self-Targetable<br>[B]gf [/B]- Godfather"
     else:
         game_flavor = random.choice(flavors)
 
-    forum = "8" if not test else "48"
+    if test == False:
+        forum = "8"
+    else:
+        forum = "48"
         
     payload = {
         "do": "postthread",
