@@ -542,7 +542,7 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
 def add_randommadnessXer_roles(game_title, player_limit=13):
     global data
     
-    name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
+    name_image_pairs, pr_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
 
     wolf_count = (player_limit * 25) // 100
     village_count = player_limit - wolf_count
