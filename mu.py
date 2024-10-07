@@ -11,6 +11,7 @@ import independent_roles
 import roles
 import rolemadness
 from bs4 import BeautifulSoup
+from role_definitions import create_random_role
 
 def load_json_file(json_file):
     with open(json_file, 'r') as f:
@@ -268,8 +269,8 @@ def new_game_token(session, thread_id):
 def start_game(session, security_token, game_title, thread_id, player_aliases, game_setup, day_length, night_length, host_name, anon_enabled, player_limit):
     global data
 
-    if game_setup == "closedrandomXer":
-        setup_title = "closedrandomXer"
+    if game_setup == "closedrandomXer" or game_setup == "randommadnessXer":
+        setup_title = game_setup
         final_game_setup = game_setup
         data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': f"{game_title} - [{setup_title} game]", 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Closed', 'period': 'day', 'phase': '1', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '1', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
         
@@ -310,6 +311,10 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         data.add('num_players', '10')
     if final_game_setup == "closedrandomXer":
         add_closedrandomXer_roles(game_title, player_limit)
+        data.add("preset", "custom")
+        data.add('num_players', player_limit)
+    if final_game_setup == 'randommadnessXer':
+        add_randommadnessXer_roles(game_title, player_limit)
         data.add("preset", "custom")
         data.add('num_players', player_limit)
     if final_game_setup == "rolemadness13":
@@ -529,6 +534,33 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
         if gf_rand <=.05:
             current_wolf['godfather'] = "1"
 
+        current_wolf['character_name'] = wolf['character_name']
+        current_wolf['character_image'] = wolf['character_image']
+        wolf_json = json.dumps(current_wolf)
+        data.add("roles[]", wolf_json)
+
+def add_randommadnessXer_roles(game_title, player_limit=13):
+    global data
+    
+    name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
+
+    wolf_count = (player_limit * 25) // 100
+    village_count = player_limit - wolf_count
+    
+    
+    villagers = random.sample(name_image_pairs, village_count)
+    wolves = random.sample(wolf_name_image_pairs, wolf_count)
+
+    for i in range(0, village_count):
+        current_villa = create_random_role("Village")
+        current_villa['character_name'] = villagers[i]['character_name']
+        current_villa['character_image'] = villagers[i]['character_image']
+        villa_json = json.dumps(current_villa)
+        data.add("roles[]", villa_json)
+        
+    for i in range(0, wolf_count):
+        wolf = wolves.pop(0)
+        current_wolf = create_random_role("Wolf")
         current_wolf['character_name'] = wolf['character_name']
         current_wolf['character_image'] = wolf['character_image']
         wolf_json = json.dumps(current_wolf)
