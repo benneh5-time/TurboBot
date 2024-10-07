@@ -54,62 +54,62 @@ possible_roles = {
     "Village": [3, 4, 10, 12, 14, 18, 27, 31, 37, 39, 43, 46, 50, 54, 63, 64, 67, 69] # Possible base roles for Village
 }
 possible_values = {
-    "bpv_status": [0, 1],
-    "ninja": [0, 1],
-    "x_shot_limit": [0, 1, 2],
-    "strongman": [0, 1],
-    "godfather": [0, 1],
-    "backup": [0, 1],
-    "macho": [0, 1],
-    "recluse": [0, 1],
-    "lost": [0, 1],
-    "vengeful": [0, 1],
-    "flipless": [0, 1],
+    "bpv_status": [1],
+    "ninja": [1],
+    "x_shot_limit": [1, 2],
+    "strongman": [1],
+    "godfather": [1],
+    "backup": [1],
+    "macho": [1],
+    "recluse": [1],
+    "lost": [1],
+    "vengeful": [1],
+    "flipless": [1],
     #"vote_weight": [0, 1],
     #"hide_vote_weight": [0, 1],
-    "non_consecutive": [0, 1],
-    "self_targetable": [0, 1],
-    "treestump": [0, 1],
+    "non_consecutive": [1],
+    "self_targetable": [1],
+    "treestump": [1],
     #"neighbor": [0, 1],
     #"mason": [0, 1],
     #"lover": [0, 1],
-    "loyal": [0, 1],
-    "disloyal": [0, 1],
-    "uncooperative": [0, 1],
-    "vendor_items": ["item1", "item2"],
-    "joat": [0, 1],
-    "inventor": [0, 1]
+    "loyal": [1],
+    "disloyal": [1],
+    "uncooperative": [1],
+    "vendor_items": ["benneh's threadpull", "boob1", "loopy69's autograph", "harold :3 adoption papers"],
+    "joat": [1],
+    "inventor": [1]
 }
 
 # Define possible values for each power
 possible_utility_powers = {
-    "alignment inspection": [0, 1, 2],
-    "fullcop": [0, 1, 2],
-    "rolecop": [0, 1, 2],
-    "neapolitan": [0, 1, 2],
-    "vanilla cop": [0, 1, 2],
-    "bodyguard": [0, 1, 2],
-    "protection": [0, 1, 2],
-    "fire protection": [0, 1, 2],
-    "frame": [0, 1, 2],
-    "jail": [0, 1, 2],
-    "roleblock": [0, 1, 2],
-    "redirect": [0, 1, 2],
-    "empower": [0, 1, 2],
-    "track": [0, 1, 2],
-    "watch": [0, 1, 2],
-    "motion detect": [0, 1, 2],
-    "voyeur": [0, 1, 2],
-    "heal": [0, 1, 2]
+    "alignment inspection": [0, 1],
+    "fullcop": [1],
+    "rolecop": [1, 2],
+    "neapolitan": [1, 2],
+    "vanilla cop": [1, 2],
+    "bodyguard": [1],
+    "protection": [1, 2],
+    "fire protection": [1, 2],
+    "frame": [1],
+    "jail": [1, 2],
+    "roleblock": [1, 2],
+    "redirect": [1, 2],
+    "empower": [1, 2],
+    "track": [1, 2],
+    "watch": [1, 2],
+    "motion detect": [1, 2],
+    "voyeur": [1, 2],
+    "heal": [1, 2]
 }
 
 possible_kill_powers = {
-    "kill": [0, 1, 2],
-    "daykill": [0, 1, 2],
-    "desperado": [0, 1, 2],
-    "day desperado": [0, 1, 2],
-    "bomb": [0, 1, 2],
-    "poison": [0, 1, 2]
+    "kill": [1, 2],
+    "daykill": [1, 2],
+    "desperado": [1],
+    "day desperado": [1],
+    "bomb": [1],
+    "poison": [1, 2]
 }
 
 def get_static_values(faction):
@@ -151,7 +151,7 @@ def randomize_night_restrictions():
             "night_x": 0  # No night_x value
         }
     else:  # option == "night_x"
-        night_x = random.choice([1, 2, 3, 4, 5, "2+"])  # Exclude 0 for night_x
+        night_x = random.choice([1, 2, 3, 4, 5, "1+", "2+", "3+"])  # Exclude 0 for night_x
         return {
             "even_night": 0,
             "odd_night": 0,
@@ -171,7 +171,7 @@ def create_random_role(faction):
     # Randomize other values (up to 4)
     keys_to_modify = [key for key in possible_values.keys()]  # Get all keys from possible_values
 
-    num_modifications = random.randint(1, 4)  # Choose how many values to modify (1 to 4)
+    num_modifications = random.randint(1, 3)  # Choose how many values to modify (1 to 4)
     modifications = random.sample(keys_to_modify, min(num_modifications, len(keys_to_modify)))  # Select keys to modify
 
     for key in modifications:
@@ -180,7 +180,7 @@ def create_random_role(faction):
         
     if faction == "Wolf": 
         if role.get("inventor") != 1 and role.get("joat") != 1:
-            for _ in range(2):
+            for _ in range(1):
                 if random.choice([True, False]):
                     if random.choice(["inventor", "joat"]) == "inventor":
                         role["inventor"] = 1
