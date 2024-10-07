@@ -176,7 +176,17 @@ def create_random_role(faction):
 
     for key in modifications:
         role[key] = random.choice(possible_values[key])
-
+        
+        
+    if faction == "Wolf": 
+        if role.get("inventor") != 1 and role.get("joat") != 1:
+            for _ in range(2):
+                if random.choice([True, False]):
+                    if random.choice(["inventor", "joat"]) == "inventor":
+                        role["inventor"] = 1
+                    else:
+                        role["joat"] = 1
+                        
     # Randomize night restrictions
     night_restrictions = randomize_night_restrictions()
     role.update(night_restrictions)
@@ -196,7 +206,7 @@ def create_random_role(faction):
         # Add one kill power
         num_kill_powers = 4 - num_utility_powers
         kill_power_keys = list(possible_kill_powers.keys())
-        selected_kill_powers = random.sample(kill_power_keys, min(num_utility_powers, len(kill_power_keys)))
+        selected_kill_powers = random.sample(kill_power_keys, min(num_kill_powers, len(kill_power_keys)))
         
         for power in selected_kill_powers:
             role["powers"][power] = random.choice(possible_kill_powers[power])
