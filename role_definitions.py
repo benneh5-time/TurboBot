@@ -196,7 +196,7 @@ def create_random_role(faction):
     
     # Randomize utility powers
     if role.get("joat") == 1 or role.get("inventor") == 1 or role_id in [39, 40, 70]:
-        num_utility_powers = random.randint(3, 4)  # Up to 4 utility powers
+        num_utility_powers = random.randint(1, 3)  # Up to 3 utility powers
         utility_power_keys = list(possible_utility_powers.keys())
         selected_utilities = random.sample(utility_power_keys, min(num_utility_powers, len(utility_power_keys)))
 
@@ -204,7 +204,7 @@ def create_random_role(faction):
             role["powers"][power] = random.choice(possible_utility_powers[power])
 
         # Add one kill power
-        num_kill_powers = 4 - num_utility_powers
+        num_kill_powers = 3 - num_utility_powers
         kill_power_keys = list(possible_kill_powers.keys())
         selected_kill_powers = random.sample(kill_power_keys, min(num_kill_powers, len(kill_power_keys)))
         
