@@ -75,7 +75,7 @@ possible_values = {
     #"lover": [0, 1],
     "loyal": [1],
     "disloyal": [1],
-    "uncooperative": [1],
+    #"uncooperative": [1],
     "vendor_items": ["benneh's threadpull", "boob1", "loopy69's autograph", "harold :3 adoption papers"],
     "joat": [1],
     "inventor": [1]
