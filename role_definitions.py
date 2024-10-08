@@ -3,66 +3,111 @@
 import random
 
 """
-# Village Roles
-village_roles = [
-    # Role ID    Role Name              
-    3           Village Alignment Cop   
-    4           Village Doctor          
-    10          Village Vigilante       
-    12          Village Roleblocker     
-    14          Village Jailkeeper      
-    18          Village Tracker         
-    27          Village Innocent Child  
-    31          Village Arsonist        
-    37          Village Day Vigilante   
-    39          Village Jack of All Trades
-    43          Village Alignment Oracle
-    46          Village Parity Cop      
-    50          Village Poisoner             
-    54          Village Motion Detector 
-    63          Village Day Desperado   
-    64          Village Night Desperado 
-    67          Village Fruit Vendor       
-    69          Village Inventor           
-]
+### Town Roles
 
-# Mafia Roles
-mafia_roles = [
-    # Role ID    Role Name              
-    9           Wolf Role Cop           
-    11          Wolf Vigilante          
-    13          Wolf Roleblocker        
-    15          Wolf Jailkeeper 
-    21          Wolf Watcher        
-    32          Wolf Arsonist           
-    38          Wolf Day Vigilante      
-    40          Wolf Jack of All Trades 
-    42          Wolf Universal Backup   
-    51          Wolf Poisoner
-    59          Wolf Treestump
-    68          Wolf Fruit Vendor
-    70          Wolf Inventor           
-    76          Wolf PR Killer
+| Role ID | Role Name                    |
+|---------|------------------------------|
+| 1       | Vanilla Town                 |
+| 3       | Town Alignment Cop           |
+| 4       | Town Doctor                  |
+| 6       | Town Miller                  |
+| 8       | Town Role Cop                |
+| 10      | Town Vigilante               |
+| 12      | Town Roleblocker             |
+| 14      | Town Jailkeeper              |
+| 16      | Town Bodyguard               |
+| 18      | Town Tracker                 |
+| 20      | Town Watcher                 |
+| 22      | Town Mason                   |
+| 23      | Town Lover                   |
+| 25      | Town Neighbor                |
+| 27      | Town Innocent Child          |
+| 28      | Town Full Cop                |
+| 31      | Town Arsonist                |
+| 34      | Town Firefighter             |
+| 37      | Town Day Vigilante           |
+| 39      | Town Jack of All Trades      |
+| 41      | Town Universal Backup        |
+| 43      | Town Alignment Oracle        |
+| 44      | Town Role Oracle             |
+| 46      | Town Parity Cop              |
+| 48      | Town Bomber                  |
+| 50      | Town Poisoner                |
+| 52      | Town Healer                  |
+| 54      | Town Motion Detector         |
+| 56      | Town Voyeur                  |
+| 58      | Town Treestump               |
+| 60      | Town Neapolitan              |
+| 63      | Town Day Desperado           |
+| 64      | Town Night Desperado         |
+| 65      | Town Vanilla Cop             |
+| 69      | Town Inventor                |
+| 71      | Town Empowerer               |
+| 73      | Town Redirector              |
+| 75      | Town Power Role Killer       |
 
-]
+### Mafia Roles
 
-# Note: Some roles appear multiple times. Adjust for uniqueness as needed.
+| Role ID | Role Name                    |
+|---------|------------------------------|
+| 2       | Mafia Goon                   |
+| 7       | Mafia Godfather              |
+| 9       | Mafia Role Cop               |
+| 11      | Mafia Vigilante              |
+| 13      | Mafia Roleblocker            |
+| 15      | Mafia Jailkeeper             |
+| 17      | Mafia Bodyguard              |
+| 19      | Mafia Tracker                |
+| 21      | Mafia Watcher                |
+| 24      | Mafia Lover                  |
+| 26      | Mafia Neighbor               |
+| 29      | Mafia Full Cop               |
+| 32      | Mafia Arsonist               |
+| 35      | Mafia Firefighter            |
+| 36      | Mafia Framer                 |
+| 38      | Mafia Day Vigilante          |
+| 40      | Mafia Jack of All Trades     |
+| 42      | Mafia Universal Backup       |
+| 45      | Mafia Role Oracle            |
+| 47      | Mafia Parity Cop             |
+| 49      | Mafia Bomber                 |
+| 51      | Mafia Poisoner               |
+| 53      | Mafia Healer                 |
+| 55      | Mafia Motion Detector         |
+| 57      | Mafia Voyeur                 |
+| 59      | Mafia Treestump              |
+| 61      | Mafia Neapolitan             |
+| 62      | Mafia Alignment Cop          |
+| 66      | Mafia Vanilla Cop            |
+| 68      | Mafia Fruit Vendor           |
+| 70      | Mafia Inventor               |
+| 72      | Mafia Empowerer              |
+| 74      | Mafia Redirector             |
+| 76      | Mafia Power Role Killer      |
 """
 # Define possible values for each key
 possible_roles = {
-    "Wolf": [9, 11, 13, 15, 21, 32, 38, 40, 42, 51, 59, 68, 70, 76],  # Possible base roles for Wolf
-    "Village": [3, 4, 10, 12, 14, 18, 27, 31, 37, 39, 43, 46, 50, 54, 63, 64, 67, 69] # Possible base roles for Village
+    "Wolf": [
+        2, 7, 9, 11, 13, 15, 17, 19, 21, 24, 26, 29,
+        32, 35, 36, 38, 40, 42, 45, 47, 49, 51, 53, 55,
+        57, 59, 61, 62, 66, 67, 68, 70, 72, 74, 76
+        ],
+    "Village": [
+        1, 3, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 23, 25,
+        27, 28, 31, 34, 37, 39, 41, 43, 44, 46, 48, 50,
+        52, 54, 56, 58, 60, 63, 64, 65, 69, 71, 73, 75
+        ] 
 }
 possible_values = {
     "bpv_status": [1],
     "ninja": [1],
     "x_shot_limit": [1, 2],
     "strongman": [1],
-    "godfather": [1],
+    #"godfather": [1],
     "backup": [1],
     "macho": [1],
-    "recluse": [1],
-    "lost": [1],
+    #"recluse": [1],
+    #"lost": [1],
     "vengeful": [1],
     "flipless": [1],
     #"vote_weight": [0, 1],
@@ -70,15 +115,19 @@ possible_values = {
     "non_consecutive": [1],
     "self_targetable": [1],
     "treestump": [1],
+    "compulsive": [1],
     #"neighbor": [0, 1],
     #"mason": [0, 1],
     #"lover": [0, 1],
-    "loyal": [1],
-    "disloyal": [1],
+    #"loyal": [1],
+    #"disloyal": [1],
     #"uncooperative": [1],
-    "vendor_items": ["benneh's threadpull", "boob1", "loopy69's autograph", "harold :3 adoption papers"],
     "joat": [1],
     "inventor": [1]
+}
+
+possible_vendor_items = {
+    "vendor_items": ["benneh's threadpull", "boob1", "loopy69's autograph", "harold :3 adoption papers"]
 }
 
 # Define possible values for each power
@@ -151,7 +200,7 @@ def randomize_night_restrictions():
             "night_x": 0  # No night_x value
         }
     else:  # option == "night_x"
-        night_x = random.choice([1, 2, 3, 4, "1+", "2+"])  # Exclude 0 for night_x
+        night_x = random.choice([1, 2, 3, "1+", "2+", 99])  # Exclude 0 for night_x
         return {
             "even_night": 0,
             "odd_night": 0,
@@ -171,7 +220,7 @@ def create_random_role(faction):
     # Randomize other values (up to 4)
     keys_to_modify = [key for key in possible_values.keys()]  # Get all keys from possible_values
 
-    num_modifications = random.randint(1, 3)  # Choose how many values to modify (1 to 4)
+    num_modifications = random.randint(1, 2)  # Choose how many values to modify (1 to 4)
     modifications = random.sample(keys_to_modify, min(num_modifications, len(keys_to_modify)))  # Select keys to modify
 
     for key in modifications:
@@ -179,7 +228,7 @@ def create_random_role(faction):
         
         
     if faction == "Wolf": 
-        if role.get("inventor") != 1 and role.get("joat") != 1:
+        if role.get("inventor") != 1 and role.get("joat") != 1 and role_id not in [39, 69, 40, 70]:
             for _ in range(1):
                 if random.choice([True, False]):
                     if random.choice(["inventor", "joat"]) == "inventor":
@@ -195,7 +244,7 @@ def create_random_role(faction):
     role["powers"] = {}
     
     # Randomize utility powers
-    if role.get("joat") == 1 or role.get("inventor") == 1 or role_id in [39, 40, 70]:
+    if role.get("joat") == 1 or role.get("inventor") == 1 or role_id in [39, 69, 40, 70]:
         num_utility_powers = random.randint(1, 3)  # Up to 3 utility powers
         utility_power_keys = list(possible_utility_powers.keys())
         selected_utilities = random.sample(utility_power_keys, min(num_utility_powers, len(utility_power_keys)))
@@ -210,6 +259,21 @@ def create_random_role(faction):
         
         for power in selected_kill_powers:
             role["powers"][power] = random.choice(possible_kill_powers[power])
+            
+    if role_id in [68, 67]:
+        num_vendor_items = random.randint(1, 3)  # Up to 3 utility powers
+        vendor_power_keys = list(possible_vendor_items.keys())
+
+        # Select 'vendor_items' since it's the only key
+        vendor_items = possible_vendor_items["vendor_items"]
+        
+        # Randomly sample items, ensuring not to exceed available items
+        selected_items = random.sample(vendor_items, min(num_vendor_items, len(vendor_items)))
+
+        # Assign selected items to the role
+        for power in selected_items:
+            role["vendor_items"][power] = power  # You can modify the value as needed
+
 
     return role
 
