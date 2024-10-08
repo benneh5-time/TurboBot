@@ -226,7 +226,9 @@ def create_random_role(faction):
     for key in modifications:
         role[key] = random.choice(possible_values[key])
         
-        
+    if role_id in [39, 40, 69, 70]:
+        role["inventor"] = 0
+        role["joat"] = 0    
     if faction == "Wolf": 
         if role.get("inventor") != 1 and role.get("joat") != 1 and role_id not in [39, 69, 40, 70]:
             for _ in range(1):
