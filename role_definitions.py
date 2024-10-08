@@ -114,7 +114,7 @@ possible_values = {
     #"hide_vote_weight": [0, 1],
     "non_consecutive": [1],
     "self_targetable": [1],
-    "treestump": [1],
+    "treestump": [1, 2],
     "compulsive": [1],
     #"neighbor": [0, 1],
     #"mason": [0, 1],
@@ -123,7 +123,9 @@ possible_values = {
     #"disloyal": [1],
     #"uncooperative": [1],
     "joat": [1],
-    "inventor": [1]
+    "inventor": [1],
+    "disabled_in_endgame": [1],
+    "janitor": [1, 2]
 }
 
 possible_vendor_items = {
@@ -179,7 +181,7 @@ def get_static_values(faction):
 
 def randomize_night_restrictions():
     # Randomly decide what type of night restrictions to apply
-    option = random.choice(["none", "even", "odd", "night_x"])
+    option = random.choice(["none", "even", "odd", "night_x", "cycle_cooldown"])
 
     if option == "none":
         return {
@@ -198,6 +200,13 @@ def randomize_night_restrictions():
             "even_night": 0,
             "odd_night": 1,
             "night_x": 0  # No night_x value
+        }
+    elif option == "cycle_cooldown":
+        return {
+            "even_night": 0,
+            "odd_night": 0,
+            "night_x": 0,
+            "cycle_cooldown": 1
         }
     else:  # option == "night_x"
         night_x = random.choice([1, 2, 3, "1+", "2+", 99])  # Exclude 0 for night_x
