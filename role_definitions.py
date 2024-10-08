@@ -151,7 +151,7 @@ def randomize_night_restrictions():
             "night_x": 0  # No night_x value
         }
     else:  # option == "night_x"
-        night_x = random.choice([1, 2, 3, 4, 5, "1+", "2+", "3+"])  # Exclude 0 for night_x
+        night_x = random.choice([1, 2, 3, 4, "1+", "2+"])  # Exclude 0 for night_x
         return {
             "even_night": 0,
             "odd_night": 0,
