@@ -240,7 +240,7 @@ def create_random_role(faction):
         role["joat"] = 0    
     if faction == "Wolf": 
         if role.get("inventor") != 1 and role.get("joat") != 1 and role_id not in [39, 69, 40, 70]:
-            for _ in range(1):
+            for _ in range(2):
                 if random.choice([True, False]):
                     if random.choice(["inventor", "joat"]) == "inventor":
                         role["inventor"] = 1
