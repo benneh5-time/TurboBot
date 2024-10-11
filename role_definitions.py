@@ -73,7 +73,7 @@ import random
 | 49      | Mafia Bomber                 |
 | 51      | Mafia Poisoner               |
 | 53      | Mafia Healer                 |
-| 55      | Mafia Motion Detector         |
+| 55      | Mafia Motion Detector        |
 | 57      | Mafia Voyeur                 |
 | 59      | Mafia Treestump              |
 | 61      | Mafia Neapolitan             |
@@ -90,12 +90,12 @@ possible_roles = {
     "Wolf": [
         2, 7, 9, 11, 13, 15, 17, 19, 21, 29,
         32, 35, 36, 38, 40, 42, 45, 47, 49, 51, 53, 55,
-        57, 59, 61, 62, 66, 67, 68, 70, 72, 74, 76
+        57, 59, 61, 62, 66, 68, 70, 72, 74, 76
         ],
     "Village": [
         1, 3, 4, 6, 8, 10, 12, 14, 16, 18, 20,
         27, 28, 31, 34, 37, 39, 41, 43, 44, 46, 48, 50,
-        52, 54, 56, 58, 60, 63, 64, 65, 69, 71, 73, 75
+        52, 54, 56, 58, 60, 63, 64, 65, 67, 69, 71, 73, 75
         ] 
 }
 possible_values = {
@@ -229,7 +229,7 @@ def create_random_role(faction):
     # Randomize other values (up to 4)
     keys_to_modify = [key for key in possible_values.keys()]  # Get all keys from possible_values
 
-    num_modifications = random.randint(1, 2)  # Choose how many values to modify (1 to 4)
+    num_modifications = random.randint(1, 3)  # Choose how many values to modify (1 to 2)
     modifications = random.sample(keys_to_modify, min(num_modifications, len(keys_to_modify)))  # Select keys to modify
 
     for key in modifications:
@@ -272,6 +272,8 @@ def create_random_role(faction):
             role["powers"][power] = random.choice(possible_kill_powers[power])
             
     if role_id in [68, 67]:
+        if "vendor_items" not in role:
+            role["vendor_items"] = []
         num_vendor_items = random.randint(1, 3)  # Up to 3 utility powers
         vendor_power_keys = list(possible_vendor_items.keys())
 
@@ -283,12 +285,12 @@ def create_random_role(faction):
 
         # Assign selected items to the role
         for power in selected_items:
-            role["vendor_items"][power] = power  # You can modify the value as needed
+            role["vendor_items"].append(power)
 
 
     return role
 
-#faction_choice = "Village" 
+#faction_choice = "Wolf" 
 
 #random_role = create_random_role(faction_choice)
 
