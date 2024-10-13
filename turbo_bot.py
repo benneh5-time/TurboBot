@@ -45,6 +45,7 @@ allowed_channels = [223260125786406912, 1258668573006495774]  # turbo-chat chann
 all_channels = [223260125786406912, 1256131761390489600]
 react_channels = [223260125786406912, 1114212787141492788]
 banned_users = [1173036536166621286]
+banned_randers = [612706340623876137]
 future_banned = [190312702692818946]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
@@ -1850,6 +1851,9 @@ async def rand(ctx, *args):
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for misusing bigping and are not allowed to rand turbos.")
         return   
+    if ctx.author.id in banned_randers:
+        await ctx.send("You are not allowed to rand for bad title creation. have someone else rand.")
+        return
     
     if ctx.author.id not in allowed_randers:
         await ctx.send("Only hosts and players on the list are allowed to execute this function.")
