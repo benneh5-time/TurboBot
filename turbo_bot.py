@@ -1611,7 +1611,7 @@ async def host(ctx, *, host_name=None):
         return
     global game_host_name
     
-    if host_name == "Turby":
+    if host_name.lower() == "Turby":
         game_host_name = ["Turby"]
         await update_status()
         await ctx.send("Host setting has been set to default for Turby :3 and cleared all other hosts.")
