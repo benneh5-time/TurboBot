@@ -1163,7 +1163,7 @@ async def out(ctx):
         return
     alias = aliases[ctx.author.id]
     
-    if alias in (hostname.lower() for hostname in game_host_name):
+    if alias in (hostname for hostname in game_host_name):
         if len(game_host_name) == 1:
             game_host_name = ["Turby"]
             await ctx.send(f"{alias} has been removed as host. Turby :3 has been set back to the default host.")
