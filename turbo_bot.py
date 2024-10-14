@@ -1163,7 +1163,7 @@ async def out(ctx):
         return
     alias = aliases[ctx.author.id]
     
-    if alias in (hostname for hostname in game_host_name):
+    if alias in (hostname.lower() for hostname in game_host_name):
         if len(game_host_name) == 1:
             game_host_name = ["Turby"]
             await ctx.send(f"{alias} has been removed as host. Turby :3 has been set back to the default host.")
@@ -1611,7 +1611,7 @@ async def host(ctx, *, host_name=None):
         return
     global game_host_name
     
-    if host_name.lower() == "Turby":
+    if host_name == "Turby":
         game_host_name = ["Turby"]
         await update_status()
         await ctx.send("Host setting has been set to default for Turby :3 and cleared all other hosts.")
