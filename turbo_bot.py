@@ -37,7 +37,7 @@ mods = [178647349369765888, 93432503863353344, 966170585040306276]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
-valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandomXer", "randommadnessXer"] #future setups
+valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandomXer", "randommadnessXer"] 
 valid_timers = ["sunbae", "14-3", "16-5", "8-2"]
 day_length = 14
 night_length = 3
@@ -1101,7 +1101,7 @@ async def in_(ctx, time: int = 60):
     alias = aliases[ctx.author.id]
     global game_host_name, player_limit, players, waiting_list
 
-    if time < 10 or time > 90:
+    if time < 10 or time > 90 and time != 10000:
         await ctx.send("Invalid duration. Please choose a duration between 10 and 90 minutes.")
         return
         
