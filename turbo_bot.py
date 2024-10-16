@@ -1091,7 +1091,11 @@ async def pr_flavor(ctx, charname=None, charimage=None):
     save_flavor_json('powerroles.json', existing_flavor)
 
 @bot.command(name="in")
-async def in_(ctx, time: int = 60):
+async def in_(ctx, time: str = '60'):
+    if time.startswith('0x'):
+        time = int(time, 16)
+    else:
+        time = int(time)
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     
