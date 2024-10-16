@@ -696,6 +696,8 @@ async def game(ctx, setup_name=None, Xer_Players: int = None):
             await ctx.send(f'The game setup has been changed to bomb10 (created by Hally)')
         elif current_setup == 'cop9' or current_setup == 'cop13':
             await ctx.send(f'The game setup has been changed to cop (created by insomnia)')
+        elif current_setup == 'bml10':
+            await ctx.send(f'The game setup has been changed to bml10 (whats wrong with you?)')
         else:
             await ctx.send(f"The game setup has been changed to '{current_setup}'")
 
