@@ -691,8 +691,11 @@ async def game(ctx, setup_name=None, Xer_Players: int = None):
             
         current_setup = setup_name
         player_limit = new_player_limit
-
-        await ctx.send(f"The game setup has been changed to '{current_setup}'")
+        
+        if current_setup == 'bomb10':
+            await ctx.send(f'The game setup has been changed to bomb10 (created by Hally)')
+        else:
+            await ctx.send(f"The game setup has been changed to '{current_setup}'")
 
     else:
         await ctx.send(f"'{setup_name}' is not a valid setup name. Please choose from: {', '.join(valid_setups)}.")
