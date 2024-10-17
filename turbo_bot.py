@@ -1138,7 +1138,8 @@ async def in_(ctx, time: str = '60'):
                 await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
             await update_status()    
             return
-            
+    if alias == 'alexa.':
+        await ctx.send('Although the above player has been added to the queue, heed this warning: This player has a high probability of baiting.')        
     if alias in players or alias in waiting_list:
         if alias in players:
             players[alias] = time            
@@ -1368,13 +1369,13 @@ async def baitping(ctx, *args):
             
         spots_left = player_limit - len(players)
         if spots_left > 1:
-            player_message += "alexa.\n"
+            player_message += "alexa. 🦆\n"
             player_message += f"+{spots_left -1} !!\n"
         elif spots_left == 1:
-            player_message += "alexa.\n"
+            player_message += "alexa. 🦆\n"
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"
         else:
-            player_message += "alexa.\n"
+            player_message += "alexa. 🦆\n"
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
         time_message +=  "10 minutes\n!in or react ✅ to join!\n"  
         embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
