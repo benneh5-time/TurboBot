@@ -37,7 +37,7 @@ mods = [178647349369765888, 93432503863353344, 966170585040306276]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
-valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandomXer", "randommadnessXer"] 
+valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandomXer", "randommadnessXer"]
 valid_timers = ["sunbae", "14-3", "16-5", "8-2"]
 day_length = 14
 night_length = 3
@@ -51,11 +51,11 @@ dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 anni_event_channels = [1258668573006495774]
 anon_enabled = False
-
 status_id = None
 status_channel = None
 is_rand_running = False
 turbo_ping_message = None
+
 def load_dvc_archive():
     with open('dvc_archive.json', 'r') as f:
         return json.load(f)
@@ -192,8 +192,6 @@ async def on_ready():
 
 async def create_dvc(thread_id):
     guild = bot.get_guild(dvc_server)
-    # DVC Archive cat_id
-    # category_id = 1114340515006136411
     category_id = 1117176858304336012
     voice_id = 1216555729138221066
     role = await guild.create_role(name=f"DVC: {thread_id}", permissions=discord.Permissions.none())
@@ -218,26 +216,17 @@ async def create_dvc(thread_id):
 
 async def create_wolf_chat(thread_id):
     guild = bot.get_guild(dvc_server)
-    # DVC Archive cat_id
-    # category_id = 1114340515006136411
     category_id = 1117176858304336012
-    #role = await guild.create_role(name=f"WC: {thread_id}", permissions=discord.Permissions.none())
-    #dvc_roles[int(thread_id)] = role.id
-    #save_dvc_roles()
-    #await guild.me.add_roles(role)
     category = guild.get_channel(category_id)
     channel = await guild.create_text_channel(
         name = f"WC {thread_id}",
         overwrites={
             guild.default_role: discord.PermissionOverwrite(read_messages=False),
-            #role: discord.PermissionOverwrite(read_messages=True)
         },
         category = category,
         position = 0
 
     )
-
-    #return role, channel.id, guild
     return channel.id, guild
 
 async def dvc_limit():
@@ -744,36 +733,6 @@ async def phases(ctx, timer_name=None):
         await ctx.send(f"'{timer_name}' is not a valid setup name. Please choose from: {', '.join(valid_timers)}.")
     await update_status()     
 
-
-
-@bot.command()
-async def flavors(ctx):
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
-        return
-    
-    vt_flavor = load_flavor_json('turboers.json')
-    pr_flavor = load_flavor_json('powerroles.json')
-    wolf_flavor = load_flavor_json('wolves.json')
-
-
-
-    async def send_message(flavor, role, ctx):
-        charnames = []
-        message = f"```\n{role}\n\n"
-        for i, item in enumerate(flavor):
-            
-            message += f"{i + 1}. {item['character_name']}\n"
-        
-        message += "```"
-
-        await ctx.author.send(message)
-    
-    await send_message(vt_flavor, "Vanilla Towns", ctx)
-    await send_message(pr_flavor, "Power Roles", ctx)
-    await send_message(wolf_flavor, "Wolves", ctx)
-    
-
-
 @bot.command()
 async def flavor(ctx, charname=None, charimage=None):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -818,46 +777,6 @@ async def flavor(ctx, charname=None, charimage=None):
         return
     
     save_flavor_json('turboers.json', existing_flavor)
-@bot.command()
-async def smallping(ctx):
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
-        return
-    
-    if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
-        return  
-    
-    await ctx.send('''# smallping 1.0 (siggi update)
-                   
-**if i pinged you although you already inned, please help recruiting. Thank you <3**
-<@1120140293275127848>
-<@438413352616722435>
-
-**Feel free to use the smallping list Yourself!**''')
-
-@bot.command()
-async def smallerping(ctx):
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
-        return
-    
-    if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
-        return  
-    
-    await ctx.send('''smallerping 1.0 (calliope update)
-<@1217289211745407026>''')
-
-@bot.command()
-async def smallestping(ctx):
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
-        return
-    
-    if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
-        return  
-    
-    await ctx.send('''smallestping 1.0 (oliwaz update)
-@ banned user''')
 
 @bot.command()
 async def smallpig(ctx):
@@ -871,31 +790,6 @@ async def smallpig(ctx):
     await ctx.send('''smallestpig 1.0 update (pork edition)
 <@924804445303349269>''')
 
-@bot.command()
-async def bugping(ctx):
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
-        return
-    
-    if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
-        return  
-    
-    await ctx.send('''bugping 1.0 (insect edition)
-<@1219457805224902716>
-<@1223419673907822603>
-<@970410416624775189>''')
-
-@bot.command()
-async def begping(ctx):
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
-        return
-    
-    if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
-        return  
-    
-    await ctx.send('''begping 1.0 (pathetic edition
-PWEASE 🥺  FUCKIJN 🥺 JOIN 🥺 I 🥺 NEED 🥺 U 🥺 IN 🥺 THIS 🥺 TUWB 🥺 PWEASE 🥺 JFC 🥺 PWEASE)''')
 @bot.command()
 async def benping(ctx):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -928,19 +822,7 @@ async def pinguin(ctx):
 <@164800310341009408>
                    
 join!!!''')
-    
 
-@bot.command()
-async def betping(ctx):
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
-        return
-    
-    if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
-        return  
-    
-    await ctx.send('''```Zara bets Suki isnt playing a turbo tonight, Akane bets Suki will play one.
-loser has to change their pfp -- won by Zara (suki is banned)!!```''')
     
 @bot.command()
 async def bigping(ctx):
@@ -952,48 +834,8 @@ async def bigping(ctx):
         return  
     
 
-    await ctx.send('''# bigping 2.1 (turby update)
-
-**If i pinged you although you already inned, please help recruiting. Thank You <3**
-<@917835877747654687>
-<@300106589455646722> 
-<@178647349369765888>
-<@1081319891195408464> 
-<@259104738925215744> 
-<@151768400815849472> 
-<@639568065306165250>
-<@695652367101853817> 
-<@1165837566587715614> 
-<@394695675838988298> 
-<@212014896873734145> 
-<@158019233438105600> 
-<@169683596318212096> 
-<@286411781512101888> 
-<@245216167713701888> 
-<@924804445303349269> 
-<@224153529483264000> 
-<@388374748163211284> 
-<@858544846531592222> 
-<@303054042492305418> 
-<@272144630789963779> 
-<@1201936195597389878>
-<@212014896873734145>
-<@866009287398522901>
-<@1218338901828042772>
-<@1217289211745407026>
-<@1171228755147112553>
-<@970410416624775189>
-<@683757633769046028>
-<@90896191767719936>                                 
-<@225964753208475649>
-<@745438545535303760>
-<@358292734962040842>
-<@712361670638305304>
-
-**To be added to the bigping list, type in the turbo chat or dm me. **
-To be removed, dm me. 
-||im not on bigping tho haha||
-**Feel free to use the bigping list Yourself!**''')
+    await ctx.send('''# bigping 2.2 (oli has been retired edition)
+                   bigping has been killed. long live bigping.''')
 
 @bot.command()
 async def wolf_flavor(ctx, charname=None, charimage=None):
@@ -1140,16 +982,13 @@ async def in_(ctx, time: str = '60'):
             players[alias] = time            
         else:
             waiting_list[alias] = time            
-        #await ctx.send(f"{alias}'s in has been renewed for the next {time} minutes.")
         await ctx.message.add_reaction('👍')
     else:
         if len(players) < player_limit:
             players[alias] = time            
-            #await ctx.send(f"{alias} has been added to the list for the next {time} minutes.")
             await ctx.message.add_reaction('👍')
         else:
             waiting_list[alias] = time
-            #await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
             await ctx.message.add_reaction('👍')
     await update_status()            
 
@@ -1596,39 +1435,6 @@ async def update_players():
         await update_status()
     except:
         print("Error updating players with update_player function", flush=True)
-""""        
-@bot.command()
-async def spec(ctx, arg: int):
-    if ctx.channel.id != dvc_channel:
-        return
-    if arg is None:
-        return
-    if 10000 <= arg <= 99999:
-        try:
-            role_id = dvc_roles[arg]
-            role_num = str(arg)
-            guild = bot.get_guild(dvc_server)
-            role = guild.get_role(role_id)
-            member = guild.get_member(ctx.author.id)
-            await member.add_roles(role)
-            await ctx.send(f"Added <@{ctx.author.id}> to role: {role.name}. Check #dvc-{role_num}")
-        except ValueError as ve:
-            # Handle ValueError
-            print("ValueError occurred:", str(ve))
-            await ctx.send(f"Failed to add <@{ctx.author.id}> to spec chat. sorry, something went wrong.", flush=True)            
-        except TypeError as te:
-            # Handle TypeError
-            print("TypeError occurred:", str(te))
-            await ctx.send(f"Failed to add <@{ctx.author.id}> to spec chat. sorry, something went wrong.", flush=True)            
-        except Exception as e:
-            # Handle any other exception
-            print("An exception occurred:", str(e))
-            await ctx.send(f"Failed to add <@{ctx.author.id}> to spec chat. sorry, something went wrong.", flush=True)
-                      
-
-    else:
-        await ctx.send('Invalid argument. Please provide the 5-digit number of the game thread. You can find this at the beginning of the URL for the game thread or from my rand comment in #turbo-chat. Please try again with !spec xxxxx')
-"""      
 
 @bot.command()
 async def live_dvc(ctx, thread_id):
@@ -1651,104 +1457,6 @@ async def live_dvc(ctx, thread_id):
     await edit_dvc(channel, guild)
     await delete_dvc_role(channel, role)
     current_game = None
-    
-@bot.command()
-async def anni_rand(ctx, *args):
-    if ctx.channel.id not in anni_event_channels:  # Restrict to certain channels
-        return
-    allowed_randers = [178647349369765888]
-
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-title', default=None)
-    parser.add_argument('-thread_id', default=None)
-    parser.add_argument('-setup', default=None)
-    parser.add_argument('-players', default=None)
-
-    try:
-        args_parsed = parser.parse_args(args)
-    except SystemExit:
-        await ctx.send(f"Invalid arguments. Please check your command syntax. Do not use `-`, `--`, or `:` in your titles and try again.")
-        return
-    except Exception as e:
-        await ctx.send(f"An unexpected error occurred. Please try again.\n{str(e)}")
-        return
-    
-    if args_parsed.players:
-        args_parsed.players = args_parsed.players.split(';')
-
-    cancel = await ctx.send(f"The game will rand in 15 seconds unless canceled by reacting with '❌'")
-    await cancel.add_reaction('❌')
-
-    def check(reaction, user):
-        return str(reaction.emoji) == '❌' and user.id in allowed_randers and reaction.message.id == cancel.id
-
-    try:
-        reaction, user = await bot.wait_for('reaction_add', timeout=15, check=check)
-
-        if str(reaction.emoji) == '❌':
-            await ctx.send(f"Rand canceled")
-            is_rand_running = False
-            return
-    except asyncio.TimeoutError:
-        await ctx.send("Randing, stfu")
-
-        try:
-        
-            username = os.environ.get('MUUN')
-            password = os.environ.get('MUPW')
-            
-            #Login and get Initial Token
-            session = mu.login(username, password)
-            security_token = mu.new_thread_token(session)
-            
-            game_title = args_parsed.title
-            anni_setup = args_parsed.setup
-            anni_players = args_parsed.players
-
-            if not game_title:
-                await ctx.send("Try again with a title")
-                return
-            if not anni_setup:
-                await ctx.send("Try again with a setup")
-                return
-            if len(anni_players) < 19:
-                await ctx.send("Player list not 10, try again")
-                return
-            if anni_setup not in valid_setups:
-                await ctx.send("Setup info wrong, try again")
-                return
-                
-            print(f"Attempting to post new thread with {game_title}", flush=True)
-            thread_id = mu.post_thread(session, game_title, security_token, anni_setup,test=False)
-
-            host_list = ["Turby"]
-            hosts = ', '.join(host_list)
-            await ctx.send(f"Attempting to rand `{game_title}`, a {anni_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
-            print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
-
-            security_token = mu.new_game_token(session, thread_id)
-
-            anni_day = 8
-            anni_night = 2
-            anni_player_limit = 19
-
-            response_message = mu.start_game(session, security_token, game_title, thread_id, anni_players, anni_setup, anni_day, anni_night, host_list, anon_enabled,anni_player_limit)
-            
-            if "was created successfully." in response_message:
-                # Use aliases to get the Discord IDs
-                print("Success. Gathering player list for mentions", flush=True)
-                game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
-                await ctx.send(f"MU Link for the current game: \n\n{game_url}")
-
-            elif "Error" in response_message:
-                print(f"Game failed to rand, reason: {response_message}", flush=True)
-                await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
-        
-        finally:
-            await ctx.send("Rand complete")
-
-    
 
     
 @bot.command()
@@ -2322,23 +2030,6 @@ async def clear(ctx, *args):
         await ctx.send("Player and waiting list has been cleared. Game is JOAT10 and host is Turby :3")
     else:
         await ctx.send("To clear, run !clear -confirm")
-        
-@bot.command(name='help')
-async def help(ctx):
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
-        return
-    embed = discord.Embed(title="Bot Commands", description="Here are the commands you can use:", color=0x1e00ff)
-    embed.add_field(name="!in", value="Joins the player list. You must first set an alias using `!alias` before joining. Optionally specify duration with a number, e.g. `!in 60` to join for 60 minutes.", inline=False)
-    embed.add_field(name="!out", value="Leaves the player list.", inline=False)
-    embed.add_field(name="!add", value="Add a player to the player list. Must specify player's username, e.g. `!add MU_Username`. You cannot control the duration with this command.", inline=False)
-    embed.add_field(name="!remove", value="Removes a player from the player list. Must specify player's username, e.g. `!remove MU_Username`.", inline=False)
-    embed.add_field(name="!rand", value="Randomly selects a game setup from a pre-defined list. Additional arguments may be used to specify thread title or id, e.g. `!rand -title \"Game Title\" -thread_id \"123456\"`.", inline=False)
-    embed.add_field(name="!alias", value="Sets the user's Mafia Universe username for use in other commands, e.g. `!alias MU_Username`.", inline=False)
-    embed.add_field(name="!clear", value="Resets the current game to defaults. Must be confirmed with `!clear -confirm`.", inline=False)
-    embed.add_field(name="!list", value="Displays the current list of the game, including player list, waiting list, host, and setup.", inline=False)
-    embed.add_field(name="!host", value="Sets the host of the game. By default, it will use your defined alias. You can specify a different host's username, e.g. `!host MU_Username`.", inline=False)
-    embed.add_field(name="!game", value="Sets the game setup. Must specify setup name from available options: cop9, cop13, joat10, vig10, bomb10, bml10, doublejoat13, random10er, closedrandomXer, randommadnessXer [PlayerLimit]. The random10er setup randomizes between a vig, bomb, and joat game. E.g. `!game cop9`.", inline=False)
-    await ctx.send(embed=embed)
 
 @bot.command()
 async def dvc(ctx):
