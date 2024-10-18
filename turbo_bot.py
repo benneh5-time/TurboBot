@@ -51,7 +51,6 @@ dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 anni_event_channels = [1258668573006495774]
 anon_enabled = False
-baitping = False
 
 status_id = None
 status_channel = None
@@ -1137,9 +1136,7 @@ async def in_(ctx, time: str = '60'):
                 waiting_list[alias] = time
                 await ctx.send(f"The list is full. {alias} has been removed as host and added to the waiting list instead.")
             await update_status()    
-            return
-    if alias == 'alexa.':
-        await ctx.send('Although the above player has been added to the queue, heed this warning: This player has a high probability of baiting.')        
+            return     
     if alias in players or alias in waiting_list:
         if alias in players:
             players[alias] = time            
@@ -1207,6 +1204,7 @@ async def out(ctx):
         await ctx.message.add_reaction('👎')
         await ctx.send(f"{next_alias} has been moved from the waiting list to the main list.")
     await update_status()
+
 @bot.command()
 async def alias(ctx, *, alias):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -1331,86 +1329,12 @@ async def remove(ctx, *, alias):
     await update_status()
 
 @bot.command()
-async def baitping(ctx, *args):
-    if ctx.guild is not None and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
-        return
-    if ctx.author.id in future_banned:
-        await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.") 
-    global game_host_name, status_id, status_channel, baitping
-
-    baitping = True
-
-    embed = discord.Embed(title="**2023 Award Winner for Best Mechanic!\nTurbo Bot v2.1 (with subs!) by benneh\nHelp keep Turby running by supporting its GoFundMe: https://gofund.me/64aaddfd", color=0x3381ff)
-    embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
-    host_list = [f"{host}\n" for host in game_host_name]
-    hosts = ''.join(host_list)
-    embed.add_field(name="**Host**", value=hosts, inline=True)
-    embed.add_field(name="**Phases**", value=str(day_length) + "m Days, " + str(night_length) + "m Nights", inline=True)
-    embed.add_field(name="", value="", inline=True)
-    embed.add_field(name="", value="", inline=True)
-    embed.add_field(name="", value="", inline=True)
-
-    embed.add_field(name="", value="", inline=True)
-    embed.add_field(name="", value="", inline=True)
-    embed.add_field(name="", value="", inline=True)
-
-    status_flavor = load_flavor_json('icons.json')    
-
-    if players:
-        player_message = ""
-        time_message = ""
-        for i, (alias, remaining_time) in enumerate(players.items(), 1):
-            player_msg = alias
-            for item in status_flavor:
-                if alias == item['alias']:
-                    player_msg = f"{alias} {item['icon']}"
-            player_message += f"{player_msg}\n"
-            time_message += f"{remaining_time} minutes\n"
-            
-        spots_left = player_limit - len(players)
-        if spots_left > 1:
-            player_message += "alexa. 🦆\n"
-            player_message += f"+{spots_left -1} !!\n"
-        elif spots_left == 1:
-            player_message += "alexa. 🦆\n"
-            player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"
-        else:
-            player_message += "alexa. 🦆\n"
-            player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
-        time_message +=  "10 minutes\n!in or react ✅ to join!\n"  
-        embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
-        embed.set_field_at(5, name="**Time Remaining:**", value=time_message, inline=True)
-        embed.set_field_at(4, name="", value="", inline=True)
-    if waiting_list:
-        waiting_list_message = ""
-        time_message = ""
-        for i, (alias, remaining_time) in enumerate(waiting_list.items(), 1):
-            waiting_list_message += f"{alias}\n"
-            time_message += f"{remaining_time} minutes\n"
-            
-        embed.set_field_at(6, name="**Waiting List:**", value=waiting_list_message, inline=True)
-        embed.set_field_at(7, name="**Time Remaining:**", value=time_message, inline=True)
-
-    if not players and not waiting_list:
-        embed.add_field(name="No players are currently signed up.", value="", inline=False)
-    
-    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1149013467790053420/1195471648850186401/image.png")
-
-    status_embed = await ctx.send(embed=embed)
-    await status_embed.add_reaction('✅')
-    status_id = status_embed.id
-    status_channel = ctx.channel
-
-
-@bot.command()
 async def status(ctx, *args):
     if ctx.guild is not None and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     if ctx.author.id in future_banned:
         await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.") 
-    global game_host_name, status_id, status_channel, baitping
-
-    baitping = False
+    global game_host_name, status_id, status_channel
 
     embed = discord.Embed(title="**2023 Award Winner for Best Mechanic!\nTurbo Bot v2.1 (with subs!) by benneh\nHelp keep Turby running by supporting its GoFundMe: https://gofund.me/64aaddfd", color=0x3381ff)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
@@ -1472,7 +1396,7 @@ async def status(ctx, *args):
 
 async def update_status():
 
-    global status_id, baitping
+    global status_id
     
     if status_id is None or status_channel is None:
         return
@@ -1512,28 +1436,15 @@ async def update_status():
                     player_msg = f"{alias} {item['icon']}"
             player_message += f"{player_msg}\n"
             time_message += f"{remaining_time} minutes\n"
-        if baitping:
-            time_message += "10 minutes\n"
-            
+
         spots_left = player_limit - len(players)
         if spots_left > 1:
-            if baitping:
-                player_message += "alexa.\n"
-                player_message += f"+{spots_left - 1} !!\n"
-            else:
-                player_message += f"+{spots_left} !!\n"
+            player_message += f"+{spots_left} !!\n"
         elif spots_left == 1:
-            if baitping:
-                player_message += "alexa.\n"
-                player_message += f"+{spots_left - 1} !!\n"
-            else:
-                player_message += f"+{spots_left} !!\n"
+            player_message += f"+{spots_left} !!\n"
         else:
-            if baitping:
-                player_message += "alexa.\n"
-                player_message += f"+{spots_left - 1} !!\n"
-            else:
-                player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
+            player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
+        
         time_message +=  "!in or react ✅ to join!\n"
         
         embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
@@ -1846,7 +1757,7 @@ async def anni_rand(ctx, *args):
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
-    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled, baitping
+    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled
 
     allowed_randers = []
     player_aliases = list(players.keys())[:player_limit]
@@ -1870,9 +1781,6 @@ async def rand(ctx, *args):
     if ctx.author.id not in allowed_randers:
         await ctx.send("Only hosts and players on the list are allowed to execute this function.")
         return 
-    
-    if len(players) < player_limit and baitping:
-        await ctx.send(f"You got baited by alexa, not enough players to start a game. Need {player_limit} players.")
 
     if len(players) < player_limit:
         await ctx.send(f"Not enough players to start a game. Need {player_limit} players.")
