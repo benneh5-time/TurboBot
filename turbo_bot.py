@@ -1334,7 +1334,7 @@ async def status(ctx, *args):
         await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.") 
     global game_host_name, status_id, status_channel
 
-    embed = discord.Embed(title="**2023 Award Winner for Best Mechanic!\nTurbo Bot v2.1 (with subs!) by benneh\nHelp keep Turby running by supporting its GoFundMe: https://gofund.me/64aaddfd", color=0x3381ff)
+    embed = discord.Embed(title="**Turbo Bot v2.1 (with auto-wolf-chat!) by benneh", color=0x3381ff)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
     host_list = [f"{host}\n" for host in game_host_name]
     hosts = ''.join(host_list)
