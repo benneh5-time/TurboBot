@@ -47,6 +47,7 @@ react_channels = [223260125786406912, 1114212787141492788]
 banned_users = [1173036536166621286]
 banned_randers = [612706340623876137]
 future_banned = [190312702692818946]
+on_1337_users = [827416091889762325]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server id
 anni_event_channels = [1258668573006495774]
@@ -951,9 +952,12 @@ async def in_(ctx, time: str = '60'):
     alias = aliases[ctx.author.id]
     global game_host_name, player_limit, players, waiting_list
 
-    if time < 10 or time > 90 and time != 10000 and time != 1610 and time != 420 and time != 6969:
+    if time < 10 or time > 90 and time != 10000 and time != 1610 and time != 420 and time != 6969 and time != 1337:
         await ctx.send("Invalid duration. Please choose a duration between 10 and 90 minutes.")
         return
+    
+    if time == 1337 and ctx.author.id in non_1337_users:
+        await ctx.send("you are not 1337 enuff for this time entry n00b")
         
     if alias in game_host_name:
         if len(game_host_name) == 1:
