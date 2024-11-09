@@ -837,7 +837,18 @@ async def bigping(ctx):
 
     await ctx.send('''# bigping 2.2 (oli has been retired edition)
                    bigping has been killed. long live bigping.''')
+    
+@bot.command()
+async def badping(ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
+        return  
+    
 
+    await ctx.send('''<@93432503863353344> ur bad lol''')
 @bot.command()
 async def wolf_flavor(ctx, charname=None, charimage=None):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
