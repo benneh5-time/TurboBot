@@ -93,6 +93,18 @@ def save_flavor_json(file, existing_flavor):
     with open(file, 'w') as f:
         json.dump(existing_flavor, f, indent=4)
 
+def load_bet_json(file):
+    try:
+        with open(file, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+def save_bet_json(file, existing_flavor):
+    with open(file, 'w') as f:
+        json.dump(bets, f, indent=4)
+
+
 def save_spec_list():
     with open('spec_list.json', 'w') as f:
         json.dump(spec_list, f, indent=4)
@@ -175,7 +187,7 @@ async def on_ready():
     load_aliases()
     load_dvc_roles()
     load_messages()
-    bets = load_flavor_json('bets.json')
+    bets = load_bet_json('bets.json')
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     recruit_list = load_recruit_list()
     spec_list = load_spec_list()
@@ -194,7 +206,7 @@ async def on_ready():
     await dvc_limit()
     # await clear_dvc_roles()
 
-@bot.command(name='bet_add')
+@bot.command(name='add_bet')
 async def add_bet(ctx, game:str, *, bet: str):
     if ctx.channel.id not in bet_channel:  # Restrict to certain channels
         return
@@ -202,7 +214,7 @@ async def add_bet(ctx, game:str, *, bet: str):
     if game not in bets:
         bets[game] = []
     bets[game].append(f"{ctx.author.name} bets: {bet}")
-    save_flavor_json('bets.json')
+    save_bet_json('bets.json')
     await ctx.send(f"Your bet has been added for {game}!")
     
 @bot.command(name='bet')
@@ -210,7 +222,7 @@ async def bets(ctx, game: str):
     if ctx.channel.id not in bet_channel:  # Restrict to certain channels
         return
     global bets 
-    bets = load_flavor_json('bets.json')
+    bets = load_bet_json('bets.json')
     if game is None:
         if not bets:
             await ctx.send("No games with bets currently.")
