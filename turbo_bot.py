@@ -2213,6 +2213,9 @@ async def on_message(message):
     if message.channel.id == anni_event_channels:
         await bot.process_commands(message)
         return
+    if message.channel.id == bet_channel:
+        await bot.process_commands(message)
+        return
 
     if isinstance(message.channel, discord.DMChannel):
         if message.author.id in mods:
