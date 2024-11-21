@@ -32,6 +32,7 @@ recruit_timer = 0
 aliases = {}
 dvc_roles = {}
 message_ids = {}
+bets = {}
 game_host_name = ["Turby"]
 mods = [178647349369765888, 93432503863353344, 966170585040306276]
 current_game = None
@@ -42,6 +43,7 @@ valid_timers = ["sunbae", "14-3", "16-5", "8-2"]
 day_length = 14
 night_length = 3
 allowed_channels = [223260125786406912, 1258668573006495774]  # turbo-chat channel ID
+bet_channel = [1308961182375350396]
 all_channels = [223260125786406912, 1256131761390489600]
 react_channels = [223260125786406912, 1114212787141492788]
 banned_users = [1173036536166621286]
@@ -168,11 +170,12 @@ def find_key_by_value(dictionary, value):
 
 @bot.event
 async def on_ready():
-    global players, waiting_list, current_setup, game_host_name, player_limit, recruit_list, spec_list
+    global players, waiting_list, current_setup, game_host_name, player_limit, recruit_list, spec_list, bets
     print(f"We have logged in as {bot.user}", flush=True)
     load_aliases()
     load_dvc_roles()
     load_messages()
+    bets = load_flavor_json('bets.json')
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     recruit_list = load_recruit_list()
     spec_list = load_spec_list()
@@ -190,6 +193,36 @@ async def on_ready():
     update_players.start()  # Start background task
     await dvc_limit()
     # await clear_dvc_roles()
+
+@bot.command(name='bet_add')
+async def add_bet(ctx, game:str, *, bet: str):
+    if ctx.channel.id not in bet_channel:  # Restrict to certain channels
+        return
+    global bets
+    if game not in bets:
+        bets[game] = []
+    bets[game].append(f"{ctx.author.name} bets: {bet}")
+    save_flavor_json('bets.json')
+    await ctx.send(f"Your bet has been added for {game}!")
+    
+@bot.command(name='bet')
+async def bets(ctx, game: str):
+    if ctx.channel.id not in bet_channel:  # Restrict to certain channels
+        return
+    global bets 
+    bets = load_flavor_json('bets.json')
+    if game is None:
+        if not bets:
+            await ctx.send("No games with bets currently.")
+        else:
+            games_list = '\n'.join([f'```{game}```' for game in bets.keys()])
+            await ctx.send(f'Games with bets: \n{games_list}')
+    else:
+        if game not in bets or not bets[game]:
+            await ctx.send(f'No bets found for "{game}".')
+        else:
+            bets_list = '\n'.join([f'```{bet}```' for bet in bets[game]])
+            await ctx.send(bets_list)
 
 async def create_dvc(thread_id):
     guild = bot.get_guild(dvc_server)
