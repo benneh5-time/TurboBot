@@ -42,7 +42,7 @@ valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", 
 valid_timers = ["sunbae", "14-3", "16-5", "8-2"]
 day_length = 14
 night_length = 3
-allowed_channels = [223260125786406912, 1258668573006495774]  # turbo-chat channel ID
+allowed_channels = [223260125786406912, 1258668573006495774, 1308961182375350396]  # turbo-chat channel ID
 bet_channel = [1308961182375350396]
 all_channels = [223260125786406912, 1256131761390489600]
 react_channels = [223260125786406912, 1114212787141492788]
@@ -2211,9 +2211,6 @@ async def on_message(message):
         return
     
     if message.channel.id == anni_event_channels:
-        await bot.process_commands(message)
-        return
-    if message.channel.id == bet_channel:
         await bot.process_commands(message)
         return
 
