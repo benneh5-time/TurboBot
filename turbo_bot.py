@@ -217,8 +217,8 @@ async def add_bet(ctx, game:str, *, bet: str):
     save_bet_json('bets.json', bets)
     await ctx.send(f"Your bet has been added for {game}!")
     
-@bot.command(name='bet')
-async def bets(ctx, game: str):
+@bot.command(name='bets')
+async def bets(ctx, game: str = None):
     if ctx.channel.id not in bet_channel:  # Restrict to certain channels
         return
     global bets 
