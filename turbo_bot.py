@@ -100,7 +100,7 @@ def load_bet_json(file):
     except FileNotFoundError:
         return {}
 
-def save_bet_json(file, existing_flavor):
+def save_bet_json(file, bets):
     with open(file, 'w') as f:
         json.dump(bets, f, indent=4)
 
@@ -214,7 +214,7 @@ async def add_bet(ctx, game:str, *, bet: str):
     if game not in bets:
         bets[game] = []
     bets[game].append(f"{ctx.author.name} bets: {bet}")
-    save_bet_json('bets.json')
+    save_bet_json('bets.json', bets)
     await ctx.send(f"Your bet has been added for {game}!")
     
 @bot.command(name='bet')
