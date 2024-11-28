@@ -628,7 +628,7 @@ async def display_setup_stats(ctx, setup, count, setup_wins):
 
     if independent_wins:
         setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{independent_win_percentage:.2f}%", inline=True)
-    setup_embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1149013467790053420/1246701427380850751/images.png?ex=665d58ae&is=665c072e&hm=b84fa3677984afac2e13d4636c5c527fdeefb22d561b5c234472cd36d8c6fdc2&")
+    setup_embed.set_thumbnail(url="https://i.imgur.com/Zb9enMh.jpeg")
 
     await ctx.send(embed=setup_embed)
 
@@ -1284,7 +1284,7 @@ async def status(ctx, *args):
     if not players and not waiting_list:
         embed.add_field(name="No players are currently signed up.", value="", inline=False)
     
-    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1149013467790053420/1195471648850186401/image.png")
+    embed.set_thumbnail(url="https://i.imgur.com/Zb9enMh.jpeg")
 
     status_embed = await ctx.send(embed=embed)
     await status_embed.add_reaction('✅')
