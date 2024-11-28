@@ -598,8 +598,8 @@ async def stats(ctx, game_setup=None):
         setup_embed.add_field(name=f'Overall Stats', value=f"Total Games since September 2023: {total_games}", inline=False)
         setup_embed.add_field(name="Town Win Percentage", value=f'{overall_town_win_percentage:.2f}%', inline=True)
         setup_embed.add_field(name='Mafia Win Percentage', value=f'{overall_mafia_win_percentage:.2f}%', inline=True)
-        setup_embed.add_field(name="Stats by Turby!", value=f"Use !stats [setup] to get individual setup stats!", inline=False)
-        setup_embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1149013467790053420/1246701427380850751/images.png?ex=665d58ae&is=665c072e&hm=b84fa3677984afac2e13d4636c5c527fdeefb22d561b5c234472cd36d8c6fdc2&")
+        setup_embed.add_field(name="Stats by Turky!", value=f"Use !stats [setup] to get individual setup stats!", inline=False)
+        setup_embed.set_thumbnail(url="https://i.imgur.com/Zb9enMh.jpeg")
         await ctx.send(embed=setup_embed)
     else:
         if game_setup not in setup_total_games:
@@ -661,7 +661,7 @@ async def game(ctx, setup_name=None, Xer_Players: int = None):
     if ctx.channel.id not in allowed_channels:  
         return
     if ctx.author.id in future_banned:
-        await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.")
+        await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turky until then.")
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return
@@ -999,7 +999,7 @@ async def in_(ctx, time: str = '60'):
         await ctx.send("You have been banned for misusing bigping and are not allowed to in turbos.")
         return
     if ctx.author.id in future_banned:
-        await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.")
+        await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turky until then.")
 
     if ctx.author.id not in aliases:
         await ctx.send("Please set your MU username by using !alias MU_Username before inning!")
@@ -1020,10 +1020,10 @@ async def in_(ctx, time: str = '60'):
             game_host_name = ["Turby"]
             if len(players) < player_limit:
                 players[alias] = time
-                await ctx.send(f"{alias} has been removed as host and added to the list for the next {time} minutes. Your current host is Turby :3")
+                await ctx.send(f"{alias} has been removed as host and added to the list for the next {time} minutes. Your current host is Turky :3")
             else:
                 waiting_list[alias] = time
-                await ctx.send(f"{alias} has been removed as host and added to the waiting list for the next {time} minutes. Your current host is Turby :3")
+                await ctx.send(f"{alias} has been removed as host and added to the waiting list for the next {time} minutes. Your current host is Turky :3")
             await update_status()
             return
             
@@ -1060,7 +1060,7 @@ async def out(ctx):
         await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return
     if ctx.author.id in future_banned:
-        await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.")
+        await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turky until then.")
     global game_host_name, player_limit, players, waiting_list 
     
     if ctx.author.id not in aliases:
@@ -1072,7 +1072,7 @@ async def out(ctx):
     if alias in (hostname.lower() for hostname in game_host_name):
         if len(game_host_name) == 1:
             game_host_name = ["Turby"]
-            await ctx.send(f"{alias} has been removed as host. Turby :3 has been set back to the default host.")
+            await ctx.send(f"{alias} has been removed as host. Turky :3 has been set back to the default host.")
             await update_status()
             return
         else:
@@ -1143,10 +1143,10 @@ async def add(ctx, *, alias):
             game_host_name = ["Turby"]
             if len(players) < player_limit:
                 players[alias] = 60
-                await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes. Your current host is Turby :3.")
+                await ctx.send(f"{alias} has been removed as host and added to the list for the next 60 minutes. Your current host is Turky :3.")
             else:
                 waiting_list[alias] = 60
-                await ctx.send(f"{alias} has been removed as host and added to the waiting list for the next 60 minutes. Your current host is Turby :3.")
+                await ctx.send(f"{alias} has been removed as host and added to the waiting list for the next 60 minutes. Your current host is Turky :3.")
             await update_status()
             return
             
@@ -1195,7 +1195,7 @@ async def remove(ctx, *, alias):
     if alias in (hostname.lower() for hostname in game_host_name):
         if len(game_host_name) == 1:
             game_host_name = ["Turby"]
-            await ctx.send(f"{alias} has been removed as host. Turby :3 has been set back to the default host.")
+            await ctx.send(f"{alias} has been removed as host. Turky :3 has been set back to the default host.")
             await update_status()
             return
         else:
@@ -1230,7 +1230,7 @@ async def status(ctx, *args):
     if ctx.guild is not None and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     if ctx.author.id in future_banned:
-        await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.") 
+        await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turky until then.") 
     global game_host_name, status_id, status_channel
 
     embed = discord.Embed(title="**Turbo Bot v2.1 (with auto-wolf-chat!) by benneh", color=0x3381ff)
@@ -1434,7 +1434,7 @@ async def host(ctx, *, host_name=None):
     if host_name == "Turby":
         game_host_name = ["Turby"]
         await update_status()
-        await ctx.send("Host setting has been set to default for Turby :3 and cleared all other hosts.")
+        await ctx.send("Host setting has been set to default for Turky :3 and cleared all other hosts.")
         return
 
     if host_name is not None and host_name.lower() in game_host_name:
@@ -1790,7 +1790,7 @@ async def test_rand(ctx, *args):
         return
     
     if ctx.author.id not in mods:
-        await ctx.send("Test rands only allowed for turby subscribers")
+        await ctx.send("Test rands only allowed for Turky subscribers")
         return
     
     # args = shlex.split(' '.join(args))
@@ -2087,7 +2087,7 @@ async def clear(ctx, *args):
         player_limit = 10
         game_host_name = ["Turby"]
         current_setup = "joat10"        
-        await ctx.send("Player and waiting list has been cleared. Game is JOAT10 and host is Turby :3")
+        await ctx.send("Player and waiting list has been cleared. Game is JOAT10 and host is Turky :3")
     else:
         await ctx.send("To clear, run !clear -confirm")
 
