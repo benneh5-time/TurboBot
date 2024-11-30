@@ -15,13 +15,13 @@ def calculate_player_win_rate(file_path, player_name):
             wolves = eval(row['Wolves'])
 
             # Check if the player participated as a Villager
-            if player_name in villagers:
+            if player_name in villagers.lower():
                 total_games['Villager'] += 1
                 if winning_alignment == 'Town':
                     wins['Villager'] += 1
 
             # Check if the player participated as a Wolf
-            if player_name in wolves:
+            if player_name in wolves.lower():
                 total_games['Wolf'] += 1
                 if winning_alignment == 'Mafia':
                     wins['Wolf'] += 1
