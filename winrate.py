@@ -11,17 +11,17 @@ def calculate_player_win_rate(file_path, player_name):
         reader = csv.DictReader(csvfile)
         for row in reader:
             winning_alignment = row['Winning Alignment']
-            villagers = eval(row['Villagers'])  # Convert string list to actual list
-            wolves = eval(row['Wolves'])
+            villagers = [v.lower() for v in eval(row['Villagers'])]  # Convert string list to actual list
+            wolves = [w.lower() for w in eval(row['Wolves'])]
 
             # Check if the player participated as a Villager
-            if player_name in villagers.lower():
+            if player_name in villagers:
                 total_games['Villager'] += 1
                 if winning_alignment == 'Town':
                     wins['Villager'] += 1
 
             # Check if the player participated as a Wolf
-            if player_name in wolves.lower():
+            if player_name in wolves:
                 total_games['Wolf'] += 1
                 if winning_alignment == 'Mafia':
                     wins['Wolf'] += 1
