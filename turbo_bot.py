@@ -1264,7 +1264,7 @@ async def status(ctx, *args):
         if spots_left > 1:
             player_message += f"+{spots_left} !!\n"
         elif spots_left == 1:
-            player_message += "+1 HERO NEEDED\n"
+            player_message += "+1 HERO NEEDED \n" 
         else:
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
         time_message +=  "!in or react ✅ to join!\n"  
