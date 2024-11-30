@@ -544,8 +544,15 @@ async def player_stats(ctx):
     
     alias = aliases[ctx.author.id]
     player_win_rate = winrate.calculate_player_win_rate("game_database.csv", alias)
-    await ctx.send(f"{player_win_rate['Player']}:\n  Villager Win Rate: {player_win_rate['Villager Win Rate']:.2f}%\n   Wolf Win Rate: {player_win_rate['Wolf Win Rate']:.2f}%")
-
+    await ctx.send(
+        f"{player_win_rate['Player']}:\n"
+        f"  Overall:\n"
+        f"    Games Played: {player_win_rate['Total Games Played']}, Wins: {player_win_rate['Total Wins']}, Win Rate: {player_win_rate['Overall Win Rate']:.2f}%\n"
+        f"  Villager:\n"
+        f"    Games Played: {player_win_rate['Villager Games']}, Wins: {player_win_rate['Villager Wins']}, Win Rate: {player_win_rate['Villager Win Rate']:.2f}%\n"
+        f"  Wolf:\n"
+        f"    Games Played: {player_win_rate['Wolf Games']}, Wins: {player_win_rate['Wolf Wins']}, Win Rate: {player_win_rate['Wolf Win Rate']:.2f}%"
+    )
 @bot.command()
 async def stats(ctx, game_setup=None):
 

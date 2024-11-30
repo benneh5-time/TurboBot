@@ -29,12 +29,22 @@ def calculate_player_win_rate(file_path, player_name):
     # Calculate win rates
     villager_win_rate = (wins['Villager'] / total_games['Villager'] * 100) if total_games['Villager'] > 0 else 0
     wolf_win_rate = (wins['Wolf'] / total_games['Wolf'] * 100) if total_games['Wolf'] > 0 else 0
+    total_wins = sum(wins.values())
+    total_games_played = sum(total_games.values())
+    overall_win_rate = (total_wins / total_games_played * 100) if total_games_played > 0 else 0
 
     # Return the player's win rates
     return {
         'Player': player_name,
         'Villager Win Rate': villager_win_rate,
-        'Wolf Win Rate': wolf_win_rate
+        'Villager Games': total_games['Villager'],
+        'Villager Wins': wins['Villager'],
+        'Wolf Win Rate': wolf_win_rate,
+        'Wolf Games': total_games['Wolf'],
+        'Wolf Wins': wins['Wolf'],
+        'Total Wins': total_wins,
+        'Total Games Played': total_games_played,
+        'Overall Win Rate': overall_win_rate
     }
 
 # Example usage
