@@ -10,6 +10,7 @@ import requests
 import csv
 from bs4 import BeautifulSoup
 import pandas as pd
+import winrate
 import re
 
 intents = discord.Intents.default()
@@ -531,6 +532,19 @@ async def sub(ctx, player=None):
     else:
         await ctx.send("Replacement didn't work, please do so manually or fix syntax")
 
+@bot.command()
+async def player_stats(ctx):
+
+    if ctx.channel.id not in allowed_channels:  
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
+        return   
+    
+    alias = aliases[ctx.author.id]
+    player_win_rate = winrate.calculate_player_win_rate("game_database.csv", alias)
+    await ctx.send(f"{player_win_rate['Player']}:\n  Villager Win Rate: {player_win_rate['Villager Win Rate']:.2f}%\n   Wolf Win Rate: {player_win_rate['Wolf Win Rate']:.2f}%")
 
 @bot.command()
 async def stats(ctx, game_setup=None):
