@@ -342,6 +342,11 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         data.add("preset", "cop-9")
         data.add('num_players', '9')
         data.add('n0_peeks', '1')
+    if final_game_setup == "paritycop9":
+        add_parity_cop9_roles(game_title)
+        data.add("preset", "cop-9")
+        data.add('num_players', '9')
+        data.add('n0_peeks', '1')
     if final_game_setup == "cop13":
         add_cop13_roles(game_title)
         data.add("preset", "cop-13")
