@@ -1,7 +1,7 @@
 import csv
 from collections import defaultdict
 
-def calculate_player_win_rate(file_path, player_name):
+def calculate_player_win_rate(file_path, player_name, setup=None):
     # Create dictionaries to store total games and wins for the player
     total_games = {'Villager': 0, 'Wolf': 0}
     wins = {'Villager': 0, 'Wolf': 0}
@@ -10,6 +10,9 @@ def calculate_player_win_rate(file_path, player_name):
     with open(file_path, 'r', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
+            if setup and row['Setup'] != setup:
+                continue  # Skip rows that don't match the specified setup
+
             winning_alignment = row['Winning Alignment']
             villagers = [v.lower() for v in eval(row['Villagers'])]  # Convert string list to actual list
             wolves = [w.lower() for w in eval(row['Wolves'])]
@@ -36,6 +39,7 @@ def calculate_player_win_rate(file_path, player_name):
     # Return the player's win rates
     return {
         'Player': player_name,
+        'Setup': setup or 'All Setups',
         'Villager Win Rate': villager_win_rate,
         'Villager Games': total_games['Villager'],
         'Villager Wins': wins['Villager'],
@@ -48,11 +52,12 @@ def calculate_player_win_rate(file_path, player_name):
     }
 
 # Example usage
-#file_path = 'game_database.csv'  # Replace with the path to your CSV file
-#player_name = 'pinguREFORMED'  # Replace with the player's name you want to query
-#player_win_rate = calculate_player_win_rate(file_path, player_name)
+# file_path = 'game_database.csv'  # Replace with the path to your CSV file
+# player_name = 'pinguREFORMED'  # Replace with the player's name you want to query
+# setup = 'Setup Name'  # Replace with the setup name or None for all setups
+# player_win_rate = calculate_player_win_rate(file_path, player_name, setup)
 
 # Print the result
-#print(f"{player_win_rate['Player']}:")
-#print(f"  Villager Win Rate: {player_win_rate['Villager Win Rate']:.2f}%")
-#print(f"  Wolf Win Rate: {player_win_rate['Wolf Win Rate']:.2f}%")
+# print(f"{player_win_rate['Player']} ({player_win_rate['Setup']}):")
+# print(f"  Villager Win Rate: {player_win_rate['Villager Win Rate']:.2f}%")
+# print(f"  Wolf Win Rate: {player_win_rate['Wolf Win Rate']:.2f}%")

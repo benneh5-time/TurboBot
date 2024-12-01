@@ -533,7 +533,7 @@ async def sub(ctx, player=None):
         await ctx.send("Replacement didn't work, please do so manually or fix syntax")
 
 @bot.command()
-async def player_stats(ctx):
+async def player_stats(ctx, *, setup=None):
 
     if ctx.channel.id not in allowed_channels:  
         return
@@ -543,9 +543,10 @@ async def player_stats(ctx):
         return   
     
     alias = aliases[ctx.author.id]
-    player_win_rate = winrate.calculate_player_win_rate("game_database.csv", alias)
+    player_win_rate = winrate.calculate_player_win_rate("game_database.csv", alias, setup)
+    
     await ctx.send(
-        f"{player_win_rate['Player']}:\n"
+        f"{player_win_rate['Player']} ({player_win_rate['Setup']}):\n"
         f"  Overall:\n"
         f"    Games Played: {player_win_rate['Total Games Played']}, Wins: {player_win_rate['Total Wins']}, Win Rate: {player_win_rate['Overall Win Rate']:.2f}%\n"
         f"  Villager:\n"
@@ -553,6 +554,7 @@ async def player_stats(ctx):
         f"  Wolf:\n"
         f"    Games Played: {player_win_rate['Wolf Games']}, Wins: {player_win_rate['Wolf Wins']}, Win Rate: {player_win_rate['Wolf Win Rate']:.2f}%"
     )
+    
 @bot.command()
 async def stats(ctx, game_setup=None):
 
