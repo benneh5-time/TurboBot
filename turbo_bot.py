@@ -39,7 +39,7 @@ mods = [178647349369765888, 93432503863353344, 966170585040306276]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
-valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "doublejoat13", "random10er", "closedrandomXer", "randommadnessXer"]
+valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", "cop13", "paritycop9", "doublejoat13", "random10er", "closedrandomXer", "randommadnessXer"]
 valid_timers = ["sunbae", "14-3", "16-5", "8-2"]
 day_length = 14
 night_length = 3
@@ -694,7 +694,7 @@ async def game(ctx, setup_name=None, Xer_Players: int = None):
     if setup_name is None:
         await ctx.send(f"The current game setup is '{current_setup}'. To change the setup, use !game <setup_name>. Valid setup names are: {', '.join(valid_setups)}.")
     elif setup_name in valid_setups:
-        if setup_name == "cop9":
+        if setup_name == "cop9" or setup_name == "paritycop9":
             new_player_limit = 9
         elif setup_name == "vig10":
             new_player_limit = 10

@@ -857,6 +857,33 @@ def add_cop9_roles(game_title):
         wolf_json = json.dumps(current_wolves)
         data.add("roles[]", wolf_json)
  
+def add_parity_cop9_roles(game_title):	
+    global data
+
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
+    villagers = random.sample(name_image_pairs, 6)
+    cop = random.sample(pr_name_image_pairs, 1)
+    wolves = random.sample(wolf_name_image_pairs, 2)
+
+    for i in range(0,6):
+        current_vanchilla = roles.vt.copy()
+        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_image'] = villagers[i]["character_image"]
+        vt_json = json.dumps(current_vanchilla)
+        data.add("roles[]", vt_json)
+   
+    current_cop = town_roles.utility_roles['parity_cop_m'].copy()
+    current_cop['character_name'] = cop[0]["character_name"]
+    current_cop['character_image'] = cop[0]["character_image"]
+    cop_json = json.dumps(current_cop)
+    data.add("roles[]", cop_json)
+     
+    for i in range(0,2):
+        current_wolves = roles.goon.copy()
+        current_wolves['character_name'] = wolves[i]['character_name']
+        current_wolves['character_image'] = wolves[i]['character_image']
+        wolf_json = json.dumps(current_wolves)
+        data.add("roles[]", wolf_json)
 
 def add_cop13_roles(game_title):
 	
