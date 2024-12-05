@@ -1805,7 +1805,8 @@ async def suki (ctx):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     quotes = load_flavor_json('sukiquotes.json')
-    suki_quote = random.choice(flavor['quotes'])
+    squote = quotes['quotes']
+    suki_quote = random.choice(squote)
     
     await ctx.send(f"Suki Quote 1.0:\n\n ```{suki_quote}```")
     
