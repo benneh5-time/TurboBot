@@ -1801,6 +1801,16 @@ async def rand(ctx, *args):
             is_rand_running = False
 
 @bot.command()
+async def suki (ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    quotes = load_flavor_json('sukiquotes.json')
+    suki_quote = random.choice(flavor['quotes'])
+    
+    await ctx.send(f"Suki Quote 1.0:\n\n ```{suki_quote}```")
+    
+
+@bot.command()
 async def test_rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
