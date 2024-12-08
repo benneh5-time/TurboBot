@@ -46,6 +46,7 @@ import random
 | 73      | Town Redirector              |
 | 75      | Town Power Role Killer       |
 
+
 ### Mafia Roles
 
 | Role ID | Role Name                    |
@@ -290,8 +291,8 @@ def create_random_role(faction):
 
     return role
 
-#faction_choice = "Village" 
+faction_choice = "Village" 
 
-#random_role = create_random_role(faction_choice)
+random_role = create_random_role(faction_choice)
 
-#print(random_role)
+print(random_role)
