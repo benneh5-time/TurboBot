@@ -179,7 +179,8 @@ def load_player_list():
         return {}, {}
         
 def find_key_by_value(dictionary, value):
-    value = value.lower()  # Ensure case-insensitive comparison
+    if isinstance(value, str):  # Ensure case-insensitive comparison for strings
+        value = value.lower()
     for key, val in dictionary.items():
         if value == val["active"] or value in val["all"]:
             return key
