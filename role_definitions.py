@@ -291,7 +291,7 @@ def create_random_role(faction):
 
     return role
 
-faction_choice = "Village" 
+faction_choice = "Wolf" 
 
 random_role = create_random_role(faction_choice)
 
