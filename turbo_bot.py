@@ -211,9 +211,6 @@ async def on_ready():
         player_limit = 10  
     update_players.start()  # Start background task
     await dvc_limit()
-    for user_id, value in aliases.items():
-        if isinstance(value, str):  # Old format
-            aliases[user_id] = {"active": value, "all": [value]}
     # await clear_dvc_roles()
 
 @bot.command(name='add_bet')
