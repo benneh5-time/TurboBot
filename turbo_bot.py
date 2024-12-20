@@ -187,7 +187,6 @@ def find_key_by_value(dictionary, value):
             return key
     return None
 
-
 @bot.event
 async def on_ready():
     global players, waiting_list, current_setup, game_host_name, player_limit, recruit_list, spec_list, bets
@@ -417,7 +416,7 @@ class ThreadmarkProcessor:
                     results = event.split("Elimination: ")[1].strip()
                     username = results.split(" was ")[0].strip().lower()
                     flavor = results.split(" was ")[1].strip().lower()
-                    if username in aliases.values():
+                    if username == aliases.get("active", "").lower() or username in [alt.lower() for alt in aliases.get("all", [])]:
                         try:
                             mention_id = find_key_by_value(aliases, username)
                             member = guild.get_member(mention_id)
@@ -452,7 +451,7 @@ class ThreadmarkProcessor:
                         if " was " in player:
                             username = player.split(" was ")[0].strip().lower()
                             flavor = results.split(" was ")[1].strip().lower()
-                            if username in aliases.values():
+                            if username == aliases.get("active", "").lower() or username in [alt.lower() for alt in aliases.get("all", [])]:
                                 try:
                                     mention_id = find_key_by_value(aliases, username)
                                     member = guild.get_member(mention_id)
@@ -474,7 +473,7 @@ class ThreadmarkProcessor:
                         if " was " in player:
                             username = player.split(" was ")[0].strip().lower()
                             flavor = results.split(" was ")[1].strip().lower()
-                            if username in aliases.values():
+                            if username == aliases.get("active", "").lower() or username in [alt.lower() for alt in aliases.get("all", [])]:
                                 try:
                                     mention_id = find_key_by_value(aliases, username)
                                     member = guild.get_member(mention_id)
