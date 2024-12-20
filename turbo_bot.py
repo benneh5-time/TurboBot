@@ -132,8 +132,11 @@ def load_messages():
         pass
 
 def save_aliases():
-    with open('aliases.json', 'w') as f:
-        json.dump(aliases, f, indent=4)
+    try:
+        with open('aliases.json', 'w') as f:
+            json.dump(aliases, f, indent=4)
+    except Exception as e:
+        print(f"Error saving aliases: {e}")
 
 def load_aliases():
     try:
@@ -176,10 +179,12 @@ def load_player_list():
         return {}, {}
         
 def find_key_by_value(dictionary, value):
+    value = value.lower()  # Ensure case-insensitive comparison
     for key, val in dictionary.items():
-        if val == value:
+        if value == val["active"] or value in val["all"]:
             return key
     return None
+
 
 @bot.event
 async def on_ready():
@@ -205,6 +210,9 @@ async def on_ready():
         player_limit = 10  
     update_players.start()  # Start background task
     await dvc_limit()
+    for user_id, value in aliases.items():
+        if isinstance(value, str):  # Old format
+            aliases[user_id] = {"active": value, "all": [value]}
     # await clear_dvc_roles()
 
 @bot.command(name='add_bet')
@@ -1028,7 +1036,7 @@ async def in_(ctx, time: str = '60'):
         await ctx.send("Please set your MU username by using !alias MU_Username before inning!")
         return
 
-    alias = aliases[ctx.author.id]
+    alias = aliases[ctx.author.id]["active"]
     global game_host_name, player_limit, players, waiting_list
 
     if time < 10 or time > 90 and time != 10000 and time != 1610 and time != 420 and time != 6969 and time != 1337:
@@ -1125,7 +1133,7 @@ async def out(ctx):
         await ctx.send(f"{next_alias} has been moved from the waiting list to the main list.")
     await update_status()
 
-@bot.command()
+"""@bot.command()
 async def alias(ctx, *, alias):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
@@ -1148,7 +1156,48 @@ async def alias(ctx, *, alias):
             for player in list(player_list.keys()):  # Create a copy of keys to avoid RuntimeError
                 if player == old_alias:
                     player_list[alias] = player_list.pop(old_alias)                   
+    await update_status()"""
+@bot.command()
+async def alias(ctx, *, alias):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to change your alias.")
+        return
+
+    alias = alias.lower()
+    
+    # Initialize the user's alias list if it doesn't exist
+    if ctx.author.id not in aliases:
+        aliases[ctx.author.id] = {"active": alias, "all": [alias]}
+        save_aliases()
+        await ctx.send(f"Alias for {ctx.author} has been set to {alias} and marked as active.")
+        await update_status()
+        return
+
+    user_aliases = aliases[ctx.author.id]["all"]
+
+    if alias in user_aliases:
+        aliases[ctx.author.id]["active"] = alias
+        await ctx.send(f"Alias for {ctx.author} is now switched to {alias}.")
+    elif alias in [item["active"] for item in aliases.values()] or alias in players:
+        await ctx.send(f"The alias {alias} is already taken or being used in a current sign-up. If someone has taken your alias, fight them.")
+    else:
+        user_aliases.append(alias)
+        aliases[ctx.author.id]["active"] = alias
+        await ctx.send(f"Alias {alias} added for {ctx.author} and marked as active.")
+    
+    save_aliases()
+
+    # Update alias in players and waiting_list
+    for player_list in [players, waiting_list]:
+        for player in list(player_list.keys()):  # Create a copy of keys to avoid RuntimeError
+            if player == aliases[ctx.author.id]["active"]:
+                player_list[alias] = player_list.pop(player)
+
     await update_status()
+
         
 @bot.command()
 async def add(ctx, *, alias):
@@ -1553,11 +1602,11 @@ async def rand(ctx, *args):
 
     for player in player_aliases:
         for key, value in aliases.items():
-            if player == value:
+            if player == value["active"] or player in value["all"]:
                 allowed_randers.append(int(key))
     for host in game_host_name:
         for key, value in aliases.items():
-            if host == value:
+            if host == value["active"] or host in value["all"]:
                 allowed_randers.append(int(key))    
 
     if ctx.author.id in banned_users:
@@ -1661,7 +1710,7 @@ async def rand(ctx, *args):
                 
                 for player in player_aliases:
                     for key, value in aliases.items():
-                        if player == value:
+                        if player == value["active"] or player in value["all"]:
                             mention_list.append(int(key))
                             
                 player_mentions = " ".join([f"<@{id}>" for id in mention_list])
@@ -1676,34 +1725,58 @@ async def rand(ctx, *args):
 
                 wc_msg = "Wolf chat: "
                 for wolf in wolf_team:
-                    if wolf.lower() in aliases.values():
+                    wolf = wolf.lower()
+                    mention_id = None
+
+                    # Search for the wolf in the active or all aliases
+                    for user_id, data in aliases.items():
+                        if wolf == data["active"] or wolf in data["all"]:
+                            mention_id = int(user_id)
+                            break
+
+                    if mention_id:
                         try:
-                            mention_id = find_key_by_value(aliases, wolf.lower())
                             wolf_id = wc_guild.get_member(mention_id)
-                            # await wolf_id.add_roles(wc_role)
+                            # await wolf_id.add_roles(wc_role)  # Uncomment if assigning roles
                             await wc_channel.set_permissions(wolf_id, read_messages=True, send_messages=True)
                             wc_msg += f"<@{mention_id}> "
-                        except:
-                            print(f"Can't add {wolf} to wc", flush=True)
+                        except Exception as e:
+                            print(f"Can't add {wolf} to wc: {e}", flush=True)
+
                 await wc_channel.send(wc_msg)
+
                 #####################################################
                 #####################################################
                 role, channel_id, guild = await create_dvc(thread_id)
                 print(f"DVC thread created. Clearing variables", flush=True)
                 channel = bot.get_channel(channel_id)
-
+                
                 host_msg = "Hosts for the current game: "
+
                 for host in game_host_name:
-                    if host in aliases.values():
+                    host = host.lower()
+                    mention_id = None
+
+                    # Search for the host in active or all aliases
+                    for user_id, data in aliases.items():
+                        if host == data["active"] or host in data["all"]:
+                            mention_id = int(user_id)
+                            break
+
+                    if mention_id:
                         try:
-                            mention_id = find_key_by_value(aliases, host)
                             member = guild.get_member(mention_id)
-                            await member.add_roles(role)
-                            host_msg += f"<@{mention_id}> "
-                            #await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
-                        except:
-                            print(f"Can't add {host} to dvc", flush=True)
-                            #await channel.send(f"failed to add {host} to dvc.")
+                            await member.add_roles(role)  # Assign the role
+                            host_msg += f"<@{mention_id}> "  # Add to message
+                        except Exception as e:
+                            print(f"Can't add {host} to dvc: {e}", flush=True)
+                            # Optionally send a failure message:
+                            # await channel.send(f"Failed to add {host} to dvc.")
+                    else:
+                        print(f"Host {host} not found in aliases", flush=True)
+                        # Optionally send a message about the missing host:
+                        # await channel.send(f"{host} is not registered in aliases.")
+
                 await channel.send(host_msg)
 
                 spec_msg = "Specs for the current game: "
