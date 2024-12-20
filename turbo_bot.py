@@ -568,7 +568,6 @@ async def sub(ctx, player=None):
 
 @bot.command()
 async def player_stats(ctx, *, setup=None):
-
     if ctx.channel.id not in allowed_channels:  
         return
     
@@ -576,18 +575,51 @@ async def player_stats(ctx, *, setup=None):
         await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return   
     
-    alias = aliases[ctx.author.id]
-    player_win_rate = winrate.calculate_player_win_rate("game_database.csv", alias, setup)
+    # Get all aliases for the user
+    alias_data = aliases.get(str(ctx.author.id), None)
     
+    if not alias_data:
+        await ctx.send(f"No alias data found for {ctx.author.name}.")
+        return
+    
+    all_aliases = alias_data.get("all", [])
+    
+    # Initialize counters for accumulated stats
+    total_games = 0
+    total_wins = 0
+    villager_games = 0
+    villager_wins = 0
+    wolf_games = 0
+    wolf_wins = 0
+    
+    # Loop through all aliases and accumulate the stats
+    for alias in all_aliases:
+        player_win_rate = winrate.calculate_player_win_rate("game_database.csv", alias, setup)
+        
+        # Accumulate stats
+        total_games += player_win_rate['Total Games Played']
+        total_wins += player_win_rate['Total Wins']
+        villager_games += player_win_rate['Villager Games']
+        villager_wins += player_win_rate['Villager Wins']
+        wolf_games += player_win_rate['Wolf Games']
+        wolf_wins += player_win_rate['Wolf Wins']
+    
+    # Calculate the combined win rates
+    overall_win_rate = (total_wins / total_games * 100) if total_games > 0 else 0
+    villager_win_rate = (villager_wins / villager_games * 100) if villager_games > 0 else 0
+    wolf_win_rate = (wolf_wins / wolf_games * 100) if wolf_games > 0 else 0
+    
+    # Send the combined stats in one message
     await ctx.send(
-        f"{player_win_rate['Player']} ({player_win_rate['Setup']}):\n"
-        f"  Overall:\n"
-        f"    Games Played: {player_win_rate['Total Games Played']}, Wins: {player_win_rate['Total Wins']}, Win Rate: {player_win_rate['Overall Win Rate']:.2f}%\n"
-        f"  Villager:\n"
-        f"    Games Played: {player_win_rate['Villager Games']}, Wins: {player_win_rate['Villager Wins']}, Win Rate: {player_win_rate['Villager Win Rate']:.2f}%\n"
-        f"  Wolf:\n"
-        f"    Games Played: {player_win_rate['Wolf Games']}, Wins: {player_win_rate['Wolf Wins']}, Win Rate: {player_win_rate['Wolf Win Rate']:.2f}%"
+        f"**Combined stats for {ctx.author.name}:**\n"
+        f"Overall:\n"
+        f"  Games Played: {total_games}, Wins: {total_wins}, Win Rate: {overall_win_rate:.2f}%\n"
+        f"Villager:\n"
+        f"  Games Played: {villager_games}, Wins: {villager_wins}, Win Rate: {villager_win_rate:.2f}%\n"
+        f"Wolf:\n"
+        f"  Games Played: {wolf_games}, Wins: {wolf_wins}, Win Rate: {wolf_win_rate:.2f}%"
     )
+
     
 @bot.command()
 async def stats(ctx, game_setup=None):
