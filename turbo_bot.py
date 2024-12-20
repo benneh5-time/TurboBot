@@ -576,7 +576,7 @@ async def player_stats(ctx, *, setup=None):
         return   
     
     # Get all aliases for the user
-    alias_data = aliases.get(str(ctx.author.id), None)
+    alias_data = aliases.get(ctx.author.id, None)
     
     if not alias_data:
         await ctx.send(f"No alias data found for {ctx.author.name}.")
