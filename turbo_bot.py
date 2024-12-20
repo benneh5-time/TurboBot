@@ -1124,7 +1124,8 @@ async def out(ctx):
         await ctx.send("You are not on the list and you haven't set an alias. Stop trolling me.")
         await ctx.message.add_reaction('👎')
         return
-    alias = aliases.get(str(ctx.author.id), {}).get("active", None)
+    
+    alias = aliases[ctx.author.id]["active"]
     
     if alias in (hostname.lower() for hostname in game_host_name):
         if len(game_host_name) == 1:
