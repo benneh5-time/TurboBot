@@ -416,22 +416,32 @@ class ThreadmarkProcessor:
                     results = event.split("Elimination: ")[1].strip()
                     username = results.split(" was ")[0].strip().lower()
                     flavor = results.split(" was ")[1].strip().lower()
-                    if username == aliases.get("active", "").lower() or username in [alt.lower() for alt in aliases.get("all", [])]:
-                        try:
-                            mention_id = find_key_by_value(aliases, username)
-                            member = guild.get_member(mention_id)
-                            await member.add_roles(role)
-                            # await channel.set_permissions(member, read_messages=True, send_messages=True)
-                            await channel.send(f"<@{mention_id}> has been added to DVC.")
-                        except:
-                            await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
-                    else:
-                        await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")                    
+                    
+                    # Track if the user is successfully added
+                    user_added = False
+
+                    for mention_id, alias_data in aliases.items():
+                        if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
+                            try:
+                                member = guild.get_member(int(mention_id))
+                                if member:
+                                    await member.add_roles(role)
+                                    # await channel.set_permissions(member, read_messages=True, send_messages=True)
+                                    await channel.send(f"<@{mention_id}> has been added to DVC.")
+                                    user_added = True  # Mark as successfully added
+                                    break  # Exit loop after successful addition
+                                else:
+                                    await channel.send(f"{username} could not be added to DVC. They are not in the server.")
+                            except Exception as e:
+                                await channel.send(f"Failed to add {username} to DVC due to an error: {e}")
+                            user_added = True  # Prevent fallback message
+
+                    if not user_added:
+                        await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+                    
+                    # Handle specific "flavor" condition
                     if "neil the eel" in flavor:
                         await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
-
-
-
         
                 elif "Results: No one died" in event or "Event" in event or "Game Information" in event:
                     pass
@@ -445,45 +455,63 @@ class ThreadmarkProcessor:
                 elif "Suicide Bomb (1):" in event:
                     results = event.split("Suicide Bomb (1):")[1].strip()
                     players = results.split(", ")
-                    
+
                     for player in players:
                         username = None
                         if " was " in player:
                             username = player.split(" was ")[0].strip().lower()
                             flavor = results.split(" was ")[1].strip().lower()
-                            if username == aliases.get("active", "").lower() or username in [alt.lower() for alt in aliases.get("all", [])]:
-                                try:
-                                    mention_id = find_key_by_value(aliases, username)
-                                    member = guild.get_member(mention_id)
-                                    await member.add_roles(role)
-                                    await channel.send(f"<@{mention_id}> has been added to DVC.")
-                                except:
-                                    await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
+
+                            # Check if the username matches 'active' or is in 'all' aliases
+                            user_added = False
+                            for mention_id, alias_data in aliases.items():
+                                if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
+                                    try:
+                                        member = guild.get_member(int(mention_id))
+                                        if member:
+                                            await member.add_roles(role)
+                                            await channel.send(f"<@{mention_id}> has been added to DVC.")
+                                            user_added = True
+                                            break  # Stop further iteration once the user is added
+                                        else:
+                                            await channel.send(f"{username} could not be added to DVC. They are not in the server.")
+                                    except Exception as e:
+                                        await channel.send(f"Error adding {username} to DVC: {e}")
+                                    
+                            if not user_added:
+                                await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+
                             if "neil the eel" in flavor:
                                 await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
-                        else:
-                            if username:
-                                await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-                    
+
                 elif "Results:" in event:
                     results = event.split("Results:")[1].strip()
                     players = results.split(", ")
-                    
+
                     for player in players:
                         if " was " in player:
                             username = player.split(" was ")[0].strip().lower()
                             flavor = results.split(" was ")[1].strip().lower()
-                            if username == aliases.get("active", "").lower() or username in [alt.lower() for alt in aliases.get("all", [])]:
-                                try:
-                                    mention_id = find_key_by_value(aliases, username)
-                                    member = guild.get_member(mention_id)
-                                    await member.add_roles(role)
-                                    await channel.send(f"<@{mention_id}> has been added to DVC.")
-                                except:
-                                    await channel.send(f"{username} could not be added to DVC. They are not in the server or something else failed.")
 
-                            else:
+                            # Check if the username matches 'active' or is in 'all' aliases
+                            user_added = False
+                            for mention_id, alias_data in aliases.items():
+                                if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
+                                    try:
+                                        member = guild.get_member(int(mention_id))
+                                        if member:
+                                            await member.add_roles(role)
+                                            await channel.send(f"<@{mention_id}> has been added to DVC.")
+                                            user_added = True
+                                            break  # Stop further iteration once the user is added
+                                        else:
+                                            await channel.send(f"{username} could not be added to DVC. They are not in the server.")
+                                    except Exception as e:
+                                        await channel.send(f"Error adding {username} to DVC: {e}")
+                            
+                            if not user_added:
                                 await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+
                             if "neil the eel" in flavor:
                                 await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
 
