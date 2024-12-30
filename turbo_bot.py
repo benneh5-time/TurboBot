@@ -1224,6 +1224,14 @@ async def alias(ctx, *, alias):
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for misusing bigping and are not allowed to change your alias.")
         return
+    
+    if alias == None:
+        alias_list = list(aliases[ctx.author.id['all']])
+        active_alias = aliases[ctx.author.id]['active']
+        usernames = ""
+        for username in alias_list:
+            usernames += username + ", "
+        await ctx.send(f"Your active alias is _{active_alias}_\n\nYour liist of aliases includes: {usernames}")
 
     alias = alias.lower()
     
