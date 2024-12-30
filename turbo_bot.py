@@ -551,7 +551,7 @@ async def sub(ctx, player=None):
         await ctx.send("Please set your MU username by using !alias MU_Username before inning!")
         return
 
-    player_in = aliases[ctx.author.id]
+    player_in = aliases[ctx.author.id]['active']
 
     username = os.environ.get('MUUN')
     password = os.environ.get('MUPW')
