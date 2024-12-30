@@ -1217,7 +1217,7 @@ async def alias(ctx, *, alias):
                     player_list[alias] = player_list.pop(old_alias)                   
     await update_status()"""
 @bot.command()
-async def alias(ctx, *, alias):
+async def alias(ctx, *, alias=None):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
 
