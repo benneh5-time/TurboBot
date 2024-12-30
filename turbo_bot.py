@@ -47,7 +47,7 @@ allowed_channels = [223260125786406912, 1258668573006495774, 306758456998887429]
 bet_channel = [306758456998887429]
 all_channels = [223260125786406912, 1256131761390489600]
 react_channels = [223260125786406912, 1114212787141492788]
-banned_users = [1173036536166621286, 142308190334353409]
+banned_users = [1173036536166621286]
 banned_randers = [612706340623876137]
 future_banned = [190312702692818946]
 non_1337_users = [827416091889762325]
@@ -2426,7 +2426,7 @@ async def on_reaction_add(reaction, user):
                 await reaction.message.channel.send("Please set your MU username by using !alias MU_Username before inning!")
                 return
 
-            alias = aliases[user.id]
+            alias = aliases[user.id]['active']
 
             if alias in game_host_name:
                 if len(game_host_name) == 1:
