@@ -565,6 +565,7 @@ async def sub(ctx, player=None):
         await ctx.send(f"{player} has been successfully replaced by {player_in}. <@{ctx.author.id}> please report to the game thread: https://www.mafiauniverse.com/forums/threads/{current_game}")
     else:
         await ctx.send("Replacement didn't work, please do so manually or fix syntax")
+        print(sub, flush=True)
 
 @bot.command()
 async def player_stats(ctx, *, setup=None):
@@ -1231,7 +1232,7 @@ async def alias(ctx, *, alias=None):
         usernames = ""
         for username in alias_list:
             usernames += username + ", "
-        await ctx.send(f"Your active alias is _{active_alias}_\n\nYour liist of aliases includes: {usernames}")
+        await ctx.send(f"Your active alias is _{active_alias}_\n\nYour list of aliases includes: {usernames}")
 
     alias = alias.lower()
     

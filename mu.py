@@ -98,7 +98,7 @@ def sub_player(session, game_id, player, player_in, security_token):
         "game_id": game_id,
         "player": player,
         "player_in": player_in,
-        "reason": "Automatic turbot replacement",
+        "reason": "Automatic turby replacement",
         "securitytoken": security_token
         }
     subs = session.post(url, data=payload)
