@@ -2478,7 +2478,7 @@ async def on_reaction_add(reaction, user):
                 await reaction.message.channel.send("Please set your MU username by using !alias MU_Username before inning!")
                 return
 
-            alias = aliases[user.id]
+            alias = aliases[user.id]['active']
 
             if alias in game_host_name:
                 if len(game_host_name) == 1:
