@@ -1226,7 +1226,7 @@ async def alias(ctx, *, alias=None):
         return
     
     if alias == None:
-        alias_list = list(aliases[ctx.author.id['all']])
+        alias_list = list(aliases[ctx.author.id]['all'])
         active_alias = aliases[ctx.author.id]['active']
         usernames = ""
         for username in alias_list:
