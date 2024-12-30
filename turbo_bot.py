@@ -1252,7 +1252,7 @@ async def alias(ctx, *, alias):
     # Update alias in players and waiting_list
     for player_list in [players, waiting_list]:
         for player in list(player_list.keys()):  # Create a copy of keys to avoid RuntimeError
-            if player == aliases[ctx.author.id]["active"]:
+            if player in aliases[ctx.author.id]["all"]:
                 player_list[alias] = player_list.pop(player)
 
     await update_status()
