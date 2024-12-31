@@ -1228,7 +1228,7 @@ async def alias(ctx, *, alias=None):
         return
     
     if alias is None:  # Show current aliases
-        user_data = aliases.get(str(ctx.author.id), None)
+        user_data = aliases.get(ctx.author.id, None)
         if not user_data:
             await ctx.send(f"You don't have any aliases set yet.")
             return
@@ -1247,11 +1247,11 @@ async def alias(ctx, *, alias=None):
             await ctx.send(f"The alias '{alias}' is already taken by another player. Ping @benneh or choose a different alias.")
             return
 
-    user_aliases = aliases.get(str(ctx.author.id), {}).get("all", [])
+    user_aliases = aliases.get(ctx.author.id, {}).get("all", [])
 
     # Initialize the user's alias list if it doesn't exist
     if str(ctx.author.id) not in aliases:
-        aliases[str(ctx.author.id)] = {"active": alias, "all": [alias]}
+        aliases[ctx.author.id] = {"active": alias, "all": [alias]}
         save_aliases()
         await ctx.send(f"Alias for {ctx.author} has been set to '{alias}' and marked as active.")
         await update_status()
@@ -1259,12 +1259,12 @@ async def alias(ctx, *, alias=None):
 
     # Update active alias if it already exists
     if alias in user_aliases:
-        aliases[str(ctx.author.id)]["active"] = alias
+        aliases[ctx.author.id]["active"] = alias
         save_aliases()
         await ctx.send(f"Alias for {ctx.author} is now switched to '{alias}'.")
     else:  # Add new alias if it's not a duplicate
         user_aliases.append(alias)
-        aliases[str(ctx.author.id)]["active"] = alias
+        aliases[ctx.author.id]["active"] = alias
         save_aliases()
         await ctx.send(f"Alias '{alias}' added for {ctx.author} and marked as active.")
     
