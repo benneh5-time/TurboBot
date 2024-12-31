@@ -1235,21 +1235,23 @@ async def alias(ctx, *, alias=None):
         await ctx.send(f"Your active alias is _{active_alias}_\n\nYour list of aliases includes: {usernames}")
 
     alias = alias.lower()
+    user_aliases = aliases[ctx.author.id]["all"]
     
     # Initialize the user's alias list if it doesn't exist
     if ctx.author.id not in aliases:
-        aliases[ctx.author.id] = {"active": alias, "all": [alias]}
-        save_aliases()
-        await ctx.send(f"Alias for {ctx.author} has been set to {alias} and marked as active.")
-        await update_status()
-        return
-
-    user_aliases = aliases[ctx.author.id]["all"]
+        if alias not in user_aliases:
+            aliases[ctx.author.id] = {"active": alias, "all": [alias]}
+            save_aliases()
+            await ctx.send(f"Alias for {ctx.author} has been set to {alias} and marked as active.")
+            await update_status()
+            return
+        else:
+            await ctx.send(f"Alias "{alias}" is in use by another player. Ping @benneh and/or fight that person.")
 
     if alias in user_aliases:
         aliases[ctx.author.id]["active"] = alias
         await ctx.send(f"Alias for {ctx.author} is now switched to {alias}.")
-    elif alias in [item["active"] for item in aliases.values()] or alias in players:
+    elif alias in [item["all"] for item in aliases.values()] or alias in players:
         await ctx.send(f"The alias {alias} is already taken or being used in a current sign-up. If someone has taken your alias, fight them.")
     else:
         user_aliases.append(alias)
