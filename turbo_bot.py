@@ -1281,6 +1281,7 @@ async def alias(ctx, *, alias=None):
 async def remove_alias(ctx, user_id: str, *, alias: str):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
+    global aliases
     if ctx.author.id in mods:
 
         alias = alias.lower()
