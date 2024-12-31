@@ -47,6 +47,7 @@ allowed_channels = [223260125786406912, 1258668573006495774, 306758456998887429]
 bet_channel = [306758456998887429]
 all_channels = [223260125786406912, 1256131761390489600]
 react_channels = [223260125786406912, 1114212787141492788]
+#banned_users = [1173036536166621286, 1313342896056958987]
 banned_users = [1173036536166621286]
 banned_randers = [612706340623876137]
 future_banned = [190312702692818946]
@@ -1226,40 +1227,48 @@ async def alias(ctx, *, alias=None):
         await ctx.send("You have been banned for misusing bigping and are not allowed to change your alias.")
         return
     
-    if alias == None:
-        alias_list = list(aliases[ctx.author.id]['all'])
-        active_alias = aliases[ctx.author.id]['active']
-        usernames = ""
-        for username in alias_list:
-            usernames += username + ", "
-        await ctx.send(f"Your active alias is _{active_alias}_\n\nYour list of aliases includes: {usernames}")
+    if alias is None:  # Show current aliases
+        user_data = aliases.get(str(ctx.author.id), None)
+        if not user_data:
+            await ctx.send(f"You don't have any aliases set yet.")
+            return
+        
+        alias_list = user_data.get('all', [])
+        active_alias = user_data.get('active', "None")
+        aliases_str = ", ".join(alias_list)
+        await ctx.send(f"Your active alias is _{active_alias}_\n\nYour list of aliases includes: {aliases_str}")
+        return
 
     alias = alias.lower()
-    user_aliases = aliases[ctx.author.id]["all"]
     
-    # Initialize the user's alias list if it doesn't exist
-    if ctx.author.id not in aliases:
-        if alias not in user_aliases:
-            aliases[ctx.author.id] = {"active": alias, "all": [alias]}
-            save_aliases()
-            await ctx.send(f"Alias for {ctx.author} has been set to {alias} and marked as active.")
-            await update_status()
+    # Check if the alias is already in use by another user
+    for user_id, data in aliases.items():
+        if alias in data.get("all", []):
+            await ctx.send(f"The alias '{alias}' is already taken by another player. Ping @benneh or choose a different alias.")
             return
-        else:
-            await ctx.send(f"Alias "{alias}" is in use by another player. Ping @benneh and/or fight that person.")
 
+    user_aliases = aliases.get(str(ctx.author.id), {}).get("all", [])
+
+    # Initialize the user's alias list if it doesn't exist
+    if str(ctx.author.id) not in aliases:
+        aliases[str(ctx.author.id)] = {"active": alias, "all": [alias]}
+        save_aliases()
+        await ctx.send(f"Alias for {ctx.author} has been set to '{alias}' and marked as active.")
+        await update_status()
+        return
+
+    # Update active alias if it already exists
     if alias in user_aliases:
-        aliases[ctx.author.id]["active"] = alias
-        await ctx.send(f"Alias for {ctx.author} is now switched to {alias}.")
-    elif alias in [item["all"] for item in aliases.values()] or alias in players:
-        await ctx.send(f"The alias {alias} is already taken or being used in a current sign-up. If someone has taken your alias, fight them.")
-    else:
+        aliases[str(ctx.author.id)]["active"] = alias
+        save_aliases()
+        await ctx.send(f"Alias for {ctx.author} is now switched to '{alias}'.")
+    else:  # Add new alias if it's not a duplicate
         user_aliases.append(alias)
-        aliases[ctx.author.id]["active"] = alias
-        await ctx.send(f"Alias {alias} added for {ctx.author} and marked as active.")
+        aliases[str(ctx.author.id)]["active"] = alias
+        save_aliases()
+        await ctx.send(f"Alias '{alias}' added for {ctx.author} and marked as active.")
     
-    save_aliases()
-
+    await update_status()
     # Update alias in players and waiting_list
     for player_list in [players, waiting_list]:
         for player in list(player_list.keys()):  # Create a copy of keys to avoid RuntimeError
@@ -1267,6 +1276,44 @@ async def alias(ctx, *, alias=None):
                 player_list[alias] = player_list.pop(player)
 
     await update_status()
+
+@bot.command()
+async def remove_alias(ctx, user_id: int, *, alias: str):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    if ctx.author.id in mods:
+
+        alias = alias.lower()
+        user_id = str(user_id)  # Convert user ID to string to match the `aliases` dictionary structure
+
+        # Check if the user exists in the aliases dictionary
+        if user_id not in aliases:
+            await ctx.send(f"User with ID {user_id} does not have any aliases.")
+            return
+
+        user_aliases = aliases[user_id]["all"]
+
+        # Check if the alias exists for the user
+        if alias not in user_aliases:
+            await ctx.send(f"The alias '{alias}' is not associated with the user {user_id}.")
+            return
+
+        # Remove the alias
+        user_aliases.remove(alias)
+
+        # Update the active alias if it was removed
+        if aliases[user_id]["active"] == alias:
+            aliases[user_id]["active"] = user_aliases[0] if user_aliases else None
+
+        # Remove the user from the dictionary if they have no aliases left
+        if not user_aliases:
+            del aliases[user_id]
+
+        save_aliases()  # Save the changes to persist
+        await ctx.send(f"Alias '{alias}' has been removed from user {user_id}.")
+        await update_status()
+    else:
+        return
 
         
 @bot.command()
