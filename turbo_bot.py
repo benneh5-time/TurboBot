@@ -1278,24 +1278,23 @@ async def alias(ctx, *, alias=None):
     await update_status()
 
 @bot.command()
-async def remove_alias(ctx, user_id: int, *, alias: str):
+async def remove_alias(ctx, user_id: str, *, alias: str):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     if ctx.author.id in mods:
 
         alias = alias.lower()
-        user_id = str(user_id)  # Convert user ID to string to match the `aliases` dictionary structure
 
         # Check if the user exists in the aliases dictionary
         if user_id not in aliases:
-            await ctx.send(f"User with ID {user_id} does not have any aliases.")
+            await ctx.send(f"User <@{user_id}> does not have any aliases.")
             return
 
         user_aliases = aliases[user_id]["all"]
 
         # Check if the alias exists for the user
         if alias not in user_aliases:
-            await ctx.send(f"The alias '{alias}' is not associated with the user {user_id}.")
+            await ctx.send(f"The alias '{alias}' is not associated with user <@{user_id}>.")
             return
 
         # Remove the alias
@@ -1310,7 +1309,7 @@ async def remove_alias(ctx, user_id: int, *, alias: str):
             del aliases[user_id]
 
         save_aliases()  # Save the changes to persist
-        await ctx.send(f"Alias '{alias}' has been removed from user {user_id}.")
+        await ctx.send(f"Alias '{alias}' has been removed from user <@{user_id}>.")
         await update_status()
     else:
         return
