@@ -1268,17 +1268,17 @@ async def alias(ctx, *, alias=None):
     await ctx.send(f"Alias '{alias}' added for {ctx.author} and marked as active.")
 
     # Update alias in players and waiting_list
-    if user_id in aliases:
+    if ctx.author.id in aliases:
         for player_list in [players, waiting_list]:
             for player in list(player_list.keys()):  # Create a copy of keys to avoid RuntimeError
-                if player in aliases[user_id]["all"]:
+                if player in aliases[ctx.author.id]["all"]:
                     player_list[alias] = player_list.pop(player)
 
     await update_status()
     
 
 @bot.command()
-async def remove_alias(ctx, user_id: str, *, alias: str):
+async def remove_alias(ctx, user_id: int, *, alias: str):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     global aliases
