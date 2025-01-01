@@ -1229,7 +1229,7 @@ async def alias(ctx, *, alias=None):
         await ctx.send("You have been banned for misusing bigping and are not allowed to change your alias.")
         return
 
-    user_id = str(ctx.author.id)  # Ensure consistent key type
+    user_id = ctx.author.id  # Ensure consistent key type
 
     if alias is None:  # Show current aliases
         user_data = aliases.get(user_id, None)
