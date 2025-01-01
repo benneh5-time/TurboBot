@@ -1218,6 +1218,8 @@ async def alias(ctx, *, alias):
                 if player == old_alias:
                     player_list[alias] = player_list.pop(old_alias)                   
     await update_status()"""
+
+    
 @bot.command()
 async def alias(ctx, *, alias=None):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -1226,56 +1228,54 @@ async def alias(ctx, *, alias=None):
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for misusing bigping and are not allowed to change your alias.")
         return
-    
+
+    user_id = str(ctx.author.id)  # Ensure consistent key type
+
     if alias is None:  # Show current aliases
-        user_data = aliases.get(ctx.author.id, None)
+        user_data = aliases.get(user_id, None)
         if not user_data:
-            await ctx.send(f"You don't have any aliases set yet.")
+            await ctx.send("You don't have any aliases set yet.")
             return
-        
-        alias_list = user_data.get('all', [])
-        active_alias = user_data.get('active', "None")
+
+        alias_list = user_data.get("all", [])
+        active_alias = user_data.get("active", "None")
         aliases_str = ", ".join(alias_list)
         await ctx.send(f"Your active alias is _{active_alias}_\n\nYour list of aliases includes: {aliases_str}")
         return
 
     alias = alias.lower()
-    
-    # Check if the alias is already in use by another user
-    for user_id, data in aliases.items():
-        if alias in data.get("all", []):
-            await ctx.send(f"The alias '{alias}' is already taken by another player. Ping @benneh or choose a different alias.")
-            return
 
-    user_aliases = aliases.get(ctx.author.id, {}).get("all", [])
+    # Check if the alias is already in use by another user
+    for other_user_id, data in aliases.items():
+        if alias in data.get("all", []):
+            if other_user_id == user_id:
+                aliases[user_id]["active"] = alias  # Update active alias
+                save_aliases()
+                await ctx.send(f"Alias for {ctx.author} is now switched to '{alias}'.")
+                return
+            else:
+                await ctx.send(f"The alias '{alias}' is already taken by another player. Ping @benneh or choose a different alias.")
+                return
 
     # Initialize the user's alias list if it doesn't exist
-    if str(ctx.author.id) not in aliases:
-        aliases[ctx.author.id] = {"active": alias, "all": [alias]}
-        save_aliases()
-        await ctx.send(f"Alias for {ctx.author} has been set to '{alias}' and marked as active.")
-        await update_status()
-        return
+    if user_id not in aliases:
+        aliases[user_id] = {"active": alias, "all": [alias]}
+    else:
+        aliases[user_id]["all"].append(alias)
+        aliases[user_id]["active"] = alias
 
-    # Update active alias if it already exists
-    if alias in user_aliases:
-        aliases[ctx.author.id]["active"] = alias
-        save_aliases()
-        await ctx.send(f"Alias for {ctx.author} is now switched to '{alias}'.")
-    else:  # Add new alias if it's not a duplicate
-        user_aliases.append(alias)
-        aliases[ctx.author.id]["active"] = alias
-        save_aliases()
-        await ctx.send(f"Alias '{alias}' added for {ctx.author} and marked as active.")
-    
-    await update_status()
+    save_aliases()
+    await ctx.send(f"Alias '{alias}' added for {ctx.author} and marked as active.")
+
     # Update alias in players and waiting_list
-    for player_list in [players, waiting_list]:
-        for player in list(player_list.keys()):  # Create a copy of keys to avoid RuntimeError
-            if player in aliases[ctx.author.id]["all"]:
-                player_list[alias] = player_list.pop(player)
+    if user_id in aliases:
+        for player_list in [players, waiting_list]:
+            for player in list(player_list.keys()):  # Create a copy of keys to avoid RuntimeError
+                if player in aliases[user_id]["all"]:
+                    player_list[alias] = player_list.pop(player)
 
     await update_status()
+    
 
 @bot.command()
 async def remove_alias(ctx, user_id: str, *, alias: str):
