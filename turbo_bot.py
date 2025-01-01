@@ -1252,7 +1252,6 @@ async def alias(ctx, *, alias=None):
                 aliases[user_id]["active"] = alias  # Update active alias
                 save_aliases()
                 await ctx.send(f"Alias for {ctx.author} is now switched to '{alias}'.")
-                return
             else:
                 await ctx.send(f"The alias '{alias}' is already taken by another player. Ping @benneh or choose a different alias.")
                 return
