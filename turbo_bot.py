@@ -1252,6 +1252,17 @@ async def alias(ctx, *, alias=None):
                 aliases[user_id]["active"] = alias  # Update active alias
                 save_aliases()
                 await ctx.send(f"Alias for {ctx.author} is now switched to '{alias}'.")
+                if user_id in aliases:
+                    user_aliases = aliases[user_id].get("all", [])
+                    for player_list in [players, waiting_list]:
+                        for player in list(player_list.keys()):  # Copy keys to avoid RuntimeError
+                            # Check if the player matches any alias (case-insensitive)
+                            if player.lower() in map(str.lower, user_aliases):
+                                # Update the key to the new alias
+                                player_list[alias] = player_list.pop(player)
+
+                await update_status()
+                return
             else:
                 await ctx.send(f"The alias '{alias}' is already taken by another player. Ping @benneh or choose a different alias.")
                 return
