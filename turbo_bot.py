@@ -569,6 +569,79 @@ async def sub(ctx, player=None):
         print(sub, flush=True)
 
 @bot.command()
+async def player_stats(ctx, *, args=None):
+    if ctx.channel.id not in allowed_channels:  
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
+        return   
+    
+    # Parse arguments for alias and setup
+    args = args.split() if args else []
+    specified_alias = None
+    setup = None
+
+    if len(args) == 1:  # If only one argument is provided, treat it as setup
+        setup = args[0]
+    elif len(args) > 1:  # If more than one argument, treat the first as alias and the rest as setup
+        specified_alias = args[0].lower()
+        setup = " ".join(args[1:])
+    
+    # Get alias data for the user
+    alias_data = aliases.get(ctx.author.id, None)
+    
+    if not alias_data:
+        await ctx.send(f"No alias data found for {ctx.author.name}.")
+        return
+    
+    all_aliases = alias_data.get("all", [])
+    
+    # Check if the specified alias is valid
+    if specified_alias and specified_alias not in all_aliases:
+        await ctx.send(f"The alias '{specified_alias}' does not belong to you. Please choose a valid alias.")
+        return
+    
+    # Determine which aliases to use
+    aliases_to_check = [specified_alias] if specified_alias else all_aliases
+
+    # Initialize counters for accumulated stats
+    total_games = 0
+    total_wins = 0
+    villager_games = 0
+    villager_wins = 0
+    wolf_games = 0
+    wolf_wins = 0
+    
+    # Loop through the selected aliases and accumulate the stats
+    for alias in aliases_to_check:
+        player_win_rate = winrate.calculate_player_win_rate("game_database.csv", alias, setup)
+        
+        # Accumulate stats
+        total_games += player_win_rate['Total Games Played']
+        total_wins += player_win_rate['Total Wins']
+        villager_games += player_win_rate['Villager Games']
+        villager_wins += player_win_rate['Villager Wins']
+        wolf_games += player_win_rate['Wolf Games']
+        wolf_wins += player_win_rate['Wolf Wins']
+
+    # Calculate win rates
+    overall_win_rate = (total_wins / total_games * 100) if total_games > 0 else 0
+    villager_win_rate = (villager_wins / villager_games * 100) if villager_games > 0 else 0
+    wolf_win_rate = (wolf_wins / wolf_games * 100) if wolf_games > 0 else 0
+
+    # Send the accumulated stats
+    await ctx.send(
+        f"Stats for {', '.join(aliases_to_check)} ({setup if setup else 'All Setups'}):\n"
+        f"  Overall:\n"
+        f"    Games Played: {total_games}, Wins: {total_wins}, Win Rate: {overall_win_rate:.2f}%\n"
+        f"  Villager:\n"
+        f"    Games Played: {villager_games}, Wins: {villager_wins}, Win Rate: {villager_win_rate:.2f}%\n"
+        f"  Wolf:\n"
+        f"    Games Played: {wolf_games}, Wins: {wolf_wins}, Win Rate: {wolf_win_rate:.2f}%"
+    )
+
+"""@bot.command()
 async def player_stats(ctx, *, setup=None):
     if ctx.channel.id not in allowed_channels:  
         return
@@ -620,7 +693,7 @@ async def player_stats(ctx, *, setup=None):
         f"  Games Played: {villager_games}, Wins: {villager_wins}, Win Rate: {villager_win_rate:.2f}%\n"
         f"Wolf:\n"
         f"  Games Played: {wolf_games}, Wins: {wolf_wins}, Win Rate: {wolf_win_rate:.2f}%"
-    )
+    )"""
 
     
 @bot.command()
