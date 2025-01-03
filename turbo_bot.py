@@ -577,18 +577,26 @@ async def player_stats(ctx, *, args=None):
         await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return   
     
-    # Parse arguments for alias and setup
-    args = args.split() if args else []
+    # Split the input arguments
+    args = args.split(maxsplit=1) if args else []
     specified_alias = None
     setup = None
 
-    if len(args) == 1:  # If only one argument is provided, treat it as setup
-        setup = args[0]
-    elif len(args) > 1:  # If more than one argument, treat the first as alias and the rest as setup
-        specified_alias = args[0].lower()
-        setup = " ".join(args[1:])
-    
-    # Get alias data for the user
+    # Check the arguments
+    if len(args) == 1:  # Single argument provided
+        if args[0].lower() in valid_setups:
+            setup = args[0].lower()
+        else:
+            specified_alias = args[0].strip().lower()
+    elif len(args) == 2:  # Two arguments provided
+        specified_alias = args[0].strip().lower()
+        if args[1].lower() in valid_setups:
+            setup = args[1].lower()
+        else:
+            await ctx.send(f"Invalid setup '{args[1]}'. Please use one of the valid setups: {', '.join(valid_setups)}.")
+            return
+
+    # Retrieve alias data for the user
     alias_data = aliases.get(ctx.author.id, None)
     
     if not alias_data:
@@ -597,7 +605,7 @@ async def player_stats(ctx, *, args=None):
     
     all_aliases = alias_data.get("all", [])
     
-    # Check if the specified alias is valid
+    # Check if the specified alias belongs to the user
     if specified_alias and specified_alias not in all_aliases:
         await ctx.send(f"The alias '{specified_alias}' does not belong to you. Please choose a valid alias.")
         return
