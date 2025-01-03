@@ -587,14 +587,14 @@ async def player_stats(ctx, *, args=None):
 
     # Check the arguments
     if len(args) == 1:  # Single argument provided
-        if args[0].lower() in valid_setups:
-            setup = args[0].lower()
+        if args[0] in valid_setups:
+            setup = args[0]
         else:
             specified_alias = args[0].strip().lower()
     elif len(args) == 2:  # Two arguments provided
         specified_alias = args[0].strip().lower()
-        if args[1].lower() in valid_setups:
-            setup = args[1].lower()
+        if args[1] in valid_setups:
+            setup = args[1]
         else:
             await ctx.send(f"Invalid setup '{args[1]}'. Please use one of the valid setups: {', '.join(valid_setups)}.")
             return
