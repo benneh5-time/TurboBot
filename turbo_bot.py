@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import winrate
 import re
+import shlex
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -568,6 +569,8 @@ async def sub(ctx, player=None):
         await ctx.send("Replacement didn't work, please do so manually or fix syntax")
         print(sub, flush=True)
 
+import shlex
+
 @bot.command()
 async def player_stats(ctx, *, args=None):
     if ctx.channel.id not in allowed_channels:  
@@ -577,8 +580,8 @@ async def player_stats(ctx, *, args=None):
         await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return   
     
-    # Split the input arguments
-    args = args.split(maxsplit=1) if args else []
+    # Use shlex to split arguments while respecting quotes
+    args = shlex.split(args) if args else []
     specified_alias = None
     setup = None
 
