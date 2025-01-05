@@ -2095,7 +2095,7 @@ async def suki (ctx):
     squote = quotes['quotes']
     suki_quote = random.choice(squote)
     
-    await ctx.send(f"Suki Quote 1.0:\n\n ```{suki_quote}```")
+    await ctx.send(f"Suki Quote 1.0:\n```{suki_quote}```")
     
 
 @bot.command()
