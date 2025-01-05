@@ -175,7 +175,7 @@ def get_static_values(faction):
         return {
             "faction": "Village",
             "alignment": "village",
-            "faction_color": "#00ff00",
+            "faction_color": "#339933",
         }
     else:
         raise ValueError("Invalid faction provided")
