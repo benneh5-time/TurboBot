@@ -2175,7 +2175,7 @@ async def test_rand(ctx, *args):
             game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
             await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}\nType !dvc to join the turbo DVC/Graveyard. You will be auto-in'd to the graveyard channel upon your death if you are in that server!")
             
-            ###################################################
+            """###################################################
             ####################### new code for wolf chat adds
             wolf_team = await get_wolf_info(game_title, setup_title)
             wc_channel_id, wc_guild = await create_wolf_chat(thread_id)
@@ -2194,7 +2194,7 @@ async def test_rand(ctx, *args):
                         print(f"Can't add {wolf} to wc", flush=True)
             await wc_channel.send(wc_msg)
             #####################################################
-            #####################################################
+            #####################################################"""
 
             role, channel_id, guild = await create_dvc(thread_id)
             print(f"DVC thread created. Clearing variables", flush=True)
