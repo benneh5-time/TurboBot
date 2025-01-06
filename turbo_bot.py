@@ -1933,31 +1933,31 @@ async def rand(ctx, *args):
                 
                 ###################################################
                 ####################### new code for wolf chat adds
-                wolf_team = await get_wolf_info(game_title, setup_title)
-                wc_channel_id, wc_guild = await create_wolf_chat(thread_id)
-                wc_channel = bot.get_channel(wc_channel_id)
+                #wolf_team = await get_wolf_info(game_title, setup_title)
+                #wc_channel_id, wc_guild = await create_wolf_chat(thread_id)
+                #wc_channel = bot.get_channel(wc_channel_id)
 
-                wc_msg = "Wolf chat: "
-                for wolf in wolf_team:
-                    wolf = wolf.lower()
-                    mention_id = None
+                #wc_msg = "Wolf chat: "
+                #for wolf in wolf_team:
+                #    wolf = wolf.lower()
+                #    mention_id = None
 
                     # Search for the wolf in the active or all aliases
-                    for user_id, data in aliases.items():
-                        if wolf == data["active"] or wolf in data["all"]:
-                            mention_id = int(user_id)
-                            break
+                #    for user_id, data in aliases.items():
+                #        if wolf == data["active"] or wolf in data["all"]:
+                #            mention_id = int(user_id)
+                #            break
 
-                    if mention_id:
-                        try:
-                            wolf_id = wc_guild.get_member(mention_id)
-                            # await wolf_id.add_roles(wc_role)  # Uncomment if assigning roles
-                            await wc_channel.set_permissions(wolf_id, read_messages=True, send_messages=True)
-                            wc_msg += f"<@{mention_id}> "
-                        except Exception as e:
-                            print(f"Can't add {wolf} to wc: {e}", flush=True)
+                #    if mention_id:
+                #        try:
+                #            wolf_id = wc_guild.get_member(mention_id)
+                #            # await wolf_id.add_roles(wc_role)  # Uncomment if assigning roles
+                #            await wc_channel.set_permissions(wolf_id, read_messages=True, send_messages=True)
+                #            wc_msg += f"<@{mention_id}> "
+                #        except Exception as e:
+                #            print(f"Can't add {wolf} to wc: {e}", flush=True)
 
-                await wc_channel.send(wc_msg)
+                #await wc_channel.send(wc_msg)
 
                 #####################################################
                 #####################################################
@@ -2027,7 +2027,7 @@ async def rand(ctx, *args):
                 await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
                 print(f"Threadmark processor finished. rand function finished.", flush=True)
                 await edit_dvc(channel, guild)
-                await edit_dvc(wc_channel, wc_guild)
+                #await edit_dvc(wc_channel, wc_guild)
                 await delete_dvc_role(channel, role)
                 # await delete_dvc_role(wc_channel, wc_role)
                 current_game = None
