@@ -2097,7 +2097,15 @@ async def suki (ctx):
     
     await ctx.send(f"Suki Quote 1.0:\n```{suki_quote}```")
     
-
+@bot.command()
+async def recon (ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    quotes = load_flavor_json('reconquotes.json')
+    squote = quotes['quotes']
+    recon_quote = random.choice(squote)
+    
+    await ctx.send(f"RECONSPARTAN Quote 1.0:\n```{recon_quote}```")
 @bot.command()
 async def test_rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
