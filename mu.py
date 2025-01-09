@@ -301,6 +301,10 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         add_bomb_roles(game_title)
         data.add("preset", "custom")
         data.add('num_players', '10')
+    if final_game_setup == "billager9":
+        add_billager9_roles(game_title)
+        data.add("preset", "custom")
+        data.add('num_players', '9')
     if final_game_setup == "vig10":
         add_vig_roles(game_title)
         data.add("preset", "vig-10") 
@@ -834,6 +838,42 @@ def post(session, thread_id, security_token, message):
 	post = session.post(url, data=payload)
 	return post.text
 
+def add_billager9_roles(game_title):	
+    global data
+
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
+    villagers = random.sample(name_image_pairs, 6)
+    fv = random.sample(pr_name_image_pairs, 1)
+    wolves = random.sample(wolf_name_image_pairs, 2)
+
+    for i in range(0,6):
+        current_vanchilla = roles.vt.copy()
+        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_image'] = villagers[i]["character_image"]
+        vt_json = json.dumps(current_vanchilla)
+        data.add("roles[]", vt_json)
+   
+    current_fv = town_roles.utility_roles['fv_loyal'].copy()
+    current_fv['character_name'] = fv[0]["character_name"]
+    current_fv['character_image'] = fv[0]["character_image"]
+    fv_json = json.dumps(current_fv)
+    data.add("roles[]", fv_json)
+     
+    for i in range(0,2):
+        if i < 1:
+            current_wolves = roles.goon.copy()
+            current_wolves['character_name'] = wolves[i]['character_name']
+            current_wolves['character_image'] = wolves[i]['character_image']
+            wolf_json = json.dumps(current_wolves)
+            data.add("roles[]", wolf_json)
+        else:
+            current_wolves = mafia_roles.utility_roles['fv'].copy()
+            current_wolves['character_name'] = wolves[i]['character_name']
+            current_wolves['character_image'] = wolves[i]['character_image']
+            wolf_json = json.dumps(current_wolves)
+            data.add("roles[]", wolf_json)
+       
+        
 def add_cop9_roles(game_title):	
     global data
 
