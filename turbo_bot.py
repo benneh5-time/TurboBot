@@ -281,7 +281,7 @@ async def pievig(ctx, action=None, target=None):
             else:
                 pie_vig_owner = target_id
                 explosion_chance *= 2
-                await ctx.send(f"{ctx.author.mention} has passed the pie vig to {target}. The explosion chance is now {explosion_chance * 100:.2f}%.")
+                await ctx.send(f"{target} is safe from explosions! Phew! {target} now has a {explosion_chance * 100:.2f}% chance to kill the next player!")
         else:
             await ctx.send("Invalid target. Mention the player to pass the pie vig to them (e.g., `!pievig @username`).")
         return
