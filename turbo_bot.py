@@ -61,6 +61,20 @@ status_id = None
 status_channel = None
 is_rand_running = False
 turbo_ping_message = None
+pie_vig_owner = None
+explosion_chance = 0.01
+scores = {}
+
+def reset_game():
+    global pie_vig_owner, explosion_chance
+    pie_vig_owner = None
+    explosion_chance = 0.01
+
+# Helper function to update scores
+def update_score(user_id, win=True):
+    if user_id not in scores:
+        scores[user_id] = 0
+    scores[user_id] += 1 if win else -1
 
 def load_dvc_archive():
     with open('dvc_archive.json', 'r') as f:
@@ -225,6 +239,54 @@ async def add_bet(ctx, game:str, *, bet: str):
     bets[game].append(f"{ctx.author.name} bets: {bet}")
     save_bet_json('bets.json', bets)
     await ctx.send(f"Your bet has been added for {game}!")
+
+@bot.command()
+async def pievig(ctx, action=None, target=None):
+    global pie_vig_owner, explosion_chance
+
+    # Claiming the pie vig
+    if not pie_vig_owner:
+        pie_vig_owner = ctx.author.id
+        await ctx.send(f"{ctx.author.mention} has claimed the pie vig! The game begins!")
+        return
+
+    # Ensure only the current owner can pass or defuse
+    if ctx.author.id != pie_vig_owner:
+        await ctx.send(f"You don't have the pie vig, {ctx.author.mention}!")
+        return
+
+    # Handling defuse
+    if action == "defuse":
+        defuse_chance = explosion_chance / 2
+        if random.random() < defuse_chance:
+            await ctx.send(f"{ctx.author.mention} has successfully defused the pie vig! They win!")
+            update_score(ctx.author.id, win=True)
+            reset_game()
+        else:
+            await ctx.send(f"{ctx.author.mention} failed to defuse the pie vig, but no one died. The game continues.")
+            pie_vig_owner = None  # Let someone else claim it
+        return
+
+    # Passing the pie vig to another player
+    if action and target:
+        if action == "@" and target.startswith("<@") and target.endswith(">"):
+            target_id = int(target[2:-1].replace("!", ""))
+            if target_id == ctx.author.id:
+                await ctx.send("You cannot pass the pie vig to yourself!")
+                return
+            if random.random() < explosion_chance:
+                await ctx.send(f"The pie vig explodes! {target} has died! The game is over.")
+                update_score(ctx.author.id, win=False)
+                reset_game()
+            else:
+                pie_vig_owner = target_id
+                explosion_chance *= 2
+                await ctx.send(f"{ctx.author.mention} has passed the pie vig to {target}. The explosion chance is now {explosion_chance * 100:.2f}%.")
+        else:
+            await ctx.send("Invalid target. Mention the player to pass the pie vig to them (e.g., `!pievig @username`).")
+        return
+
+    await ctx.send("Invalid action. Use `!pievig defuse` to defuse or `!pievig @username` to pass.")
     
 @bot.command(name='bets')
 async def bets(ctx, game: str = None):
