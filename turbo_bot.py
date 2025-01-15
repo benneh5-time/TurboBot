@@ -263,7 +263,7 @@ async def pievig(ctx, action=None, target=None):
             update_score(ctx.author.id, win=True)
             reset_game()
         else:
-            await ctx.send(f"{ctx.author.mention} failed to defuse the pie vig, but no one died. The game continues.")
+            await ctx.send(f"{ctx.author.mention} failed to defuse the pie vig and died! Start a new game by claiming the !pievig")
             pie_vig_owner = None  # Let someone else claim it
         return
 
