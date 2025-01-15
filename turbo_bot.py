@@ -248,7 +248,7 @@ async def add_bet(ctx, game:str, *, bet: str):
     save_bet_json('bets.json', bets)
     await ctx.send(f"Your bet has been added for {game}!")
 
-@bot.command()
+"""@bot.command()
 async def pievig(ctx, action=None, target=None):
     global pie_vig_owner, explosion_chance
     if ctx.channel.id not in allowed_channels:
@@ -308,12 +308,12 @@ async def pievig(ctx, action=None, target=None):
             await ctx.send("Invalid target. Mention the player to pass the pie vig to them (e.g., `!pievig @username`).")
         return
 
-    await ctx.send("Invalid action. Use `!pievig defuse` to defuse or `!pievig @username` to pass.")
+    await ctx.send("Invalid action. Use `!pievig defuse` to defuse or `!pievig @username` to pass.")"""
 
-@bot.command()
+"""@bot.command()
 async def pievig_scoreboard(ctx):
     scoreboard = get_scoreboard()
-    await ctx.send(scoreboard)
+    await ctx.send(scoreboard)"""
 
 @bot.command(name='bets')
 async def bets(ctx, game: str = None):
