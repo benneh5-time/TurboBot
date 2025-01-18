@@ -1,10 +1,10 @@
 [
-    {"alias": "benneh", "icon": "<:harold:1262542360445845534>"},
+    {"alias": "benneh", "icon": ":top: :keycap_ten: <:harold:1262542360445845534>"},
     {"alias": "snally", "icon": "🐌"},
     {"alias": "fires", "icon": "🔥"},
-    {"alias": "gamer", "icon": "😹"},
+    {"alias": "gamer", "icon": ":top: :keycap_ten: 😹"},
     {"alias": "baudib1", "icon": "🌰"},
-    {"alias": "alexa.", "icon": "🦆"},
+    {"alias": "alexa.", "icon": ":top: :keycap_ten: 🦆"},
     {"alias": "hallia", "icon": "<:skype_sun:232705311176261632> 💅"},
     {"alias": "gengar", "icon": "👻"},
     {"alias": "frostflame", "icon":"🐶"},
@@ -17,10 +17,10 @@
     {"alias": "oliwaz", "icon": ":pinching_hand:"},
     {"alias": "joe bruin", "icon": ":bear:"},
     {"alias": "xanjori", "icon": ":prince:"},
-    {"alias": "purrito", "icon": ":cat:"},
+    {"alias": "purrito", "icon": ":top: :keycap_ten: :cat:"},
     {"alias": "akasuki", "icon": ":umbrella2:"},
     {"alias": "luna", "icon": ":crescent_moon:"},
-    {"alias": "clouds", "icon": ":cloud_lightning:"},
+    {"alias": "clouds", "icon": ":top: :keycap_ten: :cloud_lightning:"},
     {"alias": "null the lull", "icon": ":fish:"},
     {"alias": "how are giraffes real", "icon":"<:giraffe:339821825330642944>"},
     {"alias": "abraham delacey", "icon": "🐈"},
@@ -41,5 +41,10 @@
     {"alias": "intoner", "icon": ":cherry_blossom:"},
     {"alias": "kuti plz", "icon": ":pensive: :rainbow_flag: :cat:"},
     {"alias": "spellblade", "icon": ":crossed_swords:"},
-    {"alias": "idwritercomic", "icon": "<:really:909331874239873084>"}
+    {"alias": "idwritercomic", "icon": "<:really:909331874239873084>"},
+    {"alias": "happy", "icon": ":top: :keycap_ten:"},
+    {"alias": "cm prada", "icon": ":top: :keycap_ten:"},
+    {"alias": "pingureformed", "icon": ":top: :keycap_ten:"},
+    {"alias": "seriousmafiaplayer", "icon": ":top: :keycap_ten:"},
+    {"alias": "arctic", "icon": ":top: :keycap_ten:"}
 ]
