@@ -1928,8 +1928,10 @@ async def log_game(ctx, thread_id=None):
         if end_index != -1:
             extracted_setup = title[start_index:end_index]
         else:
+            extracted_setup = "Custom setup"
             print("No setup found", flush=True)
     else:
+        extracted_setup = "Custom setup"
         print("No setup found", flush=True)
 
     with open(summary_csv, 'a', newline='') as csvfile:
