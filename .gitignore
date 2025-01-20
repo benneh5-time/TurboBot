@@ -1,9 +1,7 @@
 TurboBot-1.code-workspace
-game_database.csv
-testing_stats.py
-testing_stats2.py
-testing_stats3.py
-testing_stats4.py
+game.csv
+testing_*.py
 *.xlsx
 *.csv
 aliases.json
+creds*

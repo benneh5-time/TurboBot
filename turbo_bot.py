@@ -1895,6 +1895,59 @@ async def live_dvc(ctx, thread_id):
 
     
 @bot.command()
+async def log_game(ctx, thread_id=None):
+    if ctx.channel.id not in allowed_channels:
+        return
+    if ctx.author.id not in mods:
+        return
+    
+    summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
+    summary_response = requests.get(summary_url)
+    summary_json = summary_response.json()
+
+    summary_csv = 'game_database.csv'
+    summary_headers = ['Turbo Title', 'Setup', 'Thread ID', 'Game ID', 'Winning Alignment', 'Villagers', 'Wolves']
+    town = summary_json['players']['town']
+    mafia = summary_json['players']['mafia']
+
+    town_list = []
+    mafia_list = []
+
+    for player in town:
+        town_list.append(player['username'])
+        
+    for player in mafia:
+        mafia_list.append(player['username'])
+    
+    title = summary_json['title']
+    start_index = title.find(" - [")
+    if start_index != -1:
+        start_index += len(" - [")
+        end_index = title.find(" game]", start_index)
+
+        if end_index != -1:
+            extracted_setup = title[start_index:end_index]
+        else:
+            print("No setup found", flush=True)
+    else:
+        print("No setup found", flush=True)
+
+    with open(summary_csv, 'a', newline='') as csvfile:
+        csv_writer = csv.DictWriter(csvfile, fieldnames=summary_headers)
+
+        if csvfile.tell() == 0:
+            csv_writer.writeheader()
+        
+        csv_writer.writerow({
+            "Turbo Title": summary_json['title'],
+            "Setup": extracted_setup,
+            "Thread ID": summary_json['threadid'],
+            "Game ID": summary_json['id'],
+            "Winning Alignment": summary_json['winning_alignment'],
+            "Villagers": town_list,
+            "Wolves": mafia_list,                          
+        })
+@bot.command()
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
