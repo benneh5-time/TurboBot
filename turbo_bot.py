@@ -1895,13 +1895,25 @@ async def live_dvc(ctx, thread_id):
 
     
 @bot.command()
-async def log_game(ctx, thread_id=None):
+async def log_game(ctx, *args):
     if ctx.channel.id not in allowed_channels:
         return
     if ctx.author.id not in mods:
         return
     
-    summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-thread_id', default=None)
+    parser.add_argument('-setup', default=None)
+    try:
+        args_parsed = parser.parse_args(args)
+    except SystemExit:
+        await ctx.send(f"Invalid arguments. Please check your command syntax. Do not use `-`, `--`, or `:` in your titles and try again.")
+        return
+    except Exception as e:
+        await ctx.send(f"An unexpected error occurred. Please try again.\n{str(e)}")
+        return
+    
+    summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={args_parsed.thread_id}"
     summary_response = requests.get(summary_url)
     summary_json = summary_response.json()
 
@@ -1928,10 +1940,10 @@ async def log_game(ctx, thread_id=None):
         if end_index != -1:
             extracted_setup = title[start_index:end_index]
         else:
-            extracted_setup = "Custom setup"
+            extracted_setup = args_parsed.setup
             print("No setup found", flush=True)
     else:
-        extracted_setup = "Custom setup"
+        extracted_setup = args_parsed.setup
         print("No setup found", flush=True)
 
     with open(summary_csv, 'a', newline='') as csvfile:
