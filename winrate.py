@@ -5,6 +5,9 @@ def calculate_player_win_rate(file_path, player_name, setup=None):
     # Create dictionaries to store total games and wins for the player
     total_games = {'Villager': 0, 'Wolf': 0}
     wins = {'Villager': 0, 'Wolf': 0}
+    
+    if setup.lower() = 'alexa role madness':
+        setup = 'Alexa Role Madness'
 
     # Read the CSV file
     with open(file_path, 'r', encoding='utf-8') as csvfile:

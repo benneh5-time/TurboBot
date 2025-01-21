@@ -591,7 +591,7 @@ async def player_stats(ctx, *, args=None):
 
     # Check the arguments
     if len(args) == 1:  # Single argument provided
-        if args[0] in valid_setups:
+        if args[0] in valid_setups or args[0].lower() == 'alexa role madness':
             setup = args[0]
         else:
             specified_alias = args[0].strip().lower()
