@@ -66,7 +66,7 @@ non_1337_users = [827416091889762325]
 status_id = None
 status_channel = None
 turbo_ping_message = None
-
+alexas = [438413352616722435]
 ###################################################### 
 # Opening Functions 
 ###################################################### 
@@ -1135,6 +1135,8 @@ async def in_(ctx, time: str = '60'):
     global game_host_name, player_limit, players, waiting_list
 
     if time < 10 or time > 90 and time != 10000 and time != 1610 and time != 420 and time != 6969 and time != 1337:
+        if ctx.author.id in alexas:
+            pass
         await ctx.send("Invalid duration. Please choose a duration between 10 and 90 minutes.")
         return
     
