@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands, tasks
 import json
 import asyncio
-import mu
 import os
 import argparse
 import random
@@ -10,9 +9,11 @@ import requests
 import csv
 from bs4 import BeautifulSoup
 import pandas as pd
-import winrate
 import re
 import shlex
+# custom imports below
+import mu
+import winrate
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -25,18 +26,8 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='!', case_insensitive=True, intents=intents, help_command=None)
 
+# Game settings
 player_limit = 10
-players = {}
-waiting_list = {}
-recruit_list = {}
-spec_list = {}
-recruit_timer = 0
-aliases = {}
-dvc_roles = {}
-message_ids = {}
-bets = {}
-game_host_name = ["Turby"]
-mods = [178647349369765888, 93432503863353344, 966170585040306276]
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
@@ -44,53 +35,44 @@ valid_setups = ["joat10", "vig10", "bomb10", "bml10", "ita10", "ita13", "cop9", 
 valid_timers = ["sunbae", "14-3", "16-5", "8-2"]
 day_length = 14
 night_length = 3
+anon_enabled = False
+is_rand_running = False
+
+# Player and Host Data
+players = {}
+waiting_list = {}
+recruit_list = {}
+spec_list = {}
+game_host_name = ["Turby"]
+recruit_timer = 0
+aliases = {}
+
+# Misc Discord Information
+mods = [178647349369765888, 93432503863353344, 966170585040306276]
 allowed_channels = [223260125786406912, 1258668573006495774, 306758456998887429]  # turbo-chat channel ID
 bet_channel = [306758456998887429]
 all_channels = [223260125786406912, 1256131761390489600]
 react_channels = [223260125786406912, 1114212787141492788]
-#banned_users = [1173036536166621286, 1313342896056958987]
+dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
+dvc_server = 1094321402489872436   # DVC Server iddvc_roles = {}
+anni_event_channels = [1258668573006495774]
+message_ids = {}
+bets = {}
 banned_users = [1173036536166621286]
 banned_randers = [612706340623876137]
 future_banned = [190312702692818946]
 non_1337_users = [827416091889762325]
-dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
-dvc_server = 1094321402489872436   # DVC Server id
-anni_event_channels = [1258668573006495774]
-anon_enabled = False
 status_id = None
 status_channel = None
-is_rand_running = False
 turbo_ping_message = None
-pie_vig_owner = None
-explosion_chance = 0.01
-pie_vig_scores = {}
 
-def reset_game():
-    global pie_vig_owner, explosion_chance
-    pie_vig_owner = None
-    explosion_chance = 0.01
-
-# Helper function to update scores
-def update_score(player_id, win):
-    if player_id not in pie_vig_scores:
-        pie_vig_scores[player_id] = 0
-    pie_vig_scores[player_id] += 1 if win else -1
-
-def get_scoreboard():
-    if not pie_vig_scores:
-        return "No scores yet!"
-    scoreboard = "Pie Vig Scores:\n"
-    for player_id, score in pie_vig_scores.items():
-        scoreboard += f"<@{player_id}>: {score} points\n"
-    return scoreboard
+###################################################### 
+# Opening Functions 
+###################################################### 
 
 def load_dvc_archive():
     with open('dvc_archive.json', 'r') as f:
         return json.load(f)
-    
-dvc_archive = load_dvc_archive()
-
-print(f"Current dvc archive: {dvc_archive}")
 
 def save_dvc_archive(new_archive):
     with open('dvc_archive.json', 'w') as f:
@@ -128,8 +110,7 @@ def load_bet_json(file):
 def save_bet_json(file, bets):
     with open(file, 'w') as f:
         json.dump(bets, f, indent=4)
-
-
+        
 def save_spec_list():
     with open('spec_list.json', 'w') as f:
         json.dump(spec_list, f, indent=4)
@@ -210,6 +191,9 @@ def find_key_by_value(dictionary, value):
         elif value == val:
             return key
     return None
+  
+dvc_archive = load_dvc_archive()
+print(f"Current dvc archive: {dvc_archive}")
 
 @bot.event
 async def on_ready():
@@ -247,73 +231,6 @@ async def add_bet(ctx, game:str, *, bet: str):
     bets[game].append(f"{ctx.author.name} bets: {bet}")
     save_bet_json('bets.json', bets)
     await ctx.send(f"Your bet has been added for {game}!")
-
-"""@bot.command()
-async def pievig(ctx, action=None, target=None):
-    global pie_vig_owner, explosion_chance
-    if ctx.channel.id not in allowed_channels:
-        return
-    if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
-        return 
-
-    # Claiming the pie vig
-    if not pie_vig_owner:
-        pie_vig_owner = ctx.author.id
-        await ctx.send(f"{ctx.author.mention} has claimed the pie vig! The game begins! Your target has a 1% chance to die. You may shoot by typing `!pievig @ @player` or defuse by typing `!pievig defuse`")
-        return
-    
-    # Allow moderators to reset the game
-    if action == "reset" and ctx.author.id in mods:
-        reset_game()
-        await ctx.send(f"{ctx.author.mention} has reset the pie vig! The game is ready to start again.")
-        return
-    
-    # Ensure only the current owner can pass or defuse
-    if ctx.author.id != pie_vig_owner:
-        await ctx.send(f"You don't have the pie vig, {ctx.author.mention}! The current pie vig owner is <@{pie_vig_owner}>!")
-        return
-
-    # Handling defuse
-    if action == "defuse":
-        defuse_chance = explosion_chance / 2
-        await ctx.send(f"Defusing... There's a {defuse_chance * 100:.2f}% chance of success!")
-        if random.random() < defuse_chance:
-            await ctx.send(f"{ctx.author.mention} has successfully defused the pie vig! They win!")
-            update_score(ctx.author.id, win=True)
-            reset_game()
-        else:
-            await ctx.send(f"{ctx.author.mention} failed to defuse the pie vig and died! Start a new game by claiming the !pievig")
-            update_score(ctx.author.id, win=False)
-            pie_vig_owner = None  # Let someone else claim it
-        return
-
-    # Passing the pie vig to another player
-    if action and target:
-        if action == "@" and target.startswith("<@") and target.endswith(">"):
-            target_id = int(target[2:-1].replace("!", ""))
-            if target_id == ctx.author.id:
-                await ctx.send("You cannot pass the pie vig to yourself!")
-                return
-            if random.random() < explosion_chance:
-                await ctx.send(f"The pie vig explodes! {target} has died! The game is over.")
-                update_score(ctx.author.id, win=True)
-                update_score(target_id, win=False)
-                reset_game()
-            else:
-                pie_vig_owner = target_id
-                explosion_chance *= 2
-                await ctx.send(f"{target} is safe from explosions! Phew! {target} now has a {explosion_chance * 100:.2f}% chance to kill the next player!")
-        else:
-            await ctx.send("Invalid target. Mention the player to pass the pie vig to them (e.g., `!pievig @username`).")
-        return
-
-    await ctx.send("Invalid action. Use `!pievig defuse` to defuse or `!pievig @username` to pass.")"""
-
-"""@bot.command()
-async def pievig_scoreboard(ctx):
-    scoreboard = get_scoreboard()
-    await ctx.send(scoreboard)"""
 
 @bot.command(name='bets')
 async def bets(ctx, game: str = None):
@@ -477,9 +394,7 @@ async def get_wolf_info(game_title, setup_title):
             username = player.find('span', style="color: #ff2244;")
             if username:
                 mafia_players.append(username.text)
-    return mafia_players
-            
-    
+    return mafia_players   
 
 class ThreadmarkProcessor:
     def __init__(self):
@@ -658,7 +573,6 @@ async def sub(ctx, player=None):
         await ctx.send("Replacement didn't work, please do so manually or fix syntax")
         print(sub, flush=True)
 
-import shlex
 
 @bot.command()
 async def player_stats(ctx, *, args=None):
@@ -683,6 +597,8 @@ async def player_stats(ctx, *, args=None):
     elif len(args) == 2:  # Two arguments provided
         specified_alias = args[0].strip().lower()
         if args[1] in valid_setups:
+            setup = args[1]
+        elif args[1].lower() == "alexa role madness":
             setup = args[1]
         else:
             await ctx.send(f"Invalid setup '{args[1]}'. Please use one of the valid setups: {', '.join(valid_setups)}.")
@@ -740,62 +656,7 @@ async def player_stats(ctx, *, args=None):
         f"  Wolf:\n"
         f"    Games Played: {wolf_games}, Wins: {wolf_wins}, Win Rate: {wolf_win_rate:.2f}%"
     )
-
-"""@bot.command()
-async def player_stats(ctx, *, setup=None):
-    if ctx.channel.id not in allowed_channels:  
-        return
-    
-    if ctx.author.id in banned_users:
-        await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
-        return   
-    
-    # Get all aliases for the user
-    alias_data = aliases.get(ctx.author.id, None)
-    
-    if not alias_data:
-        await ctx.send(f"No alias data found for {ctx.author.name}.")
-        return
-    
-    all_aliases = alias_data.get("all", [])
-    
-    # Initialize counters for accumulated stats
-    total_games = 0
-    total_wins = 0
-    villager_games = 0
-    villager_wins = 0
-    wolf_games = 0
-    wolf_wins = 0
-    
-    # Loop through all aliases and accumulate the stats
-    for alias in all_aliases:
-        player_win_rate = winrate.calculate_player_win_rate("game_database.csv", alias, setup)
-        
-        # Accumulate stats
-        total_games += player_win_rate['Total Games Played']
-        total_wins += player_win_rate['Total Wins']
-        villager_games += player_win_rate['Villager Games']
-        villager_wins += player_win_rate['Villager Wins']
-        wolf_games += player_win_rate['Wolf Games']
-        wolf_wins += player_win_rate['Wolf Wins']
-    
-    # Calculate the combined win rates
-    overall_win_rate = (total_wins / total_games * 100) if total_games > 0 else 0
-    villager_win_rate = (villager_wins / villager_games * 100) if villager_games > 0 else 0
-    wolf_win_rate = (wolf_wins / wolf_games * 100) if wolf_games > 0 else 0
-    
-    # Send the combined stats in one message
-    await ctx.send(
-        f"**Combined stats for {ctx.author.name}:**\n"
-        f"Overall:\n"
-        f"  Games Played: {total_games}, Wins: {total_wins}, Win Rate: {overall_win_rate:.2f}%\n"
-        f"Villager:\n"
-        f"  Games Played: {villager_games}, Wins: {villager_wins}, Win Rate: {villager_win_rate:.2f}%\n"
-        f"Wolf:\n"
-        f"  Games Played: {wolf_games}, Wins: {wolf_wins}, Win Rate: {wolf_win_rate:.2f}%"
-    )"""
-
-    
+   
 @bot.command()
 async def stats(ctx, game_setup=None):
 
