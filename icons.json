@@ -43,8 +43,9 @@
     {"alias": "spellblade", "icon": ":crossed_swords:"},
     {"alias": "idwritercomic", "icon": "<:really:909331874239873084>"},
     {"alias": "happy", "icon": ":top: :keycap_ten:"},
-    {"alias": "cm prada", "icon": ":top: :keycap_ten:"},
+    {"alias": "cm prada", "icon": ""},
     {"alias": "pingureformed", "icon": ":top: :keycap_ten:"},
     {"alias": "seriousmafiaplayer", "icon": ":top: :keycap_ten:"},
-    {"alias": "arctic", "icon": ":top: :keycap_ten:"}
+    {"alias": "arctic", "icon": ":top: :keycap_ten:"},
+    {"alias": "illwei", "icon": ":top: :keycap_ten:"}
 ]
