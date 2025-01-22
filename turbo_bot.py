@@ -2079,7 +2079,7 @@ async def rand(ctx, *args):
                     aliases_file = 'aliases.json'
                     credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
                     spreadsheet_name = 'Turbo ELO Sheet'
-                    sheet_name = 'Test Turbo Champs 2025'
+                    sheet_name = 'Turbo Champs 2025'
                     # Load data
                     df = pd.read_csv(file_path)
                     df['Villagers'] = df['Villagers'].apply(eval)
