@@ -97,7 +97,7 @@ class EloCalculator:
                 'Games Played': self.game_counts[player]['Town'] + self.game_counts[player]['Wolf']
             }
             for player, scores in self.elo_scores.items()
-            if self.game_counts[player]['Town'] + self.game_counts[player]['Wolf'] >= 25
+            if self.game_counts[player]['Town'] + self.game_counts[player]['Wolf'] >= 1
         ]
         result_df = pd.DataFrame(result_data).sort_values(by='Overall ELO', ascending=False)
         sheet_data = [result_df.columns.tolist()] + result_df.values.tolist()
