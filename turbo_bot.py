@@ -2065,7 +2065,7 @@ async def rand(ctx, *args):
                 current_date_gmt = datetime.datetime.now(datetime.timezone.utc).date()
 
                 # Define the date range
-                start_date = datetime.date(current_date_gmt.year, 2, 17)  # February 17
+                start_date = datetime.date(current_date_gmt.year, 1, 21)  # February 17
                 end_date = datetime.date(current_date_gmt.year, 3, 31)    # March 31
 
                 # Check the conditions
