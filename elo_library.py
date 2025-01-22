@@ -89,16 +89,17 @@ class EloCalculator:
         result_data = [
             {
                 'Name': player,
-                'Town ELO': round(scores['Town'], 2),
-                'Wolf ELO': round(scores['Wolf'], 2),
-                'Overall ELO': round(scores['Town'] + scores['Wolf'], 2),
+                'Town ELO': 0 if self.game_counts[player]['Town'] == 0 else round(scores['Town'], 2),
+                'Wolf ELO': 0 if self.game_counts[player]['Wolf'] == 0 else round(scores['Wolf'], 2),
+                'Overall ELO': round(scores['Town'] + scores['Wolf'], 2) if self.game_counts[player]['Town'] > 0 and self.game_counts[player]['Wolf'] > 0 else 0,
                 'Town games': self.game_counts[player]['Town'],
                 'Wolf games': self.game_counts[player]['Wolf'],
                 'Games Played': self.game_counts[player]['Town'] + self.game_counts[player]['Wolf']
             }
             for player, scores in self.elo_scores.items()
-            if self.game_counts[player]['Town'] + self.game_counts[player]['Wolf'] >= 1
+            if self.game_counts[player]['Town'] + self.game_counts[player]['Wolf'] >= 1  # This ensures they are included if they've played at least one game in either alignment
         ]
         result_df = pd.DataFrame(result_data).sort_values(by='Overall ELO', ascending=False)
         sheet_data = [result_df.columns.tolist()] + result_df.values.tolist()
         self.export_to_google_sheets(spreadsheet_name, sheet_name, sheet_data)
+
