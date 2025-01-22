@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 import shlex
+import datetime
 # custom imports below
 import mu
 import winrate
@@ -37,6 +38,8 @@ day_length = 14
 night_length = 3
 anon_enabled = False
 is_rand_running = False
+ELO_eligible = False
+ineligible_setups = ['ita10', 'ita13', 'randommadnessXer']
 
 # Player and Host Data
 players = {}
@@ -67,6 +70,7 @@ status_id = None
 status_channel = None
 turbo_ping_message = None
 alexas = [438413352616722435]
+
 ###################################################### 
 # Opening Functions 
 ###################################################### 
@@ -529,8 +533,6 @@ class ThreadmarkProcessor:
         
                 elif "Game Over:" in event:
                     await channel.send("Game concluded -- attempting channel housekeeping/clean up")
-                    # Not used anymore
-                    # process_threadmarks.stop()
                     self.processed_threadmarks.clear()
                     return
                 self.processed_threadmarks.append(event)
@@ -1830,7 +1832,7 @@ async def log_game(ctx, *args):
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
-    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled
+    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled, ELO_eligible
 
     allowed_randers = []
     player_aliases = list(players.keys())[:player_limit]
@@ -1923,6 +1925,7 @@ async def rand(ctx, *args):
             else:
                 final_game_setup = current_setup
                 setup_title = final_game_setup
+            
 
             if not game_title:
                 game_title = mu.generate_game_thread_uuid()
@@ -1935,7 +1938,6 @@ async def rand(ctx, *args):
             await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
             print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
             security_token = mu.new_game_token(session, thread_id)
-
             response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, final_game_setup, day_length, night_length, game_host_name, anon_enabled,player_limit)
             
             if "was created successfully." in response_message:
@@ -2052,7 +2054,7 @@ async def rand(ctx, *args):
                 await delete_dvc_role(channel, role)
                 # await delete_dvc_role(wc_channel, wc_role)
                 current_game = None
-                
+                """
                 summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
                 summary_response = requests.get(summary_url)
                 summary_json = summary_response.json()
@@ -2098,15 +2100,65 @@ async def rand(ctx, *args):
                         "Winning Alignment": summary_json['winning_alignment'],
                         "Villagers": town_list,
                         "Wolves": mafia_list,                          
-                    })
-
+                    })"""
+                current_year = datetime.datetime.now().year
+                write_game_log(thread_id, 'game_database.csv')
+                write_game_log(thread_id, 'database/' + current_year + '_database.csv')
+                write_game_log(thread_id, 'database/' + current_year + '_' + current_setup + '_database.csv')
 
             elif "Error" in response_message:
                 print(f"Game failed to rand, reason: {response_message}", flush=True)
                 await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
-        
         finally:
             is_rand_running = False
+
+def write_game_log(thread_id, csv_file):
+    summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
+    summary_response = requests.get(summary_url)
+    summary_json = summary_response.json()
+
+    summary_csv = csv_file
+    summary_headers = ['Turbo Title', 'Setup', 'Thread ID', 'Game ID', 'Winning Alignment', 'Villagers', 'Wolves']
+    town = summary_json['players']['town']
+    mafia = summary_json['players']['mafia']
+
+    town_list = []
+    mafia_list = []
+
+    for player in town:
+        town_list.append(player['username'])
+        
+    for player in mafia:
+        mafia_list.append(player['username'])
+    
+    title = summary_json['title']
+    start_index = title.find(" - [")
+    if start_index != -1:
+        start_index += len(" - [")
+        end_index = title.find(" game]", start_index)
+
+        if end_index != -1:
+            extracted_setup = title[start_index:end_index]
+        else:
+            print("No setup found", flush=True)
+    else:
+        print("No setup found", flush=True)
+
+    with open(summary_csv, 'a', newline='') as csvfile:
+        csv_writer = csv.DictWriter(csvfile, fieldnames=summary_headers)
+
+        if csvfile.tell() == 0:
+            csv_writer.writeheader()
+        
+        csv_writer.writerow({
+            "Turbo Title": summary_json['title'],
+            "Setup": extracted_setup,
+            "Thread ID": summary_json['threadid'],
+            "Game ID": summary_json['id'],
+            "Winning Alignment": summary_json['winning_alignment'],
+            "Villagers": town_list,
+            "Wolves": mafia_list,                          
+        })
 
 @bot.command()
 async def suki (ctx):
