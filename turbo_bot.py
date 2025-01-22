@@ -2096,6 +2096,8 @@ async def rand(ctx, *args):
 async def test_champs_db(ctx):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
+    if ctx.author.id not in mods:
+        return
     current_year = str(datetime.datetime.now().year)
     
     #Turbo Champs stuff
