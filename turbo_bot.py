@@ -2065,7 +2065,7 @@ async def rand(ctx, *args):
                 current_date_gmt = datetime.datetime.now(datetime.timezone.utc).date()
 
                 # Define the date range
-                start_date = datetime.date(current_date_gmt.year, 1, 21)  # February 17
+                start_date = datetime.date(current_date_gmt.year, 2, 17)  # February 17
                 end_date = datetime.date(current_date_gmt.year, 3, 31)    # March 31
 
                 # Check the conditions
@@ -2092,7 +2092,31 @@ async def rand(ctx, *args):
                 await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
         finally:
             is_rand_running = False
+@bot.command()
+async def test_champs_db(ctx):
+    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    current_year = str(datetime.datetime.now().year)
+    
+    #Turbo Champs stuff
+    current_date_gmt = datetime.datetime.now(datetime.timezone.utc).date()
 
+    # Define the date range
+    start_date = datetime.date(current_date_gmt.year, 1, 21)  # February 17
+    end_date = datetime.date(current_date_gmt.year, 3, 31)    # March 31
+
+    file_path = 'database/' + current_year + '_TurboChampDatabase.csv'
+    aliases_file = 'aliases.json'
+    credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
+    spreadsheet_name = 'Turbo ELO Sheet'
+    sheet_name = 'Test Turbo Champs 2025'
+    # Load data
+    df = pd.read_csv(file_path)
+    df['Villagers'] = df['Villagers'].apply(eval)
+    df['Wolves'] = df['Wolves'].apply(eval)
+    elo_calculator = EloCalculator(credentials_path,aliases_file)
+    elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name)
+    
 def write_game_log(thread_id, csv_file):
     summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
     summary_response = requests.get(summary_url)
