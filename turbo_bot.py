@@ -2101,7 +2101,7 @@ async def rand(ctx, *args):
                         "Villagers": town_list,
                         "Wolves": mafia_list,                          
                     })"""
-                current_year = datetime.datetime.now().year
+                current_year = str(datetime.datetime.now().year)
                 write_game_log(thread_id, 'game_database.csv')
                 write_game_log(thread_id, 'database/' + current_year + '_database.csv')
                 write_game_log(thread_id, 'database/' + current_year + '_' + current_setup + '_database.csv')
