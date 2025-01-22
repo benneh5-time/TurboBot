@@ -1137,8 +1137,9 @@ async def in_(ctx, time: str = '60'):
     if time < 10 or time > 90 and time != 10000 and time != 1610 and time != 420 and time != 6969 and time != 1337:
         if ctx.author.id in alexas:
             pass
-        await ctx.send("Invalid duration. Please choose a duration between 10 and 90 minutes.")
-        return
+        else:
+            await ctx.send("Invalid duration. Please choose a duration between 10 and 90 minutes.")
+            return
     
     if time == 1337 and ctx.author.id in non_1337_users:
         await ctx.send("you are not 1337 enuff for this time entry n00b")
