@@ -91,7 +91,7 @@ class EloCalculator:
                 'Name': player,
                 'Town ELO': 0 if self.game_counts[player]['Town'] == 0 else round(scores['Town'], 2),
                 'Wolf ELO': 0 if self.game_counts[player]['Wolf'] == 0 else round(scores['Wolf'], 2),
-                'Overall ELO': round(scores['Town'] + scores['Wolf'], 2) if self.game_counts[player]['Town'] > 0 and self.game_counts[player]['Wolf'] > 0 else 0,
+                'Overall ELO': round(scores['Town'], 2) + round(scores['Wolf'], 2),  # Sum of Town and Wolf ELO
                 'Town games': self.game_counts[player]['Town'],
                 'Wolf games': self.game_counts[player]['Wolf'],
                 'Games Played': self.game_counts[player]['Town'] + self.game_counts[player]['Wolf']
@@ -102,4 +102,5 @@ class EloCalculator:
         result_df = pd.DataFrame(result_data).sort_values(by='Overall ELO', ascending=False)
         sheet_data = [result_df.columns.tolist()] + result_df.values.tolist()
         self.export_to_google_sheets(spreadsheet_name, sheet_name, sheet_data)
+
 
