@@ -15,6 +15,7 @@ import datetime
 # custom imports below
 import mu
 import winrate
+from elo_library import EloCalculator
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -2054,57 +2055,37 @@ async def rand(ctx, *args):
                 await delete_dvc_role(channel, role)
                 # await delete_dvc_role(wc_channel, wc_role)
                 current_game = None
-                """
-                summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
-                summary_response = requests.get(summary_url)
-                summary_json = summary_response.json()
-
-                summary_csv = 'game_database.csv'
-                summary_headers = ['Turbo Title', 'Setup', 'Thread ID', 'Game ID', 'Winning Alignment', 'Villagers', 'Wolves']
-                town = summary_json['players']['town']
-                mafia = summary_json['players']['mafia']
-
-                town_list = []
-                mafia_list = []
-
-                for player in town:
-                    town_list.append(player['username'])
-                    
-                for player in mafia:
-                    mafia_list.append(player['username'])
                 
-                title = summary_json['title']
-                start_index = title.find(" - [")
-                if start_index != -1:
-                    start_index += len(" - [")
-                    end_index = title.find(" game]", start_index)
-
-                    if end_index != -1:
-                        extracted_setup = title[start_index:end_index]
-                    else:
-                        print("No setup found", flush=True)
-                else:
-                    print("No setup found", flush=True)
-
-                with open(summary_csv, 'a', newline='') as csvfile:
-                    csv_writer = csv.DictWriter(csvfile, fieldnames=summary_headers)
-
-                    if csvfile.tell() == 0:
-                        csv_writer.writeheader()
-                    
-                    csv_writer.writerow({
-                        "Turbo Title": summary_json['title'],
-                        "Setup": extracted_setup,
-                        "Thread ID": summary_json['threadid'],
-                        "Game ID": summary_json['id'],
-                        "Winning Alignment": summary_json['winning_alignment'],
-                        "Villagers": town_list,
-                        "Wolves": mafia_list,                          
-                    })"""
                 current_year = str(datetime.datetime.now().year)
                 write_game_log(thread_id, 'game_database.csv')
                 write_game_log(thread_id, 'database/' + current_year + '_database.csv')
-                write_game_log(thread_id, 'database/' + current_year + '_' + current_setup + '_database.csv')
+                write_game_log(thread_id, 'database/' + current_year + '_' + final_game_setup + '_database.csv')
+                
+                #Turbo Champs stuff
+                current_date_gmt = datetime.datetime.now(datetime.timezone.utc).date()
+
+                # Define the date range
+                start_date = datetime.date(current_date_gmt.year, 2, 17)  # February 17
+                end_date = datetime.date(current_date_gmt.year, 3, 31)    # March 31
+
+                # Check the conditions
+                if (
+                    final_game_setup not in ineligible_setups and 
+                    phases != 'sunbae' and 
+                    start_date <= current_date_gmt <= end_date
+                ):
+                    write_game_log(thread_id, 'database/' + current_year + '_TurboChampDatabase.csv')
+                    file_path = 'database/' + current_year + '_TurboChampDatabase.csv'
+                    aliases_file = aliases.json
+                    credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
+                    spreadsheet_name = 'Turbo ELO Sheet'
+                    sheet_name = 'Test Turbo Champs 2025'
+                    # Load data
+                    df = pd.read_csv(file_path)
+                    df['Villagers'] = df['Villagers'].apply(eval)
+                    df['Wolves'] = df['Wolves'].apply(eval)
+                    elo_calculator = EloCalculator(credentials_path,aliases_file)
+                    elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name)
 
             elif "Error" in response_message:
                 print(f"Game failed to rand, reason: {response_message}", flush=True)
