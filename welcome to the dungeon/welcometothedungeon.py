@@ -38,7 +38,7 @@ async def join(ctx):
     elif ctx.author in players:
         await ctx.send("You are already in the game!")
     elif len(players) >= 4:
-        await ctx.send("Game full")
+        await ctx.send("Game full, sorry watch for now!")
     else:
         await ctx.send("No active game to join. Type `!start` to start a new game.")
 

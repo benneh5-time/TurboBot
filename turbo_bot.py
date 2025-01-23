@@ -2061,7 +2061,7 @@ async def rand(ctx, *args):
                 write_game_log(thread_id, 'database/' + current_year + '_database.csv')
                 write_game_log(thread_id, 'database/' + current_year + '_' + final_game_setup + '_database.csv')
                 
-                file_path = 'database/' + current_year + 'database.csv'
+                file_path = 'database/' + current_year + '_database.csv'
                 aliases_file = 'aliases.json'
                 credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
                 spreadsheet_name = 'Turbo ELO Sheet'
