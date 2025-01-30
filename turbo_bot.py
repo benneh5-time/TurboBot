@@ -2066,10 +2066,17 @@ async def rand(ctx, *args):
                 credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
                 spreadsheet_name = 'Turbo ELO Sheet'
                 sheet_name = '2025'
+                lifetime_sheet_name = 'Lifetime'
+                
+                lifetime_df = pd.read_csv('game_database.csv')
+                lifetime_df['Villagers'] = lifetime_df['Villagers'].apply(eval)
+                lifetime_df['Wolves'] = lifetime_df['Wolves'].apply(eval)  
+                
                 df = pd.read_csv(file_path)
                 df['Villagers'] = df['Villagers'].apply(eval)
                 df['Wolves'] = df['Wolves'].apply(eval)
                 elo_calculator = EloCalculator(credentials_path,aliases_file)
+                elo_calculator.calculate_and_export(lifetime_df, spreadsheet_name, lifetime_sheet_name)
                 elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name)
                 
                 #Turbo Champs stuff
