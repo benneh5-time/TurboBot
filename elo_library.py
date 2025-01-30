@@ -84,7 +84,7 @@ class EloCalculator:
             worksheet = spreadsheet.add_worksheet(title=sheet_name, rows="1000", cols="20")
         worksheet.update("A1", data)
 
-    def calculate_and_export(self, df, spreadsheet_name, sheet_name):
+    def calculate_and_export(self, df, spreadsheet_name, sheet_name, min_games = 25):
         self.process_game_data(df)
         result_data = [
             {
@@ -100,7 +100,7 @@ class EloCalculator:
                 'Games Played': self.game_counts[player]['Town'] + self.game_counts[player]['Wolf']
             }
             for player, scores in self.elo_scores.items()
-            if self.game_counts[player]['Town'] + self.game_counts[player]['Wolf'] >= 1  # Include players with at least one game played
+            if self.game_counts[player]['Town'] + self.game_counts[player]['Wolf'] >= min_games  # Include players with at least one game played
         ]
         result_df = pd.DataFrame(result_data).sort_values(by='Overall ELO', ascending=False)
         sheet_data = [result_df.columns.tolist()] + result_df.values.tolist()

@@ -2076,8 +2076,8 @@ async def rand(ctx, *args):
                 df['Villagers'] = df['Villagers'].apply(eval)
                 df['Wolves'] = df['Wolves'].apply(eval)
                 elo_calculator = EloCalculator(credentials_path,aliases_file)
-                elo_calculator.calculate_and_export(lifetime_df, spreadsheet_name, lifetime_sheet_name)
-                elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name)
+                elo_calculator.calculate_and_export(lifetime_df, spreadsheet_name, lifetime_sheet_name, 1)
+                elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name, 10)
                 
                 #Turbo Champs stuff
                 current_date_gmt = datetime.datetime.now(datetime.timezone.utc).date()
@@ -2103,7 +2103,7 @@ async def rand(ctx, *args):
                     df['Villagers'] = df['Villagers'].apply(eval)
                     df['Wolves'] = df['Wolves'].apply(eval)
                     elo_calculator = EloCalculator(credentials_path,aliases_file)
-                    elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name)
+                    elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name, 1)
 
             elif "Error" in response_message:
                 print(f"Game failed to rand, reason: {response_message}", flush=True)
