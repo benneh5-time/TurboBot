@@ -2057,9 +2057,12 @@ async def rand(ctx, *args):
                 current_game = None
                 
                 current_year = str(datetime.datetime.now().year)
-                write_game_log(thread_id, 'game_database.csv')
-                write_game_log(thread_id, 'database/' + current_year + '_database.csv')
-                write_game_log(thread_id, 'database/' + current_year + '_' + final_game_setup + '_database.csv')
+                lifetime_file_path = 'game_database.csv'
+                
+                game_data = get_game_log(thread_id)
+                write_game_log(lifetime_file_path, game_data)
+                write_game_log('database/' + current_year + '_database.csv', game_data)
+                write_game_log('database/' + current_year + '_' + final_game_setup + '_database.csv', game_data)
                 
                 file_path = 'database/' + current_year + '_database.csv'
                 aliases_file = 'aliases.json'
@@ -2068,7 +2071,7 @@ async def rand(ctx, *args):
                 sheet_name = '2025'
                 lifetime_sheet_name = 'Lifetime'
                 
-                lifetime_df = pd.read_csv('game_database.csv')
+                lifetime_df = pd.read_csv(lifetime_file_path)
                 lifetime_df['Villagers'] = lifetime_df['Villagers'].apply(eval)
                 lifetime_df['Wolves'] = lifetime_df['Wolves'].apply(eval)  
                 
@@ -2092,7 +2095,7 @@ async def rand(ctx, *args):
                     phases != 'sunbae' and 
                     start_date <= current_date_gmt <= end_date
                 ):
-                    write_game_log(thread_id, 'database/' + current_year + '_TurboChampDatabase.csv')
+                    write_game_log(thread_id, 'database/' + current_year + '_TurboChampDatabase.csv', game_data)
                     file_path = 'database/' + current_year + '_TurboChampDatabase.csv'
                     aliases_file = 'aliases.json'
                     credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
@@ -2136,54 +2139,46 @@ async def test_champs_db(ctx):
     df['Wolves'] = df['Wolves'].apply(eval)
     elo_calculator = EloCalculator(credentials_path,aliases_file)
     elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name)
-    
-def write_game_log(thread_id, csv_file):
+
+def get_game_log(thread_id):
+    """Fetches the game summary from the API and returns relevant data."""
     summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
     summary_response = requests.get(summary_url)
     summary_json = summary_response.json()
 
-    summary_csv = csv_file
-    summary_headers = ['Turbo Title', 'Setup', 'Thread ID', 'Game ID', 'Winning Alignment', 'Villagers', 'Wolves']
-    town = summary_json['players']['town']
-    mafia = summary_json['players']['mafia']
+    town_list = [player['username'] for player in summary_json['players']['town']]
+    mafia_list = [player['username'] for player in summary_json['players']['mafia']]
 
-    town_list = []
-    mafia_list = []
-
-    for player in town:
-        town_list.append(player['username'])
-        
-    for player in mafia:
-        mafia_list.append(player['username'])
-    
     title = summary_json['title']
+    extracted_setup = None
     start_index = title.find(" - [")
     if start_index != -1:
         start_index += len(" - [")
         end_index = title.find(" game]", start_index)
-
         if end_index != -1:
             extracted_setup = title[start_index:end_index]
-        else:
-            print("No setup found", flush=True)
-    else:
-        print("No setup found", flush=True)
 
-    with open(summary_csv, 'a', newline='') as csvfile:
+    return {
+        "Turbo Title": summary_json['title'],
+        "Setup": extracted_setup if extracted_setup else "Unknown",
+        "Thread ID": summary_json['threadid'],
+        "Game ID": summary_json['id'],
+        "Winning Alignment": summary_json['winning_alignment'],
+        "Villagers": town_list,
+        "Wolves": mafia_list
+    }
+     
+def write_game_log(csv_file, game_data):
+    """Writes the game summary data to a CSV file."""
+    summary_headers = ['Turbo Title', 'Setup', 'Thread ID', 'Game ID', 'Winning Alignment', 'Villagers', 'Wolves']
+
+    with open(csv_file, 'a', newline='') as csvfile:
         csv_writer = csv.DictWriter(csvfile, fieldnames=summary_headers)
 
-        if csvfile.tell() == 0:
+        if csvfile.tell() == 0:  # Write header if the file is empty
             csv_writer.writeheader()
         
-        csv_writer.writerow({
-            "Turbo Title": summary_json['title'],
-            "Setup": extracted_setup,
-            "Thread ID": summary_json['threadid'],
-            "Game ID": summary_json['id'],
-            "Winning Alignment": summary_json['winning_alignment'],
-            "Villagers": town_list,
-            "Wolves": mafia_list,                          
-        })
+        csv_writer.writerow(game_data)
 
 @bot.command()
 async def suki (ctx):
