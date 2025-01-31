@@ -2073,14 +2073,15 @@ async def rand(ctx, *args):
                 df = pd.read_csv(file_path)
                 df['Villagers'] = df['Villagers'].apply(eval)
                 df['Wolves'] = df['Wolves'].apply(eval)
-                elo_calculator = EloCalculator(credentials_path,aliases_file)
-                elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name, 10)
+                y2025_elo_calculator = EloCalculator(credentials_path,aliases_file)
+                y2025_elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name, 10)
                 
                 lifetime_sheet_name = 'Lifetime'
                 lifetime_df = pd.read_csv(lifetime_file_path)
                 lifetime_df['Villagers'] = lifetime_df['Villagers'].apply(eval)
                 lifetime_df['Wolves'] = lifetime_df['Wolves'].apply(eval)  
-                elo_calculator.calculate_and_export(lifetime_df, spreadsheet_name, lifetime_sheet_name, 1)
+                lifetime_elo_calculator = EloCalculator(credentials_path,aliases_file)
+                lifetime_elo_calculator.calculate_and_export(lifetime_df, spreadsheet_name, lifetime_sheet_name, 1)
                 
                 #Turbo Champs stuff
                 current_date_gmt = datetime.datetime.now(datetime.timezone.utc).date()
@@ -2096,17 +2097,17 @@ async def rand(ctx, *args):
                     start_date <= current_date_gmt <= end_date
                 ):
                     write_game_log(thread_id, 'database/' + current_year + '_TurboChampDatabase.csv', game_data)
-                    file_path = 'database/' + current_year + '_TurboChampDatabase.csv'
+                    champs_file_path = 'database/' + current_year + '_TurboChampDatabase.csv'
                     aliases_file = 'aliases.json'
                     credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
                     spreadsheet_name = 'Turbo ELO Sheet'
-                    sheet_name = 'Turbo Champs 2025'
+                    champs_sheet_name = 'Turbo Champs 2025'
                     # Load data
-                    df = pd.read_csv(file_path)
-                    df['Villagers'] = df['Villagers'].apply(eval)
-                    df['Wolves'] = df['Wolves'].apply(eval)
-                    elo_calculator = EloCalculator(credentials_path,aliases_file)
-                    elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name, 1)
+                    champs_df = pd.read_csv(champs_file_path)
+                    champs_df['Villagers'] = champs_df['Villagers'].apply(eval)
+                    champs_df['Wolves'] = champs_df['Wolves'].apply(eval)
+                    champs_elo_calculator = EloCalculator(credentials_path,aliases_file)
+                    champs_elo_calculator.calculate_and_export(champs_df, spreadsheet_name, champs_sheet_name, 1)
 
             elif "Error" in response_message:
                 print(f"Game failed to rand, reason: {response_message}", flush=True)
