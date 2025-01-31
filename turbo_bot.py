@@ -1782,6 +1782,7 @@ async def log_game(ctx, *args):
         await ctx.send(f"An unexpected error occurred. Please try again.\n{str(e)}")
         return
     
+    update_db_after_game(args_parsed.thread_id)
     summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={args_parsed.thread_id}"
     summary_response = requests.get(summary_url)
     summary_json = summary_response.json()
