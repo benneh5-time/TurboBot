@@ -12,6 +12,7 @@ import pandas as pd
 import re
 import shlex
 import datetime
+import sqlite3
 # custom imports below
 import mu
 import winrate
@@ -2060,6 +2061,7 @@ async def rand(ctx, *args):
                 lifetime_file_path = 'game_database.csv'
                 
                 game_data = get_game_log(thread_id)
+                update_db_after_game(thread_id)
                 write_game_log(lifetime_file_path, game_data)
                 write_game_log('database/' + current_year + '_database.csv', game_data)
                 write_game_log('database/' + current_year + '_' + final_game_setup + '_database.csv', game_data)
@@ -2140,6 +2142,43 @@ async def test_champs_db(ctx):
     df['Wolves'] = df['Wolves'].apply(eval)
     elo_calculator = EloCalculator(credentials_path,aliases_file)
     elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name)
+    
+def fetch_game_data(thread_id):
+    """Fetches the game summary JSON from the API."""
+    url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Failed to fetch data for thread {thread_id}: {response.status_code}")
+        return None
+
+def store_game_data(thread_id, summary_json, db_name="game_logs.db"):
+    """Stores the full JSON response in the database."""
+    conn = sqlite3.connect(db_name)
+    cursor = conn.cursor()
+    
+    json_str = json.dumps(summary_json)  # Convert JSON to string
+    
+    cursor.execute('''
+        INSERT OR REPLACE INTO game_data (thread_id, json_data) 
+        VALUES (?, ?)
+    ''', (thread_id, json_str))
+    
+    conn.commit()
+    conn.close()
+    
+def update_db_after_game(thread_id, db_name="game_logs.db"):
+    """Fetches and stores the game data for a newly completed game."""
+    
+    summary_json = fetch_game_data(thread_id)  # Get game data
+
+    if summary_json:
+        store_game_data(thread_id, summary_json, db_name)
+        print(f"✅ Game data stored for thread {thread_id}")
+    else:
+        print(f"⚠️ Failed to fetch data for thread {thread_id}")
 
 def get_game_log(thread_id):
     """Fetches the game summary from the API and returns relevant data."""
