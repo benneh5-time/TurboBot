@@ -13,6 +13,7 @@ import re
 import shlex
 import datetime
 import sqlite3
+from io import StringIO
 # custom imports below
 import mu
 import winrate
@@ -578,6 +579,58 @@ async def sub(ctx, player=None):
         await ctx.send("Replacement didn't work, please do so manually or fix syntax")
         print(sub, flush=True)
 
+def get_google_sheet(sheet_name):
+    SHEET_ID = "1zjM5DPXizdgyrYxwAui6LT_yusMEs6I8XXj9iB6LVpE"  # Replace with your Google Sheet ID
+    url = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
+
+    response = requests.get(url)
+    if response.status_code != 200:
+        return None
+    
+    data = StringIO(response.text)
+    return list(csv.DictReader(data)) 
+
+@bot.command()
+async def elo(ctx, sheet_name: str):
+    
+    if ctx.channel.id not in allowed_channels:  
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
+        return   
+    
+    sheet_data = get_google_sheet(sheet_name)
+
+    if not sheet_data:
+        await ctx.send("Error fetching data from Google Sheets.")
+        return
+    
+    alias_data = aliases.get(ctx.author.id, None)
+    
+    if not alias_data:
+        await ctx.send(f"No alias data found for {ctx.author.name}.")
+        return
+    
+    all_aliases = alias_data.get("all", [])
+    
+    for active_alias in all_aliases:
+        for row in sheet_data:
+            if row.get("Name") == active_alias:
+                user_data = row
+    #user_data = find_user_data(sheet_data, ctx.author.id, aliases)
+
+    if user_data:
+        embed = discord.Embed(title=f"ELO Stats for {user_data['Name']}", color=discord.Color.blue())
+        embed.add_field(name="Town ELO", value=user_data["Town ELO"], inline=True)
+        embed.add_field(name="Wolf ELO", value=user_data["Wolf ELO"], inline=True)
+        embed.add_field(name="Overall ELO", value=user_data["Overall ELO"], inline=False)
+        embed.add_field(name="Town Games", value=user_data["Town Games"], inline=True)
+        embed.add_field(name="Wolf Games", value=user_data["Wolf Games"], inline=True)
+        embed.add_field(name="Games Played", value=user_data["Games Played"], inline=False)
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send("No ELO data found for you.")
 
 @bot.command()
 async def player_stats(ctx, *, args=None):

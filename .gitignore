@@ -1,7 +1,7 @@
 TurboBot-1.code-workspace
 game.csv
-testing_*.py
 *.xlsx
 *.csv
 aliases.json
 creds*
+testing*
