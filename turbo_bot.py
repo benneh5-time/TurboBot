@@ -600,6 +600,10 @@ async def elo(ctx, sheet_name: str = "Lifetime"):
         await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return   
     
+    valid_sheets = ['Lifetime', 'Turbo Champs 2025', '2025', '2024', 'joat-2024', 'bomb-2024', 'vig-2024', 'crx-2024', 'cop9-2024']
+    if sheet_name not in valid_sheets:
+        await ctx.send(f"Not a valid ELO leaderboard. Use one of the following sheet names to find your ELO for that leaderboard: {valid_sheets}.")
+        
     sheet_data = get_google_sheet(sheet_name)
 
     if not sheet_data:
@@ -613,6 +617,7 @@ async def elo(ctx, sheet_name: str = "Lifetime"):
         return
     
     all_aliases = alias_data.get("all", [])
+    user_data = None
     
     for active_alias in all_aliases:
         for row in sheet_data:
@@ -621,16 +626,17 @@ async def elo(ctx, sheet_name: str = "Lifetime"):
     #user_data = find_user_data(sheet_data, ctx.author.id, aliases)
 
     if user_data:
-        embed = discord.Embed(title=f"ELO Stats for {user_data['Name']}", color=discord.Color.blue())
+        embed = discord.Embed(title=f"{sheet_name} ELO for {user_data['Name']}", color=discord.Color.blue())
+        embed.add_field(name="Overall ELO", value=user_data["Overall ELO"], inline=False)
         embed.add_field(name="Town ELO", value=user_data["Town ELO"], inline=True)
         embed.add_field(name="Wolf ELO", value=user_data["Wolf ELO"], inline=True)
-        embed.add_field(name="Overall ELO", value=user_data["Overall ELO"], inline=False)
+        embed.add_field(name="Total Games Played", value=user_data["Games Played"], inline=False)
         embed.add_field(name="Town Games", value=user_data["Town games"], inline=True)
         embed.add_field(name="Wolf Games", value=user_data["Wolf games"], inline=True)
-        embed.add_field(name="Games Played", value=user_data["Games Played"], inline=False)
+
         await ctx.send(embed=embed)
     else:
-        await ctx.send("No ELO data found for you.")
+        await ctx.send(f"No ELO data found for you on the {sheet_name} leaderboards")
 
 @bot.command()
 async def player_stats(ctx, *, args=None):
