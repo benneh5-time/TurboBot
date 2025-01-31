@@ -2064,23 +2064,23 @@ async def rand(ctx, *args):
                 write_game_log('database/' + current_year + '_database.csv', game_data)
                 write_game_log('database/' + current_year + '_' + final_game_setup + '_database.csv', game_data)
                 
-                file_path = 'database/' + current_year + '_database.csv'
                 aliases_file = 'aliases.json'
-                credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
+                credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'      
                 spreadsheet_name = 'Turbo ELO Sheet'
+                            
+                file_path = 'database/' + current_year + '_database.csv'
                 sheet_name = '2025'
-                lifetime_sheet_name = 'Lifetime'
-                
-                lifetime_df = pd.read_csv(lifetime_file_path)
-                lifetime_df['Villagers'] = lifetime_df['Villagers'].apply(eval)
-                lifetime_df['Wolves'] = lifetime_df['Wolves'].apply(eval)  
-                
                 df = pd.read_csv(file_path)
                 df['Villagers'] = df['Villagers'].apply(eval)
                 df['Wolves'] = df['Wolves'].apply(eval)
                 elo_calculator = EloCalculator(credentials_path,aliases_file)
-                elo_calculator.calculate_and_export(lifetime_df, spreadsheet_name, lifetime_sheet_name, 1)
                 elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name, 10)
+                
+                lifetime_sheet_name = 'Lifetime'
+                lifetime_df = pd.read_csv(lifetime_file_path)
+                lifetime_df['Villagers'] = lifetime_df['Villagers'].apply(eval)
+                lifetime_df['Wolves'] = lifetime_df['Wolves'].apply(eval)  
+                elo_calculator.calculate_and_export(lifetime_df, spreadsheet_name, lifetime_sheet_name, 1)
                 
                 #Turbo Champs stuff
                 current_date_gmt = datetime.datetime.now(datetime.timezone.utc).date()
