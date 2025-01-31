@@ -591,7 +591,7 @@ def get_google_sheet(sheet_name):
     return list(csv.DictReader(data)) 
 
 @bot.command()
-async def elo(ctx, sheet_name: str = "Lifetime"):
+async def elo(ctx, *, sheet_name: str = "Lifetime"):
     
     if ctx.channel.id not in allowed_channels:  
         return
