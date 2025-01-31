@@ -625,8 +625,8 @@ async def elo(ctx, sheet_name: str):
         embed.add_field(name="Town ELO", value=user_data["Town ELO"], inline=True)
         embed.add_field(name="Wolf ELO", value=user_data["Wolf ELO"], inline=True)
         embed.add_field(name="Overall ELO", value=user_data["Overall ELO"], inline=False)
-        embed.add_field(name="Town Games", value=user_data["Town Games"], inline=True)
-        embed.add_field(name="Wolf Games", value=user_data["Wolf Games"], inline=True)
+        embed.add_field(name="Town Games", value=user_data["Town games"], inline=True)
+        embed.add_field(name="Wolf Games", value=user_data["Wolf gaames"], inline=True)
         embed.add_field(name="Games Played", value=user_data["Games Played"], inline=False)
         await ctx.send(embed=embed)
     else:
