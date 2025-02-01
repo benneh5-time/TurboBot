@@ -2136,7 +2136,7 @@ async def rand(ctx, *args):
                 df['Villagers'] = df['Villagers'].apply(eval)
                 df['Wolves'] = df['Wolves'].apply(eval)
                 y2025_elo_calculator = EloCalculator(credentials_path,aliases_file)
-                y2025_elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name, 10)
+                y2025_elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name, 1)
                 
                 lifetime_sheet_name = 'Lifetime'
                 lifetime_df = pd.read_csv(lifetime_file_path)
