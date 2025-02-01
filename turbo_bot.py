@@ -2242,7 +2242,7 @@ def update_db_after_game(thread_id, db_name="game_logs.db"):
 
 def get_game_log(thread_id):
     """Fetches the game summary from the API and returns relevant data."""
-    summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?thregadid={thread_id}"
+    summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
     summary_response = requests.get(summary_url)
     summary_json = summary_response.json()
 
