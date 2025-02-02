@@ -58,6 +58,7 @@ mods = [178647349369765888, 93432503863353344, 966170585040306276, 4384133526167
 allowed_channels = [223260125786406912, 1258668573006495774, 306758456998887429]  # turbo-chat channel ID
 bet_channel = [306758456998887429]
 all_channels = [223260125786406912, 1256131761390489600]
+turbo_chat = 223260125786406912
 react_channels = [223260125786406912, 1114212787141492788]
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server iddvc_roles = {}
@@ -1243,6 +1244,9 @@ async def in_(ctx, time: str = '60'):
         else:
             waiting_list[alias] = time
             await ctx.message.add_reaction('👍')
+    if ctx.guild is None:
+        await turbo_chat.send(f"{alias} used `!in {time}` in DMs and joins the game!")
+        
     await update_status()            
 
 @bot.command()
@@ -1295,6 +1299,8 @@ async def out(ctx):
         players[next_alias] = next_time
         await ctx.message.add_reaction('👎')
         await ctx.send(f"{next_alias} has been moved from the waiting list to the main list.")
+    if ctx.guild is None:
+        await turbo_chat.send(f"{alias} used `!out` in DMs and left the game!")
     await update_status()
 
 """@bot.command()
@@ -1751,7 +1757,7 @@ async def host(ctx, *, host_name=None):
         
     if host_name is None:
         if ctx.author.id in aliases:
-            host_name = aliases[ctx.author.id]
+            host_name = aliases[ctx.author.id]["active"]
             if host_name in players or host_name in waiting_list:
                 await ctx.send(f"{host_name} is already on the turbo list or waiting list.\n Please choose a different name for the host.")
                 return
