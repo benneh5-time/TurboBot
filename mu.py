@@ -690,11 +690,11 @@ def add_bomb_roles(game_title):
         data.add("roles[]", vt_json)
   
 
-        current_inven = town_roles.killing_roles['inv_1xsuibomb'].copy()
-        current_inven['character_name'] = powerroles_bomb[i]["character_name"]
-        current_inven['character_image'] = powerroles_bomb[i]["character_image"]
-        inven_json = json.dumps(current_inven)
-        data.add("roles[]", inven_json)
+    current_inven = town_roles.killing_roles['inv_1xsuibomb'].copy()
+    current_inven['character_name'] = powerroles_bomb[0]["character_name"]
+    current_inven['character_image'] = powerroles_bomb[0]["character_image"]
+    inven_json = json.dumps(current_inven)
+    data.add("roles[]", inven_json)
             
     for i in range(0,2):
         if i < 1:
