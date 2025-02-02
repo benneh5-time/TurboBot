@@ -1181,7 +1181,11 @@ async def in_(ctx, time: str = '60'):
         time = int(time, 16)
     else:
         time = int(time)
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        
+    turbo_chat_id = 223260125786406912
+    turbo_chat = bot.get_channel(turbo_chat_id)
+        
+    if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     
     if ctx.author.id in banned_users:
