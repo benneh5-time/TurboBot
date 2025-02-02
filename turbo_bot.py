@@ -1245,7 +1245,8 @@ async def in_(ctx, time: str = '60'):
             waiting_list[alias] = time
             await ctx.message.add_reaction('👍')
     if ctx.guild is None:
-        await turbo_chat.send(f"{alias} used `!in {time}` in DMs and joins the game!")
+        turbochannel = bot.get_channel(turbo_chat)
+        await turbochannel.send(f"{alias} used `!in {time}` in DMs and joins the game!")
         
     await update_status()            
 
@@ -1300,7 +1301,8 @@ async def out(ctx):
         await ctx.message.add_reaction('👎')
         await ctx.send(f"{next_alias} has been moved from the waiting list to the main list.")
     if ctx.guild is None:
-        await turbo_chat.send(f"{alias} used `!out` in DMs and left the game!")
+        turbochannel = bot.get_channel(turbo_chat)
+        await turbochannel.send(f"{alias} used `!out` in DMs and left the game!")
     await update_status()
 
 """@bot.command()
