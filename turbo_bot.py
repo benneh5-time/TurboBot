@@ -18,6 +18,7 @@ from io import StringIO
 import mu
 import winrate
 from elo_library import EloCalculator
+from turby_responses import turbo_responses
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -2766,6 +2767,13 @@ async def on_message(message):
 
     if message.author == bot.user or message.channel.id not in allowed_channels:
         return
+    
+    if message.channel.id == turbo_chat and "turby" in message.content.lower():
+        if random.random() < 0.2:
+            response = random.choice(turbo_responses)
+            await message.channel.send(response)
+        pass
+        
 
 
     for mention in message.role_mentions:
