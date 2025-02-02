@@ -593,7 +593,7 @@ def get_google_sheet(sheet_name):
 @bot.command()
 async def elo(ctx, *, sheet_name: str = "Lifetime"):
     
-    if ctx.channel.id not in allowed_channels:  
+    if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     
     if ctx.author.id in banned_users:
@@ -640,7 +640,7 @@ async def elo(ctx, *, sheet_name: str = "Lifetime"):
 
 @bot.command()
 async def player_stats(ctx, *, args=None):
-    if ctx.channel.id not in allowed_channels:  
+    if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     
     if ctx.author.id in banned_users:
@@ -1182,9 +1182,6 @@ async def in_(ctx, time: str = '60'):
     else:
         time = int(time)
         
-    turbo_chat_id = 223260125786406912
-    turbo_chat = bot.get_channel(turbo_chat_id)
-        
     if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     
@@ -1250,7 +1247,8 @@ async def in_(ctx, time: str = '60'):
 
 @bot.command()
 async def out(ctx):
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+    
+    if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
@@ -1327,7 +1325,8 @@ async def alias(ctx, *, alias):
     
 @bot.command()
 async def alias(ctx, *, alias=None):
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+    
+    if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
 
     if ctx.author.id in banned_users:
@@ -1594,9 +1593,11 @@ async def status(ctx, *args):
     embed.set_thumbnail(url="https://i.imgur.com/maWzSc2.png")
 
     status_embed = await ctx.send(embed=embed)
-    await status_embed.add_reaction('✅')
-    status_id = status_embed.id
-    status_channel = ctx.channel
+    
+    if ctx.guild:
+        await status_embed.add_reaction('✅')
+        status_id = status_embed.id
+        status_channel = ctx.channel
 
 async def update_status():
 
