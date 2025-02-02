@@ -788,7 +788,7 @@ async def stats(ctx, game_setup=None):
         setup_embed.add_field(name="Town Win Percentage", value=f'{overall_town_win_percentage:.2f}%', inline=True)
         setup_embed.add_field(name='Mafia Win Percentage', value=f'{overall_mafia_win_percentage:.2f}%', inline=True)
         setup_embed.add_field(name="Stats by Turby!", value=f"Use !stats [setup] to get individual setup stats!", inline=False)
-        setup_embed.set_thumbnail(url="https://i.imgur.com/CsNpjEY.png")
+        setup_embed.set_thumbnail(url="https://i.imgur.com/maWzSc2.png")
         await ctx.send(embed=setup_embed)
     else:
         if game_setup not in setup_total_games:
@@ -817,7 +817,7 @@ async def display_setup_stats(ctx, setup, count, setup_wins):
 
     if independent_wins:
         setup_embed.add_field(name="Evil Independent Win Percentage", value=f"{independent_win_percentage:.2f}%", inline=True)
-    setup_embed.set_thumbnail(url="https://i.imgur.com/CsNpjEY.png")
+    setup_embed.set_thumbnail(url="https://i.imgur.com/maWzSc2.png")
 
     await ctx.send(embed=setup_embed)
 
@@ -1587,7 +1587,7 @@ async def status(ctx, *args):
     if not players and not waiting_list:
         embed.add_field(name="No players are currently signed up.", value="", inline=False)
     
-    embed.set_thumbnail(url="https://i.imgur.com/CsNpjEY.png")
+    embed.set_thumbnail(url="https://i.imgur.com/maWzSc2.png")
 
     status_embed = await ctx.send(embed=embed)
     await status_embed.add_reaction('✅')
@@ -2749,9 +2749,7 @@ async def on_message(message):
         return
 
     if isinstance(message.channel, discord.DMChannel):
-        if message.author.id in mods:
-            target_channel = bot.get_channel(223260125786406912)
-            await target_channel.send(f"{message.content}")   
+        await bot.process_commands(message)  
 
     if message.author == bot.user or message.channel.id not in allowed_channels:
         return
