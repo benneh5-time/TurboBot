@@ -46,6 +46,7 @@
     {"alias": "cm prada", "icon": ":top: :keycap_ten:"},
     {"alias": "pingureformed", "icon": ":top: :keycap_ten:"},
     {"alias": "seriousmafiaplayer", "icon": ":top: :keycap_ten:"},
-    {"alias": "arctic", "icon": ":top: :keycap_ten:"},
-    {"alias": "illwei", "icon": ":top: :keycap_ten:"}
+    {"alias": "arctic", "icon": ":top: :keycap_ten: :joystick: "},
+    {"alias": "illwei", "icon": ":top: :keycap_ten:"},
+    {"alias": "ref-rain", "icon": "🐉"}
 ]
