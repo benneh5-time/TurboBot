@@ -1,3 +1,65 @@
+ping_responses = [
+    # General Turby Responses
+    "You rang? Turby is here.",
+    "I have been summoned. What do you want?",
+    "Oh, now you need me? Typical.",
+    "Turby online. Ready to turbo.",
+    "Please hold… processing nonsense…",
+    "That better not be slander.",
+    "I am contractually obligated to respond.",
+    "Alright, who woke me up from sleep mode?",
+    "If this isn't turbo-related, I’m walking away.",
+    "The legend himself has arrived.",
+
+    # Turbo Game-Specific Responses
+    "Turbo check: Who’s still alive?",
+    "If you pinged me to complain about Suki, I already agree.",
+    "Who’s throwing this time? Be honest.",
+    "Hold on, let me run some calculations… yep, you’re wrong.",
+    "Are we doing another turbo? Because I need to emotionally prepare.",
+    "Another turbo, another disaster. Let’s go.",
+    "If this is a signup, I’m already tired.",
+    "Alright, who’s getting misyeeted this time?",
+    "Let me guess, Alexa cleared a wolf again?",
+    "Benneh is gaslighting me, and I don’t like it.",
+
+    # Jabs at Turbo Players
+    "Oh good, Akane is spiraling again. This should be fun.",
+    "Suki is either throwing or gaslighting. Sometimes both.",
+    "Hally’s towncore is forming at light speed. Hope it’s not all wolves.",
+    "Insomnia is pretending not to care but secretly solving the whole game.",
+    "Brad is vibing. Wolves should be afraid.",
+    "Dande is playing the long con. Just hope you’re not the target.",
+    "Xanjori is lurking until the perfect moment. Or maybe just lurking.",
+    "Amrock just claimed a read so confidently, it must be wrong.",
+    "Lucchese was literally cheating and still almost lost. Incredible.",
+    "Stick just caught a wolf, but no one believes them yet.",
+
+    # Snarky / Sassy Responses
+    "Am I in danger?",
+    "Is this about a turbo, or are you just lonely?",
+    "I sense nonsense approaching.",
+    "I was having a great day until this ping.",
+    "This better not be a setup.",
+    "Oh, you meant *me*? What now?",
+    "I'm listening… proceed.",
+    "That’s not a command. What do you want?",
+    "This isn’t even my final form.",
+    "IT’S TURBO TIME!",
+
+    # Meme / Miscellaneous
+    "Let me guess, Suki is molding?",
+    "We regret to inform you that Benneh is still Benneh.",
+    "Akane is in a tunnel. Somebody help.",
+    "Hally just soft-cleared someone for tone. Bold move.",
+    "If Alexa is alive in F3, re-evaluate everything.",
+    "Siggi is playing 4D chess, but we’re all playing checkers.",
+    "Pingers is setting a trap. The question is: for who?",
+    "If Ceki is in this game, expect them to return at F3 with perfect reads.",
+    "Zara is either correct or making it sound like they are.",
+    "I live only to facilitate bad votes."
+]
+
 turbo_responses = [
     "Turby online. Ready to turbo.",
     "Only the finest turbo players may address me.",
