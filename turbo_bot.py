@@ -2765,6 +2765,10 @@ async def on_message(message):
 
     if isinstance(message.channel, discord.DMChannel):
         await bot.process_commands(message)  
+        
+        if message.author.bot:
+            return
+        
         log_channel_obj = bot.get_channel(log_channel)
 
         if log_channel_obj:
