@@ -61,6 +61,7 @@ bet_channel = [306758456998887429]
 all_channels = [223260125786406912, 1256131761390489600]
 turbo_chat = 223260125786406912
 react_channels = [223260125786406912, 1114212787141492788]
+log_channel = 
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server iddvc_roles = {}
 dvc_roles = {}
@@ -2764,6 +2765,16 @@ async def on_message(message):
 
     if isinstance(message.channel, discord.DMChannel):
         await bot.process_commands(message)  
+        log_channel_obj = bot.get_channel(log_channel)
+
+        if log_channel_obj:
+            embed = discord.Embed(
+                title="New DM Received",
+                description=f"**From:** {message.author} ({message.author.id})\n**Message:** {message.content}",
+                color=discord.Color.blue()
+            )
+            await log_channel_obj.send(embed=embed)
+        return
 
     if message.author == bot.user or message.channel.id not in allowed_channels:
         return
