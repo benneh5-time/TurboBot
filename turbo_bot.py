@@ -2771,7 +2771,7 @@ async def on_message(message):
     if message.channel.id == turbo_chat and "turby" in message.content.lower():
         chance = random.random()
         print(chance, flush=True)
-        if chance < 0.2:
+        if chance < 0.35:
             response = random.choice(turbo_responses)
             await message.channel.send(response)
         
