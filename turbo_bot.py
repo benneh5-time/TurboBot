@@ -61,7 +61,7 @@ bet_channel = [306758456998887429]
 all_channels = [223260125786406912, 1256131761390489600]
 turbo_chat = 223260125786406912
 react_channels = [223260125786406912, 1114212787141492788]
-log_channel = 
+log_channel = 1336076934332813402
 dvc_channel = 1114212787141492788  # DVC #turbo-chat channel id
 dvc_server = 1094321402489872436   # DVC Server iddvc_roles = {}
 dvc_roles = {}
