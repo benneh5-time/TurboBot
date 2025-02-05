@@ -784,8 +784,8 @@ def add_inno4_roles(game_title):
     data.add("roles[]", ic_json)
             
     current_wolves = roles.goon.copy()
-    current_wolves['character_name'] = wolves[i]['character_name']
-    current_wolves['character_image'] = wolves[i]['character_image']
+    current_wolves['character_name'] = wolves[0]['character_name']
+    current_wolves['character_image'] = wolves[0]['character_image']
     wolf_json = json.dumps(current_wolves)
     data.add("roles[]", wolf_json)
             
