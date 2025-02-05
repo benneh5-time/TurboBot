@@ -2788,7 +2788,7 @@ async def on_message(message):
     
     if message.channel.id == turbo_chat:
         if bot.user.mentioned_in(message):  # Always respond if directly mentioned
-            response = await gpt_responses.get_turby_response(message)
+            response = await gpt_responses.get_turby_response(message.content)
             
             if response == "Failed to call GPT":
                 response = random.choice(ping_responses)
@@ -2800,7 +2800,7 @@ async def on_message(message):
             chance = random.random()
             print(chance, flush=True)
             if chance < 0.25:
-                response = await gpt_responses.get_turby_response(message)
+                response = await gpt_responses.get_turby_response(message.content)
                 if response == "Failed to call GPT":
                     response = random.choice(turbo_responses)
                 await message.channel.send(response)
