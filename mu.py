@@ -275,7 +275,7 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         setup_title = game_setup
         final_game_setup = game_setup
         data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': f"{game_title} - [{setup_title} game]", 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Closed', 'period': 'day', 'phase': '1', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '1', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
-    elif game_setup == 'bean10':
+    elif game_setup == 'bean10' or game_setup == 'inno4':
         final_game_setup = game_setup
         setup_title = final_game_setup
         data = HTTPHeaderDict({'s': '', 'securitytoken': security_token, 'submit': '1', 'do': 'newgame', 'automated': '0', 'automation_setting': '2', 'game_name': f"{game_title} - [{setup_title} game]", 'thread_id': thread_id, 'speed_type': '1', 'game_type': 'Open', 'period': 'night', 'phase': '0', 'phase_end': '', 'started': '1', 'start_date': '', 'votecount_interval': '0', 'votecount_units': 'minutes', 'speed_preset': 'custom', 'day_units': 'minutes', 'night_units': 'minutes', 'itas_enabled': '0', 'default_ita_hit': '15', 'default_ita_count': '1', 'ita_immune_policy': '0', 'alias_pool': 'Greek_Alphabet', 'daily_post_limit': '0', 'postlimit_cutoff': '0', 'postlimit_cutoff_units': 'hours', 'character_limit': '0', 'proxy_voting': '0', 'tied_lynch': '1', 'self_voting': '0', 'no_lynch': '1', 'announce_lylo': '1', 'votes_locked': '1', 'votes_locked_manual': '0', 'auto_majority': '2', 'maj_delay': '0', 'show_flips': '0', 'suppress_rolepms': '0', 'suppress_phasestart': '0', 'day_action_cutoff': '1', 'mafia_kill_enabled': '1', 'mafia_kill_type': 'kill', 'detailed_flips': '0', 'backup_inheritance': '0', 'mafia_win_con': '1', 'mafia_kill_assigned': '1', 'mafia_day_chat': '1', 'characters_enabled': '2', 'role_quantity': '1'})
@@ -311,6 +311,10 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         add_bean_roles(game_title)
         data.add("preset", "custom")
         data.add('num_players', '10')
+    if final_game_setup == "inno4":
+        add_inno4_roles(game_title)
+        data.add("preset", "custom")
+        data.add('num_players', '4')
     if final_game_setup == "billager9":
         add_billager9_roles(game_title)
         data.add("preset", "custom")
@@ -756,7 +760,35 @@ def add_bomb_roles(game_title):
             wolf_json = json.dumps(current_wolves)
             data.add("roles[]", wolf_json)
  
+def add_inno4_roles(game_title):
+    global data
+    
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
 
+    villagers = random.sample(name_image_pairs, 2)
+    power_roles = random.sample(pr_name_image_pairs, 1)
+    wolves = random.sample(wolf_name_image_pairs, 1)
+
+    for i in range(0,1):
+        current_vanchilla = roles.vt.copy()
+        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_image'] = villagers[i]["character_image"]
+        vt_json = json.dumps(current_vanchilla)
+        data.add("roles[]", vt_json)
+  
+
+    current_ic = roles.ic.copy()
+    current_ic['character_name'] = power_roles[0]["character_name"]
+    current_ic['character_image'] = power_roles[0]["character_image"]
+    ic_json = json.dumps(current_ic)
+    data.add("roles[]", ic_json)
+            
+    current_wolves = roles.goon.copy()
+    current_wolves['character_name'] = wolves[i]['character_name']
+    current_wolves['character_image'] = wolves[i]['character_image']
+    wolf_json = json.dumps(current_wolves)
+    data.add("roles[]", wolf_json)
+            
 def add_bml_roles(game_title):
     global data
     
