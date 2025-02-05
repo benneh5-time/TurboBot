@@ -769,7 +769,7 @@ def add_inno4_roles(game_title):
     power_roles = random.sample(pr_name_image_pairs, 1)
     wolves = random.sample(wolf_name_image_pairs, 1)
 
-    for i in range(0,1):
+    for i in range(0,2):
         current_vanchilla = roles.vt.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
