@@ -19,6 +19,7 @@ import mu
 import winrate
 from elo_library import EloCalculator
 from turby_responses import turbo_responses, ping_responses
+import gpt_responses
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -2787,7 +2788,11 @@ async def on_message(message):
     
     if message.channel.id == turbo_chat:
         if bot.user.mentioned_in(message):  # Always respond if directly mentioned
-            response = random.choice(ping_responses)
+            response = await gpt_responses.get_turby_response(message)
+            
+            if response == "Failed to call GPT":
+                response = random.choice(ping_responses)
+            
             await message.channel.send(response)
             return
 
@@ -2795,7 +2800,9 @@ async def on_message(message):
             chance = random.random()
             print(chance, flush=True)
             if chance < 0.25:
-                response = random.choice(turbo_responses)
+                response = await gpt_responses.get_turby_response(message)
+                if response == "Failed to call GPT":
+                    response = random.choice(turbo_responses)
                 await message.channel.send(response)
         
 
