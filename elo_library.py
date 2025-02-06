@@ -5,6 +5,8 @@ import json
 import gspread
 from google.oauth2.service_account import Credentials
 
+non_elo_setups = ['inno4']
+
 class EloCalculator:
     def __init__(self, credentials_path, aliases_file, initial_elo=1000):
         self.initial_elo = initial_elo
@@ -53,6 +55,10 @@ class EloCalculator:
 
     def process_game_data(self, df):
         for _, row in df.iterrows():
+            for setup in non_elo_setups:
+                if setup == row['Setup']:
+                    continue
+                
             winning_alignment = row['Winning Alignment']
             villagers = row['Villagers']
             wolves = row['Wolves']
