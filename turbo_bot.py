@@ -2789,18 +2789,23 @@ async def on_message(message):
         return
     
     if message.channel.id == turbo_chat:
+
         if bot.user.mentioned_in(message):  # Always respond if directly mentioned
-            message_and_user = "Username: " + message.author.name + " Message: " + message.content
-            response = await gpt_responses.get_turby_response(message_and_user)
-            
-            if response == "Failed to call GPT":
-                response = random.choice(ping_responses)
-            
-            await message.channel.send(response)
-            return
+            chance = random.random()
+            message_and_user = "Username: " + message.author + " Message: " + message.content
+            chance = random.random()
+            print(chance, flush=True)
+            if chance < 0.5:
+                response = await gpt_responses.get_turby_response(message_and_user)
+                
+                if response == "Failed to call GPT":
+                    response = random.choice(ping_responses)
+                
+                await message.channel.send(response)
+                return
 
         if "turby" in message.content.lower():  # 35% chance to respond if name is just in text
-            message_and_user = "Username: " + message.author.name + " Message: " + message.content
+            message_and_user = "Username: " + message.author + " Message: " + message.content
             chance = random.random()
             print(chance, flush=True)
             if chance < 0.25:
