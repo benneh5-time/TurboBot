@@ -704,7 +704,7 @@ def add_bean_roles(game_title):
 
     for i in range(0,2):
         if i < 1:
-            current_inven = roles.doc_inv_doc.copy()
+            current_inven = roles.doc.copy()
             current_inven['character_name'] = powerroles_bean[i]["character_name"]
             current_inven['character_image'] = powerroles_bean[i]["character_image"]
             inven_json = json.dumps(current_inven)
@@ -717,11 +717,18 @@ def add_bean_roles(game_title):
             data.add("roles[]", vig_json)
             
     for i in range(0,2):
-        current_wolves = roles.goon.copy()
-        current_wolves['character_name'] = wolves[i]['character_name']
-        current_wolves['character_image'] = wolves[i]['character_image']
-        wolf_json = json.dumps(current_wolves)
-        data.add("roles[]", wolf_json)
+        if i < 1:
+            current_wolves = roles.rb_nc.copy()
+            current_wolves['character_name'] = wolves[i]['character_name']
+            current_wolves['character_image'] = wolves[i]['character_image']
+            wolf_json = json.dumps(current_wolves)
+            data.add("roles[]", wolf_json)
+        else:
+            current_wolves = mafia_roles.killing_roles['prk_1x'].copy()
+            current_wolves['character_name'] = wolves[i]['character_name']
+            current_wolves['character_image'] = wolves[i]['character_image']
+            wolf_json = json.dumps(current_wolves)
+            data.add("roles[]", wolf_json)
 
 def add_bomb_roles(game_title):
     global data
