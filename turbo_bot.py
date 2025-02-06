@@ -57,7 +57,8 @@ aliases = {}
 
 # Misc Discord Information
 mods = [178647349369765888, 93432503863353344, 966170585040306276, 438413352616722435]
-allowed_channels = [223260125786406912, 1258668573006495774, 306758456998887429]  # turbo-chat channel ID
+allowed_channels = [223260125786406912, 1258668573006495774, 306758456998887429, 1337149623361601699]  # turbo-chat channel ID
+test_channels = [1337149623361601699]
 bet_channel = [306758456998887429]
 all_channels = [223260125786406912, 1256131761390489600]
 turbo_chat = 223260125786406912
@@ -1243,14 +1244,14 @@ async def in_(ctx, time: str = '60'):
             players[alias] = time            
         else:
             waiting_list[alias] = time            
-        await ctx.message.add_reaction('👍')
+        await ctx.message.add_reaction('<:bensdog:1337168191465722088>')
     else:
         if len(players) < player_limit:
             players[alias] = time            
-            await ctx.message.add_reaction('👍')
+            await ctx.message.add_reaction('<:bensdog:1337168191465722088>')
         else:
             waiting_list[alias] = time
-            await ctx.message.add_reaction('👍')
+            await ctx.message.add_reaction('<:bensdog:1337168191465722088>')
     if ctx.guild is None:
         turbochannel = bot.get_channel(turbo_chat)
         await turbochannel.send(f"{alias} used `!in {time}` in DMs and joins the game!")
@@ -2825,7 +2826,7 @@ async def on_message(message):
             turbo_ping_message = response.id
             await response.add_reaction('✅')
     await bot.process_commands(message)
-
+    
 
 @bot.event 
 async def on_reaction_add(reaction, user):
@@ -2871,16 +2872,16 @@ async def on_reaction_add(reaction, user):
                     waiting_list[alias] = 60
                     
                 await reaction.message.channel.send(f"{alias}'s in has been renewed for the next 60 minutes.")
-                #await ctx.message.add_reaction('👍')
+                #await ctx.message.add_reaction('<:bensdog:1337168191465722088>')
             else:
                 if len(players) < player_limit:
                     players[alias] = 60            
                     await reaction.message.channel.send(f'{alias} joined the game!')
-                    #await ctx.message.add_reaction('👍')
+                    #await ctx.message.add_reaction('<:bensdog:1337168191465722088>')
                 else:
                     waiting_list[alias] = 60
                     #await ctx.send(f"The list is full. {alias} has been added to the waiting list.")
-                    #await ctx.message.add_reaction('👍')           
+                    #await ctx.message.add_reaction('<:bensdog:1337168191465722088>')           
                     await reaction.message.channel.send(f'{alias} joined the waiting list!')
             await update_status()
 
