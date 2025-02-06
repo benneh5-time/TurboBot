@@ -2792,7 +2792,7 @@ async def on_message(message):
 
         if bot.user.mentioned_in(message):  # Always respond if directly mentioned
             chance = random.random()
-            message_and_user = "Username: " + message.author + " Message: " + message.content
+            message_and_user = "Username: " + message.author.name + " Message: " + message.content
             chance = random.random()
             print(chance, flush=True)
             if chance < 0.5:
@@ -2805,7 +2805,7 @@ async def on_message(message):
                 return
 
         if "turby" in message.content.lower():  # 35% chance to respond if name is just in text
-            message_and_user = "Username: " + message.author + " Message: " + message.content
+            message_and_user = "Username: " + message.author.name + " Message: " + message.content
             chance = random.random()
             print(chance, flush=True)
             if chance < 0.25:
