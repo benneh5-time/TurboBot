@@ -55,9 +55,8 @@ class EloCalculator:
 
     def process_game_data(self, df):
         for _, row in df.iterrows():
-            for setup in non_elo_setups:
-                if setup == row['Setup']:
-                    continue
+            if row['Setup'] in non_elo_setups:
+                continue
                 
             winning_alignment = row['Winning Alignment']
             villagers = row['Villagers']
