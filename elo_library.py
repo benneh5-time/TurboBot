@@ -5,7 +5,7 @@ import json
 import gspread
 from google.oauth2.service_account import Credentials
 
-non_elo_setups = ['inno4']
+non_elo_setups = ['inno4', 'ita10', 'ita13', 'randommadnessXer']
 
 class EloCalculator:
     def __init__(self, credentials_path, aliases_file, initial_elo=1000):
