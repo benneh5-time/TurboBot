@@ -1272,7 +1272,7 @@ async def out(ctx):
     
     if ctx.author.id not in aliases:
         await ctx.send("You are not on the list and you haven't set an alias. Stop trolling me.")
-        await ctx.message.add_reaction('👎')
+        await ctx.message.add_reaction('<:laserbensdog:1337171130166939739>')
         return
     
     alias = aliases[ctx.author.id]["active"]
@@ -1294,19 +1294,19 @@ async def out(ctx):
     if alias in players:
         del players[alias]
         #await ctx.send(f"{alias} has been removed from the list.")
-        await ctx.message.add_reaction('👎')
+        await ctx.message.add_reaction('<:laserbensdog:1337171130166939739>')
     elif alias in waiting_list:
         del waiting_list[alias]
         #await ctx.send(f"{alias} has been removed from the waiting list.")
-        await ctx.message.add_reaction('👎')
+        await ctx.message.add_reaction('<:laserbensdog:1337171130166939739>')
     else:
         await ctx.send(f"{alias} is not on the list.")
-        await ctx.message.add_reaction('👎')
+        await ctx.message.add_reaction('<:laserbensdog:1337171130166939739>')
     # Add a player from waiting list to main list if it's not full
     if len(players) < player_limit and waiting_list:
         next_alias, next_time = waiting_list.popitem()
         players[next_alias] = next_time
-        await ctx.message.add_reaction('👎')
+        await ctx.message.add_reaction('<:laserbensdog:1337171130166939739>')
         await ctx.send(f"{next_alias} has been moved from the waiting list to the main list.")
     if ctx.guild is None:
         turbochannel = bot.get_channel(turbo_chat)
@@ -1530,15 +1530,15 @@ async def remove(ctx, *, alias):
         
     if alias in players:
         del players[alias]
-        await ctx.message.add_reaction('👎')
+        await ctx.message.add_reaction('<:laserbensdog:1337171130166939739>')
         #await ctx.send(f"{alias} has been removed from the list.")
     elif alias in waiting_list:
         del waiting_list[alias]
-        await ctx.message.add_reaction('👎')
+        await ctx.message.add_reaction('<:laserbensdog:1337171130166939739>')
         #await ctx.send(f"{alias} has been removed from the waiting list.")
     else:
         await ctx.send(f"{alias} is not on the list.")
-        await ctx.message.add_reaction('👎')
+        await ctx.message.add_reaction('<:laserbensdog:1337171130166939739>')
     # Add a player from waiting list to main list if it's not full
     if len(players) < player_limit and waiting_list:
         next_alias, next_time = waiting_list.popitem()
@@ -1589,7 +1589,7 @@ async def status(ctx, *args):
             player_message += "+1 HERO NEEDED \n" 
         else:
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
-        time_message +=  "!in or react ✅ to join!\n"  
+        time_message +=  "!in or react <:laserbensdog:1337171130166939739> to join!\n"  
         embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
         embed.set_field_at(5, name="**Time Remaining:**", value=time_message, inline=True)
         embed.set_field_at(4, name="", value="", inline=True)
@@ -1611,7 +1611,7 @@ async def status(ctx, *args):
     status_embed = await ctx.send(embed=embed)
     
     if ctx.guild:
-        await status_embed.add_reaction('✅')
+        await status_embed.add_reaction('<:laserbensdog:1337171130166939739>')
         status_id = status_embed.id
         status_channel = ctx.channel
 
@@ -1666,7 +1666,7 @@ async def update_status():
         else:
             player_message += "Game is full. Switch to a larger setup using `!game [setup]` or rand the game using `!rand -title \"Title of game thread\"`\n"        
         
-        time_message +=  "!in or react ✅ to join!\n"
+        time_message +=  "!in or react <:laserbensdog:1337171130166939739> to join!\n"
         
         embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
         embed.set_field_at(5, name="**Time Remaining:**", value=time_message, inline=True)
@@ -2257,7 +2257,7 @@ def update_db_after_game(thread_id, db_name="game_logs.db"):
 
     if summary_json:
         store_game_data(thread_id, summary_json, db_name)
-        print(f"✅ Game data stored for thread {thread_id}")
+        print(f"<:laserbensdog:1337171130166939739> Game data stored for thread {thread_id}")
     else:
         print(f"⚠️ Failed to fetch data for thread {thread_id}")
 
@@ -2822,9 +2822,9 @@ async def on_message(message):
             mention_list = [f"<@{id}>" for id in recruit_list if str(id) not in players]                    
             spots = player_limit - len(players)
             opt_in_mentions = ' '.join(mention_list)
-            response = await message.channel.send(f'ITS TURBO TIME! {opt_in_mentions}!! +{spots} spots!  React to ✅ to join the next turbo!')
+            response = await message.channel.send(f'ITS TURBO TIME! {opt_in_mentions}!! +{spots} spots!  React to <:laserbensdog:1337171130166939739> to join the next turbo!')
             turbo_ping_message = response.id
-            await response.add_reaction('✅')
+            await response.add_reaction('<:laserbensdog:1337171130166939739>')
     await bot.process_commands(message)
     
 
@@ -2834,7 +2834,7 @@ async def on_reaction_add(reaction, user):
         return
     global game_host_name, player_limit, players, waiting_list, turbo_ping_message   
     if reaction.message.id == turbo_ping_message:
-        if reaction.emoji == '✅':
+        if reaction.emoji == '<:laserbensdog:1337171130166939739>':
             if user.id in banned_users:
                 await reaction.message.channel.send("You have been banned for misusing bigping and are not allowed to in turbos.")
                 return
@@ -2886,7 +2886,7 @@ async def on_reaction_add(reaction, user):
             await update_status()
 
     if reaction.message.id == status_id:
-        if reaction.emoji == '✅':
+        if reaction.emoji == '<:laserbensdog:1337171130166939739>':
             if user.id in banned_users:
                 await reaction.message.channel.send("You have been banned for misusing bigping and are not allowed to in turbos.")
                 return
