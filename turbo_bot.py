@@ -2887,7 +2887,8 @@ async def on_reaction_add(reaction, user):
             await update_status()
 
     if reaction.message.id == status_id:
-        if reaction.emoji == '<:laserbensdog:1337171130166939739>':
+        print(reaction.emoji, flush=True)
+        if reaction.emoji == ':laserbensdog:':
             if user.id in banned_users:
                 await reaction.message.channel.send("You have been banned for misusing bigping and are not allowed to in turbos.")
                 return
