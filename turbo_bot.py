@@ -2835,7 +2835,7 @@ async def on_reaction_add(reaction, user):
     global game_host_name, player_limit, players, waiting_list, turbo_ping_message   
     if reaction.message.id == turbo_ping_message:
         print(reaction.emoji, flush=True)
-        if reaction.emoji == ':laserbensdog:':
+        if reaction.emoji == '<:laserbensdog:1337171130166939739>':
             if user.id in banned_users:
                 await reaction.message.channel.send("You have been banned for misusing bigping and are not allowed to in turbos.")
                 return
@@ -2888,7 +2888,7 @@ async def on_reaction_add(reaction, user):
 
     if reaction.message.id == status_id:
         print(reaction.emoji, flush=True)
-        if reaction.emoji == ':laserbensdog:':
+        if reaction.emoji == '<:laserbensdog:1337171130166939739>':
             if user.id in banned_users:
                 await reaction.message.channel.send("You have been banned for misusing bigping and are not allowed to in turbos.")
                 return
@@ -2938,6 +2938,8 @@ async def on_reaction_add(reaction, user):
                     #await ctx.message.add_reaction('👍')           
                     await reaction.message.channel.send(f'{alias} joined the waiting list!')
             await update_status()
+        else:
+            print("Didn't match", flush=True)
 
     if reaction.message.id in message_ids.values():
         role_thread_id = find_key_by_value(message_ids, reaction.message.id)
