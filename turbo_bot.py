@@ -659,7 +659,10 @@ class ThreadmarkProcessor:
                     continue
 
                 await channel.send(event)
-                await self.handle_event(event, player_aliases, role, guild, channel, thread_id, game_setup, current_game)
+                stop_game = await self.handle_event(event, player_aliases, role, guild, channel, thread_id, game_setup, current_game)
+                
+                if stop_game:
+                    return
 
                 self.processed_threadmarks.append(event)
 
@@ -698,6 +701,9 @@ class ThreadmarkProcessor:
         elif "Game Over:" in event:
             await channel.send("Game concluded -- attempting channel housekeeping/clean up")
             self.processed_threadmarks.clear()
+            return True
+        
+        return False
 
     async def add_player_to_dvc(self, username, player_aliases, guild, role, channel):
         """Attempts to add a player to the Dead Voice Chat (DVC) based on their alias."""
