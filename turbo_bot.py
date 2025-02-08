@@ -78,6 +78,7 @@ status_id = None
 status_channel = None
 turbo_ping_message = None
 alexas = [438413352616722435]
+ranked_game = True
 
 ###################################################### 
 # Opening Functions 
@@ -471,15 +472,15 @@ class ThreadmarkProcessor:
                 #elif "In-Thread Attack: " in event:
                 #    results = event.split()
 
-                elif "Suicide Bomb (1):" in event:
-                    results = event.split("Suicide Bomb (1):")[1].strip()
+                elif "Bomb (1):" in event:
+                    results = event.split("Bomb (1):", 1)[1].strip()
                     players = results.split(", ")
 
                     for player in players:
                         username = None
                         if " was " in player:
                             username = player.split(" was ")[0].strip().lower()
-                            flavor = results.split(" was ")[1].strip().lower()
+                            flavor = player.split(" was ")[1].strip().lower()
 
                             # Check if the username matches 'active' or is in 'all' aliases
                             user_added = False
@@ -505,6 +506,97 @@ class ThreadmarkProcessor:
 
                 elif "Results:" in event:
                     results = event.split("Results:")[1].strip()
+                    players = results.split(", ")
+
+                    for player in players:
+                        if " was " in player:
+                            username = player.split(" was ")[0].strip().lower()
+                            flavor = results.split(" was ")[1].strip().lower()
+
+                            # Check if the username matches 'active' or is in 'all' aliases
+                            user_added = False
+                            for mention_id, alias_data in aliases.items():
+                                if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
+                                    try:
+                                        member = guild.get_member(int(mention_id))
+                                        if member:
+                                            await member.add_roles(role)
+                                            await channel.send(f"<@{mention_id}> has been added to DVC.")
+                                            user_added = True
+                                            break  # Stop further iteration once the user is added
+                                        else:
+                                            await channel.send(f"{username} could not be added to DVC. They are not in the server.")
+                                    except Exception as e:
+                                        await channel.send(f"Error adding {username} to DVC: {e}")
+                            
+                            if not user_added:
+                                await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+
+                            if "neil the eel" in flavor:
+                                await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
+               
+                elif "Shots Fired (1):" in event:
+                    results = event.split("Shots Fired (1):", 1)[1].strip().lower()
+                    players = results.split(", ")
+
+                    for player in players:
+                        if " was " in player:
+                            username = player.split(" was ")[0].strip().lower()
+                            flavor = results.split(" was ")[1].strip().lower()
+
+                            # Check if the username matches 'active' or is in 'all' aliases
+                            user_added = False
+                            for mention_id, alias_data in aliases.items():
+                                if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
+                                    try:
+                                        member = guild.get_member(int(mention_id))
+                                        if member:
+                                            await member.add_roles(role)
+                                            await channel.send(f"<@{mention_id}> has been added to DVC.")
+                                            user_added = True
+                                            break  # Stop further iteration once the user is added
+                                        else:
+                                            await channel.send(f"{username} could not be added to DVC. They are not in the server.")
+                                    except Exception as e:
+                                        await channel.send(f"Error adding {username} to DVC: {e}")
+                            
+                            if not user_added:
+                                await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+
+                            if "neil the eel" in flavor:
+                                await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
+                elif "Poison Results:" in event:
+                    results = event.split("Poison Results:", 1)[1].strip().lower()
+                    players = results.split(", ")
+
+                    for player in players:
+                        if " was " in player:
+                            username = player.split(" was ")[0].strip().lower()
+                            flavor = results.split(" was ")[1].strip().lower()
+
+                            # Check if the username matches 'active' or is in 'all' aliases
+                            user_added = False
+                            for mention_id, alias_data in aliases.items():
+                                if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
+                                    try:
+                                        member = guild.get_member(int(mention_id))
+                                        if member:
+                                            await member.add_roles(role)
+                                            await channel.send(f"<@{mention_id}> has been added to DVC.")
+                                            user_added = True
+                                            break  # Stop further iteration once the user is added
+                                        else:
+                                            await channel.send(f"{username} could not be added to DVC. They are not in the server.")
+                                    except Exception as e:
+                                        await channel.send(f"Error adding {username} to DVC: {e}")
+                            
+                            if not user_added:
+                                await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+
+                            if "neil the eel" in flavor:
+                                await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
+                elif "Desperado (1):" in event:
+                    results = event.split("Desperado (1):", 1)[1].strip().lower()
                     players = results.split(", ")
 
                     for player in players:
