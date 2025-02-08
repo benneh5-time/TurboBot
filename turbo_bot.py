@@ -410,7 +410,7 @@ async def get_wolf_info(game_title, setup_title):
                 mafia_players.append(username.text)
     return mafia_players   
 
-class ThreadmarkProcessor:
+"""class ThreadmarkProcessor:
     def __init__(self):
         self.processed_threadmarks = []
 
@@ -637,7 +637,92 @@ class ThreadmarkProcessor:
                     return
                 self.processed_threadmarks.append(event)
 
+            await asyncio.sleep(30)"""
+
+class ThreadmarkProcessor:
+    def __init__(self):
+        self.processed_threadmarks = []
+
+    async def process_threadmarks(self, thread_id, aliases, role, guild, channel_id, game_setup, current_game):
+        """Fetch and process threadmarks from Mafia Universe."""
+        while True:        
+            url = f"https://www.mafiauniverse.com/forums/threadmarks/{thread_id}"
+            response = requests.get(url)
+            soup = BeautifulSoup(response.text, "html.parser")
+            event_div = soup.find("div", class_="bbc_threadmarks view-threadmarks")
+            channel = bot.get_channel(channel_id)
+
+            for row in reversed(event_div.find_all("div", class_="threadmark-row")):
+                event = row.find("div", class_="threadmark-event").text.strip()
+
+                if event in self.processed_threadmarks:
+                    continue
+
+                await channel.send(event)
+                await self.handle_event(event, aliases, role, guild, channel, thread_id, game_setup, current_game)
+
+                self.processed_threadmarks.append(event)
+
             await asyncio.sleep(30)
+
+    async def handle_event(self, event, aliases, role, guild, channel, thread_id, game_setup, current_game):
+        """Handles specific game events based on threadmarks."""
+        
+        elimination_keywords = ["Elimination:", "Bomb (1):", "Results:", "Shots Fired (1):", "Poison Results:", "Desperado (1):"]
+        
+        # Process eliminations and deaths
+        if any(keyword in event for keyword in elimination_keywords) and " was " in event:
+            results = event.split(max([keyword for keyword in elimination_keywords if keyword in event], key=len), 1)[1].strip()
+            players = results.split(", ")
+
+            for player in players:
+                if " was " in player:
+                    username, flavor = self.parse_player_info(player)
+                    user_added = await self.add_player_to_dvc(username, aliases, guild, role, channel)
+
+                    # Special case for "neil the eel"
+                    if "neil the eel" in flavor:
+                        await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
+
+        elif "Results: No one died" in event or "Event" in event or "Game Information" in event:
+            pass  # Ignore these events
+
+        elif "Day 2 Start" in event and game_setup in ('ita10', 'ita13'):
+            await start_itas(current_game)
+
+        elif "Elimination: Sleep" in event:
+            await channel.send("Players voted sleep. ZzZZZZzzzZzzz.")
+            await channel.send("https://media1.tenor.com/m/VdIKn05yIh8AAAAd/cat-sleep.gif")
+            await post_game_reply(thread_id, "eepy\n\n[img]https://media1.tenor.com/m/VdIKn05yIh8AAAAd/cat-sleep.gif[/img]\n\neepy")
+
+        elif "Game Over:" in event:
+            await channel.send("Game concluded -- attempting channel housekeeping/clean up")
+            self.processed_threadmarks.clear()
+
+    async def add_player_to_dvc(self, username, aliases, guild, role, channel):
+        """Attempts to add a player to the Dead Voice Chat (DVC) based on their alias."""
+        for mention_id, alias_data in aliases.items():
+            if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
+                try:
+                    member = guild.get_member(int(mention_id))
+                    if member:
+                        await member.add_roles(role)
+                        await channel.send(f"<@{mention_id}> has been added to DVC.")
+                        return True  # Success
+                    else:
+                        await channel.send(f"{username} could not be added to DVC. They are not in the server.")
+                except Exception as e:
+                    await channel.send(f"Error adding {username} to DVC: {e}")
+                return True  # Prevents fallback message
+
+        await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
+        return False
+
+    def parse_player_info(self, player):
+        """Extracts username and flavor text from a player string."""
+        username, flavor = player.split(" was ", 1)
+        return username.strip().lower(), flavor.strip().lower()
+
 
 processor = ThreadmarkProcessor()
 
