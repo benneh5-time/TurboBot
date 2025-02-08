@@ -643,7 +643,7 @@ class ThreadmarkProcessor:
     def __init__(self):
         self.processed_threadmarks = []
 
-    async def process_threadmarks(self, thread_id, aliases, role, guild, channel_id, game_setup, current_game):
+    async def process_threadmarks(self, thread_id, player_aliases, role, guild, channel_id, game_setup, current_game):
         """Fetch and process threadmarks from Mafia Universe."""
         while True:        
             url = f"https://www.mafiauniverse.com/forums/threadmarks/{thread_id}"
@@ -659,13 +659,13 @@ class ThreadmarkProcessor:
                     continue
 
                 await channel.send(event)
-                await self.handle_event(event, aliases, role, guild, channel, thread_id, game_setup, current_game)
+                await self.handle_event(event, player_aliases, role, guild, channel, thread_id, game_setup, current_game)
 
                 self.processed_threadmarks.append(event)
 
             await asyncio.sleep(30)
 
-    async def handle_event(self, event, aliases, role, guild, channel, thread_id, game_setup, current_game):
+    async def handle_event(self, event, player_aliases, role, guild, channel, thread_id, game_setup, current_game):
         """Handles specific game events based on threadmarks."""
         
         elimination_keywords = ["Elimination:", "Bomb (1):", "Results:", "Shots Fired (1):", "Poison Results:", "Desperado (1):"]
@@ -678,7 +678,7 @@ class ThreadmarkProcessor:
             for player in players:
                 if " was " in player:
                     username, flavor = self.parse_player_info(player)
-                    user_added = await self.add_player_to_dvc(username, aliases, guild, role, channel)
+                    user_added = await self.add_player_to_dvc(username, player_aliases, guild, role, channel)
 
                     # Special case for "neil the eel"
                     if "neil the eel" in flavor:
@@ -699,7 +699,7 @@ class ThreadmarkProcessor:
             await channel.send("Game concluded -- attempting channel housekeeping/clean up")
             self.processed_threadmarks.clear()
 
-    async def add_player_to_dvc(self, username, aliases, guild, role, channel):
+    async def add_player_to_dvc(self, username, player_aliases, guild, role, channel):
         """Attempts to add a player to the Dead Voice Chat (DVC) based on their alias."""
         for mention_id, alias_data in aliases.items():
             if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
