@@ -1922,7 +1922,7 @@ async def update_status():
     if ranked_game:
         embed.set_field_at(9, name="Turbo Champs Ranked Game", value="True", inline=True)
     else:
-        embed.set_field_at(9, name="Turbo Champs Ranked Game", value="True", inline=True)
+        embed.set_field_at(9, name="Turbo Champs Ranked Game", value="False", inline=True)
         
     
     await status_message.edit(embed=embed)
