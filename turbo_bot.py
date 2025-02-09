@@ -43,8 +43,7 @@ day_length = 14
 night_length = 3
 anon_enabled = False
 is_rand_running = False
-ELO_eligible = False
-ineligible_setups = ['ita10', 'ita13', 'randommadnessXer']
+ineligible_setups = ['ita10', 'ita13', 'randommadnessXer', 'inno4', 'bean10']
 
 # Player and Host Data
 players = {}
@@ -908,6 +907,48 @@ async def player_stats(ctx, *, args=None):
         f"  Wolf:\n"
         f"    Games Played: {wolf_games}, Wins: {wolf_wins}, Win Rate: {wolf_win_rate:.2f}%"
     )
+
+@bot.command()
+async def ranked(ctx, ranked: str = None):
+
+    if ctx.channel.id not in allowed_channels:  
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
+        return   
+    
+    global ranked_game
+    
+    if ranked is None:  # No argument given, just return the current setting
+        if ranked_game:
+            await ctx.send("The current game is set to be ranked and will count for Turbo Champs.")
+        else:
+            await ctx.send("The current game is not ranked and will not count for Turbo Champs.")
+    
+    elif ranked.lower() == "on":
+        if ranked_game:
+            await ctx.send("The game is already set to count for Turbo Champs.")
+        else:
+            ranked_game = True
+            await ctx.send("The game is now set to ranked and will count for Turbo Champs.")
+            await update_status()
+
+    elif ranked.lower() == "off":
+        if not ranked_game:  # Already unranked
+            await ctx.send("The game is already set to not count for Turbo Champs.")
+        else:
+            ranked_game = False
+            await ctx.send("The game is now set to unranked and will not count for Turbo Champs.")
+            await update_status()
+
+
+    else:  # Invalid argument, return current setting
+        if ranked_game:
+            await ctx.send("Invalid argument. Use !ranked [on/off] instead. The current game is set to ranked and will count for Turbo Champs.")
+        else:
+            await ctx.send("Invalid argument. Use !ranked [on/off] instead. The current game is not ranked and will not count for Turbo Champs.")
+
    
 @bot.command()
 async def stats(ctx, game_setup=None):
@@ -1738,7 +1779,7 @@ async def status(ctx, *args):
         await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.") 
     global game_host_name, status_id, status_channel
 
-    embed = discord.Embed(title="**Turbo Bot v2.2 (without auto-wolf-chat!) by benneh", color=0x3381ff)
+    embed = discord.Embed(title="**Turbo Bot v2.3 (turbo champ time!!) by benneh", color=0x3381ff)
     embed.add_field(name="**Game Setup**", value=current_setup, inline=True)    
     host_list = [f"{host}\n" for host in game_host_name]
     hosts = ''.join(host_list)
@@ -1751,6 +1792,10 @@ async def status(ctx, *args):
     embed.add_field(name="", value="", inline=True)
     embed.add_field(name="", value="", inline=True)
     embed.add_field(name="", value="", inline=True)
+    if ranked_game:
+        embed.add_field(name="Turbo Champs Ranked Game", value="True", inline=True)
+    else:
+        embed.add_field(name="Turbo Champs Ranked Game", value="False", inline=True)
 
     status_flavor = load_flavor_json('icons.json')    
 
@@ -1873,6 +1918,11 @@ async def update_status():
     if not waiting_list:
         embed.set_field_at(6, name="", value="", inline=True)
         embed.set_field_at(7, name="", value="", inline=True)
+    
+    if ranked_game:
+        embed.set_field_at(9, name="C", value="True", inline=True)
+    else:
+        embed.set_field_at(9, name="C", value="True", inline=True)
         
     
     await status_message.edit(embed=embed)
@@ -2098,7 +2148,7 @@ async def log_game(ctx, *args):
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
-    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled, ELO_eligible
+    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled, ranked_game
 
     allowed_randers = []
     player_aliases = list(players.keys())[:player_limit]
@@ -2115,9 +2165,6 @@ async def rand(ctx, *args):
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for misusing bigping and are not allowed to rand turbos.")
         return   
-    if ctx.author.id in banned_randers:
-        await ctx.send("You are not allowed to rand for bad title creation. have someone else rand.")
-        return
     
     if ctx.author.id not in allowed_randers:
         await ctx.send("Only hosts and players on the list are allowed to execute this function.")
@@ -2130,13 +2177,13 @@ async def rand(ctx, *args):
     if is_rand_running:
         await ctx.send("The !rand command is currently being processed. Please wait.")
         return
-    
-    # args = shlex.split(' '.join(args))
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-title', default=None)
     parser.add_argument('-thread_id', default=None)
     parser.add_argument('-wolves', default=None)
     parser.add_argument('-villager', default=None)
+    
     try:
         args_parsed = parser.parse_args(args)
     except SystemExit:
@@ -2147,6 +2194,7 @@ async def rand(ctx, *args):
         return
 
     is_rand_running = True
+    current_game_ranked = bool(ranked_game)
 
     mentions = " ".join([f"<@{id}>" for id in allowed_randers])
     cancel = await ctx.send(f"{mentions} \n\nThe game will rand in 15 seconds unless canceled by reacting with '❌'")
@@ -2162,7 +2210,9 @@ async def rand(ctx, *args):
             await ctx.send(f"Rand canceled")
             is_rand_running = False
             return
+        
     except asyncio.TimeoutError:
+        
         await ctx.send("Randing, stfu")
         
         try:
@@ -2192,13 +2242,13 @@ async def rand(ctx, *args):
                 final_game_setup = current_setup
                 setup_title = final_game_setup
             
-
             if not game_title:
                 game_title = mu.generate_game_thread_uuid()
                 
             if not thread_id:
                 print(f"Attempting to post new thread with {game_title}", flush=True)
                 thread_id = mu.post_thread(session, game_title, security_token, setup_title,test=False)
+                
             host_list = [f"{host}" for host in game_host_name]
             hosts = ', '.join(host_list)
             await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
@@ -2360,8 +2410,9 @@ async def rand(ctx, *args):
                 if (
                     final_game_setup not in ineligible_setups and 
                     phases != 'sunbae' and 
+                    current_game_ranked == True and
                     start_date <= current_date_gmt <= end_date
-                ):
+                    ):
                     write_game_log(thread_id, 'database/' + current_year + '_TurboChampDatabase.csv', game_data)
                     champs_file_path = 'database/' + current_year + '_TurboChampDatabase.csv'
                     aliases_file = 'aliases.json'
