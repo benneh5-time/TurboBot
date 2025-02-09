@@ -1793,9 +1793,9 @@ async def status(ctx, *args):
     embed.add_field(name="", value="", inline=True)
     embed.add_field(name="", value="", inline=True)
     if ranked_game:
-        embed.add_field(name="Turbo Champs Ranked Game", value="True", inline=True)
+        embed.add_field(name="Turbo Champs Ranked Game", value="True", inline=False)
     else:
-        embed.add_field(name="Turbo Champs Ranked Game", value="False", inline=True)
+        embed.add_field(name="Turbo Champs Ranked Game", value="False", inline=False)
 
     status_flavor = load_flavor_json('icons.json')    
 
@@ -1912,6 +1912,7 @@ async def update_status():
     if not players and not waiting_list:
         embed.set_field_at(3, name="No players are currently signed up.", value="", inline=False)
         embed.set_field_at(4, name="", value="", inline=True)
+        embed.set_field_at(5, name="", value="", inline=True)
         embed.set_field_at(6, name="", value="", inline=True)
         embed.set_field_at(7, name="", value="", inline=True)
     
@@ -1920,9 +1921,9 @@ async def update_status():
         embed.set_field_at(7, name="", value="", inline=True)
     
     if ranked_game:
-        embed.set_field_at(9, name="Turbo Champs Ranked Game", value="True", inline=True)
+        embed.set_field_at(9, name="Turbo Champs Ranked Game", value="True", inline=False)
     else:
-        embed.set_field_at(9, name="Turbo Champs Ranked Game", value="False", inline=True)
+        embed.set_field_at(9, name="Turbo Champs Ranked Game", value="False", inline=False)
         
     
     await status_message.edit(embed=embed)
