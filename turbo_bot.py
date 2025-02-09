@@ -1832,7 +1832,7 @@ async def status(ctx, *args):
         embed.set_field_at(7, name="**Time Remaining:**", value=time_message, inline=True)
 
     if not players and not waiting_list:
-        embed.add_field(name="No players are currently signed up.", value="", inline=False)
+        embed.set_field_at(3, name="No players are currently signed up.", value="", inline=False)
     
     embed.set_thumbnail(url="https://i.imgur.com/maWzSc2.png")
 
@@ -1920,9 +1920,9 @@ async def update_status():
         embed.set_field_at(7, name="", value="", inline=True)
     
     if ranked_game:
-        embed.set_field_at(9, name="C", value="True", inline=True)
+        embed.set_field_at(9, name="Turbo Champs Ranked Game", value="True", inline=True)
     else:
-        embed.set_field_at(9, name="C", value="True", inline=True)
+        embed.set_field_at(9, name="Turbo Champs Ranked Game", value="True", inline=True)
         
     
     await status_message.edit(embed=embed)
