@@ -44,6 +44,8 @@ night_length = 3
 anon_enabled = False
 is_rand_running = False
 ineligible_setups = ['ita10', 'ita13', 'randommadnessXer', 'inno4', 'bean10']
+username = os.environ.get('MUUN')
+password = os.environ.get('MUPW')
 
 # Player and Host Data
 players = {}
@@ -365,22 +367,16 @@ async def delete_dvc_role(channel, role):
             await channel.send("Failed to delete dvc role")
 
 async def post_game_reply(thread_id, message):
-    username = os.environ.get('MUUN')
-    password = os.environ.get('MUPW')
     session = mu.login(username,password)
     game_id, security_token = mu.open_game_thread(session, thread_id)
     mu.post(session, thread_id, security_token, message)
 
 async def start_itas(current_game):
-    username = os.environ.get('MUUN')
-    password = os.environ.get('MUPW')
     ita_session = mu.login(username, password)
     ita_game_id, ita_security_token = mu.open_game_thread(ita_session, current_game)
     mu.ita_window(ita_session, ita_game_id, ita_security_token)
 
 async def get_wolf_info(game_title, setup_title):
-    username = os.environ.get('MUUN')
-    password = os.environ.get('MUPW')
     session = mu.login(username, password)
     mafia_players = []
 
@@ -408,235 +404,6 @@ async def get_wolf_info(game_title, setup_title):
             if username:
                 mafia_players.append(username.text)
     return mafia_players   
-
-"""class ThreadmarkProcessor:
-    def __init__(self):
-        self.processed_threadmarks = []
-
-    async def process_threadmarks(self, thread_id, player_aliases, role, guild, channel_id, game_setup, current_game):
-
-        while True:		
-            url = f"https://www.mafiauniverse.com/forums/threadmarks/{thread_id}"
-            response = requests.get(url)
-            html = response.text
-            soup = BeautifulSoup(html, "html.parser")
-            event_div = soup.find("div", class_="bbc_threadmarks view-threadmarks")
-            channel = bot.get_channel(channel_id)
-            pl_list = [item.lower() for item in player_aliases]
-            for i, row in enumerate(reversed(event_div.find_all("div", class_="threadmark-row"))):
-                event = row.find("div", class_="threadmark-event").text
-                
-                if event in self.processed_threadmarks:
-                    continue
-                            
-                await channel.send(event)
-                            
-                if "Elimination:" in event and " was " in event:
-                    results = event.split("Elimination: ")[1].strip()
-                    username = results.split(" was ")[0].strip().lower()
-                    flavor = results.split(" was ")[1].strip().lower()
-                    
-                    # Track if the user is successfully added
-                    user_added = False
-
-                    for mention_id, alias_data in aliases.items():
-                        if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
-                            try:
-                                member = guild.get_member(int(mention_id))
-                                if member:
-                                    await member.add_roles(role)
-                                    # await channel.set_permissions(member, read_messages=True, send_messages=True)
-                                    await channel.send(f"<@{mention_id}> has been added to DVC.")
-                                    user_added = True  # Mark as successfully added
-                                    break  # Exit loop after successful addition
-                                else:
-                                    await channel.send(f"{username} could not be added to DVC. They are not in the server.")
-                            except Exception as e:
-                                await channel.send(f"Failed to add {username} to DVC due to an error: {e}")
-                            user_added = True  # Prevent fallback message
-
-                    if not user_added:
-                        await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-                    
-                    # Handle specific "flavor" condition
-                    if "neil the eel" in flavor:
-                        await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
-        
-                elif "Results: No one died" in event or "Event" in event or "Game Information" in event:
-                    pass
-
-                elif ("Day 2 Start" in event) and (game_setup == 'ita10' or game_setup == 'ita13'):
-                    await start_itas(current_game)
-                
-                #elif "In-Thread Attack: " in event:
-                #    results = event.split()
-
-                elif "Bomb (1):" in event:
-                    results = event.split("Bomb (1):", 1)[1].strip()
-                    players = results.split(", ")
-
-                    for player in players:
-                        username = None
-                        if " was " in player:
-                            username = player.split(" was ")[0].strip().lower()
-                            flavor = player.split(" was ")[1].strip().lower()
-
-                            # Check if the username matches 'active' or is in 'all' aliases
-                            user_added = False
-                            for mention_id, alias_data in aliases.items():
-                                if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
-                                    try:
-                                        member = guild.get_member(int(mention_id))
-                                        if member:
-                                            await member.add_roles(role)
-                                            await channel.send(f"<@{mention_id}> has been added to DVC.")
-                                            user_added = True
-                                            break  # Stop further iteration once the user is added
-                                        else:
-                                            await channel.send(f"{username} could not be added to DVC. They are not in the server.")
-                                    except Exception as e:
-                                        await channel.send(f"Error adding {username} to DVC: {e}")
-                                    
-                            if not user_added:
-                                await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-
-                            if "neil the eel" in flavor:
-                                await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
-
-                elif "Results:" in event:
-                    results = event.split("Results:")[1].strip()
-                    players = results.split(", ")
-
-                    for player in players:
-                        if " was " in player:
-                            username = player.split(" was ")[0].strip().lower()
-                            flavor = results.split(" was ")[1].strip().lower()
-
-                            # Check if the username matches 'active' or is in 'all' aliases
-                            user_added = False
-                            for mention_id, alias_data in aliases.items():
-                                if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
-                                    try:
-                                        member = guild.get_member(int(mention_id))
-                                        if member:
-                                            await member.add_roles(role)
-                                            await channel.send(f"<@{mention_id}> has been added to DVC.")
-                                            user_added = True
-                                            break  # Stop further iteration once the user is added
-                                        else:
-                                            await channel.send(f"{username} could not be added to DVC. They are not in the server.")
-                                    except Exception as e:
-                                        await channel.send(f"Error adding {username} to DVC: {e}")
-                            
-                            if not user_added:
-                                await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-
-                            if "neil the eel" in flavor:
-                                await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
-               
-                elif "Shots Fired (1):" in event:
-                    results = event.split("Shots Fired (1):", 1)[1].strip().lower()
-                    players = results.split(", ")
-
-                    for player in players:
-                        if " was " in player:
-                            username = player.split(" was ")[0].strip().lower()
-                            flavor = results.split(" was ")[1].strip().lower()
-
-                            # Check if the username matches 'active' or is in 'all' aliases
-                            user_added = False
-                            for mention_id, alias_data in aliases.items():
-                                if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
-                                    try:
-                                        member = guild.get_member(int(mention_id))
-                                        if member:
-                                            await member.add_roles(role)
-                                            await channel.send(f"<@{mention_id}> has been added to DVC.")
-                                            user_added = True
-                                            break  # Stop further iteration once the user is added
-                                        else:
-                                            await channel.send(f"{username} could not be added to DVC. They are not in the server.")
-                                    except Exception as e:
-                                        await channel.send(f"Error adding {username} to DVC: {e}")
-                            
-                            if not user_added:
-                                await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-
-                            if "neil the eel" in flavor:
-                                await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
-                elif "Poison Results:" in event:
-                    results = event.split("Poison Results:", 1)[1].strip().lower()
-                    players = results.split(", ")
-
-                    for player in players:
-                        if " was " in player:
-                            username = player.split(" was ")[0].strip().lower()
-                            flavor = results.split(" was ")[1].strip().lower()
-
-                            # Check if the username matches 'active' or is in 'all' aliases
-                            user_added = False
-                            for mention_id, alias_data in aliases.items():
-                                if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
-                                    try:
-                                        member = guild.get_member(int(mention_id))
-                                        if member:
-                                            await member.add_roles(role)
-                                            await channel.send(f"<@{mention_id}> has been added to DVC.")
-                                            user_added = True
-                                            break  # Stop further iteration once the user is added
-                                        else:
-                                            await channel.send(f"{username} could not be added to DVC. They are not in the server.")
-                                    except Exception as e:
-                                        await channel.send(f"Error adding {username} to DVC: {e}")
-                            
-                            if not user_added:
-                                await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-
-                            if "neil the eel" in flavor:
-                                await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
-                elif "Desperado (1):" in event:
-                    results = event.split("Desperado (1):", 1)[1].strip().lower()
-                    players = results.split(", ")
-
-                    for player in players:
-                        if " was " in player:
-                            username = player.split(" was ")[0].strip().lower()
-                            flavor = results.split(" was ")[1].strip().lower()
-
-                            # Check if the username matches 'active' or is in 'all' aliases
-                            user_added = False
-                            for mention_id, alias_data in aliases.items():
-                                if username == alias_data.get("active", "").lower() or username in [alt.lower() for alt in alias_data.get("all", [])]:
-                                    try:
-                                        member = guild.get_member(int(mention_id))
-                                        if member:
-                                            await member.add_roles(role)
-                                            await channel.send(f"<@{mention_id}> has been added to DVC.")
-                                            user_added = True
-                                            break  # Stop further iteration once the user is added
-                                        else:
-                                            await channel.send(f"{username} could not be added to DVC. They are not in the server.")
-                                    except Exception as e:
-                                        await channel.send(f"Error adding {username} to DVC: {e}")
-                            
-                            if not user_added:
-                                await channel.send(f"{username} could not be added to DVC. I don't have an alias for them!")
-
-                            if "neil the eel" in flavor:
-                                await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
-
-                elif "Elimination: Sleep" in event:
-                    await channel.send("Players voted sleep. ZzZZZZzzzZzzz.")
-                    await channel.send("https://media1.tenor.com/m/VdIKn05yIh8AAAAd/cat-sleep.gif")
-                    await post_game_reply(thread_id, "eepy\n\n[img]https://media1.tenor.com/m/VdIKn05yIh8AAAAd/cat-sleep.gif[/img]\n\neepy")
-        
-                elif "Game Over:" in event:
-                    await channel.send("Game concluded -- attempting channel housekeeping/clean up")
-                    self.processed_threadmarks.clear()
-                    return
-                self.processed_threadmarks.append(event)
-
-            await asyncio.sleep(30)"""
 
 class ThreadmarkProcessor:
     def __init__(self):
@@ -676,6 +443,12 @@ class ThreadmarkProcessor:
         if any(keyword in event for keyword in elimination_keywords) and " was " in event:
             results = event.split(max([keyword for keyword in elimination_keywords if keyword in event], key=len), 1)[1].strip()
             players = results.split(", ")
+            try:
+                thread_flavor_post = await gpt_responses.get_flavor_response(str(event))
+                if thread_flavor_post and thread_flavor_post != "Failed to call GPT":
+                    await post_game_reply(thread_id, thread_flavor_post)
+            except Exception as e:
+                print(f"Error getting flavor response: {e}", flush=True)
 
             for player in players:
                 if " was " in player:
@@ -751,9 +524,6 @@ async def sub(ctx, player=None):
         return
 
     player_in = aliases[ctx.author.id]['active']
-
-    username = os.environ.get('MUUN')
-    password = os.environ.get('MUPW')
     
     #Login and get Initial Token
     session = mu.login(username, password)
@@ -1871,8 +1641,6 @@ async def update_status():
     embed.set_field_at(1, name="**Host**", value=hosts, inline=True)
     embed.set_field_at(2, name="**Phases**", value=str(day_length) + "m Days, " + str(night_length) + "m Nights", inline=True)
 
-    
-
     status_flavor = load_flavor_json('icons.json')    
 
     if players:
@@ -2145,24 +1913,41 @@ async def log_game(ctx, *args):
             "Villagers": town_list,
             "Wolves": mafia_list,                          
         })
+
+def get_allowed_randers():
+    """Retrieve allowed users based on aliases and hosts."""
+    allowed = set()
+    for player in list(players.keys())[:player_limit]:
+        allowed.update(get_alias_ids(player))
+    for host in game_host_name:
+        allowed.update(get_alias_ids(host))
+    return allowed
+
+def get_alias_ids(name):
+    """Retrieve the Discord IDs associated with a given alias."""
+    return {int(k) for k, v in aliases.items() if name in v["all"] or name == v["active"]}
+
+
+async def wait_for_cancel(message, allowed_users):
+    """Wait for a ❌ reaction from an allowed user within 15 seconds."""
+    def check(reaction, user):
+        return (str(reaction.emoji) == '❌' and user.id in allowed_users and reaction.message.id == message.id)
+
+    try:
+        await bot.wait_for('reaction_add', timeout=15, check=check)
+        return True  # Canceled
+    except asyncio.TimeoutError:
+        return False  # Proceed with rand
+    
+    
 @bot.command()
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled, ranked_game
 
-    allowed_randers = []
+    allowed_randers = get_allowed_randers()
     player_aliases = list(players.keys())[:player_limit]
-
-    for player in player_aliases:
-        for key, value in aliases.items():
-            if player == value["active"] or player in value["all"]:
-                allowed_randers.append(int(key))
-    for host in game_host_name:
-        for key, value in aliases.items():
-            if host == value["active"] or host in value["all"]:
-                allowed_randers.append(int(key))    
-
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for misusing bigping and are not allowed to rand turbos.")
         return   
@@ -2198,240 +1983,229 @@ async def rand(ctx, *args):
     current_game_ranked = bool(ranked_game)
 
     mentions = " ".join([f"<@{id}>" for id in allowed_randers])
+    
     cancel = await ctx.send(f"{mentions} \n\nThe game will rand in 15 seconds unless canceled by reacting with '❌'")
     await cancel.add_reaction('❌')
-
-    def check(reaction, user):
-        return str(reaction.emoji) == '❌' and user.id in allowed_randers and reaction.message.id == cancel.id
-
+    
+    if await wait_for_cancel(cancel, allowed_randers):
+        await ctx.send("Rand canceled")
+        is_rand_running = False
+        return
+    
+    await ctx.send("Randing, stfu")
+        
     try:
-        reaction, user = await bot.wait_for('reaction_add', timeout=15, check=check)
+        #Login and get Initial Token
+        session = mu.login(username, password)
+        security_token = mu.new_thread_token(session)
+        
+        game_title = args_parsed.title
+        thread_id = args_parsed.thread_id
+        wolves = args_parsed.wolves
+        fake_villager = args_parsed.villager
 
-        if str(reaction.emoji) == '❌':
-            await ctx.send(f"Rand canceled")
+        if wolves is not None:
+            await ctx.send(f"{wolves} have been set as the wolf team, proceeding with rand.")
+        if fake_villager is not None:
+            await ctx.send(f"{fake_villager} has been set as the town IC for this game, proceeding with rand.")
+
+        if current_setup == "random10er":
+            potential_setups = ["joat10", "vig10", "bomb10"]
+            final_game_setup = random.choice(potential_setups)
+            setup_title = final_game_setup
+        else:
+            final_game_setup = current_setup
+            setup_title = final_game_setup
+        
+        if not game_title:
+            game_title = mu.generate_game_thread_uuid()
+            
+        if not thread_id:
+            print(f"Attempting to post new thread with {game_title}", flush=True)
+            thread_id = mu.post_thread(session, game_title, security_token, setup_title,test=False)
+            
+        hosts = ', '.join(game_host_name)
+        await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
+        print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
+        
+        security_token = mu.new_game_token(session, thread_id)
+        response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, final_game_setup, day_length, night_length, game_host_name, anon_enabled,player_limit)
+        
+        if "was created successfully." in response_message:
+            # Use aliases to get the Discord IDs
+            print("Success. Gathering player list for mentions", flush=True)
+            mention_list = []
+            
+            for player in player_aliases:
+                for key, value in aliases.items():
+                    if player == value["active"] or player in value["all"]:
+                        mention_list.append(int(key))
+                        
+            player_mentions = " ".join([f"<@{id}>" for id in mention_list])
+            game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
+            await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}\nType !dvc to join the turbo DVC/Graveyard. You will be auto-in'd to the graveyard channel upon your death if you are in that server!")
+            
+            ###################################################
+            ####################### new code for wolf chat adds
+            #wolf_team = await get_wolf_info(game_title, setup_title)
+            #wc_channel_id, wc_guild = await create_wolf_chat(thread_id)
+            #wc_channel = bot.get_channel(wc_channel_id)
+
+            #wc_msg = "Wolf chat: "
+            #for wolf in wolf_team:
+            #    wolf = wolf.lower()
+            #    mention_id = None
+
+                # Search for the wolf in the active or all aliases
+            #    for user_id, data in aliases.items():
+            #        if wolf == data["active"] or wolf in data["all"]:
+            #            mention_id = int(user_id)
+            #            break
+
+            #    if mention_id:
+            #        try:
+            #            wolf_id = wc_guild.get_member(mention_id)
+            #            # await wolf_id.add_roles(wc_role)  # Uncomment if assigning roles
+            #            await wc_channel.set_permissions(wolf_id, read_messages=True, send_messages=True)
+            #            wc_msg += f"<@{mention_id}> "
+            #        except Exception as e:
+            #            print(f"Can't add {wolf} to wc: {e}", flush=True)
+
+            #await wc_channel.send(wc_msg)
+
+            #####################################################
+            #####################################################
+            role, channel_id, guild = await create_dvc(thread_id)
+            print(f"DVC thread created. Clearing variables", flush=True)
+            channel = bot.get_channel(channel_id)
+            
+            host_msg = "Hosts for the current game: "
+
+            for host in game_host_name:
+                host = host.lower()
+                mention_id = None
+
+                # Search for the host in active or all aliases
+                for user_id, data in aliases.items():
+                    if host == data["active"] or host in data["all"]:
+                        mention_id = int(user_id)
+                        break
+
+                if mention_id:
+                    try:
+                        member = guild.get_member(mention_id)
+                        await member.add_roles(role)  # Assign the role
+                        host_msg += f"<@{mention_id}> "  # Add to message
+                    except Exception as e:
+                        print(f"Can't add {host} to dvc: {e}", flush=True)
+                        # Optionally send a failure message:
+                        # await channel.send(f"Failed to add {host} to dvc.")
+                else:
+                    print(f"Host {host} not found in aliases", flush=True)
+                    # Optionally send a message about the missing host:
+                    # await channel.send(f"{host} is not registered in aliases.")
+
+            await channel.send(host_msg)
+
+            spec_msg = "Specs for the current game: "
+            for spec in spec_list:
+                print(spec, flush=True)
+                if int(spec) in mention_list:
+                    print(f"{spec} not in list, continuing to next", flush=True)
+                    continue
+                else:
+                    try:
+                        spec_int = int(spec)
+                        print(f"Trying to add {spec_int} to dvc",flush=True)
+
+                        spec_member = guild.get_member(spec_int)
+                        await spec_member.add_roles(role)
+                        spec_msg += f"<@{spec}> "
+                        #await channel.send(f"<@{spec}> is spectating, welcome to dvc")
+                    except Exception as error:
+                        print(f"Error: {error}", flush=True)
+            await channel.send(spec_msg)
+            
+            await channel.send(f"MU Link for the current game: \n\n{game_url}")
+
+            await new_game_spec_message(bot, thread_id, game_title)
+            postgame_players = players
+            game_host_name = ["Turby"]
+            players.clear()
+            players.update(waiting_list)
+            waiting_list.clear()  
+            anon_enabled = False 
+            print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
             is_rand_running = False
-            return
-        
-    except asyncio.TimeoutError:
-        
-        await ctx.send("Randing, stfu")
-        
-        try:
-        
-            username = os.environ.get('MUUN')
-            password = os.environ.get('MUPW')
+            current_game = thread_id
+            await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
+            print(f"Threadmark processor finished. rand function finished.", flush=True)
+            await edit_dvc(channel, guild)
+            #await edit_dvc(wc_channel, wc_guild)
+            await delete_dvc_role(channel, role)
+            # await delete_dvc_role(wc_channel, wc_role)
+            current_game = None
             
-            #Login and get Initial Token
-            session = mu.login(username, password)
-            security_token = mu.new_thread_token(session)
+            current_year = str(datetime.datetime.now().year)
+            lifetime_file_path = 'game_database.csv'
             
-            game_title = args_parsed.title
-            thread_id = args_parsed.thread_id
-            wolves = args_parsed.wolves
-            fake_villager = args_parsed.villager
-
-            if wolves is not None:
-                await ctx.send(f"{wolves} have been set as the wolf team, proceeding with rand.")
-            if fake_villager is not None:
-                await ctx.send(f"{fake_villager} has been set as the town IC for this game, proceeding with rand.")
-
-            if current_setup == "random10er":
-                potential_setups = ["joat10", "vig10", "bomb10"]
-                final_game_setup = random.choice(potential_setups)
-                setup_title = final_game_setup
-            else:
-                final_game_setup = current_setup
-                setup_title = final_game_setup
+            game_data = get_game_log(thread_id)
+            update_db_after_game(thread_id)
+            write_game_log(lifetime_file_path, game_data)
+            write_game_log('database/' + current_year + '_database.csv', game_data)
+            write_game_log('database/' + current_year + '_' + final_game_setup + '_database.csv', game_data)
             
-            if not game_title:
-                game_title = mu.generate_game_thread_uuid()
-                
-            if not thread_id:
-                print(f"Attempting to post new thread with {game_title}", flush=True)
-                thread_id = mu.post_thread(session, game_title, security_token, setup_title,test=False)
-                
-            host_list = [f"{host}" for host in game_host_name]
-            hosts = ', '.join(host_list)
-            await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
-            print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
-            security_token = mu.new_game_token(session, thread_id)
-            response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, final_game_setup, day_length, night_length, game_host_name, anon_enabled,player_limit)
+            aliases_file = 'aliases.json'
+            credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'      
+            spreadsheet_name = 'Turbo ELO Sheet'
+                        
+            file_path = 'database/' + current_year + '_database.csv'
+            sheet_name = '2025'
+            df = pd.read_csv(file_path)
+            df['Villagers'] = df['Villagers'].apply(eval)
+            df['Wolves'] = df['Wolves'].apply(eval)
+            y2025_elo_calculator = EloCalculator(credentials_path,aliases_file)
+            y2025_elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name, 1)
             
-            if "was created successfully." in response_message:
-                # Use aliases to get the Discord IDs
-                print("Success. Gathering player list for mentions", flush=True)
-                mention_list = []
-                
-                for player in player_aliases:
-                    for key, value in aliases.items():
-                        if player == value["active"] or player in value["all"]:
-                            mention_list.append(int(key))
-                            
-                player_mentions = " ".join([f"<@{id}>" for id in mention_list])
-                game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
-                await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}\nType !dvc to join the turbo DVC/Graveyard. You will be auto-in'd to the graveyard channel upon your death if you are in that server!")
-                
-                ###################################################
-                ####################### new code for wolf chat adds
-                #wolf_team = await get_wolf_info(game_title, setup_title)
-                #wc_channel_id, wc_guild = await create_wolf_chat(thread_id)
-                #wc_channel = bot.get_channel(wc_channel_id)
+            lifetime_sheet_name = 'Lifetime'
+            lifetime_df = pd.read_csv(lifetime_file_path)
+            lifetime_df['Villagers'] = lifetime_df['Villagers'].apply(eval)
+            lifetime_df['Wolves'] = lifetime_df['Wolves'].apply(eval)  
+            lifetime_elo_calculator = EloCalculator(credentials_path,aliases_file)
+            lifetime_elo_calculator.calculate_and_export(lifetime_df, spreadsheet_name, lifetime_sheet_name, 1)
+            
+            #Turbo Champs stuff
+            current_date_gmt = datetime.datetime.now(datetime.timezone.utc).date()
 
-                #wc_msg = "Wolf chat: "
-                #for wolf in wolf_team:
-                #    wolf = wolf.lower()
-                #    mention_id = None
+            # Define the date range
+            start_date = datetime.date(current_date_gmt.year, 2, 17)  # February 17
+            end_date = datetime.date(current_date_gmt.year, 3, 31)    # March 31
 
-                    # Search for the wolf in the active or all aliases
-                #    for user_id, data in aliases.items():
-                #        if wolf == data["active"] or wolf in data["all"]:
-                #            mention_id = int(user_id)
-                #            break
-
-                #    if mention_id:
-                #        try:
-                #            wolf_id = wc_guild.get_member(mention_id)
-                #            # await wolf_id.add_roles(wc_role)  # Uncomment if assigning roles
-                #            await wc_channel.set_permissions(wolf_id, read_messages=True, send_messages=True)
-                #            wc_msg += f"<@{mention_id}> "
-                #        except Exception as e:
-                #            print(f"Can't add {wolf} to wc: {e}", flush=True)
-
-                #await wc_channel.send(wc_msg)
-
-                #####################################################
-                #####################################################
-                role, channel_id, guild = await create_dvc(thread_id)
-                print(f"DVC thread created. Clearing variables", flush=True)
-                channel = bot.get_channel(channel_id)
-                
-                host_msg = "Hosts for the current game: "
-
-                for host in game_host_name:
-                    host = host.lower()
-                    mention_id = None
-
-                    # Search for the host in active or all aliases
-                    for user_id, data in aliases.items():
-                        if host == data["active"] or host in data["all"]:
-                            mention_id = int(user_id)
-                            break
-
-                    if mention_id:
-                        try:
-                            member = guild.get_member(mention_id)
-                            await member.add_roles(role)  # Assign the role
-                            host_msg += f"<@{mention_id}> "  # Add to message
-                        except Exception as e:
-                            print(f"Can't add {host} to dvc: {e}", flush=True)
-                            # Optionally send a failure message:
-                            # await channel.send(f"Failed to add {host} to dvc.")
-                    else:
-                        print(f"Host {host} not found in aliases", flush=True)
-                        # Optionally send a message about the missing host:
-                        # await channel.send(f"{host} is not registered in aliases.")
-
-                await channel.send(host_msg)
-
-                spec_msg = "Specs for the current game: "
-                for spec in spec_list:
-                    print(spec, flush=True)
-                    if int(spec) in mention_list:
-                        print(f"{spec} not in list, continuing to next", flush=True)
-                        continue
-                    else:
-                        try:
-                            spec_int = int(spec)
-                            print(f"Trying to add {spec_int} to dvc",flush=True)
-
-                            spec_member = guild.get_member(spec_int)
-                            await spec_member.add_roles(role)
-                            spec_msg += f"<@{spec}> "
-                            #await channel.send(f"<@{spec}> is spectating, welcome to dvc")
-                        except Exception as error:
-                            print(f"Error: {error}", flush=True)
-                await channel.send(spec_msg)
-                
-                await channel.send(f"MU Link for the current game: \n\n{game_url}")
-
-                await new_game_spec_message(bot, thread_id, game_title)
-                postgame_players = players
-                game_host_name = ["Turby"]
-                players.clear()
-                players.update(waiting_list)
-                waiting_list.clear()  
-                anon_enabled = False 
-                print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
-                is_rand_running = False
-                current_game = thread_id
-                await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
-                print(f"Threadmark processor finished. rand function finished.", flush=True)
-                await edit_dvc(channel, guild)
-                #await edit_dvc(wc_channel, wc_guild)
-                await delete_dvc_role(channel, role)
-                # await delete_dvc_role(wc_channel, wc_role)
-                current_game = None
-                
-                current_year = str(datetime.datetime.now().year)
-                lifetime_file_path = 'game_database.csv'
-                
-                game_data = get_game_log(thread_id)
-                update_db_after_game(thread_id)
-                write_game_log(lifetime_file_path, game_data)
-                write_game_log('database/' + current_year + '_database.csv', game_data)
-                write_game_log('database/' + current_year + '_' + final_game_setup + '_database.csv', game_data)
-                
+            # Check the conditions
+            if (
+                final_game_setup not in ineligible_setups and 
+                phases != 'sunbae' and 
+                current_game_ranked == True and
+                start_date <= current_date_gmt <= end_date
+                ):
+                write_game_log(thread_id, 'database/' + current_year + '_TurboChampDatabase.csv', game_data)
+                champs_file_path = 'database/' + current_year + '_TurboChampDatabase.csv'
                 aliases_file = 'aliases.json'
-                credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'      
+                credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
                 spreadsheet_name = 'Turbo ELO Sheet'
-                            
-                file_path = 'database/' + current_year + '_database.csv'
-                sheet_name = '2025'
-                df = pd.read_csv(file_path)
-                df['Villagers'] = df['Villagers'].apply(eval)
-                df['Wolves'] = df['Wolves'].apply(eval)
-                y2025_elo_calculator = EloCalculator(credentials_path,aliases_file)
-                y2025_elo_calculator.calculate_and_export(df, spreadsheet_name, sheet_name, 1)
-                
-                lifetime_sheet_name = 'Lifetime'
-                lifetime_df = pd.read_csv(lifetime_file_path)
-                lifetime_df['Villagers'] = lifetime_df['Villagers'].apply(eval)
-                lifetime_df['Wolves'] = lifetime_df['Wolves'].apply(eval)  
-                lifetime_elo_calculator = EloCalculator(credentials_path,aliases_file)
-                lifetime_elo_calculator.calculate_and_export(lifetime_df, spreadsheet_name, lifetime_sheet_name, 1)
-                
-                #Turbo Champs stuff
-                current_date_gmt = datetime.datetime.now(datetime.timezone.utc).date()
+                champs_sheet_name = 'Turbo Champs 2025'
+                # Load data
+                champs_df = pd.read_csv(champs_file_path)
+                champs_df['Villagers'] = champs_df['Villagers'].apply(eval)
+                champs_df['Wolves'] = champs_df['Wolves'].apply(eval)
+                champs_elo_calculator = EloCalculator(credentials_path,aliases_file)
+                champs_elo_calculator.calculate_and_export(champs_df, spreadsheet_name, champs_sheet_name, 1)
 
-                # Define the date range
-                start_date = datetime.date(current_date_gmt.year, 2, 17)  # February 17
-                end_date = datetime.date(current_date_gmt.year, 3, 31)    # March 31
-
-                # Check the conditions
-                if (
-                    final_game_setup not in ineligible_setups and 
-                    phases != 'sunbae' and 
-                    current_game_ranked == True and
-                    start_date <= current_date_gmt <= end_date
-                    ):
-                    write_game_log(thread_id, 'database/' + current_year + '_TurboChampDatabase.csv', game_data)
-                    champs_file_path = 'database/' + current_year + '_TurboChampDatabase.csv'
-                    aliases_file = 'aliases.json'
-                    credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
-                    spreadsheet_name = 'Turbo ELO Sheet'
-                    champs_sheet_name = 'Turbo Champs 2025'
-                    # Load data
-                    champs_df = pd.read_csv(champs_file_path)
-                    champs_df['Villagers'] = champs_df['Villagers'].apply(eval)
-                    champs_df['Wolves'] = champs_df['Wolves'].apply(eval)
-                    champs_elo_calculator = EloCalculator(credentials_path,aliases_file)
-                    champs_elo_calculator.calculate_and_export(champs_df, spreadsheet_name, champs_sheet_name, 1)
-
-            elif "Error" in response_message:
-                print(f"Game failed to rand, reason: {response_message}", flush=True)
-                await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
-        finally:
-            is_rand_running = False
+        elif "Error" in response_message:
+            print(f"Game failed to rand, reason: {response_message}", flush=True)
+            await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
+    finally:
+        is_rand_running = False
 @bot.command()
 async def test_champs_db(ctx):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -2585,10 +2359,6 @@ async def test_rand(ctx, *args):
     await ctx.send("Randing, stfu")
     #
     try:
-    
-        username = os.environ.get('MUUN')
-        password = os.environ.get('MUPW')
-        
         #Login and get Initial Token
         session = mu.login(username, password)
         security_token = mu.new_thread_token(session)
