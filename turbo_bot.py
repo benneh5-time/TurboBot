@@ -558,7 +558,7 @@ async def elo(ctx, *, sheet_name: str = "Turbo Champs 2025"):
         return   
     
     valid_sheets = ['Lifetime', 'Turbo Champs 2025', '2025', '2024', 'joat-2024', 'bomb-2024', 'vig-2024', 'crx-2024', 'cop9-2024']
-    if sheet_name not in valid_sheets:
+    if sheet_name.lower() not in (s.lower() for s in valid_sheets):
         await ctx.send(f"Not a valid ELO leaderboard. Use one of the following sheet names to find your ELO for that leaderboard: {valid_sheets}.")
         
     sheet_data = get_google_sheet(sheet_name)
