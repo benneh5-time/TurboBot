@@ -43,7 +43,7 @@ day_length = 14
 night_length = 3
 anon_enabled = False
 is_rand_running = False
-ineligible_setups = ['ita10', 'ita13', 'randommadnessXer', 'inno4', 'bean10']
+ineligible_setups = ['ita10', 'ita13', 'randommadnessXer', 'inno4', 'bean10', 'bml10']
 username = os.environ.get('MUUN')
 password = os.environ.get('MUPW')
 
@@ -71,7 +71,7 @@ dvc_roles = {}
 anni_event_channels = [1258668573006495774]
 message_ids = {}
 bets = {}
-banned_users = [1173036536166621286, 1014752248301092875]
+banned_users = [1173036536166621286]
 banned_randers = [612706340623876137]
 future_banned = [190312702692818946]
 non_1337_users = [827416091889762325]
@@ -548,7 +548,7 @@ def get_google_sheet(sheet_name):
     return list(csv.DictReader(data)) 
 
 @bot.command()
-async def elo(ctx, *, sheet_name: str = "Lifetime"):
+async def elo(ctx, *, sheet_name: str = "Turbo Champs 2025"):
     
     if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
