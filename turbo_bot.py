@@ -71,7 +71,7 @@ dvc_roles = {}
 anni_event_channels = [1258668573006495774]
 message_ids = {}
 bets = {}
-banned_users = [1173036536166621286]
+banned_users = [1173036536166621286, 1014752248301092875]
 banned_randers = [612706340623876137]
 future_banned = [190312702692818946]
 non_1337_users = [827416091889762325]
@@ -946,7 +946,7 @@ async def phases(ctx, timer_name=None):
     elif timer_name in valid_timers:
         if timer_name == "sunbae":
             new_day_length = 1
-            new_night_length = 0
+            new_night_length = 1
         elif timer_name == "14-3":
             new_day_length = 14
             new_night_length = 3
