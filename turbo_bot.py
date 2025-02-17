@@ -2202,7 +2202,7 @@ async def rand(ctx, *args):
                 champs_df['Villagers'] = champs_df['Villagers'].apply(eval)
                 champs_df['Wolves'] = champs_df['Wolves'].apply(eval)
                 champs_elo_calculator = EloCalculator(credentials_path,aliases_file)
-                champs_elo_calculator.calculate_and_export_champs(champs_df, spreadsheet_name, town_sheet_name, wolf_sheet_name, champs_sheet_name, 1)
+                champs_elo_calculator.calculate_and_export_champs(champs_df, spreadsheet_name, champs_sheet_name, town_sheet_name, wolf_sheet_name, 1)
 
         elif "Error" in response_message:
             print(f"Game failed to rand, reason: {response_message}", flush=True)
