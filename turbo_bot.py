@@ -2189,7 +2189,7 @@ async def rand(ctx, *args):
                 current_game_ranked == True and
                 start_date <= current_date_gmt <= end_date
                 ):
-                write_game_log(thread_id, 'database/' + current_year + '_TurboChampDatabase.csv', game_data)
+                write_game_log('database/' + current_year + '_TurboChampDatabase.csv', game_data)
                 champs_file_path = 'database/' + current_year + '_TurboChampDatabase.csv'
                 aliases_file = 'aliases.json'
                 credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
