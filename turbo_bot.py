@@ -2200,13 +2200,14 @@ async def rand(ctx, *args):
                 champs_df['Villagers'] = champs_df['Villagers'].apply(eval)
                 champs_df['Wolves'] = champs_df['Wolves'].apply(eval)
                 champs_elo_calculator = EloCalculator(credentials_path,aliases_file)
-                champs_elo_calculator.calculate_and_export(champs_df, spreadsheet_name, champs_sheet_name, 1)
+                champs_elo_calculator.calculate_and_export_champs(champs_df, spreadsheet_name, champs_sheet_name, 1)
 
         elif "Error" in response_message:
             print(f"Game failed to rand, reason: {response_message}", flush=True)
             await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
     finally:
         is_rand_running = False
+        
 @bot.command()
 async def test_champs_db(ctx):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels

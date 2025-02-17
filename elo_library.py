@@ -6,6 +6,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 non_elo_setups = ['inno4', 'ita10', 'ita13', 'randommadnessXer']
+opt_out_players = {"178647349369765888"}
 
 class EloCalculator:
     def __init__(self, credentials_path, aliases_file, initial_elo=1000):
@@ -110,6 +111,36 @@ class EloCalculator:
         result_df = pd.DataFrame(result_data).sort_values(by='Overall ELO', ascending=False)
         sheet_data = [result_df.columns.tolist()] + result_df.values.tolist()
         self.export_to_google_sheets(spreadsheet_name, sheet_name, sheet_data)
-
+        
+    def get_discord_id(self, player_name):
+        """Get the Discord ID for a player based on their alias."""
+        player_name_lower = player_name.lower()
+        for discord_id, data in self.aliases.items():
+            if player_name_lower in [alias.lower() for alias in data['all']]:
+                return discord_id  # Return Discord ID
+        return None  # Return None if not found
+    
+    def calculate_and_export_champs(self, df, spreadsheet_name, sheet_name, min_games = 25):
+        self.process_game_data(df)
+        result_data = [
+            {
+                'Name': player,
+                'Town ELO': 0 if self.game_counts[player]['Town'] == 0 else round(scores['Town'], 2),
+                'Wolf ELO': 0 if self.game_counts[player]['Wolf'] == 0 else round(scores['Wolf'], 2),
+                'Overall ELO': (
+                    (0 if self.game_counts[player]['Town'] == 0 else scores['Town']) + 
+                    (0 if self.game_counts[player]['Wolf'] == 0 else scores['Wolf'])
+                ),  # Sum of adjusted Town and Wolf ELO
+                'Town games': self.game_counts[player]['Town'],
+                'Wolf games': self.game_counts[player]['Wolf'],
+                'Games Played': self.game_counts[player]['Town'] + self.game_counts[player]['Wolf']
+            }
+            for player, scores in self.elo_scores.items()
+            if self.game_counts[player]['Town'] + self.game_counts[player]['Wolf'] >= min_games
+            and (self.get_discord_id(player) not in opt_out_players) # Include players with at least one game played
+        ]
+        result_df = pd.DataFrame(result_data).sort_values(by='Overall ELO', ascending=False)
+        sheet_data = [result_df.columns.tolist()] + result_df.values.tolist()
+        self.export_to_google_sheets(spreadsheet_name, sheet_name, sheet_data)
 
 
