@@ -2839,7 +2839,8 @@ async def on_message(message):
 
 @bot.event 
 async def on_reaction_add(reaction, user):
-    if user == bot.user or reaction.message.channel.id not in react_channels:
+    
+    if user == bot.user or reaction.message.channel.id not in react_channels or user in banned_users:
         return
     global game_host_name, player_limit, players, waiting_list, turbo_ping_message   
     if reaction.message.id == turbo_ping_message:
