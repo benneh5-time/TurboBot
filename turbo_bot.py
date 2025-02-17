@@ -2182,25 +2182,27 @@ async def rand(ctx, *args):
             start_date = datetime.date(current_date_gmt.year, 2, 17)  # February 17
             end_date = datetime.date(current_date_gmt.year, 3, 31)    # March 31
 
-            # Check the conditions
+            # Check the conditions for turbo champs 2025
             if (
                 final_game_setup not in ineligible_setups and 
                 phases != 'sunbae' and 
                 current_game_ranked == True and
                 start_date <= current_date_gmt <= end_date
                 ):
-                write_game_log('database/' + current_year + '_TurboChampDatabase.csv', game_data)
-                champs_file_path = 'database/' + current_year + '_TurboChampDatabase.csv'
+                write_game_log('database/2025_TurboChampDatabase.csv', game_data)
+                champs_file_path = 'database/2025_TurboChampDatabase.csv'
                 aliases_file = 'aliases.json'
                 credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
                 spreadsheet_name = 'Turbo ELO Sheet'
                 champs_sheet_name = 'Turbo Champs 2025'
+                town_sheet_name = 'Sorted by Town'
+                wolf_sheet_name = 'Sorted by Wolf'
                 # Load data
                 champs_df = pd.read_csv(champs_file_path)
                 champs_df['Villagers'] = champs_df['Villagers'].apply(eval)
                 champs_df['Wolves'] = champs_df['Wolves'].apply(eval)
                 champs_elo_calculator = EloCalculator(credentials_path,aliases_file)
-                champs_elo_calculator.calculate_and_export_champs(champs_df, spreadsheet_name, champs_sheet_name, 1)
+                champs_elo_calculator.calculate_and_export_champs(champs_df, spreadsheet_name, town_sheet_name, wolf_sheet_name, champs_sheet_name, 1)
 
         elif "Error" in response_message:
             print(f"Game failed to rand, reason: {response_message}", flush=True)

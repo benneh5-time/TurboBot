@@ -120,7 +120,7 @@ class EloCalculator:
                 return discord_id  # Return Discord ID
         return None  # Return None if not found
     
-    def calculate_and_export_champs(self, df, spreadsheet_name, sheet_name, min_games = 25):
+    def calculate_and_export_champs(self, df, spreadsheet_name, sheet_name, town_sheet_name, wolf_sheet_name, min_games = 25):
         self.process_game_data(df)
         result_data = [
             {
@@ -142,5 +142,13 @@ class EloCalculator:
         result_df = pd.DataFrame(result_data).sort_values(by='Overall ELO', ascending=False)
         sheet_data = [result_df.columns.tolist()] + result_df.values.tolist()
         self.export_to_google_sheets(spreadsheet_name, sheet_name, sheet_data)
+        
+        town_result_df = pd.DataFrame(result_data).sort_values(by='Town ELO', ascending=False)
+        town_sheet_data = [town_result_df.columns.tolist()] + town_result_df.values.tolist()
+        self.export_to_google_sheets(spreadsheet_name, town_sheet_name, town_sheet_data)        
+        
+        wolf_result_df = pd.DataFrame(result_data).sort_values(by='Wolf ELO', ascending=False)
+        wolf_sheet_data = [wolf_result_df.columns.tolist()] + wolf_result_df.values.tolist()
+        self.export_to_google_sheets(spreadsheet_name, wolf_sheet_name, wolf_sheet_data)
 
 
