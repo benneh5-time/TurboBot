@@ -71,7 +71,8 @@ dvc_roles = {}
 anni_event_channels = [1258668573006495774]
 message_ids = {}
 bets = {}
-banned_users = [1173036536166621286]
+# 745067673557270578 is soop, ends 2/23
+banned_users = [1173036536166621286, 745067673557270578]
 banned_randers = [612706340623876137]
 future_banned = [190312702692818946]
 non_1337_users = [827416091889762325]
@@ -2766,6 +2767,9 @@ async def new_game_spec_message(bot, thread_id, title):
 @bot.event
 async def on_message(message):
     global turbo_ping_message
+    
+    if message.author.id in banned_users:
+        return
     if message.channel.id == dvc_channel:
         await bot.process_commands(message)
         return
