@@ -549,6 +549,18 @@ def get_google_sheet(sheet_name):
     return list(csv.DictReader(data)) 
 
 @bot.command()
+async def leaderboard(ctx, *, leaderboard: str = "Overall"):
+    
+    if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    
+    if ctx.author.id in banned_users:
+        await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
+        return   
+    
+    
+    
+@bot.command()
 async def elo(ctx, *, sheet_name: str = "Turbo Champs 2025"):
     
     if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
