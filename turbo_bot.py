@@ -596,9 +596,15 @@ async def leaderboard(ctx, *, leaderboard: str = "Overall"):
         color=discord.Color.blue()
     )
 
-    # Add fields for each player
+    names = []
+    scores = []
+
     for i, (name, score) in enumerate(top_players, start=1):
-        embed.add_field(name=f"#{i} {name}", value=f"**{score}**", inline=False)
+        names.append(f"#{i} {name}")
+        scores.append(f"**{score}**")
+
+    embed.add_field(name="Players", value="\n".join(names), inline=True)
+    embed.add_field(name="Scores", value="\n".join(scores), inline=True)
 
     await ctx.send(embed=embed)
     
