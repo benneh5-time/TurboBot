@@ -798,23 +798,31 @@ def add_doublejoat13_roles(game_title):
     global data
     name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
 
-    villagers = random.sample(name_image_pairs, 9)
-    joat = random.sample(pr_name_image_pairs, 1)
+    villagers = random.sample(name_image_pairs, 8)
+    joat = random.sample(pr_name_image_pairs, 2)
     wolves = random.sample(wolf_name_image_pairs, 3)    
 
-    for i in range(0,9):
+    for i in range(0,8):
         current_vanchilla = roles.vt.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
-      
-    current_joat = town_roles.utility_roles['joat_peekvigdoc'].copy()
-    current_joat['character_name'] = joat[0]["character_name"]
-    current_joat['character_image'] = joat[0]["character_image"]
-    joat_json = json.dumps(current_joat)
-    data.add("roles[]", joat_json)
     
+    for i in range(0,2):
+        if i < 1:  
+            current_joat = town_roles.utility_roles['joat_peekvigdoc_even'].copy()
+            current_joat['character_name'] = joat[i]["character_name"]
+            current_joat['character_image'] = joat[i]["character_image"]
+            joat_json = json.dumps(current_joat)
+            data.add("roles[]", joat_json)
+        else:
+            current_joat = town_roles.utility_roles['joat_peekvigdoc_odd'].copy()
+            current_joat['character_name'] = joat[0]["character_name"]
+            current_joat['character_image'] = joat[0]["character_image"]
+            joat_json = json.dumps(current_joat)
+            data.add("roles[]", joat_json)
+            
     for i in range(0,3):
         if i < 2:
             current_wolves = roles.goon.copy()
