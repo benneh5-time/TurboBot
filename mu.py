@@ -692,11 +692,11 @@ def add_bomb_roles(game_title):
     
     name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
 
-    villagers = random.sample(name_image_pairs, 7)
-    powerroles_bomb = random.sample(pr_name_image_pairs, 1)
+    villagers = random.sample(name_image_pairs, 6)
+    powerroles_bomb = random.sample(pr_name_image_pairs, 2)
     wolves = random.sample(wolf_name_image_pairs, 2)
 
-    for i in range(0,7):
+    for i in range(0,6):
         current_vanchilla = roles.vt.copy()
         current_vanchilla['character_name'] = villagers[i]["character_name"]
         current_vanchilla['character_image'] = villagers[i]["character_image"]
@@ -704,11 +704,20 @@ def add_bomb_roles(game_title):
         data.add("roles[]", vt_json)
   
 
-    current_inven = town_roles.killing_roles['inv_1xsuibomb'].copy()
-    current_inven['character_name'] = powerroles_bomb[0]["character_name"]
-    current_inven['character_image'] = powerroles_bomb[0]["character_image"]
-    inven_json = json.dumps(current_inven)
-    data.add("roles[]", inven_json)
+
+    for i in range(0,2):
+        if i < 1:
+            current_inven = town_roles.killing_roles['inv_1xsuibomb'].copy()
+            current_inven['character_name'] = powerroles_bomb[i]["character_name"]
+            current_inven['character_image'] = powerroles_bomb[i]["character_image"]
+            inven_json = json.dumps(current_inven)
+            data.add("roles[]", inven_json)
+        else:
+            current_inven = town_roles.utility_roles['ic_d2plus'].copy()
+            current_inven['character_name'] = powerroles_bomb[i]["character_name"]
+            current_inven['character_image'] = powerroles_bomb[i]["character_image"]
+            inven_json = json.dumps(current_inven)
+            data.add("roles[]", inven_json)
             
     for i in range(0,2):
         if i < 1:
