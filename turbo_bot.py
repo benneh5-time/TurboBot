@@ -548,15 +548,59 @@ def get_google_sheet(sheet_name):
     data = StringIO(response.text)
     return list(csv.DictReader(data)) 
 
+def get_top_players(sheet_name, column_name, top_n=10):
+    data = get_google_sheet(sheet_name)
+    if data is None:
+        return None, "Failed to fetch sheet data."
+
+    # Ensure column exists
+    if column_name not in data[0]:
+        return None, f"Column '{column_name}' not found in sheet."
+
+    # Sort by the specified column (convert to float for numerical sorting)
+    sorted_data = sorted(data, key=lambda x: float(x[column_name]), reverse=True)
+
+    # Extract top N players
+    top_players = [(row["Name"], row[column_name]) for row in sorted_data[:top_n]]
+
+    return top_players, None
+
+
 @bot.command()
 async def leaderboard(ctx, *, leaderboard: str = "Overall"):
     
     if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
-    
+
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return   
+    
+    if leaderboard.lower() == 'overall':
+        column = "Overall ELO"
+    elif leaderboard.lower() == 'town' or leaderboard.lower() == 'village':
+        column = 'Town ELO'
+    elif leaderboard.lower() == 'wolf' or leaderboard.lower() == 'mafia':
+        column = 'Wolf ELO'
+    else:
+        await ctx.send("Not a valid leaderboard, use !leaderboard `overall/village/mafia`")
+        return
+    
+    top_players, error = get_top_players("Turbo Champs 2025", column)
+    if error:
+        await ctx.send(error)
+        return
+    
+    embed = discord.Embed(
+        title=f"Top 10 Players by {column}",
+        color=discord.Color.blue()
+    )
+
+    # Add fields for each player
+    for i, (name, score) in enumerate(top_players, start=1):
+        embed.add_field(name=f"#{i} {name}", value=f"**{score}**", inline=False)
+
+    await ctx.send(embed=embed)
     
     
     
