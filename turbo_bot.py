@@ -1244,6 +1244,7 @@ async def pr_flavor(ctx, charname=None, charimage=None):
 
 @bot.command(name="in")
 async def in_(ctx, time: str = '60'):
+    delayed_time = None
     if time.startswith('0x'):
         time = int(time, 16)
     elif time.startswith('in '):
