@@ -1760,7 +1760,7 @@ async def update_status():
             waiting_list_message += f"{alias}\n"
             time_message += f"{remaining_time} minutes\n"
                     
-    if waiting_list_message or time_message:
+    if waiting_list_message:
         embed.set_field_at(6, name="**Waiting List/Future In List:**", value=waiting_list_message, inline=True)
         embed.set_field_at(7, name="**Time Remaining:**", value=time_message, inline=True)
         
@@ -1771,7 +1771,7 @@ async def update_status():
         embed.set_field_at(6, name="", value="", inline=True)
         embed.set_field_at(7, name="", value="", inline=True)
     
-    if not waiting_list:
+    if not waiting_list and not delay_list:
         embed.set_field_at(6, name="", value="", inline=True)
         embed.set_field_at(7, name="", value="", inline=True)
     
@@ -1913,13 +1913,15 @@ async def update_players():
             delay_list[alias] -= 1
             if delay_list[alias] <= 0:
                 if len(players) < player_limit and waiting_list:
-                    next_alias, next_time = delay_list.popitem()
+                    next_alias, next_time = delay_list[alias]
                     waiting_list[next_alias] = next_time
                     await bot.get_channel(223260125786406912).send(f"{alias}'s bait has run out of time and has been added to the waiting list.")
+                    del delay_list[alias]
                 else:
-                    next_alias, next_time = delay_list.popitem()
+                    next_alias, next_time = delay_list[alias]
                     players[next_alias] = next_time
                     await bot.get_channel(223260125786406912).send(f"{alias}'s bait has run out of time and has been added to the game.")
+                    del delay_list[alias]
                 
                 
         save_player_list(players, waiting_list, current_setup, game_host_name, player_limit)
