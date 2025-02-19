@@ -50,6 +50,7 @@ password = os.environ.get('MUPW')
 # Player and Host Data
 players = {}
 waiting_list = {}
+delay_list = {}
 recruit_list = {}
 spec_list = {}
 game_host_name = ["Turby"]
@@ -1245,6 +1246,11 @@ async def pr_flavor(ctx, charname=None, charimage=None):
 async def in_(ctx, time: str = '60'):
     if time.startswith('0x'):
         time = int(time, 16)
+    elif time.startswith('in '):
+        parts = time.split()
+        if len(parts) > 1 and parts[1].isdigit():
+            delayed_time = int(parts[1])
+            time = '60'
     else:
         time = int(time)
         
@@ -1262,7 +1268,7 @@ async def in_(ctx, time: str = '60'):
         return
 
     alias = aliases[ctx.author.id]["active"]
-    global game_host_name, player_limit, players, waiting_list
+    global game_host_name, player_limit, players, waiting_list, delay_list
 
     if time < 10 or time > 90 and time != 10000 and time != 1610 and time != 420 and time != 6969 and time != 1337:
         if ctx.author.id in alexas:
@@ -1275,7 +1281,13 @@ async def in_(ctx, time: str = '60'):
         await ctx.send("you are not 1337 enuff for this time entry n00b")
         
     if alias in game_host_name:
-        if len(game_host_name) == 1:
+        if delayed_time:
+            delay_list[alias] = delayed_time
+            await ctx.send(f"{alias} will be removed as host and added to the list in {delayed_time} minutes.")
+            await update_status()
+            return
+        
+        elif len(game_host_name) == 1:
             game_host_name = ["Turby"]
             if len(players) < player_limit:
                 players[alias] = time
@@ -1297,13 +1309,19 @@ async def in_(ctx, time: str = '60'):
             await update_status()    
             return     
     if alias in players or alias in waiting_list:
+        if delayed_time:
+            await ctx.send(f"{alias} is already in and cant also join in {delayed_time} minutes.")
+            return
         if alias in players:
             players[alias] = time            
         else:
             waiting_list[alias] = time            
         await ctx.message.add_reaction('<:bensdog:1337168191465722088>')
     else:
-        if len(players) < player_limit:
+        if delayed_time:
+            delay_list[alias] = delayed_time
+            await ctx.message.add_reaction('<:bensdog:1337168191465722088>')
+        elif len(players) < player_limit:
             players[alias] = time            
             await ctx.message.add_reaction('<:bensdog:1337168191465722088>')
         else:
@@ -1689,14 +1707,6 @@ async def update_status():
     spots_left = player_limit - len(players)
     host_list = [f"{host}\n" for host in game_host_name]
     hosts = ''.join(host_list)
-    """embed.set_field_at(0, name="**Game Setup**", value=current_setup, inline=True)
-    embed.set_field_at(1, name="**Host**", value=hosts, inline=True)
-    embed.set_field_at(2, name="", value="", inline=True)
-    embed.set_field_at(3, name="No players are currently signed up.", value="", inline=True)
-    embed.set_field_at(4, name="", value="", inline=True)
-    embed.set_field_at(5, name="", value="", inline=True)
-    embed.set_field_at(6, name="", value="", inline=True)
-    embed.set_field_at(7, name="", value="", inline=True)"""
 
     embed.set_field_at(0, name="**Game Setup**", value=current_setup, inline=True)
     host_list = [f"{host}\n" for host in game_host_name]
@@ -1733,11 +1743,15 @@ async def update_status():
     if waiting_list:
         waiting_list_message = ""
         time_message = ""
+        if delay_list:
+            for i, (alias, remaining_time) in enumerate(delay_list.items(), 1):
+                waiting_list_message += f"{alias}\n"
+                time_message += f"in in {remaining_time} minutes\n"
         for i, (alias, remaining_time) in enumerate(waiting_list.items(), 1):
             waiting_list_message += f"{alias}\n"
-            time_message += f"{remaining_time} minutes\n"            
-
-        embed.set_field_at(6, name="**Waiting List:**", value=waiting_list_message, inline=True)
+            time_message += f"{remaining_time} minutes\n"
+                    
+        embed.set_field_at(6, name="**Waiting List/Future In List:**", value=waiting_list_message, inline=True)
         embed.set_field_at(7, name="**Time Remaining:**", value=time_message, inline=True)
         
     if not players and not waiting_list:
