@@ -1740,21 +1740,24 @@ async def update_status():
         embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
         embed.set_field_at(5, name="**Time Remaining:**", value=time_message, inline=True)
     
+    waiting_list_message = ""
+    time_message = ""
+    
+    if delay_list:
+        for i, (alias, remaining_time) in enumerate(delay_list.items(), 1):
+            waiting_list_message += f"{alias}\n"
+            time_message += f"in in {remaining_time} minutes\n"
+            
     if waiting_list:
-        waiting_list_message = ""
-        time_message = ""
-        if delay_list:
-            for i, (alias, remaining_time) in enumerate(delay_list.items(), 1):
-                waiting_list_message += f"{alias}\n"
-                time_message += f"in in {remaining_time} minutes\n"
         for i, (alias, remaining_time) in enumerate(waiting_list.items(), 1):
             waiting_list_message += f"{alias}\n"
             time_message += f"{remaining_time} minutes\n"
                     
+    if waiting_list_message or time_message:
         embed.set_field_at(6, name="**Waiting List/Future In List:**", value=waiting_list_message, inline=True)
         embed.set_field_at(7, name="**Time Remaining:**", value=time_message, inline=True)
         
-    if not players and not waiting_list:
+    if not players and not waiting_list and not delay_list:
         embed.set_field_at(3, name="No players are currently signed up.", value="", inline=False)
         embed.set_field_at(4, name="", value="", inline=True)
         embed.set_field_at(5, name="", value="", inline=True)
@@ -1894,6 +1897,24 @@ async def update_players():
                     next_alias, next_time = waiting_list.popitem()
                     players[next_alias] = next_time
                     await bot.get_channel(223260125786406912).send(f"{next_alias} has been moved from the waiting list to the main list.")
+        for alias in list(waiting_list.keys()):
+            waiting_list[alias] -= 1
+            if waiting_list[alias] <= 0:
+                await bot.get_channel(223260125786406912).send(f"{alias} has run out of time and has been removed from the waitlist.")
+                del waiting_list[alias]
+        for alias in list(delay_list.keys()):
+            delay_list[alias] -= 1
+            if delay_list[alias] <= 0:
+                if len(players) < player_limit and waiting_list:
+                    next_alias, next_time = delay_list.popitem()
+                    waiting_list[next_alias] = next_time
+                    await bot.get_channel(223260125786406912).send(f"{alias}'s bait has run out of time and has been added to the waiting list.")
+                else:
+                    next_alias, next_time = delay_list.popitem()
+                    players[next_alias] = next_time
+                    await bot.get_channel(223260125786406912).send(f"{alias}'s bait has run out of time and has been added to the game.")
+                
+                
         save_player_list(players, waiting_list, current_setup, game_host_name, player_limit)
         await update_status()
     except:
