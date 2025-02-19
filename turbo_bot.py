@@ -1253,6 +1253,7 @@ async def in_(ctx, time: str = '60'):
             delayed_time = int(parts[1])
             time = int(time)
     else:
+        print(time, flush=True)
         time = int(time)
         
     if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
