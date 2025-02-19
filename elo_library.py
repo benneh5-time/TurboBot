@@ -43,7 +43,7 @@ class EloCalculator:
         elif games_played <= 100:
             return 24
         else:
-            return 24
+            return 20
 
     def calculate_elo_with_team_impact(self, player_elo, team_elo, result, role, games_played):
         k = self.calculate_dynamic_k(games_played)
