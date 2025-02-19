@@ -49,9 +49,9 @@ class EloCalculator:
         k = self.calculate_dynamic_k(games_played)
         expected_score = 1 / (1 + 10 ** ((team_elo - player_elo) / 400))
         if role == "town":
-            expected_score *= 1 + (53.69 / 50 - 1)
+            expected_score *= 1 + (55 / 50 - 1)
         elif role == "mafia":
-            expected_score *= 1 + (46.23 / 50 - 1)
+            expected_score *= 1 + (45 / 50 - 1)
         return player_elo + k * (result - max(0, min(1, expected_score)))
 
     def process_game_data(self, df):
