@@ -1243,15 +1243,20 @@ async def pr_flavor(ctx, charname=None, charimage=None):
     save_flavor_json('powerroles.json', existing_flavor)
 
 @bot.command(name="in")
-async def in_(ctx, time: str = '60'):
+async def in_(ctx, *time):
     delayed_time = None
+    if not time:
+        time = '60'
+    else:
+        time = ' '.join(time)
+        
     if time.startswith('0x'):
         time = int(time, 16)
     elif time.startswith('in '):
         parts = time.split()
         if len(parts) > 1 and parts[1].isdigit():
             delayed_time = int(parts[1])
-            time = int(time)
+            time = int(60)
     else:
         print(time, flush=True)
         time = int(time)
