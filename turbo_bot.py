@@ -1251,7 +1251,7 @@ async def in_(ctx, time: str = '60'):
         parts = time.split()
         if len(parts) > 1 and parts[1].isdigit():
             delayed_time = int(parts[1])
-            time = '60'
+            time = int(time)
     else:
         time = int(time)
         
