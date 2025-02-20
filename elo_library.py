@@ -62,8 +62,8 @@ class EloCalculator:
             town_multiplier = 53.23
             mafia_multiplier = 46.63
         else:
-            town_multiplier = setup_multipliers[setup]['town'] / 50
-            mafia_multiplier = setup_multipliers[setup]['mafia'] / 50
+            town_multiplier = setup_multipliers[setup]['town']
+            mafia_multiplier = setup_multipliers[setup]['mafia']
             
         if role == "town":
             expected_score *= 1 + (town_multiplier / 50 - 1)
