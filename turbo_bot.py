@@ -1919,7 +1919,7 @@ async def update_players():
                     del delay_list[alias]
                 else:
                     next_alias, next_time = delay_list[alias]
-                    players[next_alias] = next_time
+                    players[next_alias] = 60
                     await bot.get_channel(223260125786406912).send(f"{alias}'s bait has run out of time and has been added to the game.")
                     del delay_list[alias]
                 
