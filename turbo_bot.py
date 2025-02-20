@@ -425,8 +425,13 @@ class ThreadmarkProcessor:
 
                 if event in self.processed_threadmarks:
                     continue
-
-                await channel.send(event)
+                
+                
+                if "Event" in event or "Game Information" in event:
+                    continue
+                else:
+                    await channel.send(event)
+                    
                 stop_game = await self.handle_event(event, player_aliases, role, guild, channel, thread_id, game_setup, current_game)
                 
                 if stop_game:
@@ -445,12 +450,12 @@ class ThreadmarkProcessor:
         if any(keyword in event for keyword in elimination_keywords) and " was " in event:
             results = event.split(max([keyword for keyword in elimination_keywords if keyword in event], key=len), 1)[1].strip()
             players = results.split(", ")
-            try:
-                thread_flavor_post = await gpt_responses.get_flavor_response(str(event))
-                if thread_flavor_post and thread_flavor_post != "Failed to call GPT":
-                    await post_game_reply(thread_id, thread_flavor_post)
-            except Exception as e:
-                print(f"Error getting flavor response: {e}", flush=True)
+            #try:
+            #    thread_flavor_post = await gpt_responses.get_flavor_response(str(event))
+            #    if thread_flavor_post and thread_flavor_post != "Failed to call GPT":
+            #        await post_game_reply(thread_id, thread_flavor_post)
+            #except Exception as e:
+            #    print(f"Error getting flavor response: {e}", flush=True)
 
             for player in players:
                 if " was " in player:
@@ -461,8 +466,11 @@ class ThreadmarkProcessor:
                     if "neil the eel" in flavor:
                         await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
 
-        elif "Results: No one died" in event or "Event" in event or "Game Information" in event:
-            pass  # Ignore these events
+        elif "Results: No one died" in event:
+            await post_game_reply(thread_id, "WTF NO DEATHS?"
+                                  )
+        elif "Event" in event or "Game Information" in event:
+            pass
 
         elif "Day 2 Start" in event and game_setup in ('ita10', 'ita13'):
             await start_itas(current_game)
@@ -2907,31 +2915,31 @@ async def on_message(message):
     if message.author == bot.user or message.channel.id not in allowed_channels:
         return
     
-    if message.channel.id == turbo_chat:
+    #if message.channel.id == turbo_chat:
 
-        if bot.user.mentioned_in(message):  # Always respond if directly mentioned
-            chance = random.random()
-            message_and_user = "Username: " + message.author.name + " Message: " + message.content
-            chance = random.random()
-            print(chance, flush=True)
-            if chance < 0.5:
-                response = await gpt_responses.get_turby_response(message_and_user)
+        #if bot.user.mentioned_in(message):  # Always respond if directly mentioned
+            #chance = random.random()
+            #message_and_user = "Username: " + message.author.name + " Message: " + message.content
+            #chance = random.random()
+            #print(chance, flush=True)
+            #if chance < 0.5:
+                #response = await gpt_responses.get_turby_response(message_and_user)
                 
-                if response == "Failed to call GPT":
-                    response = random.choice(ping_responses)
+                #if response == "Failed to call GPT":
+                #    response = random.choice(ping_responses)
                 
-                await message.channel.send(response)
-                return
+                #await message.channel.send(response)
+                #return
 
-        if "turby" in message.content.lower():  # 35% chance to respond if name is just in text
-            message_and_user = "Username: " + message.author.name + " Message: " + message.content
-            chance = random.random()
-            print(chance, flush=True)
-            if chance < 0.25:
-                response = await gpt_responses.get_turby_response(message_and_user)
-                if response == "Failed to call GPT":
-                    response = random.choice(turbo_responses)
-                await message.channel.send(response)
+        #if "turby" in message.content.lower():  # 35% chance to respond if name is just in text
+        #    message_and_user = "Username: " + message.author.name + " Message: " + message.content
+        #    chance = random.random()
+        #    print(chance, flush=True)
+        #    if chance < 0.25:
+        #        #response = await gpt_responses.get_turby_response(message_and_user)
+        #        if response == "Failed to call GPT":
+        #            response = random.choice(turbo_responses)
+        #        await message.channel.send(response)
         
 
 
