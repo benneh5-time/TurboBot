@@ -1914,7 +1914,7 @@ async def update_players():
             if delay_list[alias] <= 0:
                 if len(players) < player_limit and waiting_list:
                     next_alias, next_time = delay_list[alias]
-                    waiting_list[next_alias] = next_time
+                    waiting_list[next_alias] = 60
                     await bot.get_channel(223260125786406912).send(f"{alias}'s bait has run out of time and has been added to the waiting list.")
                     del delay_list[alias]
                 else:
