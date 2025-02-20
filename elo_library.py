@@ -49,6 +49,7 @@ class EloCalculator:
         k = self.calculate_dynamic_k(games_played)
         expected_score = 1 / (1 + 10 ** ((team_elo - player_elo) / 400))
         
+        print(setup, flush=True)
         setup_multipliers = {
             "joat10": {"town": 57.32, "mafia": 42.68},
             "vig10": {"town": 50.77, "mafia": 49.23},
@@ -58,8 +59,8 @@ class EloCalculator:
             "default": {"town": 53.23, "mafia": 46.63},
         }
         if setup not in setup_multipliers:
-            town_multiplier = 53.23 / 50 
-            mafia_multiplier = 46.63 / 50
+            town_multiplier = 53.23
+            mafia_multiplier = 46.63
         else:
             town_multiplier = setup_multipliers[setup]['town'] / 50
             mafia_multiplier = setup_multipliers[setup]['mafia'] / 50
