@@ -48,8 +48,7 @@ class EloCalculator:
     def calculate_elo_with_team_impact(self, player_elo, team_elo, result, role, games_played, setup):
         k = self.calculate_dynamic_k(games_played)
         expected_score = 1 / (1 + 10 ** ((team_elo - player_elo) / 400))
-        
-        print(setup, flush=True)
+
         setup_multipliers = {
             "joat10": {"town": 57.32, "mafia": 42.68},
             "vig10": {"town": 50.77, "mafia": 49.23},
