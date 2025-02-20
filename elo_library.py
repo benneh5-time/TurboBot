@@ -45,13 +45,29 @@ class EloCalculator:
         else:
             return 20
 
-    def calculate_elo_with_team_impact(self, player_elo, team_elo, result, role, games_played):
+    def calculate_elo_with_team_impact(self, player_elo, team_elo, result, role, games_played, setup):
         k = self.calculate_dynamic_k(games_played)
         expected_score = 1 / (1 + 10 ** ((team_elo - player_elo) / 400))
+        
+        setup_multipliers = {
+            "joat10": {"town": 57.32, "mafia": 42.68},
+            "vig10": {"town": 50.77, "mafia": 49.23},
+            "bomb10": {"town": 45.30, "mafia": 54.7},
+            "closedrandomXer": {"town": 45.93, "mafia": 54.07},
+            "cop9": {"town": 52.5, "mafia": 47.5},
+            "default": {"town": 53.23, "mafia": 46.63},
+        }
+        if setup not in setup_multipliers:
+            town_multiplier = 53.23 / 50 
+            mafia_multiplier = 46.63 / 50
+        else:
+            town_multiplier = setup_multipliers[setup]['town'] / 50
+            mafia_multiplier = setup_multipliers[setup]['mafia'] / 50
+            
         if role == "town":
-            expected_score *= 1 + (53 / 50 - 1)
+            expected_score *= 1 + (town_multiplier / 50 - 1)
         elif role == "mafia":
-            expected_score *= 1 + (47 / 50 - 1)
+            expected_score *= 1 + (mafia_multiplier / 50 - 1)
         return player_elo + k * (result - max(0, min(1, expected_score)))
 
     def process_game_data(self, df):
@@ -69,14 +85,14 @@ class EloCalculator:
                 self.game_counts[active_villager]['Town'] += 1
                 result = 1 if winning_alignment == 'Town' else 0
                 self.elo_scores[active_villager]['Town'] = self.calculate_elo_with_team_impact(
-                    self.elo_scores[active_villager]['Town'], wolf_elo, result, 'town', self.game_counts[active_villager]['Town']
+                    self.elo_scores[active_villager]['Town'], wolf_elo, result, 'town', self.game_counts[active_villager]['Town'], row['Setup']
                 )
             for wolf in wolves:
                 active_wolf = self.get_active_alias(wolf)
                 self.game_counts[active_wolf]['Wolf'] += 1
                 result = 0 if winning_alignment == 'Town' else 1
                 self.elo_scores[active_wolf]['Wolf'] = self.calculate_elo_with_team_impact(
-                    self.elo_scores[active_wolf]['Wolf'], town_elo, result, 'mafia', self.game_counts[active_wolf]['Wolf']
+                    self.elo_scores[active_wolf]['Wolf'], town_elo, result, 'mafia', self.game_counts[active_wolf]['Wolf'], row['Setup']
                 )
 
     def export_to_google_sheets(self, spreadsheet_name, sheet_name, data):
