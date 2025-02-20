@@ -1926,8 +1926,8 @@ async def update_players():
                 
         save_player_list(players, waiting_list, current_setup, game_host_name, player_limit)
         await update_status()
-    except:
-        print("Error updating players with update_player function", flush=True)
+    except Exception as e:
+        print(f"Error updating players with update_player function: {e}", flush=True)
 
 @bot.command()
 async def live_dvc(ctx, thread_id):
