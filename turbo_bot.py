@@ -1422,10 +1422,16 @@ async def out(ctx):
         del players[alias]
         #await ctx.send(f"{alias} has been removed from the list.")
         await ctx.message.add_reaction('<:laserbensdog:1337171130166939739>')
+        if ctx.guild is None:
+            turbochannel = bot.get_channel(turbo_chat)
+            await turbochannel.send(f"{alias} used `!out` in DMs and left the game!")
     elif alias in waiting_list:
         del waiting_list[alias]
         #await ctx.send(f"{alias} has been removed from the waiting list.")
         await ctx.message.add_reaction('<:laserbensdog:1337171130166939739>')
+        if ctx.guild is None:
+            turbochannel = bot.get_channel(turbo_chat)
+            await turbochannel.send(f"{alias} used `!out` in DMs and left the game!")
     else:
         await ctx.send(f"{alias} is not on the list.")
         await ctx.message.add_reaction('<:laserbensdog:1337171130166939739>')
@@ -1435,9 +1441,7 @@ async def out(ctx):
         players[next_alias] = next_time
         await ctx.message.add_reaction('<:laserbensdog:1337171130166939739>')
         await ctx.send(f"{next_alias} has been moved from the waiting list to the main list.")
-    if ctx.guild is None:
-        turbochannel = bot.get_channel(turbo_chat)
-        await turbochannel.send(f"{alias} used `!out` in DMs and left the game!")
+
     await update_status()
 
 """@bot.command()
