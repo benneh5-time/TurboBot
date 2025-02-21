@@ -743,7 +743,7 @@ async def player_stats(ctx, *, args=None):
     wolf_win_rate = (wolf_wins / wolf_games * 100) if wolf_games > 0 else 0
 
     # Send the accumulated stats
-    await ctx.send(
+    """await ctx.send(
         f"Stats for {', '.join(aliases_to_check)} ({setup if setup else 'All Setups'}):\n"
         f"  Overall:\n"
         f"    Games Played: {total_games}, Wins: {total_wins}, Win Rate: {overall_win_rate:.2f}%\n"
@@ -751,8 +751,31 @@ async def player_stats(ctx, *, args=None):
         f"    Games Played: {villager_games}, Wins: {villager_wins}, Win Rate: {villager_win_rate:.2f}%\n"
         f"  Wolf:\n"
         f"    Games Played: {wolf_games}, Wins: {wolf_wins}, Win Rate: {wolf_win_rate:.2f}%"
+    )"""
+    embed = discord.Embed(
+        title=f"Stats for {', '.join(aliases_to_check)}",
+        description=f"Setup: {setup if setup else 'All Setups'}",
+        color=discord.Color.blue()
     )
 
+    embed.add_field(
+        name="Overall",
+        value=f"**Games Played:** {total_games}\n**Wins:** {total_wins}\n**Win Rate:** {overall_win_rate:.2f}%",
+        inline=False
+    )
+
+    embed.add_field(
+        name="Villager",
+        value=f"**Games Played:** {villager_games}\n**Wins:** {villager_wins}\n**Win Rate:** {villager_win_rate:.2f}%",
+        inline=False
+    )
+
+    embed.add_field(
+        name="Wolf",
+        value=f"**Games Played:** {wolf_games}\n**Wins:** {wolf_wins}\n**Win Rate:** {wolf_win_rate:.2f}%",
+        inline=False
+    )
+    await ctx.send(embed=embed)
 @bot.command()
 async def ranked(ctx, ranked: str = None):
 
