@@ -725,7 +725,7 @@ async def player_stats(ctx, *, args=None):
     # Loop through the selected aliases and accumulate the stats
     for alias in aliases_to_check:
         if setup.lower() == 'champs':
-            player_win_rate = winrate.calculate_player_win_rate("database/2025_TurboChampDatabase.csv", alias, setup)
+            player_win_rate = winrate.calculate_player_win_rate("database/2025_TurboChampDatabase.csv", alias, None)
         else:
             player_win_rate = winrate.calculate_player_win_rate("game_database.csv", alias, setup)
         
