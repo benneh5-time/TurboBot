@@ -801,8 +801,12 @@ async def stats(ctx, game_setup=None):
     if ctx.author.id in banned_users:
         await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return   
-
-    df = pd.read_csv('game_database.csv')
+    
+    if game_setup.lower() == 'champs':
+        df = pd.read_csv('database/2025_TurboChampDatabase.csv')
+    else:
+        df = pd.read_csv('game_database.csv')
+    
 
     overall_mafia_wins = 0
     overall_town_wins = 0
@@ -853,7 +857,7 @@ async def stats(ctx, game_setup=None):
 
     # Display overall stats
 
-    if game_setup is None:
+    if game_setup is None or game_setup.lower() == 'champs':
         setup_embed = discord.Embed(title="Setup Stats", color=0x3381ff)
         setup_embed.add_field(name=f'Overall Stats', value=f"Total Games since September 2023: {total_games}", inline=False)
         setup_embed.add_field(name="Town Win Percentage", value=f'{overall_town_win_percentage:.2f}%', inline=True)
@@ -865,7 +869,6 @@ async def stats(ctx, game_setup=None):
         if game_setup not in setup_total_games:
             await ctx.send("Setup not found in the database.")
             return
-
         count = setup_total_games[game_setup]
         await display_setup_stats(ctx, game_setup, count, setup_wins)
 
