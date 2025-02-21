@@ -857,9 +857,17 @@ async def stats(ctx, game_setup=None):
 
     # Display overall stats
 
-    if game_setup is None or game_setup.lower() == 'champs':
+    if game_setup is None:
         setup_embed = discord.Embed(title="Setup Stats", color=0x3381ff)
         setup_embed.add_field(name=f'Overall Stats', value=f"Total Games since September 2023: {total_games}", inline=False)
+        setup_embed.add_field(name="Town Win Percentage", value=f'{overall_town_win_percentage:.2f}%', inline=True)
+        setup_embed.add_field(name='Mafia Win Percentage', value=f'{overall_mafia_win_percentage:.2f}%', inline=True)
+        setup_embed.add_field(name="Stats by Turby!", value=f"Use !stats [setup] to get individual setup stats!", inline=False)
+        setup_embed.set_thumbnail(url="https://i.imgur.com/2sSTEh3.gif")
+        await ctx.send(embed=setup_embed)
+    elif game_setup.lower() == 'champs':
+        setup_embed = discord.Embed(title="Setup Stats", color=0x3381ff)
+        setup_embed.add_field(name=f'Overall Stats', value=f"Total Champs Games since 2/17/2025: {total_games}", inline=False)
         setup_embed.add_field(name="Town Win Percentage", value=f'{overall_town_win_percentage:.2f}%', inline=True)
         setup_embed.add_field(name='Mafia Win Percentage', value=f'{overall_mafia_win_percentage:.2f}%', inline=True)
         setup_embed.add_field(name="Stats by Turby!", value=f"Use !stats [setup] to get individual setup stats!", inline=False)
