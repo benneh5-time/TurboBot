@@ -1728,18 +1728,31 @@ async def status(ctx, *args):
         embed.set_field_at(3, name="**Players:**", value=player_message, inline=True)
         embed.set_field_at(5, name="**Time Remaining:**", value=time_message, inline=True)
         embed.set_field_at(4, name="", value="", inline=True)
+        
+    waiting_list_message = ""
+    time_message = ""
+    
+    if delay_list:
+        for i, (alias, remaining_time) in enumerate(delay_list.items(), 1):
+            waiting_list_message += f"{alias}\n"
+            time_message += f"in in {remaining_time} minutes\n"
+            
     if waiting_list:
-        waiting_list_message = ""
-        time_message = ""
         for i, (alias, remaining_time) in enumerate(waiting_list.items(), 1):
             waiting_list_message += f"{alias}\n"
             time_message += f"{remaining_time} minutes\n"
-            
-        embed.set_field_at(6, name="**Waiting List:**", value=waiting_list_message, inline=True)
+                    
+    if waiting_list_message:
+        embed.set_field_at(6, name="**Waiting/Future-In List:**", value=waiting_list_message, inline=True)
         embed.set_field_at(7, name="**Time Remaining:**", value=time_message, inline=True)
 
-    if not players and not waiting_list:
+
+    if not players and not waiting_list and not delay_list:
         embed.set_field_at(3, name="No players are currently signed up.", value="", inline=False)
+    
+    if not waiting_list and not delay_list:
+        embed.set_field_at(6, name="", value="", inline=True)
+        embed.set_field_at(7, name="", value="", inline=True)
     
     embed.set_thumbnail(url="https://i.imgur.com/2sSTEh3.gif")
 
