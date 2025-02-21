@@ -683,7 +683,7 @@ async def player_stats(ctx, *, args=None):
 
     # Check the arguments
     if len(args) == 1:  # Single argument provided
-        if args[0] in valid_setups or args[0].lower() == 'alexa role madness':
+        if args[0] in valid_setups or args[0].lower() == 'alexa role madness' or args[0].lower() == 'champs':
             setup = args[0]
         else:
             specified_alias = args[0].strip().lower()
@@ -691,7 +691,7 @@ async def player_stats(ctx, *, args=None):
         specified_alias = args[0].strip().lower()
         if args[1] in valid_setups:
             setup = args[1]
-        elif args[1].lower() == "alexa role madness":
+        elif args[1].lower() == "alexa role madness" or args[1].lower() == 'champs':
             setup = args[1]
         else:
             await ctx.send(f"Invalid setup '{args[1]}'. Please use one of the valid setups: {', '.join(valid_setups)}.")
@@ -724,7 +724,10 @@ async def player_stats(ctx, *, args=None):
     
     # Loop through the selected aliases and accumulate the stats
     for alias in aliases_to_check:
-        player_win_rate = winrate.calculate_player_win_rate("game_database.csv", alias, setup)
+        if setup.lower() == 'champs':
+            player_win_rate = winrate.calculate_player_win_rate("database/2025_TurboChampDatabase.csv", alias, setup)
+        else:
+            player_win_rate = winrate.calculate_player_win_rate("game_database.csv", alias, setup)
         
         # Accumulate stats
         total_games += player_win_rate['Total Games Played']
