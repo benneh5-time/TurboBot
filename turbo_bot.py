@@ -767,7 +767,7 @@ async def player_stats(ctx, *, args=None):
     embed.add_field(
         name="Villager",
         value=f"**Games Played:** {villager_games}\n**Wins:** {villager_wins}\n**Win Rate:** {villager_win_rate:.2f}%",
-        inline=False
+        inline=True
     )
 
     embed.add_field(
