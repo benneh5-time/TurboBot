@@ -753,8 +753,8 @@ async def player_stats(ctx, *, args=None):
         f"    Games Played: {wolf_games}, Wins: {wolf_wins}, Win Rate: {wolf_win_rate:.2f}%"
     )"""
     embed = discord.Embed(
-        title=f"Stats for {', '.join(aliases_to_check)}",
-        description=f"Setup: {setup if setup else 'All Setups'}",
+        title=f"Stats for {setup if setup else 'All Setups'}",
+        description=f"Aliases: {', '.join(aliases_to_check)}",
         color=discord.Color.blue()
     )
 
