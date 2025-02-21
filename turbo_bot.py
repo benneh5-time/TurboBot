@@ -773,7 +773,7 @@ async def player_stats(ctx, *, args=None):
     embed.add_field(
         name="Wolf",
         value=f"**Games Played:** {wolf_games}\n**Wins:** {wolf_wins}\n**Win Rate:** {wolf_win_rate:.2f}%",
-        inline=False
+        inline=True
     )
     await ctx.send(embed=embed)
 @bot.command()
