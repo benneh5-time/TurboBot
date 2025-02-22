@@ -724,7 +724,7 @@ async def player_stats(ctx, *, args=None):
     
     # Loop through the selected aliases and accumulate the stats
     for alias in aliases_to_check:
-        if setup.lower() == 'champs':
+        if setup and setup.lower() == 'champs':
             player_win_rate = winrate.calculate_player_win_rate("database/2025_TurboChampDatabase.csv", alias, None)
         else:
             player_win_rate = winrate.calculate_player_win_rate("game_database.csv", alias, setup)
@@ -828,7 +828,7 @@ async def stats(ctx, game_setup=None):
         await ctx.send("You have been banned for misusing bigping and are not allowed to adjust turbos.")
         return   
     
-    if game_setup.lower() == 'champs':
+    if game_setup and game_setup.lower() == 'champs':
         df = pd.read_csv('database/2025_TurboChampDatabase.csv')
     else:
         df = pd.read_csv('game_database.csv')
