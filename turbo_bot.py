@@ -683,7 +683,7 @@ async def player_stats(ctx, *, args=None):
 
     # Check the arguments
     if len(args) == 1:  # Single argument provided
-        if args[0] in valid_setups or args[0].lower() == 'alexa role madness' or args[0].lower() == 'champs':
+        if args[0] in valid_setups or args[0].lower() == 'alexa role madness' or args[0].lower() == 'champs'  or args[0].lower() == 'anne role madness'  or args[0].lower() == 'bennehrm':
             setup = args[0]
         else:
             specified_alias = args[0].strip().lower()
@@ -691,7 +691,7 @@ async def player_stats(ctx, *, args=None):
         specified_alias = args[0].strip().lower()
         if args[1] in valid_setups:
             setup = args[1]
-        elif args[1].lower() == "alexa role madness" or args[1].lower() == 'champs':
+        elif args[1].lower() == "alexa role madness" or args[1].lower() == 'champs' or args[1].lower() == 'anne role madness'  or args[1].lower() == 'bennehrm':
             setup = args[1]
         else:
             await ctx.send(f"Invalid setup '{args[1]}'. Please use one of the valid setups: {', '.join(valid_setups)}.")
