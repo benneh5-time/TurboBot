@@ -6,7 +6,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 non_elo_setups = ['inno4', 'ita10', 'ita13', 'randommadnessXer']
-opt_out_players = {"178647349369765888", "851954038068478002", "1014752248301092875"}
+opt_out_players = {"178647349369765888", "851954038068478002"}
 
 class EloCalculator:
     def __init__(self, credentials_path, aliases_file, initial_elo=1000):
