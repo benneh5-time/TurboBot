@@ -18,7 +18,6 @@ from io import StringIO
 import mu
 import winrate
 from elo_library import EloCalculator
-from turby_responses import turbo_responses, ping_responses
 import gpt_responses
 
 intents = discord.Intents.default()
