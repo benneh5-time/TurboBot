@@ -71,8 +71,9 @@ dvc_roles = {}
 anni_event_channels = [1258668573006495774]
 message_ids = {}
 bets = {}
-# 745067673557270578 is soop, ends 2/23
-banned_users = [1173036536166621286]
+# ceki ban ends 3/23 (35829273)
+# ref ban ends 3/3 (17990711)
+banned_users = [1173036536166621286, 358292734962040842, 179907116700532737]
 banned_randers = [612706340623876137]
 future_banned = [190312702692818946]
 non_1337_users = [827416091889762325]
