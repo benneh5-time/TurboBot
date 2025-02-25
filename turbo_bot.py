@@ -72,8 +72,7 @@ anni_event_channels = [1258668573006495774]
 message_ids = {}
 bets = {}
 # ceki ban ends 3/23 (35829273)
-# ref ban ends 3/3 (17990711)
-banned_users = [1173036536166621286, 358292734962040842, 179907116700532737]
+banned_users = [1173036536166621286, 358292734962040842]
 banned_randers = [612706340623876137]
 future_banned = [190312702692818946]
 non_1337_users = [827416091889762325]
@@ -2855,36 +2854,8 @@ async def on_message(message):
         return
 
     if message.author == bot.user or message.channel.id not in allowed_channels:
-        return
+        return      
     
-    #if message.channel.id == turbo_chat:
-
-        #if bot.user.mentioned_in(message):  # Always respond if directly mentioned
-            #chance = random.random()
-            #message_and_user = "Username: " + message.author.name + " Message: " + message.content
-            #chance = random.random()
-            #print(chance, flush=True)
-            #if chance < 0.5:
-                #response = await gpt_responses.get_turby_response(message_and_user)
-                
-                #if response == "Failed to call GPT":
-                #    response = random.choice(ping_responses)
-                
-                #await message.channel.send(response)
-                #return
-
-        #if "turby" in message.content.lower():  # 35% chance to respond if name is just in text
-        #    message_and_user = "Username: " + message.author.name + " Message: " + message.content
-        #    chance = random.random()
-        #    print(chance, flush=True)
-        #    if chance < 0.25:
-        #        #response = await gpt_responses.get_turby_response(message_and_user)
-        #        if response == "Failed to call GPT":
-        #            response = random.choice(turbo_responses)
-        #        await message.channel.send(response)
-        
-
-
     for mention in message.role_mentions:
         if mention.id == 327124222512070656:
             mention_list = [f"<@{id}>" for id in recruit_list if str(id) not in players]                    
