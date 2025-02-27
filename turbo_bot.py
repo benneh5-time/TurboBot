@@ -457,6 +457,8 @@ class ThreadmarkProcessor:
                 poll = Poll(question="who wolf", duration=duration, multiple=True)
                 for player in player_aliases:
                     poll.add_answer(text=player)
+                turbo_channel = bot.get_channel(turbo_chat)
+                await turbo_channel.send("who wolf", view=poll)
                                              
             await asyncio.sleep(30)
 
