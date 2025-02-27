@@ -427,6 +427,7 @@ class ThreadmarkProcessor:
 
             for row in reversed(event_div.find_all("div", class_="threadmark-row")):
                 event = row.find("div", class_="threadmark-event").text.strip()
+                event_link = row.find("a")
 
                 if event in self.processed_threadmarks:
                     continue
@@ -435,8 +436,13 @@ class ThreadmarkProcessor:
                     continue
                 else:
                     await channel.send(event)
-                    
-                stop_game = await self.handle_event(event, player_aliases, role, guild, channel, thread_id, game_setup, current_game)
+                
+                if event_link:
+                    href = event_link['href']
+                    match = re.search(r'#post(\d+)', href)
+                    if match:
+                        post_id = match.group(1)                    
+                stop_game = await self.handle_event(event, player_aliases, role, guild, channel, thread_id, game_setup, current_game, post_id)
                 
                 if stop_game:
                     return
@@ -445,7 +451,7 @@ class ThreadmarkProcessor:
 
             await asyncio.sleep(30)
 
-    async def handle_event(self, event, player_aliases, role, guild, channel, thread_id, game_setup, current_game):
+    async def handle_event(self, event, player_aliases, role, guild, channel, thread_id, game_setup, current_game, post_id=None):
         """Handles specific game events based on threadmarks."""
         
         elimination_keywords = ["Elimination:", "Bomb (1):", "Results:", "Shots Fired (1):", "Poison Results:", "Desperado (1):"]
@@ -469,6 +475,11 @@ class ThreadmarkProcessor:
                     # Special case for "neil the eel"
                     if "neil the eel" in flavor:
                         await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
+            if "Elimination:" in event:
+                eod_votes = await get_votals(thread_id, post_id)
+                formatted_votes = mu.parse_votecount(eod_votes)
+                await channel.send(f"``` {formatted_votes}```")
+                pass
 
         elif "Results: No one died" in event:
             await post_game_reply(thread_id, "WTF NO DEATHS?"

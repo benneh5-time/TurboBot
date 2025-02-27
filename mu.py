@@ -15,13 +15,43 @@ import rolemadness
 from role_definitions import create_random_role
 from flavor import joat10_flavor, cop13_flavor, cop9_flavor, vig10_flavor, billager9_flavor, bomb10_flavor
 
+def parse_votecount(html):
+    soup = BeautifulSoup(html, "html.parser")
+    title = soup.find("div", style="text-align: center;").text.strip()  # Title of the vote count section
 
+    # Extract votecount table data
+    rows = soup.find_all("tr", class_="cms_table_grid_tr")[1:]  # Skip the header row
+    vote_data = []
+    
+    for row in rows:
+        cells = row.find_all("td")
+        votes = cells[0].text.strip()
+        target = cells[1].text.strip()
+        voters = cells[2].text.strip()
+        vote_data.append([votes, target, voters])
+    
+    # Extract countdown info
+    time_info = soup.find("span", class_="bbc_timezone").text.strip()
+
+    # Format the data into a nice output
+    formatted_output = f"\n{title}\n{'=' * len(title)}\n"
+    formatted_output += f"{'Votes':<10} {'Target':<20} {'Voters (Posts in Phase)':<40}\n"
+    formatted_output += "-" * 70 + "\n"
+    
+    for vote in vote_data:
+        formatted_output += f"{vote[0]:<10} {vote[1]:<20} {vote[2]:<40}\n"
+    
+    formatted_output += f"\n{time_info}\n"
+    
+    return formatted_output
 
 def load_json_file(json_file):
     with open(json_file, 'r') as f:
         return json.load(f)
 
 data = None
+
+
 
 def generate_game_thread_uuid():
     random_uuid = str(uuid.uuid4())[:16]
