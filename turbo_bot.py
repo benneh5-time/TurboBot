@@ -371,6 +371,12 @@ async def post_game_reply(thread_id, message):
     session = mu.login(username,password)
     game_id, security_token = mu.open_game_thread(session, thread_id)
     mu.post(session, thread_id, security_token, message)
+    
+async def get_votals(thread_id, atvote_array=None):
+    session = mu.login(username,password)
+    game_id, security_token = mu.open_game_thread(session, thread_id)
+    votes = mu.get_vote_total(session, thread_id, security_token, atvote_array)
+    return votes.text
 
 async def start_itas(current_game):
     ita_session = mu.login(username, password)

@@ -87,7 +87,7 @@ def get_vote_total(session, thread_id, security_token, atvote_array=None):
     payload = {
         "do": "get_votes",
         "userid": "11",
-        "thread_id": "51866",
+        "thread_id": thread_id,
         "message": "Votal",
         "securitytoken": security_token,
     }
