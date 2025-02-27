@@ -455,12 +455,12 @@ class ThreadmarkProcessor:
             if "Night 1 Start" in self.processed_threadmarks and not self.poll_created:
                 duration = datetime.timedelta(hours=1)
                 poll = Poll(question="who wolf", duration=duration, multiple=True)
-                for player in player_aliases:
+                for player in self.player_aliases:
                     print(f"DEBUG: player_aliases = {player_aliases} ({type(player_aliases)})", flush=True)
                     print(player, flush=True)
                     poll.add_answer(text=player)
                 turbo_channel = bot.get_channel(turbo_chat)
-               # await turbo_channel.send("who wolf", poll=poll)
+                await turbo_channel.send("who wolf", poll=poll)
                                              
             await asyncio.sleep(30)
 
