@@ -14,6 +14,7 @@ import roles
 import rolemadness
 from role_definitions import create_random_role
 from flavor import joat10_flavor, cop13_flavor, cop9_flavor, vig10_flavor, billager9_flavor, bomb10_flavor
+import datetime
 
 def parse_votecount(html):
     soup = BeautifulSoup(html, "html.parser")
@@ -112,25 +113,57 @@ def open_game_thread(session, thread_id):
 
     return game_id, security_token 
 
-def get_vote_total(session, thread_id, security_token, atvote_array=None):
+def get_vote_total(thread_id, atvote_array=None):
     url = "https://www.mafiauniverse.com/forums/modbot/botpost.php"
     payload = {
         "do": "get_votes",
         "userid": "11",
         "thread_id": thread_id,
         "message": "Votal",
-        "securitytoken": security_token,
+        "securitytoken": "guest",
     }
     if atvote_array:
         payload["atvote_array[]"] = atvote_array
         
     try:
-        votes = session.post(url, data=payload)
+        votes = requests.post(url, data=payload)
         votes.raise_for_status()
         return votes.text
     except Exception as e:
         print(f"Error fetching vote total: {e}")
         return None
+
+def is_day1_near_end(vote_html, minutes=7):
+     soup = BeautifulSoup(vote_html, 'html.parser')
+     title = soup.find('div', style='text-align: center;')
+     print(title)
+     if title and "Day 1 Votecount" in title.text:
+         countdown = soup.find('span', class_='countdown')
+         print(countdown)
+         if countdown and countdown.has_attr('data-date'):
+             timestamp = int(countdown['data-date']) // 1000
+             current_time = datetime.datetime.utcnow().timestamp()
+             return (timestamp - current_time) <= (minutes * 60)
+     return False
+ 
+def get_zero_posters(vote_html):
+    soup = BeautifulSoup(vote_html, "html.parser")
+    zero_posters = []
+    
+    for row in soup.find_all("tr", class_="cms_table_grid_tr"):
+        cells = row.find_all("td")
+        if len(cells) < 3:
+            continue
+        
+        target = cells[1].text.strip()
+        if target.lower() == "not voting":
+            voters = cells[2].text.strip().split(", ")
+            for voter in voters:
+                if "(0)" in voter:
+                    name = voter.rsplit(" (", 1)[0]  # Extract name before " (0)"
+                    zero_posters.append(name)
+    
+    return zero_posters
 
 def ita_window(session, game_id, security_token):
     url = "https://www.mafiauniverse.com/forums/modbot/ita-window.php"

@@ -371,12 +371,7 @@ async def post_game_reply(thread_id, message):
     session = mu.login(username,password)
     game_id, security_token = mu.open_game_thread(session, thread_id)
     mu.post(session, thread_id, security_token, message)
-    
-async def get_votals(thread_id, atvote_array=None):
-    session = mu.login(username,password)
-    game_id, security_token = mu.open_game_thread(session, thread_id)
-    votes = mu.get_vote_total(session, thread_id, security_token, atvote_array)
-    return votes
+
 
 async def start_itas(current_game):
     ita_session = mu.login(username, password)
@@ -415,6 +410,7 @@ async def get_wolf_info(game_title, setup_title):
 class ThreadmarkProcessor:
     def __init__(self):
         self.processed_threadmarks = []
+        self.checked_zero_posters = False
 
     async def process_threadmarks(self, thread_id, player_aliases, role, guild, channel_id, game_setup, current_game):
         """Fetch and process threadmarks from Mafia Universe."""
@@ -448,7 +444,19 @@ class ThreadmarkProcessor:
                     return
 
                 self.processed_threadmarks.append(event)
-
+            
+            if "Day 1 Start" in self.processed_threadmarks and "Night 1 Start" not in self.processed_threadmarks and not self.checked_zero_posters:
+                current_vc = mu.get_vote_total(thread_id)
+                if mu.is_day1_near_end(current_vc):
+                    self.checked_zero_posters = True
+                    zero_posters = mu.get_zero_posters(current_vc)
+                    if zero_posters:
+                        sub_commands = "\n".join([f'Use `!sub "{name}"` if they have not been replaced or confirmed they are back' for name in zero_posters])  # Generate !sub command for each player
+                        message = f"<@&327124222512070656> - the ongoing turbo has zero posters/AFKs that need to be replaced:\n{sub_commands}"
+                        turbo_channel = bot.get_channel(turbo_chat)
+                        await turbo_channel.send(message)
+                    # post to discord requesting subs for players
+                     
             await asyncio.sleep(30)
 
     async def handle_event(self, event, player_aliases, role, guild, channel, thread_id, game_setup, current_game, post_id=None):
@@ -476,7 +484,7 @@ class ThreadmarkProcessor:
                     if "neil the eel" in flavor:
                         await post_game_reply(thread_id, "have you seen this fish\n[img]https://i.imgur.com/u9QjIqc.png[/img]\n now you have")
             if "Elimination:" in event:
-                eod_votes = await get_votals(thread_id, post_id)
+                eod_votes = mu.get_vote_total(thread_id, post_id)
                 formatted_votes = mu.parse_votecount(eod_votes)
                 await channel.send(f"``` {formatted_votes}```")
                 pass
