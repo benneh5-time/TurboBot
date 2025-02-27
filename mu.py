@@ -224,8 +224,157 @@ def new_game_token(session, thread_id):
         return security_token
     else:
         print("Failed to extract security token.")
-        
+
+
 def start_game(session, security_token, game_title, thread_id, player_aliases, game_setup, day_length, night_length, host_name, anon_enabled, player_limit):
+    global data
+
+    # Define base game settings (common for all setups)
+    base_data = {
+        's': '',
+        'securitytoken': security_token,
+        'submit': '1',
+        'do': 'newgame',
+        'automated': '0',
+        'automation_setting': '2',
+        'game_name': f"{game_title} - [{game_setup} game]",
+        'thread_id': thread_id,
+        'speed_type': '1',
+        'game_type': 'Open',  # Default to "Open", update later if needed
+        'period': 'day',  # Default starting period
+        'phase': '1',
+        'phase_end': '',
+        'started': '1',
+        'start_date': '',
+        'votecount_interval': '0',
+        'votecount_units': 'minutes',
+        'speed_preset': 'custom',
+        'day_units': 'minutes',
+        'night_units': 'minutes',
+        'itas_enabled': '0',
+        'default_ita_hit': '15',
+        'default_ita_count': '1',
+        'ita_immune_policy': '0',
+        'alias_pool': 'Greek_Alphabet',
+        'daily_post_limit': '0',
+        'postlimit_cutoff': '0',
+        'postlimit_cutoff_units': 'hours',
+        'character_limit': '0',
+        'proxy_voting': '0',
+        'tied_lynch': '1',
+        'self_voting': '0',
+        'no_lynch': '1',
+        'announce_lylo': '1',
+        'votes_locked': '1',
+        'votes_locked_manual': '0',
+        'auto_majority': '2',
+        'maj_delay': '0',
+        'show_flips': '0',
+        'suppress_rolepms': '0',
+        'suppress_phasestart': '0',
+        'day_action_cutoff': '1',
+        'mafia_kill_enabled': '1',
+        'mafia_kill_type': 'kill',
+        'detailed_flips': '0',
+        'backup_inheritance': '0',
+        'mafia_win_con': '1',
+        'mafia_kill_assigned': '1',
+        'mafia_day_chat': '1',
+        'characters_enabled': '2',
+        'role_quantity': '1'
+    }
+
+    # Modify game type and period based on game setup
+    if game_setup in ["closedrandomXer", "randommadnessXer"]:
+        base_data["game_type"] = "Closed"
+    elif game_setup in ["bean10", "inno4"]:
+        base_data["game_type"] = "Open"
+        base_data["period"] = "night"  # These games start at night
+
+    # Create an HTTPHeaderDict and add values
+    data = HTTPHeaderDict(base_data)
+
+    # Add dynamic game settings
+    data.add('day_length', day_length)
+    data.add('night_length', night_length)
+    data.add('num_hosts', str(len(host_name)))
+
+    # Anonymity settings
+    if anon_enabled:
+        data.add('aliased', '1')
+        data.add('alias_pool', 'Marvel')
+    else:
+        data.add('aliased', '0')
+
+    # Role Assignment based on game setup
+    game_role_map = {
+        "joat10": (add_joat_roles, "custom", "10"),
+        "bomb10": (add_bomb_roles, "custom", "10"),
+        "bean10": (add_bean_roles, "custom", "10"),
+        "inno4": (add_inno4_roles, "custom", "4"),
+        "billager9": (add_billager9_roles, "custom", "9"),
+        "vig10": (add_vig_roles, "vig-10", "10"),
+        "bml10": (add_bml_roles, "custom", "10"),
+        "closedrandomXer": (add_closedrandomXer_roles, "custom", player_limit),
+        "randommadnessXer": (add_randommadnessXer_roles, "custom", player_limit),
+        "rolemadness13": (add_rm13_roles, "custom", "13"),
+        "ita10": (add_ita10_roles, "custom", "10"),
+        "ita13": (add_ita13_roles, "custom", "13"),
+        "cop9": (add_cop9_roles, "cop-9", "9"),
+        "paritycop9": (add_parity_cop9_roles, "cop-9", "9"),
+        "cop13": (add_cop13_roles, "cop-13", "13"),
+        "doublejoat13": (add_doublejoat13_roles, "custom", "13"),
+    }
+
+    if game_setup in game_role_map:
+        role_function, preset, num_players = game_role_map[game_setup]
+        role_function(game_title)
+        data.add("preset", preset)
+        data.add("num_players", str(num_players))
+
+        # Special case settings
+        if "ita" in game_setup:
+            data.add("itas_enabled", "1")
+            data.add("default_ita_hit", "25")
+            data.add("default_ita_count", "1")
+            data.add("ita_immune_policy", "0")
+        if game_setup in ["cop9", "paritycop9", "cop13"]:
+            data.add("n0_peeks", "2" if game_setup == "paritycop9" else "1")
+
+    # Add players to game
+    add_players(player_aliases, host_name)
+
+    # Submit game request
+    protected_url = "https://www.mafiauniverse.com/forums/modbot/manage-game/"
+    response = session.post(protected_url, data=data)
+
+    # Handle response
+    if response.status_code == 200:
+        print("Game rand submitted successfully", flush=True)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        errors_div = soup.find('div', class_='errors')
+
+        if errors_div:
+            blockhead_text = errors_div.find('h2', class_='blockhead').get_text(strip=True)
+            if blockhead_text == "Success!":
+                success_message = errors_div.find('div', class_='blockrow').find('p').get_text(strip=True)
+                print(success_message)
+                return success_message
+            elif blockhead_text == "Errors":
+                error_message = errors_div.find('div', class_='blockrow').find('p').get_text(strip=True)
+                print(error_message)
+                return error_message
+            else:
+                print("Unexpected blockhead text received:", blockhead_text, flush=True)
+                return f"Unexpected blockhead text received: {blockhead_text}"
+        else:
+            print("No 'errors' div found in the response.", flush=True)            
+            return "No 'errors' div found in the response."
+    else:
+        print("Game rand failed", flush=True)
+        return "Game rand failed"
+     
+"""def start_game(session, security_token, game_title, thread_id, player_aliases, game_setup, day_length, night_length, host_name, anon_enabled, player_limit):
     global data
 
     if game_setup == "closedrandomXer" or game_setup == "randommadnessXer":
@@ -254,7 +403,45 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
     elif anon_enabled == False:
         data.add('aliased', '0')
     
+    game_setups = {
+        "joat10": {"func": add_joat_roles, "preset": "custom", "num_players": "10", "roles_dropdown": "39"},
+        "bomb10": {"func": add_bomb_roles, "preset": "custom", "num_players": "10"},
+        "bean10": {"func": add_bean_roles, "preset": "custom", "num_players": "10"},
+        "inno4": {"func": add_inno4_roles, "preset": "custom", "num_players": "4"},
+        "billager9": {"func": add_billager9_roles, "preset": "custom", "num_players": "9"},
+        "vig10": {"func": add_vig_roles, "preset": "vig-10", "num_players": "10"},
+        "bml10": {"func": add_bml_roles, "preset": "custom", "num_players": "10"},
+        "closedrandomXer": {"func": add_closedrandomXer_roles, "preset": "custom", "num_players": player_limit},
+        "randommadnessXer": {"func": add_randommadnessXer_roles, "preset": "custom", "num_players": player_limit},
+        "rolemadness13": {"func": add_rm13_roles, "preset": "custom", "num_players": "13"},
+        "ita10": {
+            "func": add_ita10_roles, "preset": "custom", "num_players": "10",
+            "itas_enabled": "1", "default_ita_hit": "25", "default_ita_count": "1", "ita_immune_policy": "0"
+        },
+        "ita13": {
+            "func": add_ita13_roles, "preset": "custom", "num_players": "13",
+            "itas_enabled": "1", "default_ita_hit": "25", "default_ita_count": "1", "ita_immune_policy": "0"
+        },
+        "cop9": {"func": add_cop9_roles, "preset": "cop-9", "num_players": "9", "n0_peeks": "1"},
+        "paritycop9": {"func": add_parity_cop9_roles, "preset": "cop-9", "num_players": "9", "n0_peeks": "2"},
+        "cop13": {"func": add_cop13_roles, "preset": "cop-13", "num_players": "13", "n0_peeks": "1"},
+        "doublejoat13": {"func": add_doublejoat13_roles, "preset": "custom", "num_players": "13"},
+    }
+    setup_config = game_setups.get(final_game_setup)
 
+    if setup_config:
+        # Call the corresponding role-adding function
+        setup_config["func"](game_title)
+
+        # Add preset and num_players (mandatory)
+        data.add("preset", setup_config["preset"])
+        data.add("num_players", str(setup_config["num_players"]))
+
+        # Add any additional settings specific to the game mode
+        for key, value in setup_config.items():
+            if key not in ["func", "preset", "num_players"]:  # Exclude function reference and mandatory keys
+                data.add(key, value)
+                
     if final_game_setup == "joat10":
         add_joat_roles(game_title)
         data.add("preset", "custom")
@@ -362,7 +549,7 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
             return ("No 'errors' div found in the response.")
 
     else:
-        print("Game rand fucked up")
+        print("Game rand fucked up")"""
 
 
 def load_flavor_jsons():
