@@ -453,16 +453,29 @@ class ThreadmarkProcessor:
                             await turbo_channel.send(message)
                             
             if "Night 1 Start" in self.processed_threadmarks and not self.poll_created:
-                duration = datetime.timedelta(hours=1)
-                poll = Poll(question="who wolf", duration=duration, multiple=True)
-                print(f"DEBUG1:player_aliases = {player_aliases} ({type(player_aliases)})", flush=True)
-                for player in player_aliases:
-                    print(f"DEBUG: player_aliases = {player_aliases} ({type(player_aliases)})", flush=True)
-                    print(player, flush=True)
-                    poll.add_answer(text=player)
-                turbo_channel = bot.get_channel(turbo_chat)
-                await turbo_channel.send("who wolf", poll=poll)
-                self.poll_created = True
+                try: 
+                    duration = datetime.timedelta(hours=1)
+                    poll = Poll(question="who wolf", duration=duration, multiple=True)
+                    print(f"DEBUG1:player_aliases = {player_aliases} ({type(player_aliases)})", flush=True)
+                    if player_aliases:
+                        for player in player_aliases:
+                            print(f"DEBUG: player_aliases = {player_aliases} ({type(player_aliases)})", flush=True)
+                            print(player, flush=True)
+                            poll.add_answer(text=player)
+                        turbo_channel = bot.get_channel(turbo_chat)
+                        await turbo_channel.send("who wolf", poll=poll)
+                        self.poll_created = True
+                    else:
+                        for player in ['moppo', 'dark forces', 'abraham delacey']:
+                            print(f"DEBUG: player_aliases = {player_aliases} ({type(player_aliases)})", flush=True)
+                            print(player, flush=True)
+                            poll.add_answer(text=player)
+                        turbo_channel = bot.get_channel(turbo_chat)
+                        await turbo_channel.send("who wolf", poll=poll)
+                        self.poll_created = True
+                except Exception as e:
+                    print(f"Couldn't create poll: {e}")
+                    self.poll_created = True
                                              
             await asyncio.sleep(30)
 
