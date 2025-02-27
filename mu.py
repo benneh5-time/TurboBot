@@ -331,8 +331,9 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         role_function(game_title)
         data.add("preset", preset)
         data.add("num_players", str(num_players))
-
-        # Special case settings
+        
+        if game_setup in ["inno4", "bean10"]:
+            data.add("phase", "0")
         if "ita" in game_setup:
             data.add("itas_enabled", "1")
             data.add("default_ita_hit", "25")
