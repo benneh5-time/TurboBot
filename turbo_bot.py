@@ -440,16 +440,16 @@ class ThreadmarkProcessor:
             
             if "Day 1 Start" in self.processed_threadmarks and "Night 1 Start" not in self.processed_threadmarks and not self.checked_zero_posters:
                 current_vc = mu.get_vote_total(thread_id)
-                if mu.is_day1_near_end(current_vc):
-                    self.checked_zero_posters = True
-                    zero_posters = mu.get_zero_posters(current_vc)
-                    if zero_posters:
-                        sub_commands = "\n".join([f'Use `!sub "{name}"` if they have not been replaced or confirmed they are back' for name in zero_posters])  # Generate !sub command for each player
-                        message = f"<@&327124222512070656> - the ongoing turbo has zero posters/AFKs that need to be replaced:\n{sub_commands}"
-                        turbo_channel = bot.get_channel(turbo_chat)
-                        await turbo_channel.send(message)
-                    # post to discord requesting subs for players
-                     
+                if current_vc:
+                    if mu.is_day1_near_end(current_vc):
+                        self.checked_zero_posters = True
+                        zero_posters = mu.get_zero_posters(current_vc)
+                        if zero_posters:
+                            sub_commands = "\n".join([f'Use `!sub "{name}"` if they have not been replaced or confirmed they are back' for name in zero_posters])  # Generate !sub command for each player
+                            message = f"<@&327124222512070656> - the ongoing turbo has zero posters/AFKs that need to be replaced:\n{sub_commands}"
+                            turbo_channel = bot.get_channel(turbo_chat)
+                            await turbo_channel.send(message)
+                                             
             await asyncio.sleep(30)
 
     async def handle_event(self, event, player_aliases, role, guild, channel, thread_id, game_setup, current_game, post_id=None):
