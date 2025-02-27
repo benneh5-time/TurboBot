@@ -376,7 +376,7 @@ async def get_votals(thread_id, atvote_array=None):
     session = mu.login(username,password)
     game_id, security_token = mu.open_game_thread(session, thread_id)
     votes = mu.get_vote_total(session, thread_id, security_token, atvote_array)
-    return votes.text
+    return votes
 
 async def start_itas(current_game):
     ita_session = mu.login(username, password)
