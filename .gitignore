@@ -6,3 +6,4 @@ aliases.json
 creds*
 testing*
 gpt_responses.py
+__pycache__/*

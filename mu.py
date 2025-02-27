@@ -5,14 +5,17 @@ from urllib3._collections import HTTPHeaderDict
 import uuid
 import json
 import random
+from bs4 import BeautifulSoup
+### Custom imports
 import mafia_roles
 import town_roles
 import independent_roles
 import roles
 import rolemadness
-from bs4 import BeautifulSoup
 from role_definitions import create_random_role
 from flavor import joat10_flavor, cop13_flavor, cop9_flavor, vig10_flavor, billager9_flavor, bomb10_flavor
+
+
 
 def load_json_file(json_file):
     with open(json_file, 'r') as f:
@@ -79,6 +82,26 @@ def open_game_thread(session, thread_id):
 
     return game_id, security_token 
 
+def get_vote_total(session, thread_id, security_token, atvote_array=None):
+    url = "https://www.mafiauniverse.com/forums/modbot/botpost.php"
+    payload = {
+        "do": "get_votes",
+        "userid": "11",
+        "thread_id": "51866",
+        "message": "Votal",
+        "securitytoken": security_token,
+    }
+    if atvote_array:
+        payload["atvote_array[]"] = atvote_array
+        
+    try:
+        votes = session.post(url, data=payload)
+        votes.raise_for_status()
+        return votes.text
+    except Exception as e:
+        print(f"Error fetching vote total: {e}")
+        return None
+
 def ita_window(session, game_id, security_token):
     url = "https://www.mafiauniverse.com/forums/modbot/ita-window.php"
 
@@ -121,6 +144,7 @@ def new_thread_token(session):
         return security_token
     else:
         print("Failed to extract security token.")
+        
 def extract_descriptions(role_categories):
     descriptions = []
     for category in role_categories:

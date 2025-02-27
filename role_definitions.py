@@ -290,9 +290,3 @@ def create_random_role(faction):
 
 
     return role
-
-faction_choice = "Wolf" 
-
-random_role = create_random_role(faction_choice)
-
-print(random_role)

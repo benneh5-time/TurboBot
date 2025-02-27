@@ -425,7 +425,6 @@ class ThreadmarkProcessor:
                 if event in self.processed_threadmarks:
                     continue
                 
-                
                 if "Event" in event or "Game Information" in event:
                     continue
                 else:
