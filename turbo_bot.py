@@ -134,7 +134,6 @@ def save_spec_list():
 def load_spec_list():
     try:
         with open('spec_list.json', 'r') as f:
-            print("loaded spec list successfully", flush=True)
             return json.load(f)
     except FileNotFoundError:
         print("Failed to load spec list", flush=True)
@@ -209,7 +208,6 @@ def find_key_by_value(dictionary, value):
     return None
   
 dvc_archive = load_dvc_archive()
-print(f"Current dvc archive: {dvc_archive}")
 
 @bot.event
 async def on_ready():
@@ -222,7 +220,6 @@ async def on_ready():
     players, waiting_list, current_setup, game_host_name, player_limit = load_player_list()
     recruit_list = load_recruit_list()
     spec_list = load_spec_list()
-    print(f"Printing Spec List: {spec_list}", flush=True)
     if players is None:
         players = {}
     if waiting_list is None:
@@ -234,8 +231,6 @@ async def on_ready():
     if player_limit is None:
         player_limit = 10  
     update_players.start()  # Start background task
-    await dvc_limit()
-    # await clear_dvc_roles()
 
 @bot.command(name='add_bet')
 async def add_bet(ctx, game:str, *, bet: str):
@@ -310,8 +305,6 @@ async def dvc_limit():
 
     category = bot.get_channel(dvc_archive)
     channel_count = len(category.channels)
-
-    print(channel_count, flush=True)
 
     if channel_count == 50:
         print("at cap", flush=True)
@@ -468,12 +461,6 @@ class ThreadmarkProcessor:
         if any(keyword in event for keyword in elimination_keywords) and " was " in event:
             results = event.split(max([keyword for keyword in elimination_keywords if keyword in event], key=len), 1)[1].strip()
             players = results.split(", ")
-            #try:
-            #    thread_flavor_post = await gpt_responses.get_flavor_response(str(event))
-            #    if thread_flavor_post and thread_flavor_post != "Failed to call GPT":
-            #        await post_game_reply(thread_id, thread_flavor_post)
-            #except Exception as e:
-            #    print(f"Error getting flavor response: {e}", flush=True)
 
             for player in players:
                 if " was " in player:
@@ -486,7 +473,8 @@ class ThreadmarkProcessor:
             if "Elimination:" in event:
                 eod_votes = mu.get_vote_total(thread_id, post_id)
                 formatted_votes = mu.parse_votecount(eod_votes)
-                await channel.send(f"``` {formatted_votes}```")
+                message = await channel.send(f"``` {formatted_votes}```")
+                await message.pin()
                 pass
 
         elif "Results: No one died" in event:
@@ -499,8 +487,11 @@ class ThreadmarkProcessor:
             await start_itas(current_game)
 
         elif "Elimination: Sleep" in event:
-            await channel.send("Players voted sleep. ZzZZZZzzzZzzz.")
+            eod_votes = mu.get_vote_total(thread_id, post_id)
+            formatted_votes = mu.parse_votecount(eod_votes)
             await channel.send("https://media1.tenor.com/m/VdIKn05yIh8AAAAd/cat-sleep.gif")
+            message = await channel.send(f"``` {formatted_votes}```")
+            await message.pin()
             await post_game_reply(thread_id, "eepy\n\n[img]https://media1.tenor.com/m/VdIKn05yIh8AAAAd/cat-sleep.gif[/img]\n\neepy")
 
         elif "Game Over:" in event:
@@ -1262,7 +1253,6 @@ async def in_(ctx, *time):
             delayed_time = int(parts[1])
             time = int(60)
     else:
-        print(time, flush=True)
         time = int(time)
         
     if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -1792,15 +1782,10 @@ async def process_archive(ctx, category_name):
     category = discord.utils.get(guild.categories, name=category_name)
     try:
         if category:
-            print(category.channels)
 
             for channel in category.channels:
-                print(channel.name, flush=True)
                 chan_name = channel.name
-                print(chan_name, flush=True)
                 match = pattern.search(chan_name)
-                print(match.group(1))
-
                 thread_id_only = str(match.group(1))
                 process(thread_id_only)
 
@@ -1920,7 +1905,9 @@ async def live_dvc(ctx, thread_id):
     channel = bot.get_channel(channel_id)
 	
     game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"
-    await channel.send(f"MU Link for the current game: \n\n{game_url}")
+    pin_message = await channel.send(f"MU Link for the current game: \n\n{game_url}")
+    if pin_message:
+        pin_message.pin()
     await new_game_spec_message(bot, thread_id, "Custom/Live DVC")
     current_game = thread_id 
     await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
@@ -2115,7 +2102,7 @@ async def rand(ctx, *args):
         
         if "was created successfully." in response_message:
             # Use aliases to get the Discord IDs
-            print("Success. Gathering player list for mentions", flush=True)
+            print("Game randed successfully", flush=True)
             mention_list = []
             
             for player in player_aliases:
@@ -2158,13 +2145,15 @@ async def rand(ctx, *args):
             #####################################################
             #####################################################
             role, channel_id, guild = await create_dvc(thread_id)
-            print(f"DVC thread created. Clearing variables", flush=True)
+            print(f"DVC thread created.", flush=True)
             channel = bot.get_channel(channel_id)
             
             host_msg = "Hosts for the current game: "
 
             for host in game_host_name:
                 host = host.lower()
+                if host == 'turby':
+                    pass
                 mention_id = None
 
                 # Search for the host in active or all aliases
@@ -2191,15 +2180,12 @@ async def rand(ctx, *args):
 
             spec_msg = "Specs for the current game: "
             for spec in spec_list:
-                print(spec, flush=True)
                 if int(spec) in mention_list:
                     print(f"{spec} not in list, continuing to next", flush=True)
                     continue
                 else:
                     try:
                         spec_int = int(spec)
-                        print(f"Trying to add {spec_int} to dvc",flush=True)
-
                         spec_member = guild.get_member(spec_int)
                         await spec_member.add_roles(role)
                         spec_msg += f"<@{spec}> "
@@ -2208,7 +2194,9 @@ async def rand(ctx, *args):
                         print(f"Error: {error}", flush=True)
             await channel.send(spec_msg)
             
-            await channel.send(f"MU Link for the current game: \n\n{game_url}")
+            pin_message = await channel.send(f"MU Link for the current game: \n\n{game_url}")
+            if pin_message:
+                pin_message.pin()
 
             await new_game_spec_message(bot, thread_id, game_title)
             postgame_players = players
@@ -2351,9 +2339,8 @@ def update_db_after_game(thread_id, db_name="game_logs.db"):
 
     if summary_json:
         store_game_data(thread_id, summary_json, db_name)
-        print(f"<:laserbensdog:1337171130166939739> Game data stored for thread {thread_id}")
     else:
-        print(f"⚠️ Failed to fetch data for thread {thread_id}")
+        print(f"Failed to fetch data for thread {thread_id}")
 
 def get_game_log(thread_id):
     """Fetches the game summary from the API and returns relevant data."""
@@ -2414,209 +2401,6 @@ async def recon (ctx):
     recon_quote = random.choice(squote)
     
     await ctx.send(f"RECONSPARTAN Quote 1.0:\n```{recon_quote}```")
-@bot.command()
-async def test_rand(ctx, *args):
-    if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
-        return
-    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled
-
-    player_aliases = ["abraham delacey", "sprigatito", "dark forces", "butterr", "joe bruin", "the turbo team", "ex lion tamer", "moppo", "Big ham, mafia goon", "catnoddotgif"]
-        
-    if is_rand_running:
-        await ctx.send("The !rand command is currently being processed. Please wait.")
-        return
-    
-    if ctx.author.id not in mods:
-        await ctx.send("Test rands only allowed for Turby subscribers")
-        return
-    
-    # args = shlex.split(' '.join(args))
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-title', default=None)
-    parser.add_argument('-thread_id', default=None)
-    
-    args_parsed = parser.parse_args(args)
-
-    is_rand_running = True
-
-    test_hosts = ["benneh", "Turby"]
-
-    await ctx.send("Randing, stfu")
-    #
-    try:
-        #Login and get Initial Token
-        session = mu.login(username, password)
-        security_token = mu.new_thread_token(session)
-        
-        game_title = args_parsed.title
-        thread_id = args_parsed.thread_id
-
-        if current_setup == "random10er":
-            potential_setups = ["joat10", "vig10", "bomb10"]
-            final_game_setup = random.choice(potential_setups)
-            setup_title = final_game_setup
-        else:
-            final_game_setup = current_setup
-            setup_title = final_game_setup
-
-        if not game_title:
-            game_title = mu.generate_game_thread_uuid()
-            
-        if not thread_id:
-            print(f"Attempting to post new thread with {game_title}", flush=True)
-            thread_id = mu.post_thread(session, game_title, security_token, setup_title,test=True)
-        host_list = [f"{host}" for host in test_hosts]
-        hosts = ', '.join(host_list)
-        await ctx.send(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.")
-        print(f"Attempting to rand `{game_title}`, a {current_setup} game hosted by `{hosts}` using thread ID: `{thread_id}`. Please standby.", flush=True)
-        security_token = mu.new_game_token(session, thread_id)
-
-        response_message = mu.start_game(session, security_token, game_title, thread_id, player_aliases, final_game_setup, day_length, night_length, test_hosts, anon_enabled,player_limit)
-        
-        if "was created successfully." in response_message:
-            # Use aliases to get the Discord IDs
-            print("Success. Gathering player list for mentions", flush=True)
-            mention_list = []
-            
-            for player in player_aliases:
-                for key, value in aliases.items():
-                    if player == value:
-                        mention_list.append(int(key))
-                        
-            player_mentions = " ".join([f"<@{id}>" for id in mention_list])
-            game_url = f"https://www.mafiauniverse.com/forums/threads/{thread_id}"  # Replace BASE_URL with the actual base URL
-            await ctx.send(f"{player_mentions}\nranded STFU\n{game_url}\nType !dvc to join the turbo DVC/Graveyard. You will be auto-in'd to the graveyard channel upon your death if you are in that server!")
-            
-            """###################################################
-            ####################### new code for wolf chat adds
-            wolf_team = await get_wolf_info(game_title, setup_title)
-            wc_channel_id, wc_guild = await create_wolf_chat(thread_id)
-            wc_channel = bot.get_channel(wc_channel_id)
-
-            wc_msg = "Wolf chat: "
-            for wolf in wolf_team:
-                if wolf.lower() in aliases.values():
-                    try:
-                        mention_id = find_key_by_value(aliases, wolf)
-                        wolf_id = wc_guild.get_member(mention_id)
-                        # await wolf_id.add_roles(wc_role)
-                        await wc_channel.set_permissions(wolf_id, read_messages=True, send_messages=True)
-                        wc_msg += f"<@{mention_id}> "
-                    except:
-                        print(f"Can't add {wolf} to wc", flush=True)
-            await wc_channel.send(wc_msg)
-            #####################################################
-            #####################################################"""
-
-            role, channel_id, guild = await create_dvc(thread_id)
-            print(f"DVC thread created. Clearing variables", flush=True)
-            channel = bot.get_channel(channel_id)
-
-            host_msg = "Hosts for the current game: "
-            for host in game_host_name:
-                if host in aliases.values():
-                    try:
-                        mention_id = find_key_by_value(aliases, host)
-                        member = guild.get_member(mention_id)
-                        await member.add_roles(role)
-                        host_msg += f"<@{mention_id}>"
-                        #await channel.send(f"<@{mention_id}> is hosting, welcome to dvc")
-                    except:
-                        print(f"Can't add {host} to dvc", flush=True)
-                        #await channel.send(f"failed to add {host} to dvc.")
-            await channel.send(host_msg)
-
-            spec_msg = "Specs for the current game: "
-            for spec in spec_list:
-                print(spec, flush=True)
-                if int(spec) in mention_list:
-                    print(f"{spec} not in list, continuing to next", flush=True)
-                    continue
-                else:
-                    try:
-                        spec_int = int(spec)
-                        print(f"Trying to add {spec_int} to dvc",flush=True)
-
-                        spec_member = guild.get_member(spec_int)
-                        await spec_member.add_roles(role)
-                        spec_msg += f"<@{spec}> "
-                        #await channel.send(f"<@{spec}> is spectating, welcome to dvc")
-                    except Exception as error:
-                        print(f"Error: {error}", flush=True)
-            await channel.send(spec_msg)
-            
-            await channel.send(f"MU Link for the current game: \n\n{game_url}")
-
-            await new_game_spec_message(bot, thread_id, game_title)
-            postgame_players = players
-            game_host_name = ["Turby"]
-            players.clear()
-            players.update(waiting_list)
-            waiting_list.clear()  
-            anon_enabled = False 
-            print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
-            is_rand_running = False
-            current_game = thread_id
-            await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
-            print(f"Threadmark processor finished. rand function finished.", flush=True)
-            await edit_dvc(channel, guild)
-            await delete_dvc_role(channel, role)
-            current_game = None
-            
-            summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
-            summary_response = requests.get(summary_url)
-            summary_json = summary_response.json()
-
-            summary_csv = 'game_database.csv'
-            summary_headers = ['Turbo Title', 'Setup', 'Thread ID', 'Game ID', 'Winning Alignment', 'Villagers', 'Wolves']
-            town = summary_json['players']['town']
-            mafia = summary_json['players']['mafia']
-
-            town_list = []
-            mafia_list = []
-
-            for player in town:
-                town_list.append(player['username'])
-                
-            for player in mafia:
-                mafia_list.append(player['username'])
-            
-            title = summary_json['title']
-            start_index = title.find(" - [")
-            if start_index != -1:
-                start_index += len(" - [")
-                end_index = title.find(" game]", start_index)
-
-                if end_index != -1:
-                    extracted_setup = title[start_index:end_index]
-                else:
-                    print("No setup found", flush=True)
-            else:
-                print("No setup found", flush=True)
-
-            with open(summary_csv, 'a', newline='') as csvfile:
-                csv_writer = csv.DictWriter(csvfile, fieldnames=summary_headers)
-
-                if csvfile.tell() == 0:
-                    csv_writer.writeheader()
-                
-                csv_writer.writerow({
-                    "Turbo Title": summary_json['title'],
-                    "Setup": extracted_setup,
-                    "Thread ID": summary_json['threadid'],
-                    "Game ID": summary_json['id'],
-                    "Winning Alignment": summary_json['winning_alignment'],
-                    "Villagers": town_list,
-                    "Wolves": mafia_list,                          
-                })
-
-
-        elif "Error" in response_message:
-            print(f"Game failed to rand, reason: {response_message}", flush=True)
-            await ctx.send(f"Game failed to rand, reason: {response_message}\nPlease fix the error and re-attempt the rand with thread_id: {thread_id} by typing '!rand -thread_id \"{thread_id}\" so a new game thread is not created.")    
-    
-    finally:
-        is_rand_running = False
 
 def process(thread_id):
     summary_url = f"https://www.mafiauniverse.com/forums/modbot-beta/get-game-summary.php?threadid={thread_id}"
@@ -2815,8 +2599,6 @@ async def spec(ctx, *args):
         return
         
     if args_parsed.opt_in:
-        print(f"Author ID: {ctx.author.id}", flush=True)
-        print(f"Current spec list: {spec_list}", flush=True)
         if str(ctx.author.id) not in spec_list:
             spec_list[str(ctx.author.id)] = str(ctx.author.id)
             save_spec_list()
@@ -2898,7 +2680,6 @@ async def on_reaction_add(reaction, user):
         return
     global game_host_name, player_limit, players, waiting_list, turbo_ping_message   
     if reaction.message.id == turbo_ping_message:
-        print(reaction.emoji, flush=True)
         if str(reaction.emoji) == '<:laserbensdog:1337171130166939739>':
             if user.id not in aliases:
                 await reaction.message.channel.send("Please set your MU username by using !alias MU_Username before inning!")
@@ -2948,7 +2729,6 @@ async def on_reaction_add(reaction, user):
             await update_status()
 
     if reaction.message.id == status_id:
-        print(reaction.emoji, flush=True)
         if str(reaction.emoji) == '<:laserbensdog:1337171130166939739>':
             if user.id not in aliases:
                 await reaction.message.channel.send("Please set your MU username by using !alias MU_Username before inning!")
@@ -3049,10 +2829,8 @@ async def clear_dvc_roles():
     for role in roles_to_delete:
         try:
             await role.delete()
-            print(f"Deleted role {role.name}")
         except:
-            print(f"Couldnt delete role {role.name}")
-       
+            print("Can't delete role", flush=True)
 TOKEN = os.environ.get('TOKEN')
 # Run the bot
 bot.run(TOKEN)

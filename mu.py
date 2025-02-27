@@ -136,10 +136,8 @@ def get_vote_total(thread_id, atvote_array=None):
 def is_day1_near_end(vote_html, minutes=7):
      soup = BeautifulSoup(vote_html, 'html.parser')
      title = soup.find('div', style='text-align: center;')
-     print(title)
      if title and "Day 1 Votecount" in title.text:
          countdown = soup.find('span', class_='countdown')
-         print(countdown)
          if countdown and countdown.has_attr('data-date'):
              timestamp = int(countdown['data-date']) // 1000
              current_time = datetime.datetime.utcnow().timestamp()
