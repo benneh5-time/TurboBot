@@ -451,11 +451,12 @@ class ThreadmarkProcessor:
                             message = f"<@&327124222512070656> - the ongoing turbo has zero posters/AFKs that need to be replaced:\n{sub_commands}"
                             turbo_channel = bot.get_channel(turbo_chat)
                             await turbo_channel.send(message)
+                            
             if "Night 1 Start" in self.processed_threadmarks and not self.poll_created:
                 duration = datetime.timedelta(hours=1)
                 poll = Poll(question="who wolf", duration=duration, multiple=True)
                 for player in player_aliases:
-                    poll.add_answer(player)
+                    poll.add_answer(text=player)
                                              
             await asyncio.sleep(30)
 
