@@ -451,8 +451,7 @@ class ThreadmarkProcessor:
                     return
 
                 self.processed_threadmarks.append(event)
-            for tm in self.processed_threadmarks:
-                print(tm, flush=True)
+
             if "Day 1 Start" in self.processed_threadmarks and "Night 1 Start" not in self.processed_threadmarks and not self.checked_zero_posters:
                 current_vc = mu.get_vote_total(thread_id)
                 if current_vc:
@@ -513,7 +512,6 @@ class ThreadmarkProcessor:
             try: 
                 duration = datetime.timedelta(hours=1)
                 poll = Poll(question="who wolf", duration=duration, multiple=True)
-                print(f"DEBUG1:player_aliases = {player_aliases} ({type(player_aliases)})", flush=True)
                 if player_aliases:
                     for player in player_aliases[:10]:
                         poll.add_answer(text=player)
