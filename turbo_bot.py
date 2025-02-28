@@ -56,6 +56,7 @@ spec_list = {}
 game_host_name = ["Turby"]
 recruit_timer = 0
 aliases = {}
+game_processors = {}
 
 # Misc Discord Information
 mods = [178647349369765888, 93432503863353344, 966170585040306276, 438413352616722435]
@@ -556,9 +557,6 @@ class ThreadmarkProcessor:
         """Extracts username and flavor text from a player string."""
         username, flavor = player.split(" was ", 1)
         return username.strip().lower(), flavor.strip().lower()
-
-
-processor = ThreadmarkProcessor()
 
 @bot.command()
 async def sub(ctx, player=None):
@@ -1929,7 +1927,7 @@ async def live_dvc(ctx, thread_id):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
 
-    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled
+    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled, game_processors
     player_aliases = []
     final_game_setup = "custom"
 	
@@ -1942,7 +1940,10 @@ async def live_dvc(ctx, thread_id):
         await pin_message.pin()
     await new_game_spec_message(bot, thread_id, "Custom/Live DVC")
     current_game = thread_id 
-    await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
+    
+    if thread_id not in game_processors:
+        game_processors[thread_id] = ThreadmarkProcessor()
+    await game_processors[thread_id].process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
 
     await edit_dvc(channel, guild)
     await delete_dvc_role(channel, role)
@@ -2240,7 +2241,9 @@ async def rand(ctx, *args):
             print("Old player/waiting lists cleared and updated and host set back to default. Starting threadmark processor next.", flush=True)			
             is_rand_running = False
             current_game = thread_id
-            await processor.process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
+            if thread_id not in game_processors:
+                game_processors[thread_id] = ThreadmarkProcessor()
+            await game_processors[thread_id].process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
             print(f"Threadmark processor finished. rand function finished.", flush=True)
             await edit_dvc(channel, guild)
             #await edit_dvc(wc_channel, wc_guild)
