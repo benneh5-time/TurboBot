@@ -464,25 +464,6 @@ class ThreadmarkProcessor:
                             message = f"<@&327124222512070656> - the ongoing turbo has zero posters/AFKs that need to be replaced:\n{sub_commands}"
                             turbo_channel = bot.get_channel(turbo_chat)
                             await turbo_channel.send(message)
-                            
-            if "Night 1 Start" in self.processed_threadmarks and not self.poll_created:
-                try: 
-                    duration = datetime.timedelta(hours=1)
-                    poll = Poll(question="who wolf", duration=duration, multiple=True)
-                    print(f"DEBUG1:player_aliases = {player_aliases} ({type(player_aliases)})", flush=True)
-                    if player_aliases:
-                        for player in player_aliases[:10]:
-                            poll.add_answer(text=player)
-                        await channel.send("n0 turby w", poll=poll)
-                        self.poll_created = True
-                    else:
-                        for player in ['moppo', 'dark forces', 'abraham delacey']:
-                            poll.add_answer(text=player)
-                        await channel.send("n0 turby w", poll=poll)
-                        self.poll_created = True
-                except Exception as e:
-                    print(f"Couldn't create poll: {e}")
-                    self.poll_created = True
                                              
             await asyncio.sleep(30)
 
@@ -527,6 +508,25 @@ class ThreadmarkProcessor:
             message = await channel.send(f"``` {formatted_votes}```")
             await message.pin()
             await post_game_reply(thread_id, "eepy\n\n[img]https://media1.tenor.com/m/VdIKn05yIh8AAAAd/cat-sleep.gif[/img]\n\neepy")
+            
+        elif "Night 1 Start" in event and not self.poll_created:
+            try: 
+                duration = datetime.timedelta(hours=1)
+                poll = Poll(question="who wolf", duration=duration, multiple=True)
+                print(f"DEBUG1:player_aliases = {player_aliases} ({type(player_aliases)})", flush=True)
+                if player_aliases:
+                    for player in player_aliases[:10]:
+                        poll.add_answer(text=player)
+                    await channel.send("n0 turby w", poll=poll)
+                    self.poll_created = True
+                else:
+                    for player in ['moppo', 'dark forces', 'abraham delacey']:
+                        poll.add_answer(text=player)
+                    await channel.send("n0 turby w", poll=poll)
+                    self.poll_created = True
+            except Exception as e:
+                print(f"Couldn't create poll: {e}")
+                self.poll_created = True
 
         elif "Game Over:" in event:
             await channel.send("Game concluded -- attempting channel housekeeping/clean up")
