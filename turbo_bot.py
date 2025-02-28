@@ -451,7 +451,8 @@ class ThreadmarkProcessor:
                     return
 
                 self.processed_threadmarks.append(event)
-            
+            for tm in self.processed_threadmarks:
+                print(tm, flush=True)
             if "Day 1 Start" in self.processed_threadmarks and "Night 1 Start" not in self.processed_threadmarks and not self.checked_zero_posters:
                 current_vc = mu.get_vote_total(thread_id)
                 if current_vc:
