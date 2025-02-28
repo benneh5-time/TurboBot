@@ -486,7 +486,7 @@ class ThreadmarkProcessor:
                                 if name.lower() == value['active'] or name.lower() in value['all']
                             ]
                             zp_mentions = " ".join(f"<@{id}>" for id in zero_poster_mention_list) if zero_poster_mention_list else "Player w/ discord unknown to Turby" 
-                            message = f"{zp_mentions} - please report to the game thread and post or a sub will be requested soon: https://www.mafiauniverse.com/forums/threads/{thread_id}"
+                            message = f"{zp_mentions} - please report to the game thread. Post in game and acknowledge here or a sub will be requested soon: https://www.mafiauniverse.com/forums/threads/{thread_id}"
                             turbo_channel = bot.get_channel(turbo_chat)
                             await turbo_channel.send(message)
                                              
