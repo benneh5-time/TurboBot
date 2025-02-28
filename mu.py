@@ -413,7 +413,10 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
 
     if game_setup in game_role_map:
         role_function, preset, num_players = game_role_map[game_setup]
-        role_function(game_title)
+        if game_setup in ['closedrandomXer', 'randommadnessXer']:
+            role_function(game_title, player_limit)
+        else:
+            role_function(game_title)
         data.add("preset", preset)
         data.add("num_players", str(num_players))
         
