@@ -419,6 +419,7 @@ class ThreadmarkProcessor:
         self.processed_threadmarks = []
         self.checked_zero_posters = False
         self.poll_created = False
+        self.ping_zero_posters = False
 
     async def process_threadmarks(self, thread_id, player_aliases, role, guild, channel_id, game_setup, current_game):
         """Fetch and process threadmarks from Mafia Universe."""
@@ -463,12 +464,29 @@ class ThreadmarkProcessor:
                             zero_poster_mention_list = [
                                 int(key) for name in zero_posters
                                 for key, value in aliases.items()
-                                if name == value['active'] or name in value['all']
+                                if name.lower() == value['active'] or name.lower() in value['all']
                             ]
-                            zp_mentions = " ".join(f"<@{id}>" for id in zero_poster_mention_list) if zero_poster_mention_list else "No mentions found" 
+                            zp_mentions = " ".join(f"<@{id}>" for id in zero_poster_mention_list) if zero_poster_mention_list else "Player w/ discord unknown to Turby" 
                             sub_commands = "\n".join(f'Use `!sub "{name}"` if they have not been replaced or confirmed they are back' for name in zero_posters)
                             message = f"<@&327124222512070656> {zp_mentions} - the ongoing turbo has zero poster(s)/AFK(s) that need to be replaced:\n{sub_commands}"
                             
+                            turbo_channel = bot.get_channel(turbo_chat)
+                            await turbo_channel.send(message)
+                            
+            if "Day 1 Start" in self.processed_threadmarks and not self.ping_zero_posters:
+                current_vc = mu.get_vote_total(thread_id)
+                if current_vc:
+                    if mu.is_day1_near_end(current_vc, minutes=10):
+                        self.ping_zero_posters = True
+                        zero_posters = mu.get_zero_posters(current_vc)
+                        if zero_posters:
+                            zero_poster_mention_list = [
+                                int(key) for name in zero_posters
+                                for key, value in aliases.items()
+                                if name.lower() == value['active'] or name.lower() in value['all']
+                            ]
+                            zp_mentions = " ".join(f"<@{id}>" for id in zero_poster_mention_list) if zero_poster_mention_list else "Player w/ discord unknown to Turby" 
+                            message = f"{zp_mentions} - please report to the game thread and post or a sub will be requested soon: https://www.mafiauniverse.com/forums/threads/{thread_id}"
                             turbo_channel = bot.get_channel(turbo_chat)
                             await turbo_channel.send(message)
                                              
