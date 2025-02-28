@@ -360,6 +360,18 @@ async def delete_dvc_role(channel, role):
             await channel.send("DVC Role deleted for post-game clean up.")
         except:
             await channel.send("Failed to delete dvc role")
+            
+async def kill_player(thread_id, dead_player):
+    session = mu.login(username, password)
+    url = f"https://www.mafiauniverse.com/forums/modbot/api/death/?do=kill&threadid={thread_id}&username={dead_player}"
+    kill = session.get(url)
+    return kill.json()
+
+async def revive_player(thread_id, revived_player):
+    session = mu.login(username, password)
+    url = f"https://www.mafiauniverse.com/forums/modbot/api/death/?do=revive&threadid={thread_id}&username={revived_player}"
+    revive = session.get(url)
+    return revive.json()
 
 async def post_game_reply(thread_id, message):
     session = mu.login(username,password)
