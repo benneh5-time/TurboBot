@@ -2049,7 +2049,7 @@ async def wait_for_cancel(message, allowed_users):
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
-    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled, ranked_game
+    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled, ranked_game, game_processors
 
     allowed_randers = get_allowed_randers()
     player_aliases = list(players.keys())[:player_limit]
