@@ -460,8 +460,15 @@ class ThreadmarkProcessor:
                         self.checked_zero_posters = True
                         zero_posters = mu.get_zero_posters(current_vc)
                         if zero_posters:
-                            sub_commands = "\n".join([f'Use `!sub "{name}"` if they have not been replaced or confirmed they are back' for name in zero_posters])  # Generate !sub command for each player
-                            message = f"<@&327124222512070656> - the ongoing turbo has zero posters/AFKs that need to be replaced:\n{sub_commands}"
+                            zero_poster_mention_list = [
+                                int(key) for name in zero_posters
+                                for key, value in aliases.items()
+                                if name == value['active'] or name in value['all']
+                            ]
+                            zp_mentions = " ".join(f"<@{id}>" for id in zero_poster_mention_list) if zero_poster_mention_list else "No mentions found" 
+                            sub_commands = "\n".join(f'Use `!sub "{name}"` if they have not been replaced or confirmed they are back' for name in zero_posters)
+                            message = f"<@&327124222512070656> {zp_mentions} - the ongoing turbo has zero poster(s)/AFK(s) that need to be replaced:\n{sub_commands}"
+                            
                             turbo_channel = bot.get_channel(turbo_chat)
                             await turbo_channel.send(message)
                                              
