@@ -533,8 +533,14 @@ class ThreadmarkProcessor:
             message = await channel.send(f"``` {formatted_votes}```")
             await message.pin()
             await post_game_reply(thread_id, "eepy\n\n[img]https://media1.tenor.com/m/VdIKn05yIh8AAAAd/cat-sleep.gif[/img]\n\neepy")
-            
-        elif "Night 1 Start" in event and not self.poll_created:
+        elif "Game Over:" in event:
+            await channel.send("Game concluded -- attempting channel housekeeping/clean up")
+            self.processed_threadmarks.clear()
+            return True
+        
+        return False
+    
+        '''elif "Night 1 Start" in event and not self.poll_created:
             try: 
                 duration = datetime.timedelta(hours=1)
                 poll = Poll(question="who wolf", duration=duration, multiple=True)
@@ -551,13 +557,9 @@ class ThreadmarkProcessor:
             except Exception as e:
                 print(f"Couldn't create poll: {e}")
                 self.poll_created = True
+        '''
 
-        elif "Game Over:" in event:
-            await channel.send("Game concluded -- attempting channel housekeeping/clean up")
-            self.processed_threadmarks.clear()
-            return True
-        
-        return False
+
 
     async def add_player_to_dvc(self, username, player_aliases, guild, role, channel):
         """Attempts to add a player to the Dead Voice Chat (DVC) based on their alias."""
