@@ -664,7 +664,7 @@ async def leaderboard(ctx, *, leaderboard: str = "Overall"):
     if error:
         await ctx.send(error)
         return
-    current_date = datetime.utcnow().strftime('%Y-%m-%d')
+    current_date = datetime.datetime.utcnow().strftime('%Y-%m-%d')
     embed = discord.Embed(
         title=f"Top 10 Players by {column}, as of {current_date} @ Midnight UTC",
         color=discord.Color.blue()
@@ -715,7 +715,7 @@ async def elo(ctx, *, sheet_name: str = "Turbo Champs 2025"):
         for row in sheet_data:
             if row.get("Name") == active_alias:
                 user_data = row
-    current_date = datetime.utcnow().strftime('%Y-%m-%d')
+    current_date = datetime.datetime.utcnow().strftime('%Y-%m-%d')
     if user_data:
         embed = discord.Embed(title=f"{sheet_name} ELO for {user_data['Name']} as of {current_date} @ Midnight UTC", color=discord.Color.blue())
         embed.add_field(name="Overall ELO", value=user_data["Overall ELO"], inline=False)
