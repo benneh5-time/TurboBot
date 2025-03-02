@@ -2289,7 +2289,7 @@ async def rand(ctx, *args):
             
             aliases_file = 'aliases.json'
             credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'      
-            spreadsheet_name = 'Turbo ELO Sheet'
+            spreadsheet_name = 'HiddenChamps'
                         
             file_path = 'database/' + current_year + '_database.csv'
             sheet_name = '2025'
