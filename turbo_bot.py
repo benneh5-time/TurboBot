@@ -61,6 +61,7 @@ game_processors = {}
 # Misc Discord Information
 mods = [178647349369765888, 93432503863353344, 966170585040306276, 438413352616722435]
 allowed_channels = [223260125786406912, 1258668573006495774, 306758456998887429, 1337149623361601699]  # turbo-chat channel ID
+active_game_channels = []
 test_channels = [1337149623361601699]
 bet_channel = [306758456998887429]
 all_channels = [223260125786406912, 1256131761390489600]
@@ -2075,7 +2076,7 @@ async def wait_for_cancel(message, allowed_users):
 async def rand(ctx, *args):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
-    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled, ranked_game, game_processors
+    global player_limit, game_host_name, current_setup, is_rand_running, current_game, spec_list, anon_enabled, ranked_game, game_processors, active_game_channels
 
     allowed_randers = get_allowed_randers()
     player_aliases = list(players.keys())[:player_limit]
@@ -2204,6 +2205,8 @@ async def rand(ctx, *args):
             #####################################################
             #####################################################
             role, channel_id, guild = await create_dvc(thread_id)
+            active_game_channels.append(channel_id)
+            
             print(f"DVC thread created.", flush=True)
             channel = bot.get_channel(channel_id)
             
@@ -2271,6 +2274,7 @@ async def rand(ctx, *args):
                 game_processors[thread_id] = ThreadmarkProcessor()
             await game_processors[thread_id].process_threadmarks(thread_id, player_aliases, role, guild, channel_id, final_game_setup, current_game)
             print(f"Threadmark processor finished. rand function finished.", flush=True)
+            active_game_channels.remove(channel_id)
             await edit_dvc(channel, guild)
             #await edit_dvc(wc_channel, wc_guild)
             await delete_dvc_role(channel, role)
@@ -2582,6 +2586,19 @@ async def dvc(ctx):
     invite = "https://discord.gg/Wt6rVWmG3B"
     await ctx.send(f"Join the Turbo DVC/Graveyard here: {invite}")
 
+@bot.command()
+async def votecount(ctx):
+    if ctx.channel.id not in active_game_channels:
+        return
+    match = re.match(r"dvc-(\d+)", ctx.channel.name)
+    if match:
+        thread_id = match.group(1)
+        eod_votes = mu.get_vote_total(thread_id)
+        formatted_votes = mu.parse_votecount(eod_votes)
+        message = await ctx.send(f"``` {formatted_votes}```")
+    else:
+        await ctx.send("can't extract thread id for some reason soz")
+    
 
 # The following is a troll command
 @bot.command()
@@ -2695,6 +2712,10 @@ async def on_message(message):
     
     if message.author.id in banned_users:
         return
+    if message.channel.id in active_game_channels:
+        await bot.process_commands(message)
+        return
+    
     if message.channel.id == dvc_channel:
         await bot.process_commands(message)
         return
