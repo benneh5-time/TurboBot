@@ -664,9 +664,9 @@ async def leaderboard(ctx, *, leaderboard: str = "Overall"):
     if error:
         await ctx.send(error)
         return
-    
+    current_date = datetime.utcnow().strftime('%Y-%m-%d')
     embed = discord.Embed(
-        title=f"Top 10 Players by {column}",
+        title=f"Top 10 Players by {column}, as of {current_date} @ Midnight UTC",
         color=discord.Color.blue()
     )
 
@@ -694,6 +694,7 @@ async def elo(ctx, *, sheet_name: str = "Turbo Champs 2025"):
     valid_sheets = ['Lifetime', 'Turbo Champs 2025', '2025', '2024', 'joat-2024', 'bomb-2024', 'vig-2024', 'crx-2024', 'cop9-2024']
     if sheet_name.lower() not in (s.lower() for s in valid_sheets):
         await ctx.send(f"Not a valid ELO leaderboard. Use one of the following sheet names to find your ELO for that leaderboard: {valid_sheets}.")
+        return
         
     sheet_data = get_google_sheet(sheet_name)
 
@@ -714,17 +715,15 @@ async def elo(ctx, *, sheet_name: str = "Turbo Champs 2025"):
         for row in sheet_data:
             if row.get("Name") == active_alias:
                 user_data = row
-    #user_data = find_user_data(sheet_data, ctx.author.id, aliases)
-
+    current_date = datetime.utcnow().strftime('%Y-%m-%d')
     if user_data:
-        embed = discord.Embed(title=f"{sheet_name} ELO for {user_data['Name']}", color=discord.Color.blue())
+        embed = discord.Embed(title=f"{sheet_name} ELO for {user_data['Name']} as of {current_date} @ Midnight UTC", color=discord.Color.blue())
         embed.add_field(name="Overall ELO", value=user_data["Overall ELO"], inline=False)
         embed.add_field(name="Town ELO", value=user_data["Town ELO"], inline=True)
         embed.add_field(name="Wolf ELO", value=user_data["Wolf ELO"], inline=True)
         embed.add_field(name="Total Games Played", value=user_data["Games Played"], inline=False)
         embed.add_field(name="Town Games", value=user_data["Town games"], inline=True)
         embed.add_field(name="Wolf Games", value=user_data["Wolf games"], inline=True)
-
         await ctx.send(embed=embed)
     else:
         await ctx.send(f"No ELO data found for you on the {sheet_name} leaderboards")
