@@ -2289,7 +2289,7 @@ async def rand(ctx, *args):
             
             aliases_file = 'aliases.json'
             credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'      
-            spreadsheet_name = 'HiddenChamps'
+            spreadsheet_name = 'Turbo ELO Sheet'
                         
             file_path = 'database/' + current_year + '_database.csv'
             sheet_name = '2025'
@@ -2324,7 +2324,7 @@ async def rand(ctx, *args):
                 champs_file_path = 'database/2025_TurboChampDatabase.csv'
                 aliases_file = 'aliases.json'
                 credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
-                spreadsheet_name = 'Turbo ELO Sheet'
+                spreadsheet_name = 'HiddenChamps'
                 champs_sheet_name = 'Turbo Champs 2025'
                 town_sheet_name = 'Sorted by Town'
                 wolf_sheet_name = 'Sorted by Wolf'
