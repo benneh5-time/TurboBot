@@ -50,11 +50,11 @@ class EloCalculator:
         expected_score = 1 / (1 + 10 ** ((team_elo - player_elo) / 400))
 
         setup_multipliers = {
-            "joat10": {"town": 57.32, "mafia": 42.68},
-            "vig10": {"town": 50.77, "mafia": 49.23},
-            "bomb10": {"town": 45.30, "mafia": 54.7},
-            "closedrandomXer": {"town": 45.93, "mafia": 54.07},
-            "cop9": {"town": 52.5, "mafia": 47.5},
+            #"joat10": {"town": 57.32, "mafia": 42.68},
+            #"vig10": {"town": 50.77, "mafia": 49.23},
+            #"bomb10": {"town": 45.30, "mafia": 54.7},
+            #"closedrandomXer": {"town": 45.93, "mafia": 54.07},
+            #"cop9": {"town": 52.5, "mafia": 47.5},
             "default": {"town": 53.23, "mafia": 46.63},
         }
         if setup not in setup_multipliers:
@@ -65,10 +65,10 @@ class EloCalculator:
             mafia_multiplier = setup_multipliers[setup]['mafia']
             
         if role == "town":
-            expected_score *= (town_multiplier / 50)
+            expected_score *= 1 + (town_multiplier / 50 - 1)
             #expected_score *= 1 + (50 / town_multiplier)
         elif role == "mafia":
-            expected_score *= (mafia_multiplier / 50)
+            expected_score *= 1 + (mafia_multiplier / 50 - 1)
             #expected_score *= 1 + (50 / mafia_multiplier)
         return player_elo + k * (result - max(0, min(1, expected_score)))
 
