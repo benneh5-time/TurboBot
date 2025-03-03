@@ -65,10 +65,10 @@ class EloCalculator:
             mafia_multiplier = setup_multipliers[setup]['mafia']
             
         if role == "town":
-            expected_score *= 1 + (town_multiplier / 50 - 1)
+            expected_score *= 1 + (mafia_multiplier / 50 - 1)
             #expected_score *= 1 + (50 / town_multiplier)
         elif role == "mafia":
-            expected_score *= 1 + (mafia_multiplier / 50 - 1)
+            expected_score *= 1 + (town_multiplier / 50 - 1)
             #expected_score *= 1 + (50 / mafia_multiplier)
         return player_elo + k * (result - max(0, min(1, expected_score)))
 
