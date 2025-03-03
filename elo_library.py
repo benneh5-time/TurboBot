@@ -82,7 +82,7 @@ class EloCalculator:
             wolves = row['Wolves']
             town_elo = sum(self.elo_scores[self.get_active_alias(v)]['Town'] for v in villagers) / len(villagers)
             wolf_elo = sum(self.elo_scores[self.get_active_alias(w)]['Wolf'] for w in wolves) / len(wolves)
-            print(f"{row['Turbo Title']} -- Wolf ELO: {wolf_elo}, Town ELO: {town_elo}")
+            
             for villager in villagers:
                 active_villager = self.get_active_alias(villager)
                 self.game_counts[active_villager]['Town'] += 1
@@ -97,6 +97,8 @@ class EloCalculator:
                 self.elo_scores[active_wolf]['Wolf'] = self.calculate_elo_with_team_impact(
                     self.elo_scores[active_wolf]['Wolf'], town_elo, result, 'mafia', self.game_counts[active_wolf]['Wolf'], row['Setup']
                 )
+                if "ref-rain" in active_wolf.lower():
+                    print(f"Ref Elo: {self.elo_scores[active_wolf]['Wolf']} -- Town Elo: {town_elo} -- Winning team: {winning_alignment}")
 
     def export_to_google_sheets(self, spreadsheet_name, sheet_name, data):
         client = gspread.authorize(self.credentials)
