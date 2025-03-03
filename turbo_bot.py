@@ -2098,7 +2098,7 @@ async def rand(ctx, *args):
     parser.add_argument('-thread_id', default=None)
     parser.add_argument('-wolves', default=None)
     parser.add_argument('-villager', default=None)
-    
+
     try:
         args_parsed = parser.parse_args(args)
     except SystemExit:
@@ -2327,7 +2327,7 @@ async def rand(ctx, *args):
                 champs_file_path = 'database/2025_TurboChampDatabase.csv'
                 aliases_file = 'aliases.json'
                 credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
-                spreadsheet_name = 'HiddenChamps'
+                spreadsheet_name = 'Turbo ELO Sheet'
                 champs_sheet_name = 'Turbo Champs 2025'
                 town_sheet_name = 'Sorted by Town'
                 wolf_sheet_name = 'Sorted by Wolf'

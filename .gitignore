@@ -1,8 +1,8 @@
 TurboBot-1.code-workspace
 champs2024.csv
 game.csv
-*.xlsx
 aliases.json
+*.xlsx
 creds*
 testing*
 gpt_responses.py
