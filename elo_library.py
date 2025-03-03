@@ -65,10 +65,10 @@ class EloCalculator:
             mafia_multiplier = setup_multipliers[setup]['mafia']
             
         if role == "town":
-            expected_score *= (50 / town_multiplier)
+            expected_score *= (town_multiplier / 50)
             #expected_score *= 1 + (50 / town_multiplier)
         elif role == "mafia":
-            expected_score *= (50 / mafia_multiplier)
+            expected_score *= (mafia_multiplier / 50)
             #expected_score *= 1 + (50 / mafia_multiplier)
         return player_elo + k * (result - max(0, min(1, expected_score)))
 
@@ -99,7 +99,8 @@ class EloCalculator:
                     self.elo_scores[active_wolf]['Wolf'], town_elo, result, 'mafia', self.game_counts[active_wolf]['Wolf'], row['Setup']
                 )
                 if "ref-rain" in active_wolf.lower():
-                    print(f"Elo change: {prev_elo} to {self.elo_scores[active_wolf]['Wolf']} -- Town Elo: {town_elo} -- Winning team: {winning_alignment} -- Setup: {row['Setup']}")
+                    x = prev_elo - self.elo_scores[active_wolf]['Wolf']
+                    print(f"Elo change: {x} -- Town Elo: {town_elo} -- Winning team: {winning_alignment} -- Setup: {row['Setup']}")
 
     def export_to_google_sheets(self, spreadsheet_name, sheet_name, data):
         client = gspread.authorize(self.credentials)
