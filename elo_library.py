@@ -80,6 +80,7 @@ class EloCalculator:
             wolves = row['Wolves']
             town_elo = sum(self.elo_scores[self.get_active_alias(v)]['Town'] for v in villagers) / len(villagers)
             wolf_elo = sum(self.elo_scores[self.get_active_alias(w)]['Wolf'] for w in wolves) / len(wolves)
+            print(f"{row['Turbo Title']} -- Wolf ELO: {wolf_elo}, Town ELO: {town_elo}")
             for villager in villagers:
                 active_villager = self.get_active_alias(villager)
                 self.game_counts[active_villager]['Town'] += 1
