@@ -35,26 +35,28 @@ class EloCalculator:
                 return data['active']
         return player_name
 
-    def calculate_dynamic_k(self, games_played):
-        if games_played <= 20:
-            return 32
-        elif games_played <= 50:
-            return 28
-        elif games_played <= 100:
-            return 24
-        else:
-            return 20
+    def calculate_dynamic_k(self, games_played, mode="town"):
+        thresholds = [  # Define threshold values for both modes
+            (5, 32), (13, 28), (25, 24)  # "w" mode (shorter ranges)
+        ] if mode == "mafia" else [
+            (20, 32), (50, 28), (100, 24)  # Normal mode (wider ranges)
+        ]
+
+        for limit, k in thresholds:
+            if games_played <= limit:
+                return k
+        return 20 
 
     def calculate_elo_with_team_impact(self, player_elo, team_elo, result, role, games_played, setup):
-        k = self.calculate_dynamic_k(games_played)
+        k = self.calculate_dynamic_k(games_played, role)
         expected_score = 1 / (1 + 10 ** ((team_elo - player_elo) / 400))
 
         setup_multipliers = {
-            #"joat10": {"town": 57.32, "mafia": 42.68},
-            #"vig10": {"town": 50.77, "mafia": 49.23},
-            #"bomb10": {"town": 45.30, "mafia": 54.7},
-            #"closedrandomXer": {"town": 45.93, "mafia": 54.07},
-            #"cop9": {"town": 52.5, "mafia": 47.5},
+            "joat10": {"town": 57.32, "mafia": 42.68},
+            "vig10": {"town": 50.77, "mafia": 49.23},
+            "bomb10": {"town": 45.30, "mafia": 54.7},
+            "closedrandomXer": {"town": 45.93, "mafia": 54.07},
+            "cop9": {"town": 52.5, "mafia": 47.5},
             "default": {"town": 53.23, "mafia": 46.63},
         }
         if setup not in setup_multipliers:
@@ -66,10 +68,8 @@ class EloCalculator:
             
         if role == "town":
             expected_score *= 1 + (town_multiplier / 50 - 1)
-            #expected_score *= 1 + (50 / town_multiplier)
         elif role == "mafia":
             expected_score *= 1 + (mafia_multiplier / 50 - 1)
-            #expected_score *= 1 + (50 / mafia_multiplier)
         return player_elo + k * (result - max(0, min(1, expected_score)))
 
     def process_game_data(self, df):
@@ -98,9 +98,6 @@ class EloCalculator:
                 self.elo_scores[active_wolf]['Wolf'] = self.calculate_elo_with_team_impact(
                     self.elo_scores[active_wolf]['Wolf'], town_elo, result, 'mafia', self.game_counts[active_wolf]['Wolf'], row['Setup']
                 )
-                if "ref-rain" in active_wolf.lower():
-                    x = prev_elo - self.elo_scores[active_wolf]['Wolf']
-                    print(f"Elo change: {x} -- Town Elo: {town_elo} -- Winning team: {winning_alignment} -- Setup: {row['Setup']}")
 
     def export_to_google_sheets(self, spreadsheet_name, sheet_name, data):
         client = gspread.authorize(self.credentials)
