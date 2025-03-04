@@ -702,8 +702,16 @@ async def is_lol_last_place(ctx):
         for row in sheet_data:
             if row.get("Name") == active_alias:
                 user_data = row
-                
-    overall_elos = [float(row["Overall ELO"]) for row in sheet_data if "Overall ELO" in row and row["Overall ELO"].replace('.', '', 1).isdigit()]
+    def safe_float(value):
+        """Convert value to float if possible, otherwise return None."""
+        try:
+            return float(value) if value and str(value).replace('.', '', 1).isdigit() else None
+        except ValueError:
+            return None   
+    overall_elos = [
+        safe_float(row.get("Overall ELO")) for row in sheet_data 
+        if "Overall ELO" in row and safe_float(row.get("Overall ELO")) is not None
+    ]
     min_elo = min(overall_elos) if overall_elos else None  # Find lowest ELO
     
     current_date = datetime.datetime.utcnow().strftime('%Y-%m-%d')
