@@ -713,7 +713,7 @@ async def is_lol_last_place(ctx):
         if "Overall ELO" in row and safe_float(row.get("Overall ELO")) is not None
     ]
     min_elo = min(overall_elos) if overall_elos else None  # Find lowest ELO
-    
+    print(min_elo, flush=True)
     current_date = datetime.datetime.utcnow().strftime('%Y-%m-%d')
     if user_data:
         user_elo = float(user_data["Overall ELO"])
