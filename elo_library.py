@@ -171,4 +171,38 @@ class EloCalculator:
         wolf_sheet_data = [wolf_result_df.columns.tolist()] + wolf_result_df.values.tolist()
         self.export_to_google_sheets(spreadsheet_name, wolf_sheet_name, wolf_sheet_data)
 
+    def append_to_google_sheets(self, spreadsheet_name, sheet_name, csv_file):
+        client = gspread.authorize(self.credentials)
+
+        # Open the spreadsheet
+        try:
+            spreadsheet = client.open(spreadsheet_name)
+            worksheet = spreadsheet.worksheet(sheet_name)
+        except gspread.exceptions.WorksheetNotFound:
+            worksheet = spreadsheet.add_worksheet(title=sheet_name, rows="1000", cols="20")
+
+        # Read the existing data from Google Sheets
+        existing_data = worksheet.get_all_values()
+        if existing_data:
+            existing_df = pd.DataFrame(existing_data[1:], columns=existing_data[0])  # Ignore headers
+        else:
+            existing_df = pd.DataFrame()
+
+        # Load CSV data
+        new_data = pd.read_csv(csv_file)
+
+        # Identify new rows (rows in CSV that aren't in Google Sheets)
+        if not existing_df.empty:
+            merged_df = pd.concat([existing_df, new_data]).drop_duplicates(keep=False)
+        else:
+            merged_df = new_data  # If sheet is empty, add all CSV data
+
+        if not merged_df.empty:
+            # Convert DataFrame to list of lists (for Google Sheets)
+            new_rows = merged_df.values.tolist()
+            worksheet.append_rows(new_rows, value_input_option="RAW")
+            print(f"Added {len(new_rows)} new rows to {sheet_name}.")
+        else:
+            print("No new data to append.")
+
 
