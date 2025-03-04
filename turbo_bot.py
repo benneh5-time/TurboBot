@@ -617,7 +617,7 @@ async def sub(ctx, player=None):
         print(sub, flush=True)
 
 def get_google_sheet(sheet_name):
-    SHEET_ID = "1zjM5DPXizdgyrYxwAui6LT_yusMEs6I8XXj9iB6LVpE"  # Replace with your Google Sheet ID
+    SHEET_ID = "1zjM5DPXizdgyrYxwAui6LT_yusMEs6I8XXj9iB6LVpE"
     url = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
 
     response = requests.get(url)
@@ -2293,6 +2293,7 @@ async def rand(ctx, *args):
             aliases_file = 'aliases.json'
             credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'      
             spreadsheet_name = 'Turbo ELO Sheet'
+            databasesheet_name = "Game Database"
                         
             file_path = 'database/' + current_year + '_database.csv'
             sheet_name = '2025'
@@ -2307,6 +2308,7 @@ async def rand(ctx, *args):
             lifetime_df['Villagers'] = lifetime_df['Villagers'].apply(eval)
             lifetime_df['Wolves'] = lifetime_df['Wolves'].apply(eval)  
             lifetime_elo_calculator = EloCalculator(credentials_path,aliases_file)
+            lifetime_elo_calculator.append_to_google_sheets(spreadsheet_name, databasesheet_name, 'game_database.csv')
             lifetime_elo_calculator.calculate_and_export(lifetime_df, spreadsheet_name, lifetime_sheet_name, 1)
             
             #Turbo Champs stuff
@@ -2329,6 +2331,7 @@ async def rand(ctx, *args):
                 credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
                 spreadsheet_name = 'Turbo ELO Sheet'
                 champs_sheet_name = 'Turbo Champs 2025'
+                databasesheet_name = 'Champs Database'
                 town_sheet_name = 'Sorted by Town'
                 wolf_sheet_name = 'Sorted by Wolf'
                 # Load data
@@ -2336,6 +2339,7 @@ async def rand(ctx, *args):
                 champs_df['Villagers'] = champs_df['Villagers'].apply(eval)
                 champs_df['Wolves'] = champs_df['Wolves'].apply(eval)
                 champs_elo_calculator = EloCalculator(credentials_path,aliases_file)
+                champs_elo_calculator.append_to_google_sheets(spreadsheet_name, databasesheet_name, champs_file_path)
                 champs_elo_calculator.calculate_and_export_champs(champs_df, spreadsheet_name, champs_sheet_name, town_sheet_name, wolf_sheet_name, 1)
 
         elif "Error" in response_message:
