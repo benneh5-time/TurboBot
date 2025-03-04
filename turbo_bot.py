@@ -684,7 +684,47 @@ async def leaderboard(ctx, *, leaderboard: str = "Overall"):
     await ctx.send(embed=embed)
     
     
+@bot.command()
+async def is_lol_last_place(ctx):
     
+    if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+
+        
+    sheet_data = get_google_sheet('Turbo Champs 2025')
+    
+    alias_data = aliases.get(501850221546962965, None)
+    
+    all_aliases = alias_data.get("all", [])
+    user_data = None
+    
+    for active_alias in all_aliases:
+        for row in sheet_data:
+            if row.get("Name") == active_alias:
+                user_data = row
+                
+    overall_elos = [float(row["Overall ELO"]) for row in sheet_data if "Overall ELO" in row and row["Overall ELO"].replace('.', '', 1).isdigit()]
+    min_elo = min(overall_elos) if overall_elos else None  # Find lowest ELO
+    
+    current_date = datetime.datetime.utcnow().strftime('%Y-%m-%d')
+    if user_data:
+        user_elo = float(user_data["Overall ELO"])
+        is_last = user_elo == min_elo
+        embed = discord.Embed(title=f"{'Turbo Champs 2025'} ELO for {user_data['Name']}", description=f"As of {current_date} @ Midnight UTC", color=discord.Color.blue())
+        embed.add_field(name="Overall ELO", value=user_data["Overall ELO"], inline=False)
+        embed.add_field(name="Town ELO", value=user_data["Town ELO"], inline=True)
+        embed.add_field(name="Wolf ELO", value=user_data["Wolf ELO"], inline=True)
+        embed.add_field(name="Total Games Played", value=user_data["Games Played"], inline=False)
+        embed.add_field(name="Town Games", value=user_data["Town games"], inline=True)
+        embed.add_field(name="Wolf Games", value=user_data["Wolf games"], inline=True)
+        await ctx.send(embed=embed)
+        if is_last:
+            embed.set_footer(text="⚠️ lol is currently in last place on the leaderboard!")
+        else:
+            embed.set_footer(text="⚠️ lol is currently NOT in last place on the leaderboard!")
+    else:
+        await ctx.send(f"No ELO data found for you on the {'Turbo Champs 2025'} leaderboards")
+        
 @bot.command()
 async def elo(ctx, *, sheet_name: str = "Turbo Champs 2025"):
     
