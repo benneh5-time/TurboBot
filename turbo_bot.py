@@ -717,6 +717,7 @@ async def is_lol_last_place(ctx):
     current_date = datetime.datetime.utcnow().strftime('%Y-%m-%d')
     if user_data:
         user_elo = float(user_data["Overall ELO"])
+        print(user_elo, flush=True)
         is_last = user_elo == min_elo
         embed = discord.Embed(title=f"{'Turbo Champs 2025'} ELO for {user_data['Name']}", description=f"As of {current_date} @ Midnight UTC", color=discord.Color.blue())
         embed.add_field(name="Overall ELO", value=user_data["Overall ELO"], inline=False)
