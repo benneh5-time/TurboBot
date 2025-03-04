@@ -726,11 +726,12 @@ async def is_lol_last_place(ctx):
         embed.add_field(name="Total Games Played", value=user_data["Games Played"], inline=False)
         embed.add_field(name="Town Games", value=user_data["Town games"], inline=True)
         embed.add_field(name="Wolf Games", value=user_data["Wolf games"], inline=True)
-        await ctx.send(embed=embed)
+
         if is_last:
             embed.set_footer(text="⚠️ lol is currently in last place on the leaderboard!")
         else:
             embed.set_footer(text="⚠️ lol is currently NOT in last place on the leaderboard!")
+        await ctx.send(embed=embed)
     else:
         await ctx.send(f"No ELO data found for you on the {'Turbo Champs 2025'} leaderboards")
         
