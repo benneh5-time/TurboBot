@@ -2308,7 +2308,7 @@ async def rand(ctx, *args):
             lifetime_df['Villagers'] = lifetime_df['Villagers'].apply(eval)
             lifetime_df['Wolves'] = lifetime_df['Wolves'].apply(eval)  
             lifetime_elo_calculator = EloCalculator(credentials_path,aliases_file)
-            lifetime_elo_calculator.append_to_google_sheets(spreadsheet_name, databasesheet_name, 'game_database.csv')
+            #lifetime_elo_calculator.append_to_google_sheets(spreadsheet_name, databasesheet_name, 'game_database.csv')
             lifetime_elo_calculator.calculate_and_export(lifetime_df, spreadsheet_name, lifetime_sheet_name, 1)
             
             #Turbo Champs stuff
@@ -2339,7 +2339,7 @@ async def rand(ctx, *args):
                 champs_df['Villagers'] = champs_df['Villagers'].apply(eval)
                 champs_df['Wolves'] = champs_df['Wolves'].apply(eval)
                 champs_elo_calculator = EloCalculator(credentials_path,aliases_file)
-                champs_elo_calculator.append_to_google_sheets(spreadsheet_name, databasesheet_name, champs_file_path)
+                #champs_elo_calculator.append_to_google_sheets(spreadsheet_name, databasesheet_name, champs_file_path)
                 champs_elo_calculator.calculate_and_export_champs(champs_df, spreadsheet_name, champs_sheet_name, town_sheet_name, wolf_sheet_name, 1)
 
         elif "Error" in response_message:
