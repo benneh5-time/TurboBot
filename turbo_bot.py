@@ -2144,7 +2144,7 @@ async def rand(ctx, *args):
         return
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-title', default=None)
+    #parser.add_argument('-title', default=None)
     parser.add_argument('-thread_id', default=None)
     parser.add_argument('-wolves', default=None)
     parser.add_argument('-villager', default=None)
@@ -2178,7 +2178,8 @@ async def rand(ctx, *args):
         session = mu.login(username, password)
         security_token = mu.new_thread_token(session)
         
-        game_title = args_parsed.title
+        #game_title = args_parsed.title
+        game_title = await gpt_responses.get_flavor_response()
         thread_id = args_parsed.thread_id
         wolves = args_parsed.wolves
         fake_villager = args_parsed.villager
