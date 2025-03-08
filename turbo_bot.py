@@ -410,9 +410,9 @@ async def get_wolf_info(game_title, setup_title):
         mafia_section = link_content_parsed.find('font', string='Mafia Players (Roles)').find_next('br').find_all_next('b')
 
         for player in mafia_section:
-            username = player.find('span', style="color: #ff2244;")
-            if username:
-                mafia_players.append(username.text)
+            player_name = player.find('span', style="color: #ff2244;")
+            if player_name:
+                mafia_players.append(player_name.text)
     return mafia_players   
 
 class ThreadmarkProcessor:
