@@ -709,44 +709,35 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
         vtwneighbors = True
     elif 0.15 <= neighbor_rand < .2:
         vprwneighbors = True
+    
+    independent_assigned = False
 
-    for i in range(0, village_vt_count):
-
-        if i == village_vt_count - 1:
-            independent_rand = random.random()
-            if independent_rand <=.015:
-                current_ind = selected_independent_roles[i].copy()
-                current_ind['character_name'] = villagers[i]['character_name']
-                current_ind['character_image'] = villagers[i]['character_image']
-                ind_json = json.dumps(current_ind)
-                data.add("roles[]", ind_json)
-            else:
-                current_vt = roles.vt.copy()
-                current_vt['character_name'] = villagers[i]['character_name']
-                current_vt['character_image'] = villagers[i]['character_image']
-                vt_json = json.dumps(current_vt)
-                data.add("roles[]", vt_json)
-                
+    for i in range(village_vt_count):
+        independent_rand = random.random()
+        
+        if not independent_assigned and independent_rand <= 0.01:
+            current_ind = selected_independent_roles[0].copy()
+            current_ind['character_name'] = villagers[i]['character_name']
+            current_ind['character_image'] = villagers[i]['character_image']
             if vvneighbors and i in [0, 1]:
-                current_vt = roles.vt.copy()
-                current_vt['character_name'] = villagers[i]['character_name']
-                current_vt['character_image'] = villagers[i]['character_image']
+                current_ind['neighbor'] = 'a'
+            elif (vtwneighbors and i == 0) or (vprvneighbors and i == 0):
+                current_ind['neighbor'] = 'a'
+            ind_json = json.dumps(current_ind)
+            data.add("roles[]", ind_json)
+            independent_assigned = True
+        else:
+            current_vt = roles.vt.copy()
+            current_vt['character_name'] = villagers[i]['character_name']
+            current_vt['character_image'] = villagers[i]['character_image']
+
+            if vvneighbors and i in [0, 1]:
                 current_vt['neighbor'] = "a"
-                vt_json = json.dumps(current_vt)
-                data.add("roles[]", vt_json)
-            elif (vtwneighbors and i in [0]) or (vprvneighbors and i in [0]):
-                current_vt = roles.vt.copy()
-                current_vt['character_name'] = villagers[i]['character_name']
-                current_vt['character_image'] = villagers[i]['character_image']
+            elif (vtwneighbors and i == 0) or (vprvneighbors and i == 0):
                 current_vt['neighbor'] = "a"
-                vt_json = json.dumps(current_vt)
-                data.add("roles[]", vt_json)
-            else:
-                current_vt = roles.vt.copy()
-                current_vt['character_name'] = villagers[i]['character_name']
-                current_vt['character_image'] = villagers[i]['character_image']
-                vt_json = json.dumps(current_vt)
-                data.add("roles[]", vt_json)
+                
+            vt_json = json.dumps(current_vt)
+            data.add("roles[]", vt_json)
 
     for i in range(0, village_pr_count):
         current_pr = selected_village_roles[i].copy()
