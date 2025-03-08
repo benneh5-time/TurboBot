@@ -1606,7 +1606,7 @@ async def add(ctx, *, alias):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     
-    if alias.lower() == 'turby':
+    if alias.lower() != 'turby':
         alias = alias.lower()
     else:
         return await ctx.send("You can't add me to a game noob")
@@ -1666,6 +1666,7 @@ async def remove(ctx, *, alias):
     
     if alias == "turby" and "turby" in players:
         del players[alias]
+        await update_status()
         return
     
     if alias in (hostname.lower() for hostname in game_host_name):
