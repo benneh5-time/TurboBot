@@ -1664,9 +1664,9 @@ async def remove(ctx, *, alias):
     alias = alias.lower()
     global game_host_name, player_limit, players, waiting_list
     
-    if alias in (hostname.lower() for hostname in game_host_name) and alias in players:
+    if alias == "turby" and "turby" in players:
         del players[alias]
-        await ctx.send(f"{alias} removed from the game, but still a host")
+        return
     
     if alias in (hostname.lower() for hostname in game_host_name):
         if len(game_host_name) == 1:
