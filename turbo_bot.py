@@ -1606,7 +1606,11 @@ async def add(ctx, *, alias):
     if ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     
-    alias = alias.lower()
+    if alias.lower() == 'turby':
+        alias = alias.lower()
+    else:
+        return await ctx.send("You can't add me to a game noob")
+    
     global game_host_name, player_limit, players, waiting_list
     
     if alias in game_host_name:
@@ -2146,8 +2150,8 @@ async def rand(ctx, *args):
     parser = argparse.ArgumentParser()
     #parser.add_argument('-title', default=None)
     parser.add_argument('-thread_id', default=None)
-    parser.add_argument('-wolves', default=None)
-    parser.add_argument('-villager', default=None)
+    #parser.add_argument('-wolves', default=None)
+    #parser.add_argument('-villager', default=None)
 
     try:
         args_parsed = parser.parse_args(args)
@@ -2181,13 +2185,13 @@ async def rand(ctx, *args):
         #game_title = args_parsed.title
         game_title = await gpt_responses.get_flavor_response()
         thread_id = args_parsed.thread_id
-        wolves = args_parsed.wolves
-        fake_villager = args_parsed.villager
+        #wolves = args_parsed.wolves
+        #fake_villager = args_parsed.villager
 
-        if wolves is not None:
-            await ctx.send(f"{wolves} have been set as the wolf team, proceeding with rand.")
-        if fake_villager is not None:
-            await ctx.send(f"{fake_villager} has been set as the town IC for this game, proceeding with rand.")
+        #if wolves is not None:
+        #    await ctx.send(f"{wolves} have been set as the wolf team, proceeding with rand.")
+        #if fake_villager is not None:
+        #    await ctx.send(f"{fake_villager} has been set as the town IC for this game, proceeding with rand.")
 
         if current_setup == "random10er":
             potential_setups = ["joat10", "vig10", "bomb10"]
@@ -2197,7 +2201,7 @@ async def rand(ctx, *args):
             final_game_setup = current_setup
             setup_title = final_game_setup
         
-        if not game_title:
+        if game_title == "Failed to call GPT":
             game_title = f"Automated turbo game thread: {mu.generate_game_thread_uuid()}"
             
         if not thread_id:
@@ -2267,7 +2271,7 @@ async def rand(ctx, *args):
             for host in game_host_name:
                 host = host.lower()
                 if host == 'turby':
-                    pass
+                    continue
                 mention_id = None
 
                 # Search for the host in active or all aliases
