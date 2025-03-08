@@ -2197,7 +2197,7 @@ async def rand(ctx, *args):
             setup_title = final_game_setup
         
         if not game_title:
-            game_title = mu.generate_game_thread_uuid()
+            game_title = f"Automated turbo game thread: {mu.generate_game_thread_uuid()}"
             
         if not thread_id:
             print(f"Attempting to post new thread with {game_title}", flush=True)
@@ -2226,29 +2226,30 @@ async def rand(ctx, *args):
             
             ###################################################
             ####################### new code for wolf chat adds
-            #wolf_team = await get_wolf_info(game_title, setup_title)
+            wolf_team = await get_wolf_info(game_title, setup_title)
+            wc_msg = f"You have wolf chat here with your teammate(s): https://tlk.io/{mu.generate_game_thread_uuid()}"
             #wc_channel_id, wc_guild = await create_wolf_chat(thread_id)
             #wc_channel = bot.get_channel(wc_channel_id)
 
-            #wc_msg = "Wolf chat: "
-            #for wolf in wolf_team:
-            #    wolf = wolf.lower()
-            #    mention_id = None
+            wc_msg = "You have wolf chat here with your teammate: "
+            for wolf in wolf_team:
+                wolf = wolf.lower()
+                mention_id = None
 
                 # Search for the wolf in the active or all aliases
-            #    for user_id, data in aliases.items():
-            #        if wolf == data["active"] or wolf in data["all"]:
-            #            mention_id = int(user_id)
-            #            break
+                for user_id, data in aliases.items():
+                    if wolf == data["active"] or wolf in data["all"]:
+                        mention_id = int(user_id)
+                        break
 
-            #    if mention_id:
-            #        try:
-            #            wolf_id = wc_guild.get_member(mention_id)
-            #            # await wolf_id.add_roles(wc_role)  # Uncomment if assigning roles
-            #            await wc_channel.set_permissions(wolf_id, read_messages=True, send_messages=True)
-            #            wc_msg += f"<@{mention_id}> "
-            #        except Exception as e:
-            #            print(f"Can't add {wolf} to wc: {e}", flush=True)
+                if mention_id:
+                    try:
+                        wolf_id = bot.get_user(mention_id)
+                        if wolf_id:
+                            await wolf_id.send(wc_msg)
+
+                    except Exception as e:
+                        print(f"Can't add {wolf} to wc: {e}", flush=True)
 
             #await wc_channel.send(wc_msg)
 
