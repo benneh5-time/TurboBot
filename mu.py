@@ -713,42 +713,32 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
     independent_assigned = False
 
     for i in range(village_vt_count):
-        independent_rand = random.random()
+        ind_and_miller_rand = random.random()
         
-        if not independent_assigned and independent_rand <= 0.01:
-            current_ind = selected_independent_roles[0].copy()
-            current_ind['character_name'] = villagers[i]['character_name']
-            current_ind['character_image'] = villagers[i]['character_image']
-            if vvneighbors and i in [0, 1]:
-                current_ind['neighbor'] = 'a'
-            elif (vtwneighbors and i == 0) or (vprvneighbors and i == 0):
-                current_ind['neighbor'] = 'a'
-            ind_json = json.dumps(current_ind)
-            data.add("roles[]", ind_json)
+        if not independent_assigned and ind_and_miller_rand <= 0.01:
+            role = selected_independent_roles[0].copy()
             independent_assigned = True
+        elif ind_and_miller_rand <= 0.035:
+            role = roles.miller.copy()
         else:
-            current_vt = roles.vt.copy()
-            current_vt['character_name'] = villagers[i]['character_name']
-            current_vt['character_image'] = villagers[i]['character_image']
-
-            if vvneighbors and i in [0, 1]:
-                current_vt['neighbor'] = "a"
-            elif (vtwneighbors and i == 0) or (vprvneighbors and i == 0):
-                current_vt['neighbor'] = "a"
+            role = roles.vt.copy()
+            
+        role['character_name'] = villagers[i]['character_name']
+        role['character_image'] = villagers[i]['character_image']
+        
+        if vvneighbors and i in [0, 1] or (vtwneighbors and i == 0) or (vprvneighbors and i == 0):
+            role['neighbor'] = "a"
                 
-            vt_json = json.dumps(current_vt)
-            data.add("roles[]", vt_json)
+        data.add("roles[]", json.dumps(role))
 
     for i in range(0, village_pr_count):
         current_pr = selected_village_roles[i].copy()
         current_pr['character_name'] = village_prs[i]['character_name']
         current_pr['character_image'] = village_prs[i]['character_image']
-        if vprvneighbors and i in [0]:
+        if vprvneighbors and i == 0 or (vprwneighbors and i == 0):
             current_pr['neighbor'] = "a"
-        elif vprwneighbors and i in [0]:
-            current_pr['neighbor'] = "a"
-        pr_json = json.dumps(current_pr)
-        data.add("roles[]", pr_json)
+
+        data.add("roles[]", json.dumps(current_pr))
         
     for i in range(0, wolf_pr_count):
         wolf = wolves.pop(0)
@@ -760,14 +750,13 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
             current_wolf['bpv_status'] = "1"
         if gf_rand <=.05:
             current_wolf['godfather'] = "1"
-        if vtwneighbors and i in [0]:
+        if vtwneighbors and i == 0 or (vprwneighbors and i == 0):
             current_wolf['neighbor'] = "a"
-        elif vprwneighbors and i in [0]:
-            current_wolf['neighbor'] = "a"
+            
         current_wolf['character_name'] = wolf['character_name']
         current_wolf['character_image'] = wolf['character_image']
-        wolf_json = json.dumps(current_wolf)
-        data.add("roles[]", wolf_json)
+
+        data.add("roles[]", json.dumps(current_wolf))
 
     for i in range(0, wolf_goon_count):
         wolf = wolves.pop(0)
@@ -782,8 +771,7 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
 
         current_wolf['character_name'] = wolf['character_name']
         current_wolf['character_image'] = wolf['character_image']
-        wolf_json = json.dumps(current_wolf)
-        data.add("roles[]", wolf_json)
+        data.add("roles[]", json.dumps(current_wolf))
 
 def add_randommadnessXer_roles(game_title, player_limit=13):
     global data
