@@ -2530,6 +2530,9 @@ async def recon (ctx):
     squote = quotes['quotes']
     recon_quote = random.choice(squote)
     
+    if recon_quote == "OK":
+        recon_quote = "OK " + ctx.author.name.upper()
+        
     await ctx.send(f"RECONSPARTAN Quote 1.0:\n```{recon_quote}```")
 
 def process(thread_id):
