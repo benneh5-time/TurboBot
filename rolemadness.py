@@ -568,3 +568,8 @@ def create_role_data(alignment):
             role_data['role_name'] = selected_role
             role_data['role'] = selected_role_number
     return role_data
+
+
+if __name__ == "__main__":
+    print(create_role_data('village'))
+    print(create_role_data('wolf'))
