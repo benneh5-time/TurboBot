@@ -547,26 +547,30 @@ def create_role_data(alignment):
         selected_role_number = next(key for key, val in village_roles.items() if val == selected_role)
         if selected_role == "Village Jack of All Trades":
             role_data = v_joat_abilities.copy()
-            role_data.update(selected_abilities)
             role_data['role_name'] = selected_role
             role_data['role'] = selected_role_number
+            role_data.update(selected_abilities)
+
         else:
             role_data = village_abilities.copy()
-            role_data.update(selected_abilities)
             role_data['role_name'] = selected_role
             role_data['role'] = selected_role_number
+            role_data.update(selected_abilities)
+
     else:
         selected_role_number = next(key for key, val in wolf_roles.items() if val == selected_role)
         if selected_role == "Wolf Jack of All Trades": 
             role_data = w_joat_abilities.copy()
-            role_data.update(selected_abilities)
             role_data['role_name'] = selected_role
             role_data['role'] = selected_role_number
+            role_data.update(selected_abilities)
+
         else:
             role_data = wolf_abilities.copy()
-            role_data.update(selected_abilities)
             role_data['role_name'] = selected_role
             role_data['role'] = selected_role_number
+            role_data.update(selected_abilities)
+
     return role_data
 
 

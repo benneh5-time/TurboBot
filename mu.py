@@ -52,8 +52,6 @@ def load_json_file(json_file):
 
 data = None
 
-
-
 def generate_game_thread_uuid():
     random_uuid = str(uuid.uuid4())[:16]
     return random_uuid

@@ -490,6 +490,15 @@ class ThreadmarkProcessor:
                             message = f"{zp_mentions} - game randed join pls: https://www.mafiauniverse.com/forums/threads/{thread_id}"
                             turbo_channel = bot.get_channel(turbo_chat)
                             await turbo_channel.send(message)
+                            for id in zero_poster_mention_list:
+                                try:
+                                    user = await bot.fetch_user(id)
+                                    await user.send(f"Your turbo game has randed, please join the thread and confirm you are not afk in turbo-chat: https://www.mafiauniverse.com/forums/threads/{thread_id}")
+                                except discord.NotFound:
+                                    print("User zero posting with no discford ID", flush=True)
+                                finally:
+                                    print("Failed to DM a zero poster for some other reason", flush=True)
+                                    
                                              
             await asyncio.sleep(30)
 
