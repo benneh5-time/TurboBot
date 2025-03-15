@@ -810,14 +810,14 @@ def add_rm13_roles(game_title):
 
     for i in range(0,10):
         randomized_role_data = rolemadness.create_role_data('village')
-        randomized_role_data['character_name'] = villagers[i]["character_name"]
+        randomized_role_data['character_name'] = villagers[i]['character_name']
         randomized_role_data['character_image'] = villagers[i]["character_image"]
         role_json = json.dumps(randomized_role_data)
         data.add("roles[]", role_json)
   
     for i in range(0,3):
         randomized_role_data = rolemadness.create_role_data('wolf')
-        randomized_role_data['character_name'] = wolves[i]["character_name"]
+        randomized_role_data['character_name'] = wolves[i]['character_name']
         randomized_role_data['character_image'] = wolves[i]["character_image"]
         role_json = json.dumps(randomized_role_data)
         data.add("roles[]", role_json)
@@ -832,7 +832,7 @@ def add_ita10_roles(game_title):
 
     for i in range(0,8):
         current_vanchilla = roles.vt.copy()
-        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_name'] = villagers[i]['character_name']
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
@@ -854,7 +854,7 @@ def add_ita13_roles(game_title):
 
     for i in range(0,9):
         current_vanchilla = roles.vt.copy()
-        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_name'] = villagers[i]['character_name']
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
@@ -878,7 +878,7 @@ def add_joat_roles(game_title):
 
     for i in range(0,7):
         current_vanchilla = roles.vt.copy()
-        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_name'] = villagers[i]['character_name']
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
@@ -907,7 +907,7 @@ def add_bean_roles(game_title):
 
     for i in range(0,6):
         current_vanchilla = roles.vt.copy()
-        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_name'] = villagers[i]['character_name']
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
@@ -916,13 +916,13 @@ def add_bean_roles(game_title):
     for i in range(0,2):
         if i < 1:
             current_inven = roles.doc.copy()
-            current_inven['character_name'] = f"[COLOR=PURPLE]{powerroles_bean[i]["character_name"]}[/COLOR]"
+            current_inven['character_name'] = f"[COLOR=PURPLE]{powerroles_bean[i]['character_name']}[/COLOR]"
             current_inven['character_image'] = powerroles_bean[i]["character_image"]
             inven_json = json.dumps(current_inven)
             data.add("roles[]", inven_json)
         else:
             current_vig = roles.vig_even.copy()
-            current_vig['character_name'] = f"[COLOR=PURPLE]{powerroles_bean[i]["character_name"]}[/COLOR]"
+            current_vig['character_name'] = f"[COLOR=PURPLE]{powerroles_bean[i]['character_name']}[/COLOR]"
             current_vig['character_image'] = powerroles_bean[i]["character_image"]
             vig_json = json.dumps(current_vig)
             data.add("roles[]", vig_json)
@@ -952,7 +952,7 @@ def add_bomb_roles(game_title):
 
     for i in range(0,6):
         current_vanchilla = roles.vt.copy()
-        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_name'] = villagers[i]['character_name']
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
@@ -962,13 +962,13 @@ def add_bomb_roles(game_title):
     for i in range(0,2):
         if i < 1:
             current_inven = town_roles.killing_roles['inv_1xsuibomb'].copy()
-            current_inven['character_name'] = f"[COLOR=PURPLE]{powerroles_bomb[i]["character_name"]}[/COLOR]"
+            current_inven['character_name'] = f"[COLOR=PURPLE]{powerroles_bomb[i]['character_name']}[/COLOR]"
             current_inven['character_image'] = powerroles_bomb[i]["character_image"]
             inven_json = json.dumps(current_inven)
             data.add("roles[]", inven_json)
         else:
             current_inven = town_roles.utility_roles['ic_d2plus'].copy()
-            current_inven['character_name'] = f"[COLOR=PURPLE]{powerroles_bomb[i]["character_name"]}[/COLOR]"
+            current_inven['character_name'] = f"[COLOR=PURPLE]{powerroles_bomb[i]['character_name']}[/COLOR]"
             current_inven['character_image'] = powerroles_bomb[i]["character_image"]
             inven_json = json.dumps(current_inven)
             data.add("roles[]", inven_json)
@@ -998,14 +998,14 @@ def add_inno4_roles(game_title):
 
     for i in range(0,2):
         current_vanchilla = roles.vt.copy()
-        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_name'] = villagers[i]['character_name']
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
   
 
     current_ic = roles.ic.copy()
-    current_ic['character_name'] = f"[COLOR=PURPLE]{power_roles[0]["character_name"]}[/COLOR]"
+    current_ic['character_name'] = f"[COLOR=PURPLE]{power_roles[0]['character_name']}[/COLOR]"
     current_ic['character_image'] = power_roles[0]["character_image"]
     ic_json = json.dumps(current_ic)
     data.add("roles[]", ic_json)
@@ -1027,14 +1027,14 @@ def add_bml_roles(game_title):
 
     for i in range(0,7):
         current_vanchilla = roles.vt.copy()
-        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_name'] = villagers[i]['character_name']
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
    
 
     current_inven = town_roles.killing_roles['inv_2xdayvig'].copy()
-    current_inven['character_name'] = f"[COLOR=PURPLE]{powerroles_bml[0]["character_name"]}[/COLOR]"
+    current_inven['character_name'] = f"[COLOR=PURPLE]{powerroles_bml[0]['character_name']}[/COLOR]"
     current_inven['character_image'] = powerroles_bml[0]["character_image"]
     inven_json = json.dumps(current_inven)
     data.add("roles[]", inven_json)
@@ -1067,14 +1067,14 @@ def add_doublejoat13_roles(game_title):
 
     for i in range(0,8):
         current_vanchilla = roles.vt.copy()
-        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_name'] = villagers[i]['character_name']
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
     
     for i in range(0,2):
             current_joat = town_roles.utility_roles['joat_peekvigdoc_even' if i >= 1 else 'joat_peekvigdoc_even'].copy()
-            current_joat['character_name'] = f"[COLOR=PURPLE]{joat[i]["character_name"]}[/COLOR]"
+            current_joat['character_name'] = f"[COLOR=PURPLE]{joat[i]['character_name']}[/COLOR]"
             current_joat['character_image'] = joat[i]["character_image"]
             joat_json = json.dumps(current_joat)
             data.add("roles[]", joat_json)
@@ -1104,7 +1104,7 @@ def add_vig_roles(game_title):
 
     for i in range(0,7):
         current_vanchilla = roles.vt.copy()
-        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_name'] = villagers[i]['character_name']
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
@@ -1149,13 +1149,13 @@ def add_billager9_roles(game_title):
 
     for i in range(0,6):
         current_vanchilla = roles.vt.copy()
-        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_name'] = villagers[i]['character_name']
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
    
     current_fv = town_roles.utility_roles['fv_loyal'].copy()
-    current_fv['character_name'] = f"[COLOR=PURPLE]{fv[0]["character_name"]}[/COLOR]"
+    current_fv['character_name'] = f"[COLOR=PURPLE]{fv[0]['character_name']}[/COLOR]"
     current_fv['character_image'] = fv[0]["character_image"]
     fv_json = json.dumps(current_fv)
     data.add("roles[]", fv_json)
@@ -1185,13 +1185,13 @@ def add_cop9_roles(game_title):
 
     for i in range(0,6):
         current_vanchilla = roles.vt.copy()
-        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_name'] = villagers[i]['character_name']
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
    
     current_cop = town_roles.utility_roles['cop'].copy()
-    current_cop['character_name'] = f"[COLOR=PURPLE]{cop[0]["character_name"]}[/COLOR]"
+    current_cop['character_name'] = f"[COLOR=PURPLE]{cop[0]['character_name']}[/COLOR]"
     current_cop['character_image'] = cop[0]["character_image"]
     cop_json = json.dumps(current_cop)
     data.add("roles[]", cop_json)
@@ -1213,13 +1213,13 @@ def add_parity_cop9_roles(game_title):
 
     for i in range(0,6):
         current_vanchilla = roles.vt.copy()
-        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_name'] = villagers[i]['character_name']
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
    
     current_cop = town_roles.utility_roles['parity_cop_m'].copy()
-    current_cop['character_name'] = f"[COLOR=PURPLE]{cop[0]["character_name"]}[/COLOR]"
+    current_cop['character_name'] = f"[COLOR=PURPLE]{cop[0]['character_name']}[/COLOR]"
     current_cop['character_image'] = cop[0]["character_image"]
     cop_json = json.dumps(current_cop)
     data.add("roles[]", cop_json)
@@ -1242,13 +1242,13 @@ def add_cop13_roles(game_title):
 
     for i in range(0,9):
         current_vanchilla = roles.vt.copy()
-        current_vanchilla['character_name'] = villagers[i]["character_name"]
+        current_vanchilla['character_name'] = villagers[i]['character_name']
         current_vanchilla['character_image'] = villagers[i]["character_image"]
         vt_json = json.dumps(current_vanchilla)
         data.add("roles[]", vt_json)
   
     current_cop = town_roles.utility_roles['cop'].copy()
-    current_cop['character_name'] = f"[COLOR=PURPLE]{cop[0]["character_name"]}[/COLOR]"
+    current_cop['character_name'] = f"[COLOR=PURPLE]{cop[0]['character_name']}[/COLOR]"
     current_cop['character_image'] = cop[0]["character_image"]
     cop_json = json.dumps(current_cop)
     data.add("roles[]", cop_json)
