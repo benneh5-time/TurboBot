@@ -713,10 +713,10 @@ def add_closedrandomXer_roles(game_title, player_limit=13):
     for i in range(village_vt_count):
         ind_and_miller_rand = random.random()
         
-        if not independent_assigned and ind_and_miller_rand <= 0.01:
+        if not independent_assigned and ind_and_miller_rand <= 0.05:
             role = selected_independent_roles[0].copy()
             independent_assigned = True
-        elif ind_and_miller_rand <= 0.035:
+        elif ind_and_miller_rand <= 0.1:
             role = roles.miller.copy()
         else:
             role = roles.vt.copy()
