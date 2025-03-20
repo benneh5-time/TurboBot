@@ -11,7 +11,7 @@ def overlay_text_on_image(image_path, output_path, text):
     draw = ImageDraw.Draw(overlay)
 
     # Increase font size
-    max_font_size = int(overlay_height * 0.4)  # 40% of overlay height
+    max_font_size = 22 #int(overlay_height * 0.4)  # 40% of overlay height
     min_font_size = 10
     font_size = max_font_size
 
@@ -23,7 +23,7 @@ def overlay_text_on_image(image_path, output_path, text):
         
         # Wrap text based on width
         max_chars_per_line = width // (font_size // 2)
-        wrapped_text = "\n".join(textwrap.wrap(text, width=max_chars_per_line))
+        wrapped_text = "\n".join(textwrap.wrap(text, width=max_chars_per_line * 2))
 
         # Measure text size
         bbox = draw.textbbox((0, 0), wrapped_text, font=font)
