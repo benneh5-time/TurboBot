@@ -20,7 +20,7 @@ import mu
 import winrate
 from elo_library import EloCalculator
 import gpt_responses
-import lenny
+from lenny import overlay_text_on_image
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -1718,7 +1718,7 @@ async def lenny(ctx, prompt):
         return
     
     output = f'images/{ctx.author.id}-request-{ctx.message.id}.jpg'
-    lenny.overlay_text_on_image('lenny.jpg', 'output', prompt)
+    overlay_text_on_image('lenny.jpg', 'output', prompt)
     await ctx.send("Here's your lenny:", file=output)
     
     
