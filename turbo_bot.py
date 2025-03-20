@@ -1713,12 +1713,12 @@ async def remove(ctx, *, alias):
     await update_status()
     
 @bot.command()
-async def lenny(ctx, prompt):
+async def lenny(ctx):
     if ctx.guild is not None and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
     
     output = f'images/{ctx.author.id}-request-{ctx.message.id}.jpg'
-    overlay_text_on_image('lenny.jpg', output, prompt)
+    overlay_text_on_image('lenny.jpg', output, ctx.message.content)
     await ctx.send("Here's your lenny:", file=output)
     
     
