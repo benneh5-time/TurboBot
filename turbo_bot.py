@@ -1714,12 +1714,21 @@ async def remove(ctx, *, alias):
     
 @bot.command()
 async def lenny(ctx):
-    if ctx.guild is not None and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+    if ctx.guild is not None and ctx.channel.id not in allowed_channels:
         return
-    
+
+    # Extract text input after the command
+    message_parts = ctx.message.clean_content.split(maxsplit=1)
+    if len(message_parts) < 2:
+        await ctx.send("Please provide text to overlay on the image.")
+        return
+    text = message_parts[1]
+
     output = f'images/{ctx.author.id}-request-{ctx.message.id}.jpg'
-    overlay_text_on_image('lenny.jpg', output, ctx.message.content)
-    await ctx.send("Here's your lenny:", file=output)
+
+    overlay_text_on_image('lenny.jpg', output, text)
+    
+    await ctx.send("Here's your lenny:", file=discord.File(output))
     
     
 @bot.command()
