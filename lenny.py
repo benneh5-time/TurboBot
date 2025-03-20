@@ -4,7 +4,7 @@ import textwrap
 def overlay_text_on_image(image_path, output_path, text):  
     image = Image.open(image_path)  
     width, height = image.size  
-    overlay_height = int(height * 0.3)  
+    overlay_height = int(height * 0.2)  
     overlay = Image.new("RGB", (width, overlay_height), (0, 0, 0))  
     draw = ImageDraw.Draw(overlay)  
 
