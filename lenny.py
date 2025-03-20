@@ -22,9 +22,9 @@ def overlay_text_on_image(image_path, output_path, text):
             font = ImageFont.load_default()
         
         # Calculate max width per line based on actual font size
-        avg_char_width = font.getsize("A")[0]  # Width of a typical character
+        avg_char_width = font.getbbox("A")[2]  # Approximate width of a typical character
         max_chars_per_line = (width * 0.9) // avg_char_width  # Use 90% of width
-        
+
         wrapped_text = "\n".join(textwrap.wrap(text, width=int(max_chars_per_line)))
         bbox = draw.textbbox((0, 0), wrapped_text, font=font)
         text_width, text_height = bbox[2] - bbox[0], bbox[3] - bbox[1]
