@@ -1,10 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 import textwrap
 
-
-from PIL import Image, ImageDraw, ImageFont
-import textwrap
-
 def overlay_text_on_image(image_path, output_path, text):
     image = Image.open(image_path)
     width, height = image.size
@@ -14,12 +10,12 @@ def overlay_text_on_image(image_path, output_path, text):
     overlay = Image.new("RGB", (width, overlay_height), (0, 0, 0))
     draw = ImageDraw.Draw(overlay)
 
-    # Increase font size to at least double the previous
+    # Use a larger font size and ensure font is loaded correctly
     font_size = 80  # Increased font size (double the previous 40)
     try:
-        font = ImageFont.truetype("arial.ttf", size=font_size)
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", size=font_size)
     except IOError:
-        font = ImageFont.load_default()
+        font = ImageFont.load_default()  # Fallback if the font file is missing
 
     # Wrap text to fit the overlay width
     max_chars_per_line = width // (font_size // 2)  # Adjust based on font size
