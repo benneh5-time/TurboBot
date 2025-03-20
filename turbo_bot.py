@@ -1718,7 +1718,7 @@ async def lenny(ctx, prompt):
         return
     
     output = f'images/{ctx.author.id}-request-{ctx.message.id}.jpg'
-    overlay_text_on_image('lenny.jpg', 'output', prompt)
+    overlay_text_on_image('lenny.jpg', output, prompt)
     await ctx.send("Here's your lenny:", file=output)
     
     
