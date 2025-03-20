@@ -4,29 +4,26 @@ import textwrap
 def overlay_text_on_image(image_path, output_path, text):
     image = Image.open(image_path)
     width, height = image.size
-    overlay_height = int(height * 0.2)  # 20% of the image height
+    overlay_height = int(height * 0.2)  # Bottom 20% of the image
 
-    # Create a black overlay
+    # Create black overlay
     overlay = Image.new("RGB", (width, overlay_height), (0, 0, 0))
     draw = ImageDraw.Draw(overlay)
 
-    # Use default font and adjust font size
-    font_size = 80  # Desired font size
-    try:
-        font = ImageFont.load_default()
-        # Pillow's default font doesn't take size arguments, so we can't scale it directly.
-        # For scaling, we'll need a fallback method, but for now we keep the default font.
-    except IOError:
-        font = ImageFont.load_default()  # Fallback if the default font is not found
+    # Use installed DejaVu Sans font
+    font_path = "/usr/share/fonts/dejavu-sans-fonts/DejaVuSans-Bold.ttf"
+    font_size = 80  # Adjust as needed
+    font = ImageFont.truetype(font_path, size=font_size)
 
-    # Wrap text to fit the overlay width
-    max_chars_per_line = width // (font_size // 2)  # Adjust based on the estimated font size
+    # Wrap text to fit overlay width
+    max_chars_per_line = width // (font_size // 2)
     wrapped_text = "\n".join(textwrap.wrap(text, width=max_chars_per_line))
 
-    # Draw text on the black overlay
-    draw.text((0, 0), wrapped_text, fill=(255, 255, 255), font=font)
+    # Draw text on overlay without alignment
+    draw.text((10, 10), wrapped_text, fill=(255, 255, 255), font=font)
 
     # Paste overlay onto image
     image.paste(overlay, (0, height - overlay_height))
     image.save(output_path)
+
     print(f"Image saved to {output_path}")
