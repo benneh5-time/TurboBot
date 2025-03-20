@@ -22,7 +22,7 @@ def overlay_text_on_image(image_path, output_path, text):
             font = ImageFont.load_default()
         
         # Wrap text based on width
-        max_chars_per_line = width // (font_size // 2)
+        max_chars_per_line = width / 2
         wrapped_text = "\n".join(textwrap.wrap(text, width=max_chars_per_line * 2))
 
         # Measure text size
