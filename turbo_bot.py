@@ -20,6 +20,7 @@ import mu
 import winrate
 from elo_library import EloCalculator
 import gpt_responses
+import lenny
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -1710,7 +1711,17 @@ async def remove(ctx, *, alias):
         
         await ctx.send(f"{next_alias} has been moved from the waiting list to the main list.")
     await update_status()
-
+    
+@bot.command()
+async def lenny(ctx, prompt):
+    if ctx.guild is not None and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
+        return
+    
+    output = f'images/{ctx.author.id}-request-{ctx.message.id}.jpg'
+    lenny.overlay_text_on_image('lenny.jpg', 'output', prompt)
+    await ctx.send("Here's your lenny:", file=output)
+    
+    
 @bot.command()
 async def status(ctx, *args):
     if ctx.guild is not None and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
