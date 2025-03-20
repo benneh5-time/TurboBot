@@ -10,15 +10,17 @@ def overlay_text_on_image(image_path, output_path, text):
     overlay = Image.new("RGB", (width, overlay_height), (0, 0, 0))
     draw = ImageDraw.Draw(overlay)
 
-    # Use a larger font size and ensure font is loaded correctly
-    font_size = 80  # Increased font size (double the previous 40)
+    # Use default font and adjust font size
+    font_size = 80  # Desired font size
     try:
-        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", size=font_size)
+        font = ImageFont.load_default()
+        # Pillow's default font doesn't take size arguments, so we can't scale it directly.
+        # For scaling, we'll need a fallback method, but for now we keep the default font.
     except IOError:
-        font = ImageFont.load_default()  # Fallback if the font file is missing
+        font = ImageFont.load_default()  # Fallback if the default font is not found
 
     # Wrap text to fit the overlay width
-    max_chars_per_line = width // (font_size // 2)  # Adjust based on font size
+    max_chars_per_line = width // (font_size // 2)  # Adjust based on the estimated font size
     wrapped_text = "\n".join(textwrap.wrap(text, width=max_chars_per_line))
 
     # Draw text on the black overlay
