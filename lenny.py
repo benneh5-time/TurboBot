@@ -2,6 +2,9 @@ from PIL import Image, ImageDraw, ImageFont
 import textwrap
 
 
+from PIL import Image, ImageDraw, ImageFont
+import textwrap
+
 def overlay_text_on_image(image_path, output_path, text):
     image = Image.open(image_path)
     width, height = image.size
@@ -11,15 +14,19 @@ def overlay_text_on_image(image_path, output_path, text):
     overlay = Image.new("RGB", (width, overlay_height), (0, 0, 0))
     draw = ImageDraw.Draw(overlay)
 
-    # Use a fixed font size
-    font_size = 40  # Fixed font size, no scaling
+    # Increase font size to at least double the previous
+    font_size = 80  # Increased font size (double the previous 40)
     try:
         font = ImageFont.truetype("arial.ttf", size=font_size)
     except IOError:
         font = ImageFont.load_default()
 
-    # Draw text on black overlay with no alignment or scaling
-    draw.text((0, 0), text, fill=(255, 255, 255), font=font)
+    # Wrap text to fit the overlay width
+    max_chars_per_line = width // (font_size // 2)  # Adjust based on font size
+    wrapped_text = "\n".join(textwrap.wrap(text, width=max_chars_per_line))
+
+    # Draw text on the black overlay
+    draw.text((0, 0), wrapped_text, fill=(255, 255, 255), font=font)
 
     # Paste overlay onto image
     image.paste(overlay, (0, height - overlay_height))
