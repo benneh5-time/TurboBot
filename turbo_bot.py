@@ -778,7 +778,7 @@ async def elo(ctx, *, sheet_name: str = "Turbo Champs 2025"):
                 user_data = row
     current_date = datetime.datetime.utcnow().strftime('%Y-%m-%d')
     if user_data:
-        embed = discord.Embed(title=f"{sheet_name} ELO for {user_data['Name']}", description=f"As of {current_date} @ Midnight UTC", color=discord.Color.blue())
+        embed = discord.Embed(title=f"{sheet_name} ELO for {user_data['Name']}", description=f"As of 3/22/2025, Midnight UTC. Turbo Champs Elo leaderboard is frozen in time from then until the final reveal in April.", color=discord.Color.blue())
         embed.add_field(name="Overall ELO", value=user_data["Overall ELO"], inline=False)
         embed.add_field(name="Town ELO", value=user_data["Town ELO"], inline=True)
         embed.add_field(name="Wolf ELO", value=user_data["Wolf ELO"], inline=True)
@@ -2419,7 +2419,7 @@ async def rand(ctx, *args):
                 champs_file_path = 'database/2025_TurboChampDatabase.csv'
                 aliases_file = 'aliases.json'
                 credentials_path = 'creds/turbo-champs-2025-a3862c5a5d97.json'
-                spreadsheet_name = 'Turbo ELO Sheet'
+                spreadsheet_name = 'HiddenChamps'
                 champs_sheet_name = 'Turbo Champs 2025'
                 databasesheet_name = 'Champs Database'
                 town_sheet_name = 'Sorted by Town'
