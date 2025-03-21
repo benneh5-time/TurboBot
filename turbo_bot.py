@@ -677,7 +677,7 @@ async def leaderboard(ctx, *, leaderboard: str = "Overall"):
         return
     current_date = datetime.datetime.utcnow().strftime('%Y-%m-%d')
     embed = discord.Embed(
-        title=f"Top 10 Players by {column}", description=f"as of {current_date} @ Midnight UTC",
+        title=f"Top 10 Players by {column}", description=f"leaderboard frozen as of 2025-03-22 @ Midnight UTC",
         color=discord.Color.blue()
     )
 
