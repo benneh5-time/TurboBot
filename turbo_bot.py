@@ -667,11 +667,16 @@ async def leaderboard(ctx, *, leaderboard: str = "Overall"):
         column = 'Town ELO'
     elif leaderboard.lower() == 'wolf' or leaderboard.lower() == 'mafia':
         column = 'Wolf ELO'
+    elif leaderboard.lower() == '3p' or leaderboard.lower() == 'sk':
+        column = 'SK ELO'
     else:
         await ctx.send("Not a valid leaderboard, use !leaderboard `overall/village/mafia`")
         return
     
-    top_players, error = get_top_players("Turbo Champs 2025", column)
+    if column != 'SK ELO':
+        top_players, error = get_top_players("Turbo Champs 2025", column)
+    else: 
+        top_players, error = get_top_players("Sorted by SK", column)
     if error:
         await ctx.send(error)
         return
