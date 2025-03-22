@@ -1736,7 +1736,7 @@ async def lenny(ctx):
     await ctx.send("Here's your lenny:", file=discord.File(output))
     
     
-@bot.command()
+@bot.command(name="status", aliases=["list"])
 async def status(ctx, *args):
     if ctx.guild is not None and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
@@ -2688,7 +2688,7 @@ async def dvc(ctx):
     invite = "https://discord.gg/Wt6rVWmG3B"
     await ctx.send(f"Join the Turbo DVC/Graveyard here: {invite}")
 
-@bot.command()
+@bot.command(name="votecount", aliases=["vc", "votes"])
 async def votecount(ctx):
     if ctx.channel.id not in active_game_channels:
         return
