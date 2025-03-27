@@ -76,7 +76,7 @@ anni_event_channels = [1258668573006495774]
 message_ids = {}
 bets = {}
 # ceki ban ends 3/23 (35829273)
-banned_users = [1173036536166621286, 358292734962040842]
+banned_users = [1173036536166621286]
 banned_randers = [612706340623876137]
 future_banned = [190312702692818946]
 non_1337_users = [827416091889762325]
@@ -2222,7 +2222,8 @@ async def rand(ctx, *args):
         security_token = mu.new_thread_token(session)
         
         game_title = args_parsed.title
-        #game_title = await gpt_responses.get_flavor_response()
+        if not game_title:
+            game_title = await gpt_responses.get_flavor_response()
         thread_id = args_parsed.thread_id
         #wolves = args_parsed.wolves
         #fake_villager = args_parsed.villager
