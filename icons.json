@@ -49,5 +49,7 @@
     {"alias": "arctic", "icon": ":top: :keycap_ten: :joystick: "},
     {"alias": "illwei", "icon": ":top: :keycap_ten:"},
     {"alias": "ref-rain", "icon": "🐉"},
-    {"alias": "pepsi blue", "icon": ":blue_circle:"}
+    {"alias": "pepsi blue", "icon": ":blue_circle:"},
+    {"alias": "sensei scumreader", "icon": "🏯 👑"},
+    {"alias": "tutter", "icon": ":seal: 👑"}
 ]
