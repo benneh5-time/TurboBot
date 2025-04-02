@@ -655,7 +655,7 @@ def get_top_players(sheet_name, column_name, top_n=10):
     return top_players, None
 
 
-"""@bot.command()
+@bot.command()
 async def leaderboard(ctx, *, leaderboard: str = "Overall"):
     
     if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -696,10 +696,10 @@ async def leaderboard(ctx, *, leaderboard: str = "Overall"):
     embed.add_field(name="Players", value="\n".join(names), inline=True)
     embed.add_field(name="Scores", value="\n".join(scores), inline=True)
 
-    await ctx.send(embed=embed)"""
+    await ctx.send(embed=embed)
     
     
-@bot.command()
+'''@bot.command()
 async def is_lol_last_place(ctx):
     
     if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
@@ -748,10 +748,10 @@ async def is_lol_last_place(ctx):
             embed.set_footer(text="⚠️ lol is currently NOT in last place on the leaderboard!")
         await ctx.send(embed=embed)
     else:
-        await ctx.send(f"No ELO data found for you on the {'Turbo Champs 2025'} leaderboards")
+        await ctx.send(f"No ELO data found for you on the {'Turbo Champs 2025'} leaderboards")'''
         
-"""@bot.command()
-async def elo(ctx, *, sheet_name: str = "Turbo Champs 2025"):
+@bot.command()
+async def elo(ctx, *, sheet_name: str = "Lifetime"):
     
     if ctx.guild and ctx.channel.id not in allowed_channels:  # Restrict to certain channels
         return
@@ -792,7 +792,7 @@ async def elo(ctx, *, sheet_name: str = "Turbo Champs 2025"):
         embed.add_field(name="Wolf Games", value=user_data["Wolf games"], inline=True)
         await ctx.send(embed=embed)
     else:
-        await ctx.send(f"No ELO data found for you on the {sheet_name} leaderboards")"""
+        await ctx.send(f"No ELO data found for you on the {sheet_name} leaderboards")
 
 @bot.command()
 async def player_stats(ctx, *, args=None):
