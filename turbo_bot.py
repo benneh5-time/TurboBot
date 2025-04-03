@@ -783,7 +783,7 @@ async def elo(ctx, *, sheet_name: str = "Lifetime"):
                 user_data = row
     current_date = datetime.datetime.utcnow().strftime('%Y-%m-%d')
     if user_data:
-        embed = discord.Embed(title=f"{sheet_name} ELO for {user_data['Name']}", description=f"As of 3/22/2025, Midnight UTC. Turbo Champs Elo leaderboard is frozen in time from then until the final reveal in April.", color=discord.Color.blue())
+        embed = discord.Embed(title=f"{sheet_name} ELO for {user_data['Name']}", description=f"", color=discord.Color.blue())
         embed.add_field(name="Overall ELO", value=user_data["Overall ELO"], inline=False)
         embed.add_field(name="Town ELO", value=user_data["Town ELO"], inline=True)
         embed.add_field(name="Wolf ELO", value=user_data["Wolf ELO"], inline=True)
@@ -1073,6 +1073,9 @@ async def game(ctx, setup_name=None, Xer_Players: int = None):
         await ctx.send("Your future ban of August 1st, 2027 is not yet in effect, so you may use Turby until then.")
 
     global current_setup, player_limit, players, waiting_list
+    
+    if setup_name == "crx" or setup_name == "closedrandomxer":
+        setup_name = "closedrandomXer"
 
     if setup_name is None:
         await ctx.send(f"The current game setup is '{current_setup}'. To change the setup, use !game <setup_name>. Valid setup names are: {', '.join(valid_setups)}.")
