@@ -496,7 +496,7 @@ class ThreadmarkProcessor:
                                     user = await bot.fetch_user(id)
                                     await user.send(f"Your turbo game has randed, please join the thread and confirm you are not afk in turbo-chat: https://www.mafiauniverse.com/forums/threads/{thread_id}")
                                 except discord.NotFound:
-                                    print("User zero posting with no discford ID", flush=True)
+                                    print("User zero posting with no discord ID", flush=True)
                                 finally:
                                     print("Failed to DM a zero poster for some other reason", flush=True)
                                     
@@ -529,8 +529,8 @@ class ThreadmarkProcessor:
                 pass
 
         elif "Results: No one died" in event:
-            await post_game_reply(thread_id, "WTF NO DEATHS?"
-                                  )
+            await post_game_reply(thread_id, "WTF NO DEATHS?")
+            
         elif "Event" in event or "Game Information" in event:
             pass
 
