@@ -497,8 +497,8 @@ class ThreadmarkProcessor:
                                     await user.send(f"Your turbo game has randed, please join the thread and confirm you are not afk in turbo-chat: https://www.mafiauniverse.com/forums/threads/{thread_id}")
                                 except discord.NotFound:
                                     print("User zero posting with no discord ID", flush=True)
-                                finally:
-                                    print("Failed to DM a zero poster for some other reason", flush=True)
+                                except Exception as e:
+                                    print(f"Error DMing zero posted: {e}", flush=True)
                                     
                                              
             await asyncio.sleep(30)
