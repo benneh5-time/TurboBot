@@ -38,7 +38,7 @@ player_limit = 10
 current_game = None
 current_setup = "joat10"
 current_timer = "14-3"
-valid_setups = ["joat10", "vig10", "bean10", "bomb10", "bml10", "inno4", "ita10", "ita13", "cop9", "cop13", "paritycop9", "billager9", "doublejoat13", "random10er", "closedrandomXer", "randommadnessXer"]
+valid_setups = ["joat10", "vig10", "bean10", "bomb10", "quick11", "bml10", "inno4", "ita10", "ita13", "cop9", "cop13", "paritycop9", "billager9", "doublejoat13", "random10er", "closedrandomXer", "randommadnessXer"]
 valid_timers = ["sunbae", "14-3", "16-5", "8-2"]
 day_length = 14
 night_length = 3
@@ -1102,6 +1102,8 @@ async def game(ctx, setup_name=None, Xer_Players: int = None):
             new_player_limit = 10
         elif setup_name == "random10er":
             new_player_limit = 10
+        elif setup_name == "quick11":
+            new_player_limit = 11
         elif (setup_name == "closedrandomXer" or setup_name == "randommadnessXer") and Xer_Players is not None:
             new_player_limit = Xer_Players
             if new_player_limit < 7:

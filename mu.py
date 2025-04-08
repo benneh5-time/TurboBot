@@ -373,6 +373,9 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
     elif game_setup in ["bean10", "inno4"]:
         base_data["game_type"] = "Open"
         base_data["period"] = "night"  # These games start at night
+    elif game_setup in ['quick11']:
+        base_data["mafia_kill_enabled"] = "3"
+        base_data["show_flips"] = "1"
 
     # Create an HTTPHeaderDict and add values
     data = HTTPHeaderDict(base_data)
@@ -407,6 +410,7 @@ def start_game(session, security_token, game_title, thread_id, player_aliases, g
         "paritycop9": (add_parity_cop9_roles, "cop-9", "9"),
         "cop13": (add_cop13_roles, "cop-13", "13"),
         "doublejoat13": (add_doublejoat13_roles, "custom", "13"),
+        "quick11": (add_quick11_roles, "custom", "11"),
     }
 
     if game_setup in game_role_map:
@@ -934,6 +938,51 @@ def add_bean_roles(game_title):
             data.add("roles[]", wolf_json)
         else:
             current_wolves = mafia_roles.killing_roles['prk_1x'].copy()
+            current_wolves['character_name'] = wolves[i]['character_name']
+            current_wolves['character_image'] = wolves[i]['character_image']
+            wolf_json = json.dumps(current_wolves)
+            data.add("roles[]", wolf_json)
+
+def add_quick11_roles(game_title):
+    global data
+    
+    name_image_pairs, pr_name_image_pairs, wolf_name_image_pairs = load_flavor_jsons()
+
+    villagers = random.sample(name_image_pairs, 7)
+    powerroles_quick = random.sample(pr_name_image_pairs, 2)
+    wolves = random.sample(wolf_name_image_pairs, 2)
+
+    for i in range(0,7):
+        current_vanchilla = roles.vt.copy()
+        current_vanchilla['character_name'] = villagers[i]['character_name']
+        current_vanchilla['character_image'] = villagers[i]["character_image"]
+        vt_json = json.dumps(current_vanchilla)
+        data.add("roles[]", vt_json)
+  
+
+    for i in range(0,2):
+        if i < 1:
+            current_pr = roles.jailkeeper.copy()
+            current_pr['character_name'] = f"[COLOR=PURPLE]{powerroles_quick[i]['character_name']}[/COLOR]"
+            current_pr['character_image'] = powerroles_quick[i]["character_image"]
+            pr_json = json.dumps(current_pr)
+            data.add("roles[]", pr_json)
+        else:
+            current_pr = roles.neopolitan.copy()
+            current_pr['character_name'] = f"[COLOR=PURPLE]{powerroles_quick[i]['character_name']}[/COLOR]"
+            current_pr['character_image'] = powerroles_quick[i]["character_image"]
+            pr_json = json.dumps(current_pr)
+            data.add("roles[]", pr_json)
+            
+    for i in range(0,2):
+        if i < 1:
+            current_wolves = roles.strongman_goon.copy()
+            current_wolves['character_name'] = wolves[i]['character_name']
+            current_wolves['character_image'] = wolves[i]['character_image']
+            wolf_json = json.dumps(current_wolves)
+            data.add("roles[]", wolf_json)
+        else:
+            current_wolves = roles.rolecop.copy()
             current_wolves['character_name'] = wolves[i]['character_name']
             current_wolves['character_image'] = wolves[i]['character_image']
             wolf_json = json.dumps(current_wolves)
