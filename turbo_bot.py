@@ -75,9 +75,8 @@ dvc_roles = {}
 anni_event_channels = [1258668573006495774]
 message_ids = {}
 bets = {}
-# ceki ban ends 3/23 (35829273)
-banned_users = [1173036536166621286]
-banned_randers = [612706340623876137]
+# matt ban ends 5/1 (250929980614115329)
+banned_users = [1173036536166621286, 250929980614115329]
 future_banned = [190312702692818946]
 non_1337_users = [827416091889762325]
 status_id = None
