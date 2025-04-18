@@ -2158,9 +2158,9 @@ def get_alias_ids(name):
 
 
 async def wait_for_cancel(message, allowed_users):
-    """Wait for a ❌ reaction from an allowed user within 15 seconds."""
+    """Wait for a 🏄‍♀️❌ reaction from an allowed user within 15 seconds."""
     def check(reaction, user):
-        return (str(reaction.emoji) == '❌' and user.id in allowed_users and reaction.message.id == message.id)
+        return (str(reaction.emoji) == '🏄‍♀️' and user.id in allowed_users and reaction.message.id == message.id)
 
     try:
         await bot.wait_for('reaction_add', timeout=15, check=check)
@@ -2210,8 +2210,8 @@ async def rand(ctx, *args):
 
     mentions = " ".join([f"<@{id}>" for id in allowed_randers])
     
-    cancel = await ctx.send(f"{mentions} \n\nThe game will rand in 15 seconds unless canceled by reacting with '❌'")
-    await cancel.add_reaction('❌')
+    cancel = await ctx.send(f"{mentions} \n\nThe game will rand in 15 seconds unless canceled by reacting with '🏄‍♀️'")
+    await cancel.add_reaction('🏄‍♀️')
     
     if await wait_for_cancel(cancel, allowed_randers):
         await ctx.send("Rand canceled")
